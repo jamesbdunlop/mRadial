@@ -3,5 +3,6 @@
 ## Author: Macka - JBD
 ## Version: 0.0.0
 
+core\frames.lua
 demoMain.lua
-core\bufftracker.lua
+core\spelltracker.lua
