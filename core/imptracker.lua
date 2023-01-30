@@ -1,0 +1,181 @@
+-- local LSM = LibStub("LibSharedMedia-3.0")
+-- local impTime, impCast = {}, {}
+-- local alreadyRegistered = false
+-- local impCount = 1 
+-- local playerGUID = UnitGUID("player")
+-- local function isCorrectSpec()
+--     -- Check if player has selected demonology as their spec
+--     local spec = GetSpecialization()
+--     if spec ~= 2 then
+--         return false
+--     end
+--     print("Demonology spec is enabled!")
+--     return true
+-- end
+-- TO DO
+-- handle when Ur'zul spawns!
+-- if isCorrectSpec() then
+--     impGUI = CreateFrame("Frame", "impGUI", UIParent)
+--     impGUI:SetWidth(100)
+--     impGUI:SetHeight(25)
+--     impGUI:SetPoint("CENTER")
+
+--     -- imp artwork
+--     local impGUIImp = impGUI:CreateTexture("impGraphic")
+--     impGUIImp:SetTexture("Interface\\AddOns\\demontracker\\media\\imp")
+--     impGUIImp:SetWidth(75)
+--     impGUIImp:SetHeight(75)
+--     impGUIImp:SetPoint("CENTER", -20, 0)
+
+--     -- count string
+--     local impCounter = impGUI:CreateFontString("impCounter")
+--     impCounter:SetFont("Fonts\\FRIZQT__.TTF", 24, "OUTLINE")
+--     impCounter:SetTextColor(1, 1, 1, 1)
+--     impCounter:SetText(impCount)
+--     impCounter:SetJustifyH("CENTER")
+--     impCounter:SetJustifyV("TOP")
+--     impCounter:SetPoint("CENTER", impGUI, 25, 0)
+
+--     -- frame movement
+--     impGUI:EnableMouse(true)
+--     impGUI:SetMovable(true)
+--     impGUI:RegisterForDrag("LeftButton")
+--     impGUI:SetScript("OnDragStart", function(self) self:StartMoving() end)
+--     impGUI:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+--     impGUI:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    -- impGUI:RegisterEvent("COMBAT_LOG_EVENT")
+    -- impTable = {}
+    -- function impGUI:COMBAT_LOG_EVENT(self, event, ...)
+    --     timestamp,combatEvent,hideCaster,sourceGUID,sourceName,sourceFlags,sourceRaidFlags,destGUID,destName,destFlags,destRaidFlags,spellID,spellName,spellSchool,auraType,amount  = CombatLogGetCurrentEventInfo()
+    --     print("------------------------")
+    --     print("timestamp: ", timestamp)
+    --     print("combatEvent: ", combatEvent)
+    --     print("hideCaster: ", hideCaster)
+    --     print("sourceGUID: ", sourceGUID)
+    --     print("sourceName: ", sourceName)
+    --     print("sourceFlags: ", sourceFlags)
+    --     print("sourceRaidFlags: ", sourceRaidFlags)
+    --     print("destGUID: ", destGUID)
+    --     print("destName: ", destName)
+    --     print("destFlags: ", destFlags)
+    --     print("destRaidFlags: ", destRaidFlags)
+    --     print("spellID: ", spellID)
+    --     print("spellName: ", spellName)
+    --     print("spellSchool: ", spellSchool)
+    --     print("auraType: ", auraType)
+    --     print("amount: ", amount)
+    --     print("------------------------")
+    -- end
+
+    -- function impGUI:COMBAT_LOG_EVENT_UNFILTERED(self, event, ...)
+        -- timestamp,combatEvent,hideCaster,sourceGUID,sourceName,sourceFlags,sourceRaidFlags,destGUID,destName,destFlags,destRaidFlags,spellID,spellName,spellSchool,auraType,amount  = CombatLogGetCurrentEventInfo()
+        -- if spellName == "Implosion" then
+        --     print("------------------------")
+        --     print("timestamp: ", timestamp)
+        --     print("combatEvent: ", combatEvent)
+        --     print("hideCaster: ", hideCaster)
+        --     print("sourceGUID: ", sourceGUID)
+        --     print("sourceName: ", sourceName)
+        --     print("sourceFlags: ", sourceFlags)
+        --     print("sourceRaidFlags: ", sourceRaidFlags)
+        --     print("destGUID: ", destGUID)
+        --     print("destName: ", destName)
+        --     print("destFlags: ", destFlags)
+        --     print("destRaidFlags: ", destRaidFlags)
+        --     print("spellID: ", spellID)
+        --     print("spellName: ", spellName)
+        --     print("spellSchool: ", spellSchool)
+        --     print("auraType: ", auraType)
+        --     print("amount: ", amount)
+        --     print("------------------------")
+        -- end
+        
+        -- for id, bool in pairs(impTable) do
+        --     exists = UnitExists(id)
+        --     if exists then
+        --         print("Imp exists!")
+        --     else
+        --         impCount = impCount -1
+        --         impTable[index] = nil
+        --     end
+        -- end
+
+        -- ADDING IMPS TO COUNT ---
+    --     if combatEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceGUID == playerGUID then
+    --         impCount = impCount + 1
+    --         -- impTable[destGUID] = true
+    --     end
+
+    --     if impCount < 0 then
+    --         impCount = 0
+    --     end
+    --     impCounter:SetText(impCount)
+    -- end
+
+    -- impGUI:SetScript("OnEvent", function(self, event, ...)
+    --     self[event](self, event, ...)
+    -- end)
+
+    -- local function OnNameplateAdded(self, event, unit)
+    --     print("event: ", event)
+    --     print("unit: ", unit)
+    --     print("name plate added! ",  UnitName(unit) )
+    --     -- if string.match(unit, "Wild Imp") then return end
+    -- end
+
+    -- local function OnNameplateRemoved(self, event, unit)
+    --     print("name plate removed! ",  UnitName(unit))
+    --     print("event: ", event)
+    --     print("unit: ", unit)
+    --     -- if string.match(unit, "Wild Imp") then return end
+    -- end
+    
+    -- local OnNameplateAddedFrame = CreateFrame("Frame")
+    -- OnNameplateAddedFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+    -- OnNameplateAddedFrame:SetScript("OnEvent", OnNameplateAdded)
+
+    -- local OnNameplateRemovedFrame = CreateFrame("Frame")
+    -- OnNameplateRemovedFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+    -- OnNameplateRemovedFrame:SetScript("OnEvent", OnNameplateRemoved)
+
+    -- for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
+    --     local unit = nameplate.unit````
+    --     if unit then
+    --         local name = UnitName(unit)
+    --         if name == "Wild Imp" then
+    --             -- Do something when Wild Imp is found
+    --             print("Wild Imp Found!")
+    --         end
+    --     end
+    -- end
+
+
+
+    -- local function OnAuraUpdate(self, event, unitTarget, updateInfo)
+    --     print("event: ", event)
+    --     print("unitTarget: ", UnitName(unitTarget))
+    --     print("updateInfo: ", updateInfo)
+    --     for k, v in pairs(updateInfo) do
+    --         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    --         print(k, v)
+    --         if k == "addedAuras" then
+    --             print("===========ADDED AURAS")
+    --             for k2, v2 in v do
+    --                 print(k2, v2)
+    --             end
+    --         end
+
+    --         if k == "updateInfo" then
+    --             print("===========UPDATE INFO")
+    --             for k2, v2 in v do
+    --                 print(k2, v2)
+    --             end
+    --         end
+    --     end
+    --     -- print("updateInfo[addedAuras][applications]: ", UnitAuraUpdateInfo(updateInfo)["addedAuras"]["applications"])
+    -- end
+    
+    -- local OnAuraUpdateFrame = CreateFrame("Frame")
+    -- OnAuraUpdateFrame:RegisterEvent("UNIT_AURA")
+    -- OnAuraUpdateFrame:SetScript("OnEvent", OnAuraUpdate)
+-- end

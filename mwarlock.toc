@@ -1,0 +1,7 @@
+## Interface: 100002
+## Title: MWarlock
+## Author: Macka - JBD
+## Version: 0.0.0
+
+demoMain.lua
+core\bufftracker.lua
