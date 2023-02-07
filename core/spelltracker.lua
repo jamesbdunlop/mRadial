@@ -46,8 +46,8 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
           iconFrame:SetPoint("CENTER", watcher, "CENTER", 0, 0)
 
     local timerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
-          timerTextBG:SetSize(80, 20)
-          timerTextBG:SetColorTexture(0, 0, 0, 0.5)
+          timerTextBG:SetSize(30, 20)
+          timerTextBG:SetColorTexture(0, 0, 0, 1)
 
     local timerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           timerText:SetSize(80, 20)
@@ -114,21 +114,15 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
             end
         end
 
-        -- Hide all the background when the timer text = READYSTR
-        timerRdy = timerText:GetText()
-        if timerRdy == READYSTR then
-            timerTextBG:Show()
-        else
-            timerTextBG:Hide()
-        end
-
         for idx = 1, 40 do
             local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
             spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
             if name == buffName and expirationTime ~= nil then
-                -- -- Buff is active
+                -- Buff is active -- 
                 timerText:Show()
                 timerTextBG:Show()
+                radialButtonLayout()
+
                 local minutes, seconds = GetAuraTimeLeft(expirationTime)
                 if minutes > 0 then
                     timerText:SetText(string.format("%d:%d", minutes, seconds))
@@ -137,8 +131,18 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
                 end
                 timerText:SetTextColor(.1, 1, .1)
                 iconFrame:SetTexture(iconPath)
-                radialButtonLayout()
+                
+            else
+                timerTextBG:Hide()
             end
+        end
+        -- Hide all the background when the timer text = READYSTR
+        timerRdy = timerText:GetText()
+        if timerRdy == READYSTR then
+            timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+            timerTextBG:Hide()
+        else
+            timerTextBG:Show()
         end
 
         if isShardDependant then
@@ -164,7 +168,7 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
     
 end
 
-function radialButtonLayout()`
+function radialButtonLayout()
     --- Handles adding the frames around a unit circle cause I like it better this way....
     radius = MWarlockSavedVariables.radius
     MWarlockMainFrame:SetSize(radius*2, radius*2)
@@ -183,35 +187,20 @@ function radialButtonLayout()`
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
        
         -- Now manage the timers texts so they're center icon when READYSTR and on the bg when ticking
-        if angle > 1.57 and angle <  4.9 then
-            if timerRdy ~= READYSTR then
-                -- left side
-                timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, 0)
-                timerTextBG:SetPoint("CENTER", iconFrame, "LEFT", 0, 0)
-            else
-                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-                timerTextBG:Hide()
-            end
+        -- We don't do ANY SHOW HIDE HERE!!
+        if angle > 1.57 and angle <  4.9 and timerRdy ~= READYSTR then
+            -- left side
+            timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, 0)
+            timerTextBG:SetPoint("CENTER", iconFrame, "LEFT", 0, 0)
         
-        elseif angle >= 4.711 and angle <= 4.713 then
+        elseif angle >= 4.711 and angle <= 4.713 and timerRdy ~= READYSTR then
             -- Bottom of the circle, we want to keep the text UNDER the icon here
-            if timerRdy ~= READYSTR then 
-                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
-                timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
-            else
-                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-                timerTextBG:Hide()
-            end
+            timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
+            timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
 
-        else
-            if timerRdy ~= READYSTR then 
-                -- Right side
-                timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
-                timerTextBG:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
-            else
-                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-                timerTextBG:Hide()
-            end
+        elseif timerRdy ~= READYSTR then
+            timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
+            timerTextBG:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
         end
     end
 end
