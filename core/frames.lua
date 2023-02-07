@@ -45,7 +45,7 @@ function createFelguardFrames()
         local spellIcon = spellData["spellIcon"]
 
         local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
-        petSpellFrame:SetSize(50, 50)
+        petSpellFrame:SetSize(40, 40)
         petSpellFrame:Show()
         petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
         framePositions = MWarlockSavedVariables.framePositions

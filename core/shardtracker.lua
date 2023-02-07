@@ -1,7 +1,6 @@
 mediaPath = "Interface\\AddOns\\mWarlock\\media\\"
 
 function createShardCountFrame()
-    print("Creating shard counter....")
     -- Used for counting warlock shards on the UI
     shardCount = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     shardCount:SetSize(140, 80)

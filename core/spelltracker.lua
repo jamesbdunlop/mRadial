@@ -183,25 +183,34 @@ function radialButtonLayout()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
        
         -- Now manage the timers texts so they're center icon when READYSTR and on the bg when ticking
-        if timerRdy == READYSTR then
-            timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-            timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-            timerTextBG:Hide()
-        else
-            if angle > 1.57 and angle < 4.9 then
+        if angle > 1.57 and angle <  4.9 then
+            if timerRdy ~= READYSTR then
                 -- left side
-                timerText:SetPoint("CENTER", iconFrame, "LEFT", 0, 0)
+                timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, 0)
                 timerTextBG:SetPoint("CENTER", iconFrame, "LEFT", 0, 0)
-            
-                -- Bottom of the circle, we want to keep the text UNDER the icon here
-            elseif angle >= 4.711 and angle <= 4.713 then
+            else
+                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+                timerTextBG:Hide()
+            end
+        
+        elseif angle >= 4.711 and angle <= 4.713 then
+            -- Bottom of the circle, we want to keep the text UNDER the icon here
+            if timerRdy ~= READYSTR then 
                 timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
                 timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
-            
             else
+                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+                timerTextBG:Hide()
+            end
+
+        else
+            if timerRdy ~= READYSTR then 
                 -- Right side
-                timerText:SetPoint("CENTER", iconFrame, "RIGHT", 0, 0)
-                timerTextBG:SetPoint("CENTER", iconFrame, "RIGHT", 0, 0)
+                timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
+                timerTextBG:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
+            else
+                timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+                timerTextBG:Hide()
             end
         end
     end
