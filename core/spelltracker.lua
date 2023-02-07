@@ -164,7 +164,7 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
     
 end
 
-function radialButtonLayout()
+function radialButtonLayout()`
     --- Handles adding the frames around a unit circle cause I like it better this way....
     radius = MWarlockSavedVariables.radius
     MWarlockMainFrame:SetSize(radius*2, radius*2)
