@@ -2,7 +2,9 @@
 ## Title: MWarlock
 ## Author: Macka - JBD
 ## Version: 0.0.0
+## SavedVariables: MWarlockSavedVariables
 
 core\frames.lua
 demoMain.lua
 core\spelltracker.lua
+
