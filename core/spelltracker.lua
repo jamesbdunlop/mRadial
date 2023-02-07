@@ -7,6 +7,7 @@ timerTexts = {}
 timerTextBGs = {}
 iconFrames = {}
 READYSTR = "RDY"
+NOSSSTR = "N0 SS!"
 ---
 
 function GetAuraTimeLeft(expirationTime)
@@ -26,6 +27,11 @@ local function HasBuff(buffName)
     return false
 end
 
+-- TO DO
+-- Get a count on Summon SoulKeeper
+-- No Felguard? No pet frames!!!
+-- Dead? No Addon visible!! Create a function to hide all, flying/dead/outOfCombat!
+
 function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
     -- Create the watcher frame
     frameName = string.format("Frame_%s", buffName)
@@ -35,7 +41,7 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
 
     local watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")
           watcher:SetSize(100, 100)
-          watcher:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        --   watcher:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
     local iconFrame = watcher:CreateTexture(nil, "ARTWORK")
           iconFrame:SetTexture(iconPath)
@@ -60,6 +66,7 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
           cooldownText:SetText(CD)
 
     -- Set the OnUpdate function for the frame
+    
     watcher:SetScript("OnUpdate", function(self, elapsed)
         local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo("player")
         if not HasBuff(buffName) then
@@ -93,7 +100,6 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
                         timerText:SetText(READYSTR)
                         timerText:SetTextColor(.1, 1, .1)
                         iconFrame:SetSize(defaultW, defaultH)
-                        -- UIFrameFadeIn(iconFrame, 0, 1, 1, iconFrame:SetSize(defaultW, defaultH))
                     else
                         -- We are still on cooldown
                         if minutes > 0 then
@@ -104,9 +110,6 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
                         cooldownText:SetTextColor(1, .1, .1)
                         iconFrame:SetAlpha(0.5)
                         iconFrame:SetSize(25, 25)
-                        -- if name == nil then
-                        --     UIFrameFadeIn(iconFrame, 1, 0, 1, iconFrame:SetSize(25, 25))
-                        -- end
                     end
                 end
             else
@@ -131,16 +134,19 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
                 end
                 timerText:SetTextColor(.1, 1, .1)
                 iconFrame:SetTexture(iconPath)
-                
             else
                 timerTextBG:Hide()
             end
         end
-        -- Hide all the background when the timer text = READYSTR
+
+        -- Hide the timer background when the timer text = READYSTR
         timerRdy = timerText:GetText()
-        if timerRdy == READYSTR then
+        if timerRdy == READYSTR or not timerRdy then
             timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
             timerTextBG:Hide()
+        elseif timerRdy == NOSSSTR then
+            radialButtonLayout()
+            timerTextBG:Show()
         else
             timerTextBG:Show()
         end
@@ -148,17 +154,43 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
         if isShardDependant then
             local soulShards = UnitPower("player", 7)
             if soulShards == 0 then
-                timerText:SetText("NO SS!")
+                timerText:SetText(NOSSSTR)
                 timerText:SetTextColor(1, 0, 0)
             end
+
             if buffName == callDreadStealersSpellName and soulShards < 2 then
-                timerText:SetText("NO SS!")
+                timerText:SetText(NOSSSTR)
                 timerText:SetTextColor(1, 0, 0)
-                -- return
             end
         end
     end)
     
+    -- watcher:SetScript("OnEvent", function(self, event)
+    --     local _, subevent, _, _, sourceName, _, _, _, _, _ = CombatLogGetCurrentEventInfo()
+    --     local spellId, amount, critical
+    
+    --     if subevent == "SPELL_CAST_SUCCESS" then
+    --         spellCId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
+    --         if spellCId == 264130 and sourceName == "Macka" then
+    --             msg = string.format(sourceName .. " cast POWER SIPHON BITCHES!!!")
+    --             SendChatMessage(msg, "PARTY")
+    --         end
+    --     end
+    -- end)
+
+    watcher:SetScript("OnEvent", function(self, event)
+        local _, subevent, _, _, sourceName, _, _, _, _, _ = CombatLogGetCurrentEventInfo()
+        local spellId, amount, critical
+    
+        if subevent == "SPELL_CAST_SUCCESS" then
+            spellCId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
+            if spellCId == 264130 and sourceName == "Macka" then
+                msg = string.format(sourceName .. " cast POWER SIPHON BITCHES!!!")
+                SendChatMessage(tostring(msg), "PARTY")
+            end
+        end
+    end)
+
     -- Now stores all these frames into tables for laying out in the radial fashion
     watcherCount = watcherCount+1
     watchers[watcherCount] = watcher
@@ -191,7 +223,7 @@ function radialButtonLayout()
         if angle > 1.57 and angle <  4.9 and timerRdy ~= READYSTR then
             -- left side
             timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, 0)
-            timerTextBG:SetPoint("CENTER", iconFrame, "LEFT", 0, 0)
+            timerTextBG:SetPoint("RIGHT", iconFrame, "LEFT", 0, 0)
         
         elseif angle >= 4.711 and angle <= 4.713 and timerRdy ~= READYSTR then
             -- Bottom of the circle, we want to keep the text UNDER the icon here
@@ -200,7 +232,7 @@ function radialButtonLayout()
 
         elseif timerRdy ~= READYSTR then
             timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
-            timerTextBG:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
+            timerTextBG:SetPoint("LEFT", iconFrame, "RIGHT", 20, 0)
         end
     end
 end

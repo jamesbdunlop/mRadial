@@ -6,14 +6,13 @@ function createMainFrame()
     MWarlockMainFrame.tex = MWarlockMainFrame:CreateTexture(nil, "ARTWORK")
     MWarlockMainFrame.tex:SetAllPoints(MWarlockMainFrame)
     MWarlockMainFrame.tex:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
-    MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0.05) -- black, 50% opacity
 
     MWarlockMainFrame.mask = MWarlockMainFrame:CreateMaskTexture("testMask")
     MWarlockMainFrame.mask:SetAllPoints(MWarlockMainFrame.tex)
     MWarlockMainFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     MWarlockMainFrame.tex:AddMaskTexture(MWarlockMainFrame.mask)
     
-    MWarlockMainFrame:RegisterForDrag("LeftButton")
+    MWarlockMainFrame:RegisterForDrag("LeftButton")    
 end
 
 -------- DEMONOLOGY FRAMES ---------
@@ -21,8 +20,8 @@ function createHandofGuldanFrame()
     -- CAST HAND OF G TEXT
     handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     handOfGText:SetSize(1000, 50)
-    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, udOffset+20)
-    handOfGText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
+    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -udOffset*2)
+    handOfGText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
     local soulShards = UnitPower("player", 7)
     handOfGText:SetTextColor(.1, 1, .1)
     handOfGText:Hide()
@@ -31,9 +30,9 @@ end
 function createFelguardFrames()
     petSpellData = {
         ["DemonicStrength"] = {["spellName"] = "Demonic Strength", 
-                               ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", rootIconPath)}, 
+                               ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", rootIconPath)}, 
         ["FelStorm"] = {["spellName"] = "FelStorm", 
-                        ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", rootIconPath)}, 
+                        ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", rootIconPath)}, 
         ["SoulStrike"] = {["spellName"] = "Soul Strike", 
                           ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", rootIconPath)}, 
         ["AxeToss"] = {["spellName"] = "Axe Toss", 

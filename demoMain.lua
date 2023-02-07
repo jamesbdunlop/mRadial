@@ -134,5 +134,5 @@ if(isCorrectClass())then
                 radialButtonLayout()
             end
         end
-    end)     
+    end)
 end

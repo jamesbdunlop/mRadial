@@ -1,4 +1,4 @@
-mediaPath = "Interface\\AddOns\\mWarlock\\media\\"
+mediaPath = "Interface\\AddOns\\mWarlock\\media"
 
 function createShardCountFrame()
     -- Used for counting warlock shards on the UI
@@ -6,15 +6,19 @@ function createShardCountFrame()
     shardCount:SetSize(140, 80)
     shardCount:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -40)
     shardCount:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
-    shardCount:SetTextColor(.5, 0, 1)
+    shardCount:SetTextColor(.5, 0, 1, 0)
 
-    local shardTextureFrame = MWarlockMainFrame:CreateTexture()
-    shardTextureFrame:SetTexture(string.format("%s\\shards_2.png", mediaPath))
-    shardTextureFrame:SetPoint("CENTER", 0, 0)
+    shardCounterFrame = CreateFrame("Frame", "shardImageFrame", MWarlockMainFrame, "BackdropTemplate")
+    shardCounterFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER",  0, -20)
+    shardCounterFrame:SetSize(256/2, 256/2)
+    shardCounterFrame.shardsTex = shardCounterFrame:CreateTexture(nil, "BACKGROUND")
+    shardCounterFrame.shardsTex:SetAllPoints(shardCounterFrame)
+    shardCounterFrame:SetAlpha(0.3)
 
     MWarlockMainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     MWarlockMainFrame:SetScript("OnEvent", function(self, event, ...)
         local soulShards = UnitPower("player", 7)
+        shardCounterFrame.shardsTex:SetTexture(string.format("%s\\shards_%d.blp", mediaPath, soulShards))
         sscount = string.format("%d", soulShards)
         if soulShards == 0 then
             MWarlockMainFrame.tex:SetColorTexture(1, 0, 0, 0.07) -- red, 10% opacity
