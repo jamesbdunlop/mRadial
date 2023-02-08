@@ -8,7 +8,6 @@ timerTextBGs = {}
 iconFrames = {}
 READYSTR = "RDY"
 NOSSSTR = "N0 SS!"
----
 
 function GetAuraTimeLeft(expirationTime)
     local timeLeft = expirationTime - GetTime()
@@ -26,11 +25,6 @@ local function HasBuff(buffName)
     end
     return false
 end
-
--- TO DO
--- Get a count on Summon SoulKeeper
--- No Felguard? No pet frames!!!
--- Dead? No Addon visible!! Create a function to hide all, flying/dead/outOfCombat!
 
 function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
     -- Create the watcher frame

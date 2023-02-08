@@ -1,12 +1,12 @@
 ## Interface: 100002
 ## Title: MWarlock
 ## Author: Macka - JBD
-## Version: 0.0.0
+## Version: 0.0.1
 ## SavedVariables: MWarlockSavedVariables
 
+core\utils.lua
 specs\demo.lua
 core\frames.lua
 demoMain.lua
 core\shardtracker.lua
 core\spelltracker.lua
-

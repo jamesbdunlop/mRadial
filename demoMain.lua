@@ -1,8 +1,18 @@
+-----
+-- TO DO
+-- Get a count on Summon SoulKeeper
+-- No Felguard? No pet frames!!!
+-- Dead? No Addon visible!! Create a function to hide all, flying/dead/outOfCombat!
+-----
+
+----GLOBAL SAVED VARS
 if not MWarlockSavedVariables then
     MWarlockSavedVariables = {}
 end
 MWarlockSavedVariables.radius = 100
 MWarlockSavedVariables.framePositions = {}
+
+----
 
 local function isCorrectClass()
     local playerClass = UnitClass("player")
@@ -90,9 +100,7 @@ if(isCorrectClass())then
             createMainFrame()
             createShardCountFrame()
 
-            -- Note this can become spec based atm only supporting DEMO!
-            createHandofGuldanFrame()
-            createFelguardFrames()
+
             ---------------------------------------------------
             if(isCorrectSpec)then
                 -- SUPPORTING ONLY DEMO ATM.
@@ -133,6 +141,10 @@ if(isCorrectClass())then
                 end
                 radialButtonLayout()
             end
+            
+            -- Note this can become spec based atm only supporting DEMO!
+            createHandofGuldanFrame()
+            createFelguardFrames()
         end
     end)
 end
