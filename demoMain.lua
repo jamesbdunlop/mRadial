@@ -3,6 +3,7 @@
 -- Get a count on Summon SoulKeeper
 -- No Felguard? No pet frames!!!
 -- Dead? No Addon visible!! Create a function to hide all, flying/dead/outOfCombat!
+-- BG Frame masking scale with...
 -----
 
 ----GLOBAL SAVED VARS
@@ -11,7 +12,7 @@ if not MWarlockSavedVariables then
 end
 MWarlockSavedVariables.radius = 100
 MWarlockSavedVariables.framePositions = {}
-
+MWarlockSavedVariables.offset = 0
 ----
 
 local function isCorrectClass()
@@ -42,16 +43,17 @@ rootIconPath ="Interface/ICONS"
 mediaPath = "Interface\\AddOns\\mWarlock\\media\\"
 
 local function checkDemonologyTalentTree()
-    for spellName, _ in pairs(dt_specialisationData) do
+    for spellName, _ in pairs(mw_specialisationData) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
         if name then
-            dt_specialisationData[spellName]["active"] = true
+            mw_specialisationData[spellName]["active"] = true
         end
     end
 end
 
 -- slash commands
 SLASH_MW1 = "/mw"
+mainFrameIsMoving = false
 
 function MW_slashCommands(msg, editbox)
     local command, rest = msg:match("^(%S*)%s*(.-)$")
@@ -70,21 +72,60 @@ function MW_slashCommands(msg, editbox)
         MWarlockMainFrame:SetScript("OnMouseUp", function(self, button)
             self:StopMovingOrSizing()
         end)
+        mainFrameIsMoving = true
+        MWarlockMainFrame.tex:SetColorTexture(0, 0, 1, .5)
     end
     
     if command == "lock" then
         MWarlockMainFrame:EnableMouse(false)
         MWarlockMainFrame:SetMovable(false)
+        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0)
+        mainFrameIsMoving = false
     end
     
     if command == "radius" then
-        print("Changed radius to: %d", tonumber(rest))
         MWarlockSavedVariables.radius = tonumber(rest)
-        -- ReloadUI()
+        radialButtonLayout()
+    end
+    
+    if command == "offset" then
+        MWarlockSavedVariables.offset = tonumber(rest)
         radialButtonLayout()
     end
 end
 SlashCmdList["MW"] = MW_slashCommands
+
+function createWatchers(specData, spellOrder)
+--- ADD ALL THE WATCHER FRAMES NOW
+    for i, orderName in ipairs(spellOrder) do
+        for buffName, data in pairs(specData) do
+            if orderName == buffName then
+                --buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant
+                local active = data["active"]
+                if active then
+                    local iconPath = data["iconPath"]
+                    local spellname = data["spellName"]
+                    if spellname ~= nil then
+                        buffName = spellname
+                    end
+                    
+                    local parentSpellIcon = data["parentSpellIcon"]
+                    local parentSpellName = data["parentSpellName"]
+                    local skipBuff = data["skipBuff"]
+                    local isShardDependant = data["isShardDependant"]
+                    addWatcher(buffName, 
+                               iconPath, 
+                               parentSpellIcon, 
+                               parentSpellName, 
+                               skipBuff, 
+                               isShardDependant)
+                    udOffset = udOffset + 32
+                end
+            end
+        end
+    end
+end
+
 
 udOffset = 20
 if(isCorrectClass())then
@@ -99,46 +140,15 @@ if(isCorrectClass())then
             -- setup the UI
             createMainFrame()
             createShardCountFrame()
-
-
             ---------------------------------------------------
             if(isCorrectSpec)then
                 -- SUPPORTING ONLY DEMO ATM.
                 checkDemonologyTalentTree()
-                spellOrder = dt_spellOrder
-                specData = dt_specialisationData
                 
-                --- ADD ALL THE WATCHER FRAMES NOW
-                local lrOffset = 75
-                for i, orderName in ipairs(spellOrder) do
-                    for buffName, data in pairs(specData) do
-                        if orderName == buffName then
-                            --buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant
-                            local active = data["active"]
-                            if active then
-                                local iconPath = data["iconPath"]
-                                local spellname = data["spellName"]
-                                if spellname ~= nil then
-                                    buffName = spellname
-                                end
-                                
-                                local parentSpellIcon = data["parentSpellIcon"]
-                                local parentSpellName = data["parentSpellName"]
-                                local skipBuff = data["skipBuff"]
-                                local isShardDependant = data["isShardDependant"]
-                                addWatcher(buffName, 
-                                        lrOffset, 
-                                        udOffset, 
-                                        iconPath, 
-                                        parentSpellIcon, 
-                                        parentSpellName, 
-                                        skipBuff, 
-                                        isShardDependant)
-                                udOffset = udOffset + 32
-                            end
-                        end
-                    end
-                end
+                spellOrder = mw_spellOrder
+                specData = mw_specialisationData
+                
+                createWatchers(specData, spellOrder)
                 radialButtonLayout()
             end
             

@@ -20,7 +20,7 @@ function createHandofGuldanFrame()
     -- CAST HAND OF G TEXT
     handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     handOfGText:SetSize(1000, 50)
-    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -udOffset)
+    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -udOffset+20)
     handOfGText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
     local soulShards = UnitPower("player", 7)
     handOfGText:SetTextColor(.1, 1, .1)
@@ -42,7 +42,7 @@ function createFelguardFrames()
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if dt_checkHasSpell(spellName) then
+        if mw_checkHasSpell(spellName) then
             local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
             petSpellFrame:SetSize(40, 40)
             petSpellFrame:Show()

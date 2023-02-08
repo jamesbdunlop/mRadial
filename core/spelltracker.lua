@@ -1,6 +1,9 @@
 -- Some globals
-defaultW = 45
-defaultH = 45
+
+local watcherFrameWidth = 45
+local watcherFrameHeight = 45
+local defIconWidth = watcherFrameWidth*1.2
+local defIconHeight = watcherFrameHeight*1.2
 watcherCount = 0
 watchers = {}
 timerTexts = {}
@@ -26,7 +29,7 @@ local function HasBuff(buffName)
     return false
 end
 
-function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
+function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
     -- Create the watcher frame
     frameName = string.format("Frame_%s", buffName)
     if parentSpellIcon then
@@ -34,30 +37,43 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
     end
 
     local watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")
-          watcher:SetSize(100, 100)
-        --   watcher:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+          watcher:SetSize(watcherFrameWidth, watcherFrameHeight)
+          
+          watcher.tex = watcher:CreateTexture(nil, "BACKGROUND")
+          watcher.tex:SetAllPoints(watcher)
+          watcher.tex:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
+          watcher.tex:SetColorTexture(0, 0, 0, 1)
+
+          watcher.mask = watcher:CreateMaskTexture("testMask")
+          watcher.mask:SetAllPoints(watcher.tex)
+          watcher.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+          
+          watcher.tex:AddMaskTexture(watcher.mask)
 
     local iconFrame = watcher:CreateTexture(nil, "ARTWORK")
           iconFrame:SetTexture(iconPath)
           if parentSpellIcon ~= null then
             iconFrame:SetTexture(parentSpellIcon)
           end
-          iconFrame:SetSize(defaultW, defaultH)
+          iconFrame:SetSize(defIconWidth, defIconHeight)
           iconFrame:SetPoint("CENTER", watcher, "CENTER", 0, 0)
+          iconFrame:AddMaskTexture(watcher.mask)
+
 
     local timerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
-          timerTextBG:SetSize(30, 20)
-          timerTextBG:SetColorTexture(0, 0, 0, 1)
+          timerTextBG:SetSize(watcherFrameWidth/1.5, watcherFrameHeight/2)
+          timerTextBG:SetColorTexture(0, .25, 0, 1)
 
     local timerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-          timerText:SetSize(80, 20)
+          timerText:SetSize(watcherFrameWidth, watcherFrameHeight)
           timerText:SetTextColor(.1, 1, .1)
           timerText:SetText(READYSTR)
 
     local cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-          cooldownText:SetSize(50, 50)
-          cooldownText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+          --cooldownText:SetSize(watcherFrameWidth/2, watcherFrameHeight/2)
+          --cooldownText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
           cooldownText:SetText(CD)
+          cooldownText:SetAllPoints(watcher)
 
     -- Set the OnUpdate function for the frame
     
@@ -93,7 +109,7 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
                         iconFrame:SetAlpha(1)
                         timerText:SetText(READYSTR)
                         timerText:SetTextColor(.1, 1, .1)
-                        iconFrame:SetSize(defaultW, defaultH)
+                        iconFrame:SetSize(defIconWidth, defIconHeight)
                     else
                         -- We are still on cooldown
                         if minutes > 0 then
@@ -170,13 +186,16 @@ end
 
 function radialButtonLayout()
     --- Handles adding the frames around a unit circle cause I like it better this way....
-    radius = MWarlockSavedVariables.radius
+    local radius = MWarlockSavedVariables.radius
+    local offset = MWarlockSavedVariables.offset
     MWarlockMainFrame:SetSize(radius*2, radius*2)
-    local angleStep = math.pi / #watchers
+    local angleStep = math.pi / #watchers 
     for x = 1, #watchers do
-        angle = (x-1)*angleStep + math.pi
-        local w = math.cos(angle)*radius
-        local h = math.sin(angle)*radius
+        angle = (x-1)*angleStep + offset*math.pi
+        local sinAng = math.sin(angle)
+        local cosAng = math.cos(angle)
+        local w = cosAng*radius
+        local h = sinAng*radius
         watcher = watchers[x]
         timerTextBG = timerTextBGs[x]
         timerText = timerTexts[x]
@@ -186,21 +205,21 @@ function radialButtonLayout()
         watcher:Show()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
        
-        -- Now manage the timers texts so they're center icon when READYSTR and on the bg when ticking
+        -- Now manage the timers texts so they're center icon when 
+        -- READYSTR and on the bg when ticking
         -- We don't do ANY SHOW HIDE HERE!!
-        if angle > 1.57 and angle <  4.9 and timerRdy ~= READYSTR then
-            -- left side
-            timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, 0)
-            timerTextBG:SetPoint("RIGHT", iconFrame, "LEFT", 0, 0)
+        if cosAng <= 0 and timerRdy ~= READYSTR then
+            timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, -20)
+            timerTextBG:SetPoint("RIGHT", iconFrame, "LEFT", 0, -20)
         
-        elseif angle >= 4.711 and angle <= 4.713 and timerRdy ~= READYSTR then
+        elseif cosAng == 0 and timerRdy ~= READYSTR then
             -- Bottom of the circle, we want to keep the text UNDER the icon here
             timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
             timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
 
         elseif timerRdy ~= READYSTR then
-            timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, 0)
-            timerTextBG:SetPoint("LEFT", iconFrame, "RIGHT", 20, 0)
+            timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, -20)
+            timerTextBG:SetPoint("LEFT", iconFrame, "RIGHT", 0, -20)
         end
     end
 end

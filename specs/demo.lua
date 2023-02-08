@@ -13,7 +13,7 @@ netherPortalSpellName = "Nether Portal" --26721
 grimFelGuardSpellName = "Grimoire: Felguard" --111898
 callDreadStealersSpellName = "Call Dreadstalkers" --104316
 
-dt_spellOrder = {
+mw_spellOrder = {
     powerSiphonSpellName,
     callDreadStealersSpellName,
     inquisitorsGazeSpellName,
@@ -23,67 +23,67 @@ dt_spellOrder = {
     grimFelGuardSpellName,
 }
 
-dt_specialisationData = {}
+mw_specialisationData = {}
 --buffName, _, _, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant
-dt_specialisationData[grimFelGuardSpellName] = {}
-dt_specialisationData[grimFelGuardSpellName]["active"] = false
-dt_specialisationData[grimFelGuardSpellName]["spellName"] = nil
-dt_specialisationData[grimFelGuardSpellName]["iconPath"] = string.format("%s/Spell_shadow_summonfelguard.blp", rootIconPath)
-dt_specialisationData[grimFelGuardSpellName]["parentSpellIcon"] = string.format("%s/Spell_shadow_summonfelguard.blp", rootIconPath)
-dt_specialisationData[grimFelGuardSpellName]["parentSpellName"] = grimFelGuardSpellName
-dt_specialisationData[grimFelGuardSpellName]["skipBuff"] = true
-dt_specialisationData[grimFelGuardSpellName]["isShardDependant"] = true
+mw_specialisationData[grimFelGuardSpellName] = {}
+mw_specialisationData[grimFelGuardSpellName]["active"] = false
+mw_specialisationData[grimFelGuardSpellName]["spellName"] = nil
+mw_specialisationData[grimFelGuardSpellName]["iconPath"] = string.format("%s/Spell_shadow_summonfelguard.blp", rootIconPath)
+mw_specialisationData[grimFelGuardSpellName]["parentSpellIcon"] = string.format("%s/Spell_shadow_summonfelguard.blp", rootIconPath)
+mw_specialisationData[grimFelGuardSpellName]["parentSpellName"] = grimFelGuardSpellName
+mw_specialisationData[grimFelGuardSpellName]["skipBuff"] = true
+mw_specialisationData[grimFelGuardSpellName]["isShardDependant"] = true
 
-dt_specialisationData[powerSiphonSpellName] = {}
-dt_specialisationData[powerSiphonSpellName]["active"] = false
-dt_specialisationData[powerSiphonSpellName]["spellName"] = demonicCoreSpellName
-dt_specialisationData[powerSiphonSpellName]["iconPath"] = string.format("%s/Warlock_spelldrain.blp", rootIconPath)
-dt_specialisationData[powerSiphonSpellName]["parentSpellIcon"] = string.format("%s/Ability_warlock_backdraft.blp", rootIconPath)
-dt_specialisationData[powerSiphonSpellName]["parentSpellName"] = powerSiphonSpellName
-dt_specialisationData[powerSiphonSpellName]["skipBuff"] = nil
-dt_specialisationData[powerSiphonSpellName]["isShardDependant"] = false
+mw_specialisationData[powerSiphonSpellName] = {}
+mw_specialisationData[powerSiphonSpellName]["active"] = false
+mw_specialisationData[powerSiphonSpellName]["spellName"] = demonicCoreSpellName
+mw_specialisationData[powerSiphonSpellName]["iconPath"] = string.format("%s/Warlock_spelldrain.blp", rootIconPath)
+mw_specialisationData[powerSiphonSpellName]["parentSpellIcon"] = string.format("%s/Ability_warlock_backdraft.blp", rootIconPath)
+mw_specialisationData[powerSiphonSpellName]["parentSpellName"] = powerSiphonSpellName
+mw_specialisationData[powerSiphonSpellName]["skipBuff"] = nil
+mw_specialisationData[powerSiphonSpellName]["isShardDependant"] = false
 
-dt_specialisationData[summonDTSpellName] = {}
-dt_specialisationData[summonDTSpellName]["active"] = false
-dt_specialisationData[summonDTSpellName]["spellName"] = demonicPowerSpellName
-dt_specialisationData[summonDTSpellName]["iconPath"] = string.format("%s/Achievement_boss_argus_maleeredar.blp", rootIconPath)
-dt_specialisationData[summonDTSpellName]["parentSpellIcon"] = string.format("%s/Inv_summondemonictyrant.blp", rootIconPath)
-dt_specialisationData[summonDTSpellName]["parentSpellName"] = summonDTSpellName
-dt_specialisationData[summonDTSpellName]["skipBuff"] = nil
-dt_specialisationData[summonDTSpellName]["isShardDependant"] = false
+mw_specialisationData[summonDTSpellName] = {}
+mw_specialisationData[summonDTSpellName]["active"] = false
+mw_specialisationData[summonDTSpellName]["spellName"] = demonicPowerSpellName
+mw_specialisationData[summonDTSpellName]["iconPath"] = string.format("%s/Achievement_boss_argus_maleeredar.blp", rootIconPath)
+mw_specialisationData[summonDTSpellName]["parentSpellIcon"] = string.format("%s/Inv_summondemonictyrant.blp", rootIconPath)
+mw_specialisationData[summonDTSpellName]["parentSpellName"] = summonDTSpellName
+mw_specialisationData[summonDTSpellName]["skipBuff"] = nil
+mw_specialisationData[summonDTSpellName]["isShardDependant"] = false
 
-dt_specialisationData[summonSoulKeeperSpellName] = {}
-dt_specialisationData[summonSoulKeeperSpellName]["active"] = false
-dt_specialisationData[summonSoulKeeperSpellName]["spellName"] = "Inquisitor's Gaze"
-dt_specialisationData[summonSoulKeeperSpellName]["iconPath"] = string.format("%s/Spell_fel_elementaldevastation.blp", rootIconPath)
-dt_specialisationData[summonSoulKeeperSpellName]["parentSpellIcon"] = nil
-dt_specialisationData[summonSoulKeeperSpellName]["parentSpellName"] = nil
-dt_specialisationData[summonSoulKeeperSpellName]["skipBuff"] = nil
-dt_specialisationData[summonSoulKeeperSpellName]["isShardDependant"] = false
+mw_specialisationData[summonSoulKeeperSpellName] = {}
+mw_specialisationData[summonSoulKeeperSpellName]["active"] = false
+mw_specialisationData[summonSoulKeeperSpellName]["spellName"] = "Inquisitor's Gaze"
+mw_specialisationData[summonSoulKeeperSpellName]["iconPath"] = string.format("%s/Spell_fel_elementaldevastation.blp", rootIconPath)
+mw_specialisationData[summonSoulKeeperSpellName]["parentSpellIcon"] = nil
+mw_specialisationData[summonSoulKeeperSpellName]["parentSpellName"] = nil
+mw_specialisationData[summonSoulKeeperSpellName]["skipBuff"] = nil
+mw_specialisationData[summonSoulKeeperSpellName]["isShardDependant"] = false
 
-dt_specialisationData[inquisitorsGazeSpellName] = {}
-dt_specialisationData[inquisitorsGazeSpellName]["active"] = false
-dt_specialisationData[inquisitorsGazeSpellName]["spellName"] = nil
-dt_specialisationData[inquisitorsGazeSpellName]["iconPath"] = string.format("%s/Inv_pet_inquisitoreye.blp", rootIconPath)
-dt_specialisationData[inquisitorsGazeSpellName]["parentSpellIcon"] = nil
-dt_specialisationData[inquisitorsGazeSpellName]["parentSpellName"] = nil
-dt_specialisationData[inquisitorsGazeSpellName]["skipBuff"] = nil
-dt_specialisationData[inquisitorsGazeSpellName]["isShardDependant"] = false
+mw_specialisationData[inquisitorsGazeSpellName] = {}
+mw_specialisationData[inquisitorsGazeSpellName]["active"] = false
+mw_specialisationData[inquisitorsGazeSpellName]["spellName"] = nil
+mw_specialisationData[inquisitorsGazeSpellName]["iconPath"] = string.format("%s/Inv_pet_inquisitoreye.blp", rootIconPath)
+mw_specialisationData[inquisitorsGazeSpellName]["parentSpellIcon"] = nil
+mw_specialisationData[inquisitorsGazeSpellName]["parentSpellName"] = nil
+mw_specialisationData[inquisitorsGazeSpellName]["skipBuff"] = nil
+mw_specialisationData[inquisitorsGazeSpellName]["isShardDependant"] = false
 
-dt_specialisationData[netherPortalSpellName] = {}
-dt_specialisationData[netherPortalSpellName]["active"] = false
-dt_specialisationData[netherPortalSpellName]["spellName"] = nil
-dt_specialisationData[netherPortalSpellName]["iconPath"] = string.format("%s/Inv_netherportal.blp", rootIconPath)
-dt_specialisationData[netherPortalSpellName]["parentSpellIcon"] = string.format("%s/Inv_netherportal.blp", rootIconPath)
-dt_specialisationData[netherPortalSpellName]["parentSpellName"] = netherPortalSpellName
-dt_specialisationData[netherPortalSpellName]["skipBuff"] = true
-dt_specialisationData[netherPortalSpellName]["isShardDependant"] = true
+mw_specialisationData[netherPortalSpellName] = {}
+mw_specialisationData[netherPortalSpellName]["active"] = false
+mw_specialisationData[netherPortalSpellName]["spellName"] = nil
+mw_specialisationData[netherPortalSpellName]["iconPath"] = string.format("%s/Inv_netherportal.blp", rootIconPath)
+mw_specialisationData[netherPortalSpellName]["parentSpellIcon"] = string.format("%s/Inv_netherportal.blp", rootIconPath)
+mw_specialisationData[netherPortalSpellName]["parentSpellName"] = netherPortalSpellName
+mw_specialisationData[netherPortalSpellName]["skipBuff"] = true
+mw_specialisationData[netherPortalSpellName]["isShardDependant"] = true
 
-dt_specialisationData[callDreadStealersSpellName] = {}
-dt_specialisationData[callDreadStealersSpellName]["active"] = false
-dt_specialisationData[callDreadStealersSpellName]["spellName"] = nil
-dt_specialisationData[callDreadStealersSpellName]["iconPath"] = string.format("%s/Spell_warlock_calldreadstalkers.blp", rootIconPath)
-dt_specialisationData[callDreadStealersSpellName]["parentSpellIcon"] = string.format("%s/Spell_warlock_calldreadstalkers.blp", rootIconPath)
-dt_specialisationData[callDreadStealersSpellName]["parentSpellName"] = callDreadStealersSpellName
-dt_specialisationData[callDreadStealersSpellName]["skipBuff"] = true
-dt_specialisationData[callDreadStealersSpellName]["isShardDependant"] = true
+mw_specialisationData[callDreadStealersSpellName] = {}
+mw_specialisationData[callDreadStealersSpellName]["active"] = false
+mw_specialisationData[callDreadStealersSpellName]["spellName"] = nil
+mw_specialisationData[callDreadStealersSpellName]["iconPath"] = string.format("%s/Spell_warlock_calldreadstalkers.blp", rootIconPath)
+mw_specialisationData[callDreadStealersSpellName]["parentSpellIcon"] = string.format("%s/Spell_warlock_calldreadstalkers.blp", rootIconPath)
+mw_specialisationData[callDreadStealersSpellName]["parentSpellName"] = callDreadStealersSpellName
+mw_specialisationData[callDreadStealersSpellName]["skipBuff"] = true
+mw_specialisationData[callDreadStealersSpellName]["isShardDependant"] = true
