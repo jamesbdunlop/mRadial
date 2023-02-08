@@ -159,32 +159,6 @@ function addWatcher(buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName
         end
     end)
     
-    -- watcher:SetScript("OnEvent", function(self, event)
-    --     local _, subevent, _, _, sourceName, _, _, _, _, _ = CombatLogGetCurrentEventInfo()
-    --     local spellId, amount, critical
-    
-    --     if subevent == "SPELL_CAST_SUCCESS" then
-    --         spellCId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
-    --         if spellCId == 264130 and sourceName == "Macka" then
-    --             msg = string.format(sourceName .. " cast POWER SIPHON BITCHES!!!")
-    --             SendChatMessage(msg, "PARTY")
-    --         end
-    --     end
-    -- end)
-
-    watcher:SetScript("OnEvent", function(self, event)
-        local _, subevent, _, _, sourceName, _, _, _, _, _ = CombatLogGetCurrentEventInfo()
-        local spellId, amount, critical
-    
-        if subevent == "SPELL_CAST_SUCCESS" then
-            spellCId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
-            if spellCId == 264130 and sourceName == "Macka" then
-                msg = string.format(sourceName .. " cast POWER SIPHON BITCHES!!!")
-                SendChatMessage(tostring(msg), "PARTY")
-            end
-        end
-    end)
-
     -- Now stores all these frames into tables for laying out in the radial fashion
     watcherCount = watcherCount+1
     watchers[watcherCount] = watcher
