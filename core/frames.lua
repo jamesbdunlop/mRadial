@@ -49,6 +49,11 @@ function createFelguardFrames()
         ["AxeToss"] = {["spellName"] = "Axe Toss", 
                           ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)}
     }
+    local frameSize = MWarlockSavedVariables["felguardFrameSize"]
+    print("FRAMGESIZE: %d", frameSize)
+    if frameSize == nil then
+        frameSize = 40
+    end
 
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
@@ -56,7 +61,7 @@ function createFelguardFrames()
         if mw_checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
                 local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
-                petSpellFrame:SetSize(40, 40)
+                petSpellFrame:SetSize(frameSize, frameSize)
                 petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
                 framePositions = MWarlockSavedVariables.framePositions
                 if framePositions ~= nil then
@@ -75,6 +80,7 @@ function createFelguardFrames()
                 local petSpellIconFrame = petSpellFrame:CreateTexture()
                 petSpellIconFrame:SetTexture(spellIcon)
                 petSpellIconFrame:SetPoint("CENTER", 0, 0)
+                petSpellIconFrame:SetSize(frameSize, frameSize)
             
                 local petSpellFrameText = petSpellFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
                 petSpellFrameText:SetSize(150, 150)
@@ -154,7 +160,7 @@ function createFelguardFrames()
                 felguardFrames[frameName] = petSpellFrame
             else
                 petSpellFrame = felguardFrames[frameName]
-                petSpellFrame:SetSize(40, 40)
+                petSpellFrame:SetSize(frameSize, frameSize)
             end
         end
     end

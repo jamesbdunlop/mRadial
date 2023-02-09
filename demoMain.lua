@@ -12,6 +12,7 @@ end
 MWarlockSavedVariables.radius = 100
 MWarlockSavedVariables.framePositions = {}
 MWarlockSavedVariables.offset = 0
+MWarlockSavedVariables.felguardFrameSize = 35
 ----
 
 felstormSpellName = "Felstorm"
@@ -81,6 +82,11 @@ function MW_slashCommands(msg, editbox)
     if command == "offset" then
         MWarlockSavedVariables.offset = tonumber(rest)
         radialButtonLayout()
+    end
+
+    if command == "fgfs" then
+        MWarlockSavedVariables.felguardFrameSize = tonumber(rest)
+        ReloadUI()
     end
 end
 SlashCmdList["MW"] = MW_slashCommands
@@ -154,19 +160,19 @@ local function setMainFrameCombatLog()
            end
        end 
        
-       -- SHOW FELGUARD FRAMES ON SUMMONS
-       if event == "UNIT_SPELLCAST_SUCCEEDED" then
-            unitTarget, castGUID, spellID = ...
-            if spellID == 30146 then
-                print("HAZZZARRRRGGGHHH")
-                createFelguardFrames()
-                return
-            end
-       end
+    --    -- SHOW FELGUARD FRAMES ON SUMMONS
+    --    if event == "UNIT_SPELLCAST_SUCCEEDED" then
+    --         unitTarget, castGUID, spellID = ...
+    --         if spellID == 30146 then
+    --             print("HAZZZARRRRGGGHHH")
+    --             createFelguardFrames()
+    --             return
+    --         end
+    --    end
        
-       if not IsFelguardSummoned() then
-           removeFelguardFrames()
-       end
+    --    if not IsFelguardSummoned() then
+    --        removeFelguardFrames()
+    --    end
 
     --    if event == "COMBAT_LOG_EVENT_UNFILTERED" then 
     --         local _, subevent, _, sourceGUID, sourceName, _, _, _, destName, destFlags = CombatLogGetCurrentEventInfo()
