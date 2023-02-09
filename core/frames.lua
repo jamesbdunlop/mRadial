@@ -1,3 +1,5 @@
+local playerGUID = UnitGUID("player")
+
 function createMainFrame()
     -- Main Frame
     MWarlockMainFrame = CreateFrame("Frame", "MWarlockBGFrame", UIParent, "BackdropTemplate")
@@ -27,6 +29,15 @@ function createHandofGuldanFrame()
     handOfGText:Hide()
 end
 
+function IsFelguardSummoned()
+    local summonedPet = UnitCreatureFamily("pet")
+    if summonedPet and summonedPet == "Felguard" then
+      return true
+    end
+    return false
+  end
+
+felguardFrames = {}
 function createFelguardFrames()
     petSpellData = {
         ["DemonicStrength"] = {["spellName"] = "Demonic Strength", 
@@ -43,96 +54,116 @@ function createFelguardFrames()
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
         if mw_checkHasSpell(spellName) then
-            local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
-            petSpellFrame:SetSize(40, 40)
-            petSpellFrame:Show()
-            petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
-            framePositions = MWarlockSavedVariables.framePositions
-            if framePositions ~= nil then
-                for sframeName, framePos in pairs(MWarlockSavedVariables.framePositions) do
-                    if sframeName == frameName then
-                        x = framePos["x"]
-                        y = framePos["y"]
-                        petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", x, y)
-                    end
-                end
-            end
-            petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-        
-            local petSpellIconFrame = petSpellFrame:CreateTexture()
-            petSpellIconFrame:SetTexture(spellIcon)
-            petSpellIconFrame:SetPoint("CENTER", 0, 0)
-        
-            local petSpellFrameText = petSpellFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            petSpellFrameText:SetSize(150, 150)
-            petSpellFrameText:SetTextColor(.1, 1, .1)
-            petSpellFrameText:SetText("")
-            petSpellFrameText:SetPoint("CENTER", petSpellFrame, "CENTER", 0, 0)
-            petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
-        
-            petSpellFrame:SetScript("OnEvent", function(self, event, ...)
-                local isActive = false
-                for idx = 1, 30 do
-                    local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
-                    spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("pet", idx)
-                    if name == spellName then
-                        -- Buff is active               
-                        local minutes, seconds = GetAuraTimeLeft(expirationTime)
-                        if minutes >0 then
-                            petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
-                        else
-                            petSpellFrameText:SetText(string.format("%ds", seconds))
+            if felguardFrames[frameName] == nil then
+                local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
+                petSpellFrame:SetSize(40, 40)
+                petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
+                framePositions = MWarlockSavedVariables.framePositions
+                if framePositions ~= nil then
+                    for sframeName, framePos in pairs(MWarlockSavedVariables.framePositions) do
+                        if sframeName == frameName then
+                            x = framePos["x"]
+                            y = framePos["y"]
+                            petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", x, y)
                         end
-                        petSpellFrameText:SetTextColor(.1, 1, .1)
-                        local isActive = true
                     end
+                else
+                    petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 20, 200)
                 end
-                    
-                if not isActive then
-                    petSpellFrameText:SetText("")
-                    local start, duration, enable = GetSpellCooldown(spellName)
-                    if enable then
-                        local remaining = start + duration - GetTime()
-                        local minutes = math.floor(remaining / 60)
-                        local seconds = math.floor(remaining - minutes * 60)
-
-                        if remaining < 0 then
-                            petSpellIconFrame   :SetAlpha(1)
-                            petSpellFrameText:SetText("")
-                            petSpellFrameText:SetTextColor(.1, 1, .1)
-                        else
+                petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+            
+                local petSpellIconFrame = petSpellFrame:CreateTexture()
+                petSpellIconFrame:SetTexture(spellIcon)
+                petSpellIconFrame:SetPoint("CENTER", 0, 0)
+            
+                local petSpellFrameText = petSpellFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                petSpellFrameText:SetSize(150, 150)
+                petSpellFrameText:SetTextColor(.1, 1, .1)
+                petSpellFrameText:SetText("")
+                petSpellFrameText:SetPoint("CENTER", petSpellFrame, "CENTER", 0, 0)
+                petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
+            
+                petSpellFrame:SetScript("OnEvent", function(self, event, ...)
+                    if not IsFelguardSummoned() then
+                        petSpellFrame:Hide()
+                        return
+                    else
+                        petSpellFrame:Show()
+                    end
+                    local isActive = false
+                    for idx = 1, 30 do
+                        local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
+                        spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("pet", idx)
+                        if name == spellName then
+                            -- Buff is active               
+                            local minutes, seconds = GetAuraTimeLeft(expirationTime)
                             if minutes >0 then
                                 petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
                             else
                                 petSpellFrameText:SetText(string.format("%ds", seconds))
                             end
-                            petSpellFrameText:SetTextColor(1, .1, .1)
-                            petSpellIconFrame:SetAlpha(0.5)
+                            petSpellFrameText:SetTextColor(.1, 1, .1)
+                            local isActive = true
                         end
                     end
-                end
-            end)
-            
-            petSpellFrame:EnableMouse(true)
-            petSpellFrame:SetMovable(true)
-            
-            petSpellFrame:SetScript("OnMouseDown", function(self, button)
-                if IsShiftKeyDown() and button == "LeftButton" then
-                    self:StartMoving()
-                end
-            end)
-            
-            petSpellFrame:SetScript("OnMouseUp", function(self, button)
-                self:StopMovingOrSizing()
-                local point, relativeTo, relativePoint, offsetX, offsetY = petSpellFrame:GetPoint()
-                if MWarlockSavedVariables.framePositions == nil then
-                    MWarlockSavedVariables.framePositions = {}
-                end
-                MWarlockSavedVariables.framePositions[frameName] = {}
-                MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
-                MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-            end)
+                        
+                    if not isActive then
+                        petSpellFrameText:SetText("")
+                        local start, duration, enable = GetSpellCooldown(spellName)
+                        if enable then
+                            local remaining = start + duration - GetTime()
+                            local minutes = math.floor(remaining / 60)
+                            local seconds = math.floor(remaining - minutes * 60)
+
+                            if remaining < 0 then
+                                petSpellIconFrame   :SetAlpha(1)
+                                petSpellFrameText:SetText("")
+                                petSpellFrameText:SetTextColor(.1, 1, .1)
+                            else
+                                if minutes >0 then
+                                    petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
+                                else
+                                    petSpellFrameText:SetText(string.format("%ds", seconds))
+                                end
+                                petSpellFrameText:SetTextColor(1, .1, .1)
+                                petSpellIconFrame:SetAlpha(0.5)
+                            end
+                        end
+                    end
+                end)
+                
+                petSpellFrame:EnableMouse(true)
+                petSpellFrame:SetMovable(true)
+                
+                petSpellFrame:SetScript("OnMouseDown", function(self, button)
+                    if IsShiftKeyDown() and button == "LeftButton" then
+                        self:StartMoving()
+                    end
+                end)
+                
+                petSpellFrame:SetScript("OnMouseUp", function(self, button)
+                    self:StopMovingOrSizing()
+                    local point, relativeTo, relativePoint, offsetX, offsetY = petSpellFrame:GetPoint()
+                    if MWarlockSavedVariables.framePositions == nil then
+                        MWarlockSavedVariables.framePositions = {}
+                    end
+                    MWarlockSavedVariables.framePositions[frameName] = {}
+                    MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
+                    MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
+                end)
+                felguardFrames[frameName] = petSpellFrame
+            else
+                petSpellFrame = felguardFrames[frameName]
+                petSpellFrame:SetSize(40, 40)
+            end
         end
+    end
+end
+
+function removeFelguardFrames()
+    for frameName, frame in pairs(felguardFrames) do
+        frame:Hide()
+        frame:SetParent(nil)
     end
 end
 ---------------------------------------------
