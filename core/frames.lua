@@ -66,10 +66,7 @@ function createFelguardFrames()
         ["AxeToss"] = {["spellName"] = "Axe Toss", 
                           ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)}
     }
-    local frameSize = MWarlockSavedVariables["felguardFrameSize"]
-    if frameSize == nil then
-        frameSize = 40
-    end
+
 
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
@@ -77,7 +74,6 @@ function createFelguardFrames()
         if mw_checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
                 local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
-                petSpellFrame:SetSize(frameSize, frameSize)
                 petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
                 framePositions = MWarlockSavedVariables.framePositions
                 if framePositions ~= nil then
@@ -96,13 +92,14 @@ function createFelguardFrames()
                 local petSpellIconFrame = petSpellFrame:CreateTexture()
                 petSpellIconFrame:SetTexture(spellIcon)
                 petSpellIconFrame:SetPoint("CENTER", 0, 0)
-                petSpellIconFrame:SetSize(frameSize, frameSize)
+                petSpellIconFrame:SetAllPoints(petSpellFrame)
             
                 local petSpellFrameText = petSpellFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-                petSpellFrameText:SetSize(150, 150)
+                -- petSpellFrameText:SetSize(150, 150)
                 petSpellFrameText:SetTextColor(.1, 1, .1)
                 petSpellFrameText:SetText("")
-                petSpellFrameText:SetPoint("CENTER", petSpellFrame, "CENTER", 0, 0)
+                petSpellFrameText:SetAllPoints(petSpellIconFrame)
+                -- petSpellFrameText:SetPoint("CENTER", petSpellFrame, "CENTER", 0, 0)
                 petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
             
                 petSpellFrame:SetScript("OnEvent", function(self, event, ...)
@@ -180,10 +177,10 @@ function createFelguardFrames()
                 felguardFrames[frameName] = petSpellFrame
             else
                 petSpellFrame = felguardFrames[frameName]
-                petSpellFrame:SetSize(frameSize, frameSize)
             end
         end
     end
+    mWarlock:setFelguardFramesSize()
 end
 
 function removeFelguardFrames()
@@ -193,6 +190,12 @@ function removeFelguardFrames()
     end
 end
 
+function mWarlock:setFelguardFramesSize()
+    local frameSize = MWarlockSavedVariables["felguardFrameSize"]
+    for frameName, frame in pairs(felguardFrames) do
+        frame:SetSize(frameSize, frameSize)
+    end
+end
 
 function mWarlock:setMovable(isMovable)
     if isMovable then
@@ -201,7 +204,6 @@ function mWarlock:setMovable(isMovable)
         shardCounterFrame:EnableMouse(true)
         shardCounterFrame:SetMovable(true)
         MWarlockMainFrame.tex:SetColorTexture(0, 0, 1, .5)
-        shardCounterFrame.tex:SetColorTexture(0, 0, 1, .5)
         mainFrameIsMoving = true
     else
         MWarlockMainFrame:EnableMouse(false)
