@@ -53,7 +53,6 @@ function createHandofGuldanFrame()
 end
 
 
-
 felguardFrames = {}
 function createFelguardFrames()
     petSpellData = {
