@@ -1,39 +1,46 @@
-local addonName, mWarlock = ...
 mw_config = LibStub("AceConfig-3.0")
 mw_dialog = LibStub("AceConfigDialog-3.0")
+
+spec = GetSpecialization()
+if spec == 2 then
+    specName = "Demonology"
+end
+
 ---------------------------------
-local function changeRadius(value)
-    print("Radius value: %d", value)
+-- Functions for Blizz Options Pane
+local function changeRadius(table, value)
+    -- print("Radius value: %d", value)
     MWarlockSavedVariables.radius = value
     radialButtonLayout()
 end
 
-local function changeOffset(value)
-    print("Offset value: %d", value)
+local function changeOffset(table, value)
+    -- print("Offset value: %d", value)
     MWarlockSavedVariables.offset = value
     radialButtonLayout()
 end
 
-function changeFgfs(value)
-    print("FGIcon value: %d", value)
+local function changeFgfs(table, value)
+    -- print("FGIcon value: %d", value)
     MWarlockSavedVariables.felguardFrameSize = value
     mWarlock:setFelguardFramesSize()
 end
 
-function getOffset()
-    print("getOffset: %d", MWarlockSavedVariables["offset"])
-    return MWarlockSavedVariables["offset"]
+local function getOffset()
+    -- print("getOffset: %d", MWarlockSavedVariables.offset)
+    return MWarlockSavedVariables.offset
 end
 
-function getRadius()
-    print("getRadius: %d", MWarlockSavedVariables["offset"])
-    return MWarlockSavedVariables["radius"]
+local function getRadius()
+    -- print("getRadius: %d", MWarlockSavedVariables.radius)
+    return MWarlockSavedVariables.radius
 end
 
-function getFelguardFrameSize()
-    print("getFelguardFrameSize: %d", MWarlockSavedVariables["offset"])
-    return MWarlockSavedVariables["felguardFrameSize"]
+local function getFelguardFrameSize()
+    -- print("getFelguardFrameSize: %d", MWarlockSavedVariables.felguardFrameSize)
+    return MWarlockSavedVariables.felguardFrameSize
 end
+---------------------------------
 
 mw_aboutOptions = {
 	type = "group",
@@ -76,11 +83,11 @@ local function mw_createconfig()
                 name = "Offset",
                 desc = "Changes the position around the circle icons draw",
                 type = "range",
-                min  = 0.1,
-                max = 4,
-                softMin = 0.1,
-                softMax = 4,
-                step = .01,
+                min  = 0,
+                max = 3,
+                softMin = 0,
+                softMax = 3,
+                step = .001,
                 set = changeOffset,
                 get = getOffset
                 },
@@ -105,7 +112,6 @@ end
 
 local options
 function mw_createBlizzOptions()
-    --print("Creating blizz options for mWarlock now..")
     options = mw_createconfig()
 
     mw_config:RegisterOptionsTable("mWarlock-General", options.args.general)
@@ -113,15 +119,15 @@ function mw_createBlizzOptions()
     return blizzPanel
 end
 
-
---- STAND ALONE OPTIONS PANE
--- CALL BACKS FOR OPTIONS PANE
+---------------------------------
+-- STAND ALONE OPTIONS PANE
+-- CALL BACKS FOR OPTIONS PANE as this approach sends through widget, cbName, value to the darn functions
 function radiusChangedCB(widget, cbName, value)
-    changeRadius(value)
+    changeRadius(nil, value)
 end
 
 function offsetChangedCB(widget, cbName, value)
-    changeOffset(value)
+    changeOffset(nil, value)
 end
 
 function movableCB(widget, cbName, value)
@@ -129,16 +135,11 @@ function movableCB(widget, cbName, value)
 end
 
 function fgfsChangedCB(widget, cbName, value)
-    changeFgfs(value)
+    changeFgfs(nil, value)
 end
 
 -- BUILD PANE
 function mWarlock:OptionsPane()
-    spec = GetSpecialization()
-    if spec == 2 then
-        specName = "Demonology"
-    end
-
     local AceGUI = LibStub("AceGUI-3.0")
     local optionsf = AceGUI:Create("Frame")
     optionsf:SetWidth(260)
@@ -168,10 +169,12 @@ function mWarlock:OptionsPane()
     opt_offset:SetLabel("Offset: ")
     optionsf:AddChild(opt_offset)
 
-    local opt_felguardFSize = AceGUI:Create("Slider")
-    opt_felguardFSize:SetCallback("OnValueChanged", fgfsChangedCB)
-    opt_felguardFSize:SetValue(getFelguardFrameSize())
-    opt_felguardFSize:SetSliderValues(10, 150, 1)
-    opt_felguardFSize:SetLabel("FelGuard Icon Size: ")
-    optionsf:AddChild(opt_felguardFSize)
+    if specName == "Demonology" then
+        local opt_felguardFSize = AceGUI:Create("Slider")
+        opt_felguardFSize:SetCallback("OnValueChanged", fgfsChangedCB)
+        opt_felguardFSize:SetValue(getFelguardFrameSize())
+        opt_felguardFSize:SetSliderValues(10, 150, 1)
+        opt_felguardFSize:SetLabel("FelGuard Icon Size: ")
+        optionsf:AddChild(opt_felguardFSize)
+    end
 end
