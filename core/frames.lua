@@ -2,8 +2,7 @@ local playerGUID = UnitGUID("player")
 
 function createMainFrame()
     -- Main Frame
-    MWarlockMainFrame = CreateFrame("Frame", "MWarlockBGFrame", UIParent, "BackdropTemplate")
-    MWarlockMainFrame:SetPoint("CENTER", UIParent, "CENTER")
+    MWarlockMainFrame = CreateFrame("Frame", mainFrameName, UIParent, "BackdropTemplate")
 
     MWarlockMainFrame.tex = MWarlockMainFrame:CreateTexture(nil, "ARTWORK")
     MWarlockMainFrame.tex:SetAllPoints(MWarlockMainFrame)
@@ -14,7 +13,31 @@ function createMainFrame()
     MWarlockMainFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     MWarlockMainFrame.tex:AddMaskTexture(MWarlockMainFrame.mask)
     
-    MWarlockMainFrame:RegisterForDrag("LeftButton")    
+    MWarlockMainFrame:RegisterForDrag("LeftButton")  
+
+    framePos = MWarlockSavedVariables.framePositions[mainFrameName]
+    if framePos ~= nil then
+        offsetX = framePos["x"]
+        offsetY = framePos["y"]
+        MWarlockMainFrame:SetPoint("CENTER", UIParent, "CENTER", offsetX, offsetY)
+    else
+        MWarlockMainFrame:SetPoint("CENTER", UIParent, "CENTER")
+    end
+
+    MWarlockMainFrame:SetScript("OnMouseDown", function(self, button)
+        if IsShiftKeyDown() and button == "LeftButton" then
+            MWarlockMainFrame:SetMovable(true)
+            self:StartMoving()
+        end
+    end)
+    
+    MWarlockMainFrame:SetScript("OnMouseUp", function(self, button)
+        self:StopMovingOrSizing()
+        local point, relativeTo, relativePoint, offsetX, offsetY = MWarlockMainFrame:GetPoint()
+        MWarlockSavedVariables.framePositions[mainFrameName] = {}
+        MWarlockSavedVariables.framePositions[mainFrameName]["x"] = offsetX
+        MWarlockSavedVariables.framePositions[mainFrameName]["y"] = offsetY
+    end)
 end
 
 -------- DEMONOLOGY SPECIFIC FRAMES ---------
@@ -29,13 +52,7 @@ function createHandofGuldanFrame()
     handOfGText:Hide()
 end
 
-function IsFelguardSummoned()
-    local summonedPet = UnitCreatureFamily("pet")
-    if summonedPet and summonedPet == "Felguard" then
-      return true
-    end
-    return false
-  end
+
 
 felguardFrames = {}
 function createFelguardFrames()
@@ -89,7 +106,7 @@ function createFelguardFrames()
                 petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
             
                 petSpellFrame:SetScript("OnEvent", function(self, event, ...)
-                    if not IsFelguardSummoned() then
+                    if not mWarlock:IsFelguardSummoned() then
                         petSpellFrame:Hide()
                         return
                     else
@@ -149,9 +166,9 @@ function createFelguardFrames()
                 petSpellFrame:SetScript("OnMouseUp", function(self, button)
                     self:StopMovingOrSizing()
                     local point, relativeTo, relativePoint, offsetX, offsetY = petSpellFrame:GetPoint()
-                    if MWarlockSavedVariables.framePositions == nil then
-                        MWarlockSavedVariables.framePositions = {}
-                    end
+                    -- if MWarlockSavedVariables.framePositions == nil then
+                    --     MWarlockSavedVariables.framePositions = {}
+                    -- end
                     MWarlockSavedVariables.framePositions[frameName] = {}
                     MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
                     MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
@@ -175,6 +192,28 @@ function removeFelguardFrames()
         frame:SetParent(nil)
     end
 end
+
+
+function mWarlock:setMovable(isMovable)
+    if isMovable then
+        MWarlockMainFrame:EnableMouse(true)
+        MWarlockMainFrame:SetMovable(true)
+        shardCounterFrame:EnableMouse(true)
+        shardCounterFrame:SetMovable(true)
+        MWarlockMainFrame.tex:SetColorTexture(0, 0, 1, .5)
+        shardCounterFrame.tex:SetColorTexture(0, 0, 1, .5)
+        mainFrameIsMoving = true
+    else
+        MWarlockMainFrame:EnableMouse(false)
+        MWarlockMainFrame:SetMovable(false)
+        shardCounterFrame:EnableMouse(false)
+        shardCounterFrame:SetMovable(false)
+        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0)
+        mainFrameIsMoving = false
+    end
+end
+
+
 ---------------------------------------------
 
 -------- DESTRO SPECIFIC FRAMES -------------

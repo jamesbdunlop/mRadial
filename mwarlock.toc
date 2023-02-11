@@ -7,6 +7,7 @@
 ## SavedVariables: MWarlockSavedVariables
 
 embeds.xml 
+addon.lua
 
 core\constants.lua
 
@@ -22,3 +23,5 @@ core\shardtracker.lua
 core\spelltracker.lua
 
 core\slashcmds.lua
+events\unitSpellCastSucceeded.lua
+events\combatlogUnfiltered.lua
