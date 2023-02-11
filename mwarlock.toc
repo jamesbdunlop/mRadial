@@ -2,11 +2,23 @@
 ## Title: MWarlock
 ## Author: Macka - JBD
 ## Version: 0.0.1
+## License: All Rights Reserved
+## Notes: Macka's warlock ui for shits and giggles
 ## SavedVariables: MWarlockSavedVariables
 
-core\utils.lua
+embeds.xml 
+
+core\constants.lua
+
 specs\demo.lua
+
+core\utils.lua
 core\frames.lua
-demoMain.lua
+
+mWarlock.lua
+core\options.lua
+
 core\shardtracker.lua
 core\spelltracker.lua
+
+core\slashcmds.lua

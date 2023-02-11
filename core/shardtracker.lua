@@ -9,21 +9,12 @@ function createShardCountFrame()
     shardCounterFrame:SetAlpha(.8)
     shardCounterFrame:SetMovable(true)
 
-    framePositions = MWarlockSavedVariables.framePositions
-    if framePositions ~= nil then
-        found = false
-        for sframeName, framePos in pairs(MWarlockSavedVariables.framePositions) do
-            if sframeName == frameName then
-                x = framePos["x"]
-                y = framePos["y"]
-                shardCounterFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", x, y)
-                found = true
-            end
-        end
-        if not found then
-            shardCounterFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", -80, 80)
-        end
-    else
+    framePos = MWarlockSavedVariables.framePositions[mw_shardFrameName]
+    if framePos == nil then
         shardCounterFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", -80, 80)
+    else
+        x = framePos["x"]
+        y = framePos["y"]
+        shardCounterFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", x, y)
     end
 end

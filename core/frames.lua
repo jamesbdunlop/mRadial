@@ -22,7 +22,7 @@ function createHandofGuldanFrame()
     -- CAST HAND OF G TEXT
     handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     handOfGText:SetSize(1000, 50)
-    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -udOffset+20)
+    handOfGText:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, udOffset+20)
     handOfGText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
     local soulShards = UnitPower("player", 7)
     handOfGText:SetTextColor(.1, 1, .1)
@@ -50,7 +50,6 @@ function createFelguardFrames()
                           ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)}
     }
     local frameSize = MWarlockSavedVariables["felguardFrameSize"]
-    print("FRAMGESIZE: %d", frameSize)
     if frameSize == nil then
         frameSize = 40
     end
@@ -156,6 +155,10 @@ function createFelguardFrames()
                     MWarlockSavedVariables.framePositions[frameName] = {}
                     MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
                     MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
+                    -- petSpellFrame:SetParent(MWarlockMainFrame)
+                    -- petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", offsetX, offsetY)
+                    petSpellFrame:ClearAllPoints()
+                    petSpellFrame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
                 end)
                 felguardFrames[frameName] = petSpellFrame
             else

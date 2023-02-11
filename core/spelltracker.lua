@@ -1,5 +1,4 @@
 -- Some globals
-
 local watcherFrameWidth = 45
 local watcherFrameHeight = 45
 local defIconWidth = watcherFrameWidth*1.2
