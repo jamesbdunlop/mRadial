@@ -1,6 +1,6 @@
 local playerGUID = UnitGUID("player")
 
-function createMainFrame()
+function mWarlock:createMainFrame()
     -- Main Frame
     MWarlockMainFrame = CreateFrame("Frame", mainFrameName, UIParent, "BackdropTemplate")
 
@@ -41,7 +41,7 @@ function createMainFrame()
 end
 
 -------- DEMONOLOGY SPECIFIC FRAMES ---------
-function createHandofGuldanFrame()
+function mWarlock:createHandofGuldanFrame()
     -- CAST HAND OF G TEXT
     handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     handOfGText:SetSize(1000, 50)
@@ -52,9 +52,8 @@ function createHandofGuldanFrame()
     handOfGText:Hide()
 end
 
-
 felguardFrames = {}
-function createFelguardFrames()
+function mWarlock:createFelguardFrames()
     petSpellData = {
         ["DemonicStrength"] = {["spellName"] = "Demonic Strength", 
                                ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", rootIconPath)}, 
@@ -65,7 +64,6 @@ function createFelguardFrames()
         ["AxeToss"] = {["spellName"] = "Axe Toss", 
                           ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)}
     }
-
 
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
@@ -182,7 +180,7 @@ function createFelguardFrames()
     mWarlock:setFelguardFramesSize()
 end
 
-function removeFelguardFrames()
+function mWarlock:removeFelguardFrames()
     for frameName, frame in pairs(felguardFrames) do
         frame:Hide()
         frame:SetParent(nil)
@@ -213,7 +211,6 @@ function mWarlock:setMovable(isMovable)
         mainFrameIsMoving = false
     end
 end
-
 
 ---------------------------------------------
 

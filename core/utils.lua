@@ -28,7 +28,7 @@ function isCorrectSpec()
     return true
 end
 
-function syncDemonologyTalentTree()
+function mWarlock:syncDemonologyTalentTree()
     for spellName, _ in pairs(demTree_specialisationData) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
         if name then

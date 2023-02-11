@@ -16,12 +16,12 @@ function MW_slashCommands(msg, editbox)
     
     if command == "radius" then
         MWarlockSavedVariables.radius = tonumber(rest)
-        radialButtonLayout()
+        mWarlock:radialButtonLayout()
     end
     
     if command == "offset" then
         MWarlockSavedVariables.offset = tonumber(rest)
-        radialButtonLayout()
+        mWarlock:radialButtonLayout()
     end
 
     if command == "fgfs" then

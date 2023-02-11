@@ -11,14 +11,14 @@ iconFrames = {}
 READYSTR = "RDY"
 NOSSSTR = "N0 SS!"
 
-function GetAuraTimeLeft(expirationTime)
+function mWarlock:GetAuraTimeLeft(expirationTime)
     local timeLeft = expirationTime - GetTime()
     local minutes = math.floor(timeLeft / 60)
     local seconds = math.floor(timeLeft - minutes * 60)
     return minutes, seconds
 end
 
-local function HasBuff(buffName)
+function mWarlock:HasBuff(buffName)
     for i = 1, 40 do
         local name, _, _, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
         if name and name == buffName then
@@ -28,7 +28,7 @@ local function HasBuff(buffName)
     return false
 end
 
-function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
+function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
     -- Create the watcher frame
     frameName = string.format("Frame_%s", buffName)
     if parentSpellIcon then
@@ -69,8 +69,6 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
           timerText:SetText(READYSTR)
 
     local cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-          --cooldownText:SetSize(watcherFrameWidth/2, watcherFrameHeight/2)
-          --cooldownText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
           cooldownText:SetText(CD)
           cooldownText:SetAllPoints(watcher)
 
@@ -78,7 +76,7 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo("player")
-        if not HasBuff(buffName) then
+        if not  mWarlock:HasBuff(buffName) then
             if skipBuff ~= nil then
                 timerText:SetText("")
             else
@@ -133,9 +131,9 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
                 -- Buff is active -- 
                 timerText:Show()
                 timerTextBG:Show()
-                radialButtonLayout()
+                mWarlock:radialButtonLayout()
 
-                local minutes, seconds = GetAuraTimeLeft(expirationTime)
+                local minutes, seconds =  mWarlock:GetAuraTimeLeft(expirationTime)
                 if minutes > 0 then
                     timerText:SetText(string.format("%d:%d", minutes, seconds))
                 else
@@ -154,7 +152,7 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
             timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
             timerTextBG:Hide()
         elseif timerRdy == NOSSSTR then
-            radialButtonLayout()
+            mWarlock:radialButtonLayout()
             timerTextBG:Show()
         else
             timerTextBG:Show()
@@ -165,11 +163,13 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
             if soulShards == 0 then
                 timerText:SetText(NOSSSTR)
                 timerText:SetTextColor(1, 0, 0)
+                timerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
             end
-
+            
             if buffName == callDreadStealersSpellName and soulShards < 2 then
                 timerText:SetText(NOSSSTR)
                 timerText:SetTextColor(1, 0, 0)
+                timerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
             end
         end
     end)
@@ -183,11 +183,12 @@ function addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBu
     
 end
 
-function radialButtonLayout()
+function mWarlock:radialButtonLayout()
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local radius = MWarlockSavedVariables.radius
     local offset = MWarlockSavedVariables.offset
     MWarlockMainFrame:SetSize(radius*2, radius*2)
+
     local angleStep = math.pi / #watchers 
     for x = 1, #watchers do
         angle = (x-1)*angleStep + offset*math.pi

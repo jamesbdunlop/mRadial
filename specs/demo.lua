@@ -13,7 +13,7 @@ netherPortalSpellName = "Nether Portal" --26721
 grimFelGuardSpellName = "Grimoire: Felguard" --111898
 callDreadStealersSpellName = "Call Dreadstalkers" --104316
 
-mw_spellOrder = {
+demo_spellOrder = {
     powerSiphonSpellName,
     callDreadStealersSpellName,
     inquisitorsGazeSpellName,

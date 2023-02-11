@@ -27,7 +27,7 @@ function mWarlock:createWatchers(specData, spellOrder)
                 local parentSpellName = data["parentSpellName"]
                 local skipBuff = data["skipBuff"]
                 local isShardDependant = data["isShardDependant"]
-                addWatcher(buffName, 
+                mWarlock:addWatcher(buffName, 
                             iconPath, 
                             parentSpellIcon, 
                             parentSpellName, 
@@ -53,6 +53,9 @@ end
 
 udOffset = 20
 function mWarlock:OnInitialize()
+    self.timerCount = 0
+    self.testTimer = self:ScheduleRepeatingTimer("TimerFeedback", 5)
+
     mWarlock:CreateConfigPanels()
 
     if(isCorrectClass()) then
@@ -65,23 +68,23 @@ function mWarlock:OnInitialize()
             if event == "PLAYER_LOGIN" then
                 ---------------------------------------------------
                 -- setup the UI
-                createMainFrame()
-                createShardCountFrame()
+                mWarlock:createMainFrame()
+                mWarlock:createShardCountFrame()
                 -- mWarlock:setMainFrameCombatLog()
                 ---------------------------------------------------
                 if(isCorrectSpec)then
                     -- SUPPORTING ONLY DEMO ATM.
-                    syncDemonologyTalentTree()
+                    mWarlock:syncDemonologyTalentTree()
                     
-                    spellOrder = mw_spellOrder
+                    spellOrder = demo_spellOrder
                     specData = demTree_specialisationData
                     
                     mWarlock:createWatchers(specData, spellOrder)
-                    radialButtonLayout()
+                    mWarlock:radialButtonLayout()
                     
                     -- Note this can become spec based atm only supporting DEMO!
-                    createHandofGuldanFrame()
-                    createFelguardFrames()
+                    mWarlock:createHandofGuldanFrame()
+                    mWarlock:createFelguardFrames()
                 end
                 self:UnregisterEvent("PLAYER_LOGIN")
             end
@@ -98,3 +101,12 @@ function mWarlock:OnDisable()
     -- Called when the addon is disabled
     print("mWarlock disabled!")
 end
+
+function mWarlock:TimerFeedback()
+    self.timerCount = self.timerCount + 1
+    print(("%d seconds passed"):format(5 * self.timerCount))
+    -- run 30 seconds in total
+    if self.timerCount == 6 then
+      self:CancelTimer(self.testTimer)
+    end
+  end

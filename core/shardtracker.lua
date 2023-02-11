@@ -1,6 +1,6 @@
 mediaPath = "Interface\\AddOns\\mWarlock\\media"
 
-function createShardCountFrame()
+function mWarlock:createShardCountFrame()
     -- Used for counting warlock shards on the UI
     shardCounterFrame = CreateFrame("Frame", mw_shardFrameName, MWarlockMainFrame, "BackdropTemplate")
     shardCounterFrame:SetSize(128, 128)

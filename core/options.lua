@@ -11,13 +11,13 @@ end
 local function changeRadius(table, value)
     -- print("Radius value: %d", value)
     MWarlockSavedVariables.radius = value
-    radialButtonLayout()
+    mWarlock:radialButtonLayout()
 end
 
 local function changeOffset(table, value)
     -- print("Offset value: %d", value)
     MWarlockSavedVariables.offset = value
-    radialButtonLayout()
+    mWarlock:radialButtonLayout()
 end
 
 local function changeFgfs(table, value)
@@ -54,7 +54,7 @@ mw_aboutOptions = {
 	},
 }
 
-local function mw_createconfig()
+function mWarlock:createconfig()
 	local options = {}
     options.type = "group"
     options.name = "mWarlock"
@@ -112,7 +112,7 @@ end
 
 local options
 function mw_createBlizzOptions()
-    options = mw_createconfig()
+    options = mWarlock:createconfig()
 
     mw_config:RegisterOptionsTable("mWarlock-General", options.args.general)
     local blizzPanel = mw_dialog:AddToBlizOptions("mWarlock-General", options.args.general.name, "mWarlock")
