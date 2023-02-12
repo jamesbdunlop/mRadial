@@ -112,7 +112,7 @@ function mWarlock:createFelguardFrames()
                         spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("pet", idx)
                         if name == spellName then
                             -- Buff is active               
-                            local minutes, seconds = GetAuraTimeLeft(expirationTime)
+                            local minutes, seconds = mWarlock:GetAuraTimeLeft(expirationTime)
                             if minutes >0 then
                                 petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
                             else
