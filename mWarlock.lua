@@ -53,9 +53,6 @@ end
 
 udOffset = 20
 function mWarlock:OnInitialize()
-    self.timerCount = 0
-    self.testTimer = self:ScheduleRepeatingTimer("TimerFeedback", 5)
-
     mWarlock:CreateConfigPanels()
 
     if(isCorrectClass()) then
@@ -70,7 +67,6 @@ function mWarlock:OnInitialize()
                 -- setup the UI
                 mWarlock:createMainFrame()
                 mWarlock:createShardCountFrame()
-                -- mWarlock:setMainFrameCombatLog()
                 ---------------------------------------------------
                 if(isCorrectSpec)then
                     -- SUPPORTING ONLY DEMO ATM.
@@ -101,12 +97,3 @@ function mWarlock:OnDisable()
     -- Called when the addon is disabled
     print("mWarlock disabled!")
 end
-
--- function mWarlock:TimerFeedback()
---     self.timerCount = self.timerCount + 1
---     print(("%d seconds passed"):format(5 * self.timerCount))
---     -- run 30 seconds in total
---     if self.timerCount == 6 then
---       self:CancelTimer(self.testTimer)
---     end
---   end

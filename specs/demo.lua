@@ -1,4 +1,4 @@
-rootIconPath ="Interface/ICONS"
+-- rootIconPath ="Interface/ICONS"
 
 -- Gather only the spells we're interested in! It's bit hard codey but I don't care atm...
 powerSiphonSpellName = "Power Siphon" --264130

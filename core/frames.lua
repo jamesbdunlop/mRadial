@@ -70,7 +70,7 @@ function mWarlock:createFelguardFrames()
         local spellIcon = spellData["spellIcon"]
         if mw_checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
-                local petSpellFrame = CreateFrame("Frame", frameName, MWarlockMainFrame)
+                local petSpellFrame = CreateFrame("Frame", frameName, UIParent)
                 petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
                 framePositions = MWarlockSavedVariables.framePositions
                 if framePositions ~= nil then
@@ -78,11 +78,11 @@ function mWarlock:createFelguardFrames()
                         if sframeName == frameName then
                             x = framePos["x"]
                             y = framePos["y"]
-                            petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", x, y)
+                            petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", x, y)
                         end
                     end
                 else
-                    petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 20, 200)
+                    petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", 20, 200)
                 end
                 petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             
@@ -150,7 +150,9 @@ function mWarlock:createFelguardFrames()
                 
                 petSpellFrame:EnableMouse(true)
                 petSpellFrame:SetMovable(true)
+                petSpellFrame:Show()
                 
+                ---- SCRIPTS
                 petSpellFrame:SetScript("OnMouseDown", function(self, button)
                     if IsShiftKeyDown() and button == "LeftButton" then
                         self:StartMoving()
@@ -171,6 +173,8 @@ function mWarlock:createFelguardFrames()
                     petSpellFrame:ClearAllPoints()
                     petSpellFrame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
                 end)
+
+                -- Add to the frame table for felguard frames
                 felguardFrames[frameName] = petSpellFrame
             else
                 petSpellFrame = felguardFrames[frameName]
@@ -195,20 +199,15 @@ function mWarlock:setFelguardFramesSize()
 end
 
 function mWarlock:setMovable(isMovable)
+    mWarlock:MoveFrame(shardCounterFrame, UIParent, isMovable)
+    mWarlock:MoveFrame(MWarlockMainFrame, UIParent, isMovable)
+    mainFrameIsMoving = isMovable
     if isMovable then
-        MWarlockMainFrame:EnableMouse(true)
-        MWarlockMainFrame:SetMovable(true)
-        shardCounterFrame:EnableMouse(true)
-        shardCounterFrame:SetMovable(true)
         MWarlockMainFrame.tex:SetColorTexture(0, 0, 1, .5)
-        mainFrameIsMoving = true
+        shardCounterFrame.tex:SetColorTexture(0, 0, 1, .5)
     else
-        MWarlockMainFrame:EnableMouse(false)
-        MWarlockMainFrame:SetMovable(false)
-        shardCounterFrame:EnableMouse(false)
-        shardCounterFrame:SetMovable(false)
         MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0)
-        mainFrameIsMoving = false
+        shardCounterFrame.tex:SetColorTexture(0, 0, 0, 0)
     end
 end
 

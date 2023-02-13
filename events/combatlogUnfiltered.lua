@@ -1,5 +1,6 @@
 function mWarlock:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     mWarlock:shardtrack()
+    
     soulShards = mWarlock:getShardCount()
     if soulShards == 2 then
         handOfGText:SetText("!Dread Only!")
