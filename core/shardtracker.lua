@@ -24,3 +24,7 @@ function mWarlock:createShardCountFrame()
     end
 end
 
+function mWarlock:setShardTrackerFramesSize()
+    local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"]
+    shardCounterFrame:SetSize(frameSize, frameSize)
+end

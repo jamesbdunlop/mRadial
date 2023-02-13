@@ -19,30 +19,36 @@ local function changeRadius(table, value)
 end
 
 local function changeOffset(table, value)
-    -- print("Offset value: %d", value)
     MWarlockSavedVariables.offset = value
     mWarlock:radialButtonLayout()
 end
 
 local function changeFgfs(table, value)
-    -- print("FGIcon value: %d", value)
     MWarlockSavedVariables.felguardFrameSize = value
     mWarlock:setFelguardFramesSize()
 end
 
+local function changeShardTracker(table, value)
+    MWarlockSavedVariables.shardTrackerFrameSize = value
+    mWarlock:setShardTrackerFramesSize()
+end
+
+----------
+-- GETTERS
 local function getOffset()
-    -- print("getOffset: %d", MWarlockSavedVariables.offset)
     return MWarlockSavedVariables.offset
 end
 
 local function getRadius()
-    -- print("getRadius: %d", MWarlockSavedVariables.radius)
     return MWarlockSavedVariables.radius
 end
 
 local function getFelguardFrameSize()
-    -- print("getFelguardFrameSize: %d", MWarlockSavedVariables.felguardFrameSize)
     return MWarlockSavedVariables.felguardFrameSize
+end
+
+local function getShardTackerFrameSize()
+    return MWarlockSavedVariables.shardTrackerFrameSize
 end
 ---------------------------------
 
@@ -142,6 +148,11 @@ function fgfsChangedCB(widget, cbName, value)
     changeFgfs(nil, value)
 end
 
+function shardTrackerChangedCB(widget, cbName, value)
+    changeShardTracker(nil, value)
+end
+
+
 -- BUILD PANE
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
@@ -176,9 +187,16 @@ function mWarlock:OptionsPane()
     if specName == "Demonology" then
         local opt_felguardFSize = AceGUI:Create("Slider")
         opt_felguardFSize:SetCallback("OnValueChanged", fgfsChangedCB)
-        opt_felguardFSize:SetValue(getFelguardFrameSize())
+        opt_felguardFSize:SetValue(getFelguardFrameSize() or 56)
         opt_felguardFSize:SetSliderValues(10, 150, 1)
         opt_felguardFSize:SetLabel("FelGuard Icon Size: ")
         optionsf:AddChild(opt_felguardFSize)
     end
+
+    local opt_ShardTrackFrameSize = AceGUI:Create("Slider")
+    opt_ShardTrackFrameSize:SetCallback("OnValueChanged", shardTrackerChangedCB)
+    opt_ShardTrackFrameSize:SetValue(getShardTackerFrameSize() or 128)
+    opt_ShardTrackFrameSize:SetSliderValues(10, 150, 1)
+    opt_ShardTrackFrameSize:SetLabel("ShardTracker Icon Size: ")
+    optionsf:AddChild(opt_ShardTrackFrameSize)
 end

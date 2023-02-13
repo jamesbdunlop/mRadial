@@ -9,6 +9,7 @@ summonSoulKeeperSpellName = "Summon Soulkeeper"
 
 demonicPowerSpellName = "Demonic Power"
 summonDTSpellName = "Summon Demonic Tyrant" --265187
+summonVFSpellName = "Summon VileFiend" --264119
 netherPortalSpellName = "Nether Portal" --26721
 grimFelGuardSpellName = "Grimoire: Felguard" --111898
 callDreadStealersSpellName = "Call Dreadstalkers" --104316
@@ -19,6 +20,7 @@ demo_spellOrder = {
     inquisitorsGazeSpellName,
     summonSoulKeeperSpellName,
     summonDTSpellName,
+    summonVFSpellName,
     netherPortalSpellName,
     grimFelGuardSpellName,
 }
@@ -51,6 +53,15 @@ demTree_specialisationData[summonDTSpellName]["parentSpellIcon"] = string.format
 demTree_specialisationData[summonDTSpellName]["parentSpellName"] = summonDTSpellName
 demTree_specialisationData[summonDTSpellName]["skipBuff"] = nil
 demTree_specialisationData[summonDTSpellName]["isShardDependant"] = false
+
+demTree_specialisationData[summonVFSpellName] = {}
+demTree_specialisationData[summonVFSpellName]["active"] = false
+demTree_specialisationData[summonVFSpellName]["spellName"] = summonVFSpellName
+demTree_specialisationData[summonVFSpellName]["iconPath"] = string.format("%s/Inv_argusfelstalkermount.blp", rootIconPath)
+demTree_specialisationData[summonVFSpellName]["parentSpellIcon"] = string.format("%s/Inv_argusfelstalkermount.blp", rootIconPath)
+demTree_specialisationData[summonVFSpellName]["parentSpellName"] = summonVFSpellName
+demTree_specialisationData[summonVFSpellName]["skipBuff"] = nil
+demTree_specialisationData[summonVFSpellName]["isShardDependant"] = false
 
 demTree_specialisationData[summonSoulKeeperSpellName] = {}
 demTree_specialisationData[summonSoulKeeperSpellName]["active"] = false

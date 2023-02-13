@@ -6,6 +6,7 @@ MWarlockSavedVariables.framePositions = {}
 MWarlockSavedVariables.radius = 100
 MWarlockSavedVariables.offset = 0
 MWarlockSavedVariables.felguardFrameSize = 35
+MWarlockSavedVariables.shardTrackerFrameSize = 128
 ----
 if MWarlockSavedVariables.framePositions == nil then
     MWarlockSavedVariables.framePositions = {}
