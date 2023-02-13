@@ -25,7 +25,7 @@ end
 
 local function changeFgfs(table, value)
     MWarlockSavedVariables.felguardFrameSize = value
-    mWarlock:setFelguardFramesSize()
+    mWarlock:setFelguardFramePosAndSize()
 end
 
 local function changeShardTracker(table, value)
@@ -114,9 +114,21 @@ function mWarlock:createconfig()
                     set = changeFgfs,
                     get = getFelguardFrameSize
                     },
-             }
+             stkrFsize = {
+                order = 3,
+                name = "SharTrackerIconSize",
+                desc = "Changes the size of the shard tracker icon",
+                type = "range",
+                min  = 10,
+                max = 1000,
+                softMin = 10,
+                softMax = 1000,
+                step = 1,
+                set = changeShardTracker,
+                get = getShardTackerFrameSize
+            }
+        }
     }
-
     return options
 end
 
@@ -196,7 +208,7 @@ function mWarlock:OptionsPane()
     local opt_ShardTrackFrameSize = AceGUI:Create("Slider")
     opt_ShardTrackFrameSize:SetCallback("OnValueChanged", shardTrackerChangedCB)
     opt_ShardTrackFrameSize:SetValue(getShardTackerFrameSize() or 128)
-    opt_ShardTrackFrameSize:SetSliderValues(10, 150, 1)
+    opt_ShardTrackFrameSize:SetSliderValues(10, 1000, 1)
     opt_ShardTrackFrameSize:SetLabel("ShardTracker Icon Size: ")
     optionsf:AddChild(opt_ShardTrackFrameSize)
 end

@@ -8,20 +8,12 @@ function mWarlock:createShardCountFrame()
     shardCounterFrame.tex = shardCounterFrame:CreateTexture(nil, "ARTWORK")
     shardCounterFrame.tex:SetAllPoints(shardCounterFrame)
     
-    local soulShards = mWarlock:getShardCount()
-    iconPath = string.format("%s\\shards_%d.blp", mediaPath, soulShards)
-    shardCounterFrame.tex:SetTexture(iconPath)
-    mWarlock:MoveFrame(shardCounterFrame, UIParent, false)
+    shardCounterFrame.movetex = shardCounterFrame:CreateTexture()
+    shardCounterFrame.movetex:SetPoint("CENTER", 0, 0)
+    shardCounterFrame.movetex:SetAllPoints(shardCounterFrame)
 
-    framePosData = MWarlockSavedVariables.framePositions[mw_shardFrameName]
-    if framePosData ~= nil then
-        x = framePosData["x"] or 80
-        y = framePosData["y"] or 80
-        point = framePosData["point"] or "CENTER"
-        relativeTo = framePosData["relativeTo"] or UIParent
-        relativePoint = framePosData["relativePoint"] or "CENTER"
-        shardCounterFrame:SetPoint(point, relativeTo, relativePoint, x, y)
-    end
+    mWarlock:MoveFrame(shardCounterFrame, UIParent, false)
+    mWarlock:restoreFrame(mw_shardFrameName, shardCounterFrame)
 end
 
 function mWarlock:setShardTrackerFramesSize()

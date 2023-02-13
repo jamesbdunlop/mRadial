@@ -53,9 +53,7 @@ function mWarlock:shardtrack()
     if soulShards == 0 and not mainFrameIsMoving then
         MWarlockMainFrame.tex:SetColorTexture(1, 0, 0, 0.09) -- red, 10% opacity
     elseif not mainFrameIsMoving then
-        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0)
-    else
-        shardCounterFrame.tex:SetColorTexture(0, 0, 1, .5)
+        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0) -- transparent
     end
 end
 
@@ -65,39 +63,4 @@ function mWarlock:IsFelguardSummoned()
       return true
     end
     return false
-end
-
-function mWarlock:MoveFrame(frame, parentFrame, isMovable)
-    if not isMovable then
-        frame:EnableMouse(false)
-        frame:SetMovable(false)
-        frame:SetParent(parentFrame)
-        return
-    end
-
-    frame:EnableMouse(true)
-    frame:SetMovable(true)
-    frameName = frame:GetName()
-
-    frame:SetScript("OnMouseDown", function(self, button)
-        if not frame:IsMovable() then
-            return
-        end
-
-        if IsShiftKeyDown() and button == "LeftButton" then
-            self:StartMoving()
-        end
-    end)
-    
-    frame:SetScript("OnMouseUp", function(self, button)
-        self:StopMovingOrSizing()
-        -- frame:SetParent(parentFrame)
-        local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
-        MWarlockSavedVariables.framePositions[frameName] = {}
-        MWarlockSavedVariables.framePositions[frameName]["point"] = point
-        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
-        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
-        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
-        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-    end)
 end
