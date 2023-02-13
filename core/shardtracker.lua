@@ -8,7 +8,7 @@ function mWarlock:createShardCountFrame()
     shardCounterFrame.tex = shardCounterFrame:CreateTexture(nil, "ARTWORK")
     shardCounterFrame.tex:SetAllPoints(shardCounterFrame)
     
-    shardCounterFrame.movetex = shardCounterFrame:CreateTexture()
+    shardCounterFrame.movetex = shardCounterFrame:CreateTexture("OVERLAY")
     shardCounterFrame.movetex:SetPoint("CENTER", 0, 0)
     shardCounterFrame.movetex:SetAllPoints(shardCounterFrame)
 

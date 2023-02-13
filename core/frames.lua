@@ -67,7 +67,7 @@ function mWarlock:createFelguardFrames()
                 end
                 petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
                 
-                petSpellFrame.movetex = petSpellFrame:CreateTexture("ARTWORK")
+                petSpellFrame.movetex = petSpellFrame:CreateTexture("OVERLAY")
                 petSpellFrame.movetex:SetPoint("CENTER", 0, 0)
                 petSpellFrame.movetex:SetAllPoints(petSpellFrame)
 
@@ -76,7 +76,7 @@ function mWarlock:createFelguardFrames()
                 petSpellFrame.tex:SetPoint("CENTER", 0, 0)
                 petSpellFrame.tex:SetAllPoints(petSpellFrame)
             
-                local petSpellFrameText = petSpellFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                local petSpellFrameText = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
                 petSpellFrameText:SetTextColor(.1, 1, .1)
                 petSpellFrameText:SetText("")
                 petSpellFrameText:SetAllPoints(petSpellFrame.tex)
