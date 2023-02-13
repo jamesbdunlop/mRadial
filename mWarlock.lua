@@ -56,7 +56,7 @@ udOffset = 20
 function mWarlock:OnInitialize()
     mWarlock:CreateConfigPanels()
 
-    if(isCorrectClass()) then
+    if(mWarlock:isCorrectClass()) then
         local f = CreateFrame("Frame")
         -- Register the event for when the player logs in
         f:RegisterEvent("PLAYER_LOGIN")
@@ -69,7 +69,7 @@ function mWarlock:OnInitialize()
                 mWarlock:createMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
-                if(isCorrectSpec)then
+                if(mWarlock:isCorrectSpec)then
                     -- SUPPORTING ONLY DEMO ATM.
                     mWarlock:syncDemonologyTalentTree()
                     

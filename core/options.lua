@@ -10,7 +10,7 @@ elseif spec == 2 then
     specName = "Demonology"
 end
 
----------------------------------
+---------------------------------------------------------------------------------------------------
 -- Functions for Blizz Options Pane
 local function changeRadius(table, value)
     -- print("Radius value: %d", value)
@@ -33,7 +33,7 @@ local function changeShardTracker(table, value)
     mWarlock:setShardTrackerFramesSize()
 end
 
-----------
+---------------------------------------------------------------------------------------------------
 -- GETTERS
 local function getOffset()
     return MWarlockSavedVariables.offset
@@ -50,8 +50,7 @@ end
 local function getShardTackerFrameSize()
     return MWarlockSavedVariables.shardTrackerFrameSize
 end
----------------------------------
-
+---------------------------------------------------------------------------------------------------
 mw_aboutOptions = {
 	type = "group",
 	args = {
@@ -141,7 +140,7 @@ function mw_createBlizzOptions()
     return blizzPanel
 end
 
----------------------------------
+---------------------------------------------------------------------------------------------------
 -- STAND ALONE OPTIONS PANE
 -- CALL BACKS FOR OPTIONS PANE as this approach sends through widget, cbName, value to the darn functions
 function radiusChangedCB(widget, cbName, value)

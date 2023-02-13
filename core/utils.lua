@@ -1,4 +1,4 @@
-function mw_checkHasSpell(spellName)
+function mWarlock:checkHasSpell(spellName)
     local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
     if name then
         return true
@@ -7,7 +7,7 @@ function mw_checkHasSpell(spellName)
     end
 end
 
-function isCorrectClass()
+function mWarlock:isCorrectClass()
     local playerClass = UnitClass("player")
     -- Check if the player's class is "Warlock"
     if playerClass == "Warlock" then
@@ -19,7 +19,7 @@ function isCorrectClass()
     return false
 end
 
-function isCorrectSpec()
+function mWarlock:isCorrectSpec()
     -- Check if player has selected demonology as their spec
     local spec = GetSpecialization()
     if spec ~= 2 then

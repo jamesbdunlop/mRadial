@@ -10,7 +10,8 @@ timerTextBGs = {}
 iconFrames = {}
 READYSTR = "RDY"
 NOSSSTR = "N0 SS!"
-
+---------------------------------------------------------------------------------------------------
+-- UTILS
 function mWarlock:GetAuraTimeLeft(expirationTime)
     local timeLeft = expirationTime - GetTime()
     local minutes = math.floor(timeLeft / 60)
@@ -27,7 +28,10 @@ function mWarlock:HasBuff(buffName)
     end
     return false
 end
+---------------------------------------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------------
+-- Spell watchers for timers/cooldowns.
 function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
     -- Create the watcher frame
     frameName = string.format("Frame_%s", buffName)
@@ -183,6 +187,8 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     
 end
 
+---------------------------------------------------------------------------------------------------
+-- Watcher radial layout.
 function mWarlock:radialButtonLayout()
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local radius = MWarlockSavedVariables.radius
@@ -223,3 +229,4 @@ function mWarlock:radialButtonLayout()
         end
     end
 end
+---------------------------------------------------------------------------------------------------

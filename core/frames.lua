@@ -18,7 +18,8 @@ function mWarlock:createMainFrame()
     mWarlock:restoreFrame(mainFrameName, MWarlockMainFrame)
 end
 
--------- DEMONOLOGY SPECIFIC FRAMES ---------
+---------------------------------------------------------------------------------------------------
+-------- DEMONOLOGY SPECIFIC FRAMES
 function mWarlock:createHandofGuldanFrame()
     -- CAST HAND OF G TEXT
     handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -144,13 +145,6 @@ function mWarlock:createFelguardFrames()
     mWarlock:setFelguardFramePosAndSize()
 end
 
--- function mWarlock:removeFelguardFrames()
---     for frameName, frame in pairs(felguardFrames) do
---         frame:Hide()
---         frame:SetParent(nil)
---     end
--- end
-
 function mWarlock:setFelguardFramePosAndSize()
     local frameSize = MWarlockSavedVariables["felguardFrameSize"]
     for frameName, frame in pairs(felguardFrames) do
@@ -158,7 +152,13 @@ function mWarlock:setFelguardFramePosAndSize()
         mWarlock:restoreFrame(frameName, frame)
     end
 end
-
+---------------------------------------------------------------------------------------------------
+-------- DESTRUCTION SPECIFIC FRAMES
+---------------------------------------------------------------------------------------------------
+-------- AFFLICTION SPECIFIC FRAMES
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+-------- FRAME UTILS
 function mWarlock:MoveFrame(frame, isMovable)
     if not isMovable then
         frame:EnableMouse(false)
@@ -228,10 +228,3 @@ function mWarlock:restoreFrame(frameName, frame)
     frame:SetPoint(point, relativeTo, relativePoint, x, y)
 end
 
----------------------------------------------
-
--------- DESTRO SPECIFIC FRAMES -------------
----------------------------------------------
-
--------- AFF SPECIFIC FRAMES ----------------
----------------------------------------------

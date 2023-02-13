@@ -1,7 +1,7 @@
 -- slash commands
 SLASH_MW1 = "/mw"
-mainFrameIsMoving = false
 
+---------------------------------------------------------------------------------------------------
 function MW_slashCommands(msg, editbox)
     local command, rest = msg:match("^(%S*)%s*(.-)$")
 	command = string.lower(command)
@@ -26,7 +26,6 @@ function MW_slashCommands(msg, editbox)
 
     if command == "fgfs" then
         MWarlockSavedVariables.felguardFrameSize = tonumber(rest)
-        -- ReloadUI()
         mWarlock:setFelguardFramesSize()
     end
 
@@ -35,3 +34,4 @@ function MW_slashCommands(msg, editbox)
     end
 end
 SlashCmdList["MW"] = MW_slashCommands
+---------------------------------------------------------------------------------------------------
