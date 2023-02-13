@@ -102,11 +102,11 @@ function mWarlock:OnDisable()
     print("mWarlock disabled!")
 end
 
-function mWarlock:TimerFeedback()
-    self.timerCount = self.timerCount + 1
-    print(("%d seconds passed"):format(5 * self.timerCount))
-    -- run 30 seconds in total
-    if self.timerCount == 6 then
-      self:CancelTimer(self.testTimer)
-    end
-  end
+-- function mWarlock:TimerFeedback()
+--     self.timerCount = self.timerCount + 1
+--     print(("%d seconds passed"):format(5 * self.timerCount))
+--     -- run 30 seconds in total
+--     if self.timerCount == 6 then
+--       self:CancelTimer(self.testTimer)
+--     end
+--   end

@@ -2,7 +2,11 @@ mw_config = LibStub("AceConfig-3.0")
 mw_dialog = LibStub("AceConfigDialog-3.0")
 
 spec = GetSpecialization()
-if spec == 2 then
+specName = "Demonology"
+
+if spec == 1 then
+    specName = "Affliction"
+elseif spec == 2 then
     specName = "Demonology"
 end
 
