@@ -69,7 +69,7 @@ function mWarlock:OnInitialize()
                 mWarlock:createMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
-                if(mWarlock:isCorrectSpec)then
+                if (mWarlock:isCorrectSpec()) then
                     -- SUPPORTING ONLY DEMO ATM.
                     mWarlock:syncDemonologyTalentTree()
                     

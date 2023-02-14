@@ -47,7 +47,7 @@ function mWarlock:createFelguardFrames()
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if mw_checkHasSpell(spellName) then
+        if mWarlock:checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
                 local petSpellFrame = CreateFrame("Frame", frameName, UIParent)
                 petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
