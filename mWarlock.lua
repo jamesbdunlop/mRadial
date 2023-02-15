@@ -13,29 +13,25 @@ if MWarlockSavedVariables.framePositions == nil then
 end
 
 function mWarlock:createWatchers(specData, spellOrder)
---- ADD ALL THE WATCHER FRAMES NOW
-    for i, orderName in ipairs(spellOrder) do
-        for buffName, data in pairs(specData) do
-            if orderName == buffName and data["active"] then
-                --buffName, lr, ud, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant
-                local iconPath = data["iconPath"]
-                local spellname = data["spellName"]
-                if spellname ~= nil then
-                    buffName = spellname
-                end
-                
-                local parentSpellIcon = data["parentSpellIcon"]
-                local parentSpellName = data["parentSpellName"]
-                local skipBuff = data["skipBuff"]
-                local isShardDependant = data["isShardDependant"]
-                mWarlock:addWatcher(buffName, 
-                            iconPath, 
-                            parentSpellIcon, 
-                            parentSpellName, 
-                            skipBuff, 
-                            isShardDependant)
-                udOffset = udOffset + 32
-            end
+    print("Creating watchers now..")
+    --- ADD ALL THE WATCHER FRAMES NOW
+    for spellName, spellID in pairs(spellOrder) do
+        spellData = specData[spellName]
+        if spellData["active"] then
+            local iconPath = spellData["iconPath"]
+            local buffName = spellData["buffName"]
+            local parentSpellIcon = spellData["parentSpellIcon"]
+            local parentSpellName = spellData["parentSpellName"]
+            local skipBuff = spellData["skipBuff"]
+            local isShardDependant = spellData["isShardDependant"]
+            mWarlock:addWatcher(buffName, 
+                        iconPath, 
+                        parentSpellIcon, 
+                        parentSpellName, 
+                        skipBuff, 
+                        isShardDependant, 
+                        spellID)
+            udOffset = udOffset + 32
         end
     end
 end
@@ -55,7 +51,6 @@ end
 udOffset = 20
 function mWarlock:OnInitialize()
     mWarlock:CreateConfigPanels()
-
     if(mWarlock:isCorrectClass()) then
         local f = CreateFrame("Frame")
         -- Register the event for when the player logs in
@@ -66,6 +61,7 @@ function mWarlock:OnInitialize()
             if event == "PLAYER_LOGIN" then
                 ---------------------------------------------------
                 -- setup the UI
+                print("MWalock setting up...")
                 mWarlock:createMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
@@ -84,6 +80,7 @@ function mWarlock:OnInitialize()
                     mWarlock:createFelguardFrames()
                 end
                 self:UnregisterEvent("PLAYER_LOGIN")
+                mWarlock:setMovable(false)
             end
         end)
     end
@@ -91,10 +88,10 @@ end
 
 function mWarlock:OnEnable()
     -- Called when the addon is enabled
-    print("mWarlock enabled!")
+    print("mWarlock OnEnable called!")
 end
 
 function mWarlock:OnDisable()
     -- Called when the addon is disabled
-    print("mWarlock disabled!")
+    print("mWarlock OnDisable called!")
 end

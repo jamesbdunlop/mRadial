@@ -5,8 +5,8 @@ local defIconWidth = watcherFrameWidth*1.2
 local defIconHeight = watcherFrameHeight*1.2
 watcherCount = 0
 watchers = {}
-timerTexts = {}
-timerTextBGs = {}
+buffTimerTexts = {}
+buffTimerTextBGs = {}
 iconFrames = {}
 READYSTR = "RDY"
 NOSSSTR = "N0 SS!"
@@ -32,8 +32,12 @@ end
 
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
-function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant)
+function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID)
     -- Create the watcher frame
+    if buffName == nil and parentSpellName ~= nil then
+        buffName = parentSpellName
+    end
+    
     frameName = string.format("Frame_%s", buffName)
     if parentSpellIcon then
         frameName = string.format("Frame_%s", parentSpellName)
@@ -62,16 +66,24 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
           iconFrame:SetPoint("CENTER", watcher, "CENTER", 0, 0)
           iconFrame:AddMaskTexture(watcher.mask)
 
+    local countText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+          countText:SetSize(50, 50)
+          countText:SetTextColor(.1, 1, 1)
+          countText:SetText("")
+          countText:SetPoint("TOP", iconFrame, "BOTTOM", 0, 20)
+          countText:Show()
 
-    local timerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
-          timerTextBG:SetSize(watcherFrameWidth/1.5, watcherFrameHeight/2)
-          timerTextBG:SetColorTexture(0, .25, 0, 1)
+    
+          local buffTimerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
+          buffTimerTextBG:SetSize(watcherFrameWidth/2, watcherFrameHeight/1.5)
+          buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
 
-    local timerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-          timerText:SetSize(watcherFrameWidth, watcherFrameHeight)
-          timerText:SetTextColor(.1, 1, .1)
-          timerText:SetText(READYSTR)
+    local buffTimerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+          buffTimerText:SetSize(watcherFrameWidth, watcherFrameHeight)
+          buffTimerText:SetTextColor(.1, 1, .1)
+          buffTimerText:SetText(READYSTR)
 
+    
     local cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           cooldownText:SetText(CD)
           cooldownText:SetAllPoints(watcher)
@@ -79,101 +91,108 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     -- Set the OnUpdate function for the frame
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
-        local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo("player")
-        if not  mWarlock:HasBuff(buffName) then
-            if skipBuff ~= nil then
-                timerText:SetText("")
-            else
-                if buffName ~= summonSoulKeeperSpellName then
-                    timerText:SetText("")
-                    timerText:SetTextColor(1, .1, .1)
-                end
-            end
-            
-            if parentSpellIcon ~= nil then
-                iconFrame:SetTexture(parentSpellIcon)
-            else
-                iconFrame:SetTexture(iconPath)
-            end
+        -- Don't display any timers for anything set to skip a buff timer.
+        if skipBuff ~= nil then
+            buffTimerText:SetText("")
+        end
         
+        local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo("player")
+        -- if buffName ~= summonSoulKeeperSpellName then
+        --     -- Summon soul keep 
+        --     buffTimerText:SetText("")
+        --     buffTimerText:SetTextColor(1, .1, .1)
+        -- end
+                    
+        if parentSpellIcon ~= nil then
             -- COOLDOWNS FOR PARENT SPELLS.. eg power siphon
-            if parentSpellName ~= nil then
-                local start, duration, enable = GetSpellCooldown(parentSpellName)
-                if enable then
-                    local remaining = start + duration - GetTime()
-                    local minutes = math.floor(remaining / 60)
-                    local seconds = math.floor(remaining - minutes * 60)
+            iconFrame:SetTexture(parentSpellIcon)
+            local start, duration, enable = GetSpellCooldown(parentSpellName)
+            if enable then
+                local remaining = start + duration - GetTime()
+                local minutes = math.floor(remaining / 60)
+                local seconds = math.floor(remaining - minutes * 60)
 
-                    -- Cooldown is finished
-                    if remaining < 1.5 then
-                        cooldownText:SetText("")
-                        iconFrame:SetAlpha(1)
-                        timerText:SetText(READYSTR)
-                        timerText:SetTextColor(.1, 1, .1)
-                        iconFrame:SetSize(defIconWidth, defIconHeight)
+                -- Cooldown is finished
+                if remaining < 1.5 then
+                    cooldownText:SetText("")
+                    iconFrame:SetAlpha(1)
+                    buffTimerText:SetText(READYSTR)
+                    buffTimerText:SetTextColor(.1, 1, .1)
+                    iconFrame:SetSize(defIconWidth, defIconHeight)
+                else
+                    -- We are still on cooldown
+                    if minutes > 0 then
+                        cooldownText:SetText(string.format("%d:%d", minutes, seconds))
                     else
-                        -- We are still on cooldown
-                        if minutes > 0 then
-                            cooldownText:SetText(string.format("%d:%d", minutes, seconds))
-                        else
-                            cooldownText:SetText(string.format("%ds", seconds))
-                        end
-                        cooldownText:SetTextColor(1, .1, .1)
-                        iconFrame:SetAlpha(0.5)
-                        iconFrame:SetSize(25, 25)
+                        cooldownText:SetText(string.format("%ds", seconds))
                     end
+                    cooldownText:SetTextColor(1, .1, .1)
+                    iconFrame:SetAlpha(0.5)
+                    iconFrame:SetSize(25, 25)
                 end
-            else
-                cooldownText:SetText("")
             end
+        else
+            iconFrame:SetTexture(iconPath)
         end
 
+        -- All other buff timers
         for idx = 1, 40 do
             local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
             spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
+            if name == buffName then
+                if count ~= nil and count > 1 then
+                    countText:Show()
+                    countText:SetText(tostring(count))
+                else
+                    countText:Hide()
+                    countText:SetText("")
+                end
+            end
+                
+            -- TIMERS
             if name == buffName and expirationTime ~= nil then
                 -- Buff is active -- 
-                timerText:Show()
-                timerTextBG:Show()
+                buffTimerText:Show()
+                buffTimerTextBG:Show()
+                
                 mWarlock:radialButtonLayout()
-
                 local minutes, seconds =  mWarlock:GetAuraTimeLeft(expirationTime)
                 if minutes > 0 then
-                    timerText:SetText(string.format("%d:%d", minutes, seconds))
+                    buffTimerText:SetText(string.format("%d:%d", minutes, seconds))
                 else
-                    timerText:SetText(string.format("%ds", seconds))
+                    buffTimerText:SetText(string.format("%ds", seconds))
                 end
-                timerText:SetTextColor(.1, 1, .1)
+                buffTimerText:SetTextColor(.1, 1, .1)
                 iconFrame:SetTexture(iconPath)
             else
-                timerTextBG:Hide()
+                buffTimerTextBG:Hide()
             end
         end
 
         -- Hide the timer background when the timer text = READYSTR
-        timerRdy = timerText:GetText()
+        timerRdy = buffTimerText:GetText()
         if timerRdy == READYSTR or not timerRdy then
-            timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
-            timerTextBG:Hide()
+            buffTimerText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+            buffTimerTextBG:Hide()
         elseif timerRdy == NOSSSTR then
             mWarlock:radialButtonLayout()
-            timerTextBG:Show()
+            buffTimerTextBG:Show()
         else
-            timerTextBG:Show()
+            buffTimerTextBG:Show()
         end
 
         if isShardDependant then
             local soulShards = UnitPower("player", 7)
             if soulShards == 0 then
-                timerText:SetText(NOSSSTR)
-                timerText:SetTextColor(1, 0, 0)
-                timerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
+                buffTimerText:SetText(NOSSSTR)
+                buffTimerText:SetTextColor(1, 0, 0)
+                buffTimerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
             end
             
             if buffName == callDreadStealersSpellName and soulShards < 2 then
-                timerText:SetText(NOSSSTR)
-                timerText:SetTextColor(1, 0, 0)
-                timerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
+                buffTimerText:SetText(NOSSSTR)
+                buffTimerText:SetTextColor(1, 0, 0)
+                buffTimerText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
             end
         end
     end)
@@ -181,8 +200,8 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     -- Now stores all these frames into tables for laying out in the radial fashion
     watcherCount = watcherCount+1
     watchers[watcherCount] = watcher
-    timerTexts[watcherCount] = timerText
-    timerTextBGs[watcherCount] = timerTextBG
+    buffTimerTexts[watcherCount] = buffTimerText
+    buffTimerTextBGs[watcherCount] = buffTimerTextBG
     iconFrames[watcherCount] = iconFrame
     
 end
@@ -203,10 +222,10 @@ function mWarlock:radialButtonLayout()
         local w = cosAng*radius
         local h = sinAng*radius
         watcher = watchers[x]
-        timerTextBG = timerTextBGs[x]
-        timerText = timerTexts[x]
+        buffTimerTextBG = buffTimerTextBGs[x]
+        buffTimerText = buffTimerTexts[x]
         iconFrame = iconFrames[x]
-        timerRdy = timerText:GetText()
+        timerRdy = buffTimerText:GetText()
         -- Move the watcher around the center of the frame
         watcher:Show()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
@@ -215,17 +234,17 @@ function mWarlock:radialButtonLayout()
         -- READYSTR and on the bg when ticking
         -- We don't do ANY SHOW HIDE HERE!!
         if cosAng <= 0 and timerRdy ~= READYSTR then
-            timerText:SetPoint("CENTER", iconFrame, "LEFT", -20, -20)
-            timerTextBG:SetPoint("RIGHT", iconFrame, "LEFT", 0, -20)
+            buffTimerTextBG:SetPoint("RIGHT", iconFrame, "LEFT", 0, 0)
+            buffTimerText:SetPoint("CENTER", buffTimerTextBG, "LEFT", 0, 0)
         
         elseif cosAng == 0 and timerRdy ~= READYSTR then
             -- Bottom of the circle, we want to keep the text UNDER the icon here
-            timerText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
-            timerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
+            buffTimerTextBG:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+            buffTimerText:SetPoint("CENTER", buffTimerTextBG, "CENTER", 0, 0)
 
         elseif timerRdy ~= READYSTR then
-            timerText:SetPoint("CENTER", iconFrame, "RIGHT", 20, -20)
-            timerTextBG:SetPoint("LEFT", iconFrame, "RIGHT", 0, -20)
+            buffTimerTextBG:SetPoint("LEFT", iconFrame, "RIGHT", 0, 0)
+            buffTimerText:SetPoint("CENTER", buffTimerTextBG, "RIGHT", 0, 0)
         end
     end
 end

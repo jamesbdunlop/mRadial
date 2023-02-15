@@ -38,10 +38,10 @@ function mWarlock:createFelguardFrames()
                                ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", rootIconPath)}, 
         ["FelStorm"] = {["spellName"] = "FelStorm", 
                         ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", rootIconPath)}, 
-        ["SoulStrike"] = {["spellName"] = "Soul Strike", 
-                          ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", rootIconPath)}, 
         ["AxeToss"] = {["spellName"] = "Axe Toss", 
-                          ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)}
+                            ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)},
+        ["SoulStrike"] = {["spellName"] = "Soul Strike", 
+                          ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", rootIconPath)}
     }
 
     for frameName, spellData in pairs(petSpellData) do
@@ -49,40 +49,26 @@ function mWarlock:createFelguardFrames()
         local spellIcon = spellData["spellIcon"]
         if mWarlock:checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
+                print("Creating new felguard frame: %s", frameName)
                 local petSpellFrame = CreateFrame("Frame", frameName, UIParent)
-                petSpellFrame:SetPoint("CENTER", MWarlockMainFrame, "CENTER", 0, -140)
-                framePositions = MWarlockSavedVariables.framePositions
-                if framePositions ~= nil then
-                    for sframeName, framePos in pairs(MWarlockSavedVariables.framePositions) do
-                        if sframeName == frameName then
-                            x = framePos["x"] or 90
-                            y = framePos["y"] or 90
-                            point = framePosData["point"] or "CENTER"
-                            relativeTo = framePosData["relativeTo"] or UIParent
-                            relativePoint = framePosData["relativePoint"] or "CENTER"
-                            petSpellFrame:SetPoint(point, relativeTo, relativePoint, x, y)
-                        end
-                    end
-                else
-                    petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", 20, 200)
-                end
+                petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
                 petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
                 
                 petSpellFrame.movetex = petSpellFrame:CreateTexture("OVERLAY")
                 petSpellFrame.movetex:SetPoint("CENTER", 0, 0)
                 petSpellFrame.movetex:SetAllPoints(petSpellFrame)
-
+                
                 petSpellFrame.tex = petSpellFrame:CreateTexture()
                 petSpellFrame.tex:SetTexture(spellIcon)
                 petSpellFrame.tex:SetPoint("CENTER", 0, 0)
                 petSpellFrame.tex:SetAllPoints(petSpellFrame)
-            
+                
                 local petSpellFrameText = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
                 petSpellFrameText:SetTextColor(.1, 1, .1)
                 petSpellFrameText:SetText("")
                 petSpellFrameText:SetAllPoints(petSpellFrame.tex)
                 petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
-            
+                
                 petSpellFrame:SetScript("OnEvent", function(self, event, ...)
                     if not mWarlock:IsFelguardSummoned() then
                         petSpellFrame:Hide()
@@ -114,7 +100,7 @@ function mWarlock:createFelguardFrames()
                             local remaining = start + duration - GetTime()
                             local minutes = math.floor(remaining / 60)
                             local seconds = math.floor(remaining - minutes * 60)
-
+                            
                             if remaining < 0 then
                                 petSpellFrame.tex:SetAlpha(1)
                                 petSpellFrameText:SetText("")
@@ -134,11 +120,18 @@ function mWarlock:createFelguardFrames()
                 
                 ---- SCRIPTS
                 mWarlock:moveFrame(petSpellFrame, UIParent, false)
-
+                
                 -- Add to the frame table for felguard frames
                 felguardFrames[frameName] = petSpellFrame
-            else
-                petSpellFrame = felguardFrames[frameName]
+            -- else
+            --     print("Using existing felguard frame: %s", frameName)
+            --     local petSpellFrame = felguardFrames[frameName]
+            end
+            
+            framePositions = MWarlockSavedVariables.framePositions[frameName]
+            if framePositions ~= nil then
+                print("We have positions for %s", frameName)
+                mWarlock:restoreFrame(frameName, felguardFrames[frameName])
             end
         end
     end
@@ -149,6 +142,7 @@ function mWarlock:setFelguardFramePosAndSize()
     local frameSize = MWarlockSavedVariables["felguardFrameSize"]
     for frameName, frame in pairs(felguardFrames) do
         frame:SetSize(frameSize, frameSize)
+        
         mWarlock:restoreFrame(frameName, frame)
     end
 end
@@ -189,6 +183,7 @@ function mWarlock:moveFrame(frame, isMovable)
         MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
         MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
         MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
+
     end)
 end
 
@@ -221,16 +216,12 @@ end
 function mWarlock:restoreFrame(frameName, frame)
     framePosData = MWarlockSavedVariables.framePositions[frameName]
     x = framePosData["x"] or 0
-    y = framePosData["y"] or 190
+    y = framePosData["y"] or 0
     point = framePosData["point"] or "CENTER"
     relativeTo = framePosData["relativeTo"] or UIParent
     relativePoint = framePosData["relativePoint"] or "CENTER"
-    -- print(x, y)
-    -- print(point)
-    -- print(relativeTo)
-    -- print(relativePoint)
-    -- WHY THE FUCK DOES THIS NOT WORK?
+    frame:SetPoint(tostring(point), UIParent, relativePoint, x, y)
+    -- WHY THE FUCK DOES THIS NOT WORK ANYMORE!!!!!??????
     -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
-    frame:SetPoint(tostring(point),  x, y)
 end
 
