@@ -13,7 +13,7 @@ function mWarlock:createShardCountFrame()
     shardCounterFrame.movetex:SetPoint("CENTER", 0, 0)
     shardCounterFrame.movetex:SetAllPoints(shardCounterFrame)
 
-    mWarlock:MoveFrame(shardCounterFrame, UIParent, false)
+    mWarlock:moveFrame(shardCounterFrame, UIParent, false)
     mWarlock:restoreFrame(mw_shardFrameName, shardCounterFrame)
 end
 

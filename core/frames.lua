@@ -14,7 +14,7 @@ function mWarlock:createMainFrame()
     MWarlockMainFrame.tex:AddMaskTexture(MWarlockMainFrame.mask)
     
     MWarlockMainFrame:RegisterForDrag("LeftButton")  
-    mWarlock:MoveFrame(MWarlockMainFrame, UIParent, false)
+    mWarlock:moveFrame(MWarlockMainFrame, UIParent, false)
     mWarlock:restoreFrame(mainFrameName, MWarlockMainFrame)
 end
 
@@ -133,7 +133,7 @@ function mWarlock:createFelguardFrames()
                 end)
                 
                 ---- SCRIPTS
-                mWarlock:MoveFrame(petSpellFrame, UIParent, false)
+                mWarlock:moveFrame(petSpellFrame, UIParent, false)
 
                 -- Add to the frame table for felguard frames
                 felguardFrames[frameName] = petSpellFrame
@@ -159,7 +159,7 @@ end
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 -------- FRAME UTILS
-function mWarlock:MoveFrame(frame, isMovable)
+function mWarlock:moveFrame(frame, isMovable)
     if not isMovable then
         frame:EnableMouse(false)
         frame:SetMovable(false)
@@ -197,10 +197,10 @@ function mWarlock:setMovable(isMovable)
         Sets frames to be moveable or not. Assigns a blue color to their respective 
         movetex, textures.
     ]]
-    mWarlock:MoveFrame(shardCounterFrame, isMovable)
-    mWarlock:MoveFrame(MWarlockMainFrame, isMovable)
+    mWarlock:moveFrame(shardCounterFrame, isMovable)
+    mWarlock:moveFrame(MWarlockMainFrame, isMovable)
     for frameName, frame in pairs(felguardFrames) do
-        mWarlock:MoveFrame(frame, isMovable)
+        mWarlock:moveFrame(frame, isMovable)
         if isMovable then
             frame.movetex:SetColorTexture(0, 0, 1, .5)
         else
@@ -225,6 +225,12 @@ function mWarlock:restoreFrame(frameName, frame)
     point = framePosData["point"] or "CENTER"
     relativeTo = framePosData["relativeTo"] or UIParent
     relativePoint = framePosData["relativePoint"] or "CENTER"
-    frame:SetPoint(point, relativeTo, relativePoint, x, y)
+    -- print(x, y)
+    -- print(point)
+    -- print(relativeTo)
+    -- print(relativePoint)
+    -- WHY THE FUCK DOES THIS NOT WORK?
+    -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
+    frame:SetPoint(tostring(point),  x, y)
 end
 
