@@ -11,9 +11,6 @@ function mWarlock:isCorrectClass()
     local playerClass = UnitClass("player")
     -- Check if the player's class is "Warlock"
     if playerClass == "Warlock" then
-        print("~~~~~~~~~~~~~~~~~")
-        print("Welcome to MWarlock!")
-        print("~~~~~~~~~~~~~~~~~")
         return true
     end
     return false

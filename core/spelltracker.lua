@@ -132,6 +132,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         end
 
         -- All other buff timers
+        found = false
         for idx = 1, 40 do
             local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
             spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
@@ -145,8 +146,9 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             end
             
             -- TIMERS
-            if name == buffName and expirationTime ~= nil then
+            if name ~= nil and name == buffName and expirationTime ~= nil then
                 -- Buff is active -- 
+                found = true
                 buffTimerText:Show()
                 buffTimerTextBG:Show()
                 buffTimerText:SetTextColor(.1, 1, .1)
@@ -163,19 +165,28 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 end
             end
         end
-
+        if not found then
+            buffTimerText:Hide()
+            buffTimerTextBG:Hide()
+        end
         if isShardDependant then
             local soulShards = UnitPower("player", 7)
             if soulShards == 0 then
                 readyText:SetText(NOSSSTR)
                 readyText:SetTextColor(1, 0, 0)
                 readyText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
+            else
+                readyText:SetText(READYSTR)
+                readyText:SetTextColor(0, 1, 0)
             end
             
             if buffName == callDreadStealersSpellName and soulShards < 2 then
                 readyText:SetText(NOSSSTR)
                 readyText:SetTextColor(1, 0, 0)
                 readyText:SetPoint("TOP", iconFrame, "TOP", 0, 0)
+            else
+                readyText:SetText(READYSTR)
+                readyText:SetTextColor(0, 1, 0)
             end
         end
         mWarlock:radialButtonLayout()
