@@ -1,4 +1,5 @@
 function mWarlock:createShardCountFrame()
+    print("Creating shardframe now..")
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED
     shardCounterFrame = CreateFrame("Frame", mw_shardFrameName, UIParent, "BackdropTemplate")

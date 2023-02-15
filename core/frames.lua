@@ -49,7 +49,7 @@ function mWarlock:createFelguardFrames()
         local spellIcon = spellData["spellIcon"]
         if mWarlock:checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
-                print("Creating new felguard frame: %s", frameName)
+                -- print("Creating new felguard frame: %s", frameName)
                 local petSpellFrame = CreateFrame("Frame", frameName, UIParent)
                 petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
                 petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -130,7 +130,6 @@ function mWarlock:createFelguardFrames()
             
             framePositions = MWarlockSavedVariables.framePositions[frameName]
             if framePositions ~= nil then
-                print("We have positions for %s", frameName)
                 mWarlock:restoreFrame(frameName, felguardFrames[frameName])
             end
         end
