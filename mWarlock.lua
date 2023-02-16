@@ -13,13 +13,8 @@ if MWarlockSavedVariables.framePositions == nil then
 end
 
 function mWarlock:createWatchers(specData, spellOrder)
-    print("Creating watchers now..")
-    --- ADD ALL THE WATCHER FRAMES NOW
     for spellName, spellID in pairs(spellOrder) do
         spellData = specData[spellName]
-        -- print("spellName: %s", spellName)
-        -- print("spellActive: %s", spellData["active"])
-        -- print("---")
         if spellData["active"] then
             local iconPath = spellData["iconPath"]
             local buffName = spellData["buffName"]
@@ -62,12 +57,11 @@ function mWarlock:OnInitialize()
             -- ud stands for UpDown
             -- lr stands for leftRight
             if event == "PLAYER_LOGIN" then
-                print("~~~~~~~~~~~~~~~~~")
+                print("~~~~~~~~~~~~~~~~~~~~")
                 print("Welcome to MWarlock!")
-                print("~~~~~~~~~~~~~~~~~")
+                print("~~~~~~~~~~~~~~~~~~~~")
                 ---------------------------------------------------
                 -- setup the UI
-                -- print("MWalock setting up...")
                 mWarlock:createMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
@@ -87,8 +81,6 @@ function mWarlock:OnInitialize()
                 end
                 self:UnregisterEvent("PLAYER_LOGIN")
                 mWarlock:setMovable(false)
-                print("mWarlock loaded!")
-                print("~~~~~~~~~~~~~~~~~")
             end
         end)
     end

@@ -1,15 +1,10 @@
 -- Some globals
-local watcherFrameWidth = 45
-local watcherFrameHeight = 45
-local defIconWidth = watcherFrameWidth*1.2
-local defIconHeight = watcherFrameHeight*1.2
 watcherCount = 0
 watchers = {}
 buffTimerTexts = {}
 buffTimerTextBGs = {}
 iconFrames = {}
-READYSTR = "RDY"
-NOSSSTR = "N0 SS!"
+local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- UTILS
 function mWarlock:GetAuraTimeLeft(expirationTime)
@@ -48,9 +43,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         frameName = string.format("Frame_%s", parentSpellName)
     end
 
-    local watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")
-          watcher:SetSize(watcherFrameWidth, watcherFrameHeight)
-          
+    local watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
           watcher.tex = watcher:CreateTexture(nil, "BACKGROUND")
           watcher.tex:SetAllPoints(watcher)
           watcher.tex:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
@@ -67,39 +60,48 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
           if parentSpellIcon ~= null then
             iconFrame:SetTexture(parentSpellIcon)
           end
-          iconFrame:SetSize(defIconWidth, defIconHeight)
           iconFrame:SetPoint("CENTER", watcher, "CENTER", 0, 0)
           iconFrame:AddMaskTexture(watcher.mask)
 
     local countText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-          countText:SetSize(150, 150)
           countText:SetTextColor(0, 1, 1)
-          countText:SetPoint("CENTER", iconFrame, "TOP", 0, 8)
-          countText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
+          countText:SetPoint("CENTER", iconFrame, "TOP", 20, -10)
+          countText:SetFont("Fonts\\" .. fontName .. ".TTF", 35, "OUTLINE, MONOCHROME")
           
     local buffTimerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
-          buffTimerTextBG:SetSize(watcherFrameWidth/1.5, watcherFrameHeight/1.5)
           buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
 
     local buffTimerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-          buffTimerText:SetSize(watcherFrameWidth*1.25, watcherFrameHeight)
           buffTimerText:SetTextColor(.1, 1, .1)
           buffTimerText:SetText(READYSTR)
-          buffTimerText:SetFont("Fonts\\FRIZQT__.TTF", watcherFrameWidth/2, "OUTLINE, MONOCHROME")
     
     local cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           cooldownText:SetText(CD)
           cooldownText:SetAllPoints(watcher)
-          cooldownText:SetFont("Fonts\\FRIZQT__.TTF", watcherFrameWidth/2, "OUTLINE, MONOCHROME")
+        --   cooldownText:SetFont("Fonts\\FRIZQT__.TTF", watcherFrameWidth/2, "OUTLINE, MONOCHROME")
 
     local readyText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           readyText:SetText(READYSTR)
           readyText:SetAllPoints(watcher)
-          readyText:SetFont("Fonts\\FRIZQT__.TTF", watcherFrameWidth/3, "OUTLINE, MONOCHROME")
+        --   readyText:SetFont("Fonts\\FRIZQT__.TTF", watcherFrameWidth/3, "OUTLINE, MONOCHROME")
           readyText:SetTextColor(.1, 1, .1)
 
     -- Set the OnUpdate function for the frame
     watcher:SetScript("OnUpdate", function(self, elapsed)
+        if IsMounted() then
+            watcher:Hide()
+            watcher.tex:Hide()
+            iconFrame:Hide()
+            readyText:Hide()
+            countText:Hide()
+        else
+            watcher:Show()
+            watcher.tex:Show()
+            readyText:Show()
+            iconFrame:Show()
+            countText:Show()
+        end
+
         if parentSpellName ~= nil then
             iconFrame:SetTexture(parentSpellIcon)
         else
@@ -122,12 +124,12 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 end
                 cooldownText:SetTextColor(1, .1, .1)
                 iconFrame:SetAlpha(0.5)
-                iconFrame:SetSize(25, 25)
             else
                 cooldownText:Hide()
                 iconFrame:SetAlpha(1)
-                iconFrame:SetSize(defIconWidth, defIconHeight)
-                readyText:Show()
+                if not IsMounted() then
+                    readyText:Show()
+                end
             end
         end
 
@@ -209,6 +211,9 @@ function mWarlock:radialButtonLayout()
     local offset = MWarlockSavedVariables.offset
     MWarlockMainFrame:SetSize(radius*2, radius*2)
 
+    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 55
+    local defIconSize = watcherFrameSize*1.2
+
     local angleStep = math.pi / #watchers 
     for x = 1, #watchers do
         angle = (x-1)*angleStep + offset*math.pi
@@ -217,9 +222,18 @@ function mWarlock:radialButtonLayout()
         local w = cosAng*radius
         local h = sinAng*radius
         watcher = watchers[x]
+        watcher:SetSize(watcherFrameSize, watcherFrameSize)
+
         buffTimerTextBG = buffTimerTextBGs[x]
+        buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
+        
         buffTimerText = buffTimerTexts[x]
+        buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
+        buffTimerText:SetFont("Fonts\\".. fontName.. ".TTF", watcherFrameSize/2, "OUTLINE, MONOCHROME")
+
         iconFrame = iconFrames[x]
+        iconFrame:SetSize(watcherFrameSize*1.25, watcherFrameSize*1.25)
+
         timerRdy = buffTimerText:GetText()
         -- Move the watcher around the center of the frame
         watcher:Show()
@@ -229,7 +243,7 @@ function mWarlock:radialButtonLayout()
         -- READYSTR and on the bg when ticking
         -- We don't do ANY SHOW HIDE HERE!!
         radialUDOffset = -10
-        radialLROffset = -30
+        radialLROffset = -10
         buffTimerText:SetPoint("CENTER", buffTimerTextBG, "CENTER", 0, 0)
         if cosAng <= 0 and timerRdy ~= READYSTR then
             buffTimerTextBG:SetPoint("CENTER", iconFrame, "LEFT", radialLROffset, radialUDOffset)

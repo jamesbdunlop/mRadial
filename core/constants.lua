@@ -5,6 +5,9 @@ rootIconPath ="Interface/ICONS"
 mediaPath = "Interface\\AddOns\\mWarlock\\media"
 mainFrameName = "MWarlockBGFrame"
 mainFrameIsMoving = false
+READYSTR = "RDY"
+NOSSSTR = "N0 SS!"
+
 ---------------------------------------------------------------------------------------------------
 -- Demo Spells of interest
 powerSiphonSpellName = "Power Siphon" --264130

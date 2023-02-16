@@ -182,7 +182,7 @@ function mWarlock:moveFrame(frame, isMovable)
         MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
         MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
         MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-
+        
     end)
 end
 

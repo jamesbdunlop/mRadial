@@ -33,22 +33,30 @@ local function changeShardTracker(table, value)
     mWarlock:setShardTrackerFramesSize()
 end
 
+local function changeWatcherFrameSize(table, value)
+    MWarlockSavedVariables.watcherFrameSize = value
+    mWarlock:radialButtonLayout()
+end
 ---------------------------------------------------------------------------------------------------
 -- GETTERS
 local function getOffset()
-    return MWarlockSavedVariables.offset
+    return MWarlockSavedVariables.offset or 0
 end
 
 local function getRadius()
-    return MWarlockSavedVariables.radius
+    return MWarlockSavedVariables.radius or 200
 end
 
 local function getFelguardFrameSize()
-    return MWarlockSavedVariables.felguardFrameSize
+    return MWarlockSavedVariables.felguardFrameSize or 45
 end
 
 local function getShardTackerFrameSize()
-    return MWarlockSavedVariables.shardTrackerFrameSize
+    return MWarlockSavedVariables.shardTrackerFrameSize or 45
+end
+
+local function getWatcherFrameSize()
+    return MWarlockSavedVariables.watcherFrameSize or 45
 end
 ---------------------------------------------------------------------------------------------------
 mw_aboutOptions = {
@@ -125,7 +133,20 @@ function mWarlock:createconfig()
                 step = 1,
                 set = changeShardTracker,
                 get = getShardTackerFrameSize
-            }
+            },
+            watcherFsize = {
+               order = 3,
+               name = "WatchersIconSize",
+               desc = "Changes the size of the spell icons",
+               type = "range",
+               min  = 10,
+               max = 1000,
+               softMin = 10,
+               softMax = 1000,
+               step = 1,
+               set = changeWatcherFrameSize,
+               get = getWatcherFrameSize
+           }
         }
     }
     return options
@@ -163,6 +184,9 @@ function shardTrackerChangedCB(widget, cbName, value)
     changeShardTracker(nil, value)
 end
 
+function watcherFrameSizeChangedCB(widget, cbName, value)
+    changeWatcherFrameSize(nil, value)
+end
 
 -- BUILD PANE
 function mWarlock:OptionsPane()
@@ -198,7 +222,7 @@ function mWarlock:OptionsPane()
     if specName == "Demonology" then
         local opt_felguardFSize = AceGUI:Create("Slider")
         opt_felguardFSize:SetCallback("OnValueChanged", fgfsChangedCB)
-        opt_felguardFSize:SetValue(getFelguardFrameSize() or 56)
+        opt_felguardFSize:SetValue(getFelguardFrameSize())
         opt_felguardFSize:SetSliderValues(10, 150, 1)
         opt_felguardFSize:SetLabel("FelGuard Icon Size: ")
         optionsf:AddChild(opt_felguardFSize)
@@ -206,8 +230,15 @@ function mWarlock:OptionsPane()
 
     local opt_ShardTrackFrameSize = AceGUI:Create("Slider")
     opt_ShardTrackFrameSize:SetCallback("OnValueChanged", shardTrackerChangedCB)
-    opt_ShardTrackFrameSize:SetValue(getShardTackerFrameSize() or 128)
+    opt_ShardTrackFrameSize:SetValue(getShardTackerFrameSize())
     opt_ShardTrackFrameSize:SetSliderValues(10, 1000, 1)
     opt_ShardTrackFrameSize:SetLabel("ShardTracker Icon Size: ")
     optionsf:AddChild(opt_ShardTrackFrameSize)
+
+    local opt_WatcherFrameSize = AceGUI:Create("Slider")
+    opt_WatcherFrameSize:SetCallback("OnValueChanged", watcherFrameSizeChangedCB)
+    opt_WatcherFrameSize:SetValue(getShardTackerFrameSize())
+    opt_WatcherFrameSize:SetSliderValues(10, 1000, 1)
+    opt_WatcherFrameSize:SetLabel("Watchers Icon Size: ")
+    optionsf:AddChild(opt_WatcherFrameSize)
 end
