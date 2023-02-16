@@ -81,7 +81,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     
     local cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           cooldownText:SetText(CD)
-          cooldownText:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+          cooldownText:SetPoint("CENTER", iconFrame, "CENTER", 0, -20)
 
     local readyText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
           readyText:SetText(READYSTR)
