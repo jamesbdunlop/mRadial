@@ -191,6 +191,10 @@ function mWarlock:setMovable(isMovable)
         Sets frames to be moveable or not. Assigns a blue color to their respective 
         movetex, textures.
     ]]
+    print("Set moveable called: %s", isMovable)
+    if isMovable == nil then
+        isMovable=MWarlockSavedVariables["moveable"]
+    end
     mWarlock:moveFrame(shardCounterFrame, isMovable)
     mWarlock:moveFrame(MWarlockMainFrame, isMovable)
     for frameName, frame in pairs(felguardFrames) do

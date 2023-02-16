@@ -75,3 +75,12 @@ demTree_specialisationData[callDreadStealersSpellName]["parentSpellIcon"] = spel
 demTree_specialisationData[callDreadStealersSpellName]["parentSpellName"] = callDreadStealersSpellName
 demTree_specialisationData[callDreadStealersSpellName]["skipBuff"] = true
 demTree_specialisationData[callDreadStealersSpellName]["isShardDependant"] = true
+
+demTree_specialisationData[implosionSpellName] = {}
+demTree_specialisationData[implosionSpellName]["active"] = false
+demTree_specialisationData[implosionSpellName]["buffName"] = nil
+demTree_specialisationData[implosionSpellName]["iconPath"] = spellIcons[implosionSpellName]
+demTree_specialisationData[implosionSpellName]["parentSpellIcon"] = spellIcons[implosionSpellName]
+demTree_specialisationData[implosionSpellName]["parentSpellName"] = implosionSpellName
+demTree_specialisationData[implosionSpellName]["skipBuff"] = true
+demTree_specialisationData[implosionSpellName]["isShardDependant"] = false

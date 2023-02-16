@@ -10,235 +10,105 @@ elseif spec == 2 then
     specName = "Demonology"
 end
 
----------------------------------------------------------------------------------------------------
--- Functions for Blizz Options Pane
-local function changeRadius(table, value)
-    -- print("Radius value: %d", value)
-    MWarlockSavedVariables.radius = value
-    mWarlock:radialButtonLayout()
+local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
+    local AceGUI = LibStub("AceGUI-3.0")
+    local opt_slider = AceGUI:Create("Slider")
+    opt_slider:SetSliderValues(minVal, maxVal, step)
+    opt_slider:SetLabel(name)
+    
+    local function setValue(table, cbName, value)
+        MWarlockSavedVariables[variableName] = value
+        if toexec ~= nil then
+            toexec()
+        end
+    end
+
+    local function getValue(info)
+        local value = MWarlockSavedVariables[variableName] or defaultValue
+        return value
+    end
+    
+    opt_slider:SetValue(getValue())
+    opt_slider:SetCallback("OnValueChanged", setValue)
+    opt_slider.get = getValue
+    
+    parent:AddChild(opt_slider)
+    return opt_slider
 end
 
-local function changeOffset(table, value)
-    MWarlockSavedVariables.offset = value
-    mWarlock:radialButtonLayout()
-end
+local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec)
+    local AceGUI = LibStub("AceGUI-3.0")
+    local opt_cbox = AceGUI:Create("CheckBox")
+    opt_cbox:SetLabel(name)
+    opt_cbox:SetDescription(descrip)
+    
+    local function setValue(table, cbName, value)
+        print(table, cbName, value)
+        MWarlockSavedVariables[variableName] = value
+        if toexec ~= nil then
+            -- print("calling func : %s", value)
+            toexec(value)
+        end
+    end
 
-local function changeFgfs(table, value)
-    MWarlockSavedVariables.felguardFrameSize = value
-    mWarlock:setFelguardFramePosAndSize()
-end
-
-local function changeShardTracker(table, value)
-    MWarlockSavedVariables.shardTrackerFrameSize = value
-    mWarlock:setShardTrackerFramesSize()
-end
-
-local function changeWatcherFrameSize(table, value)
-    MWarlockSavedVariables.watcherFrameSize = value
-    mWarlock:radialButtonLayout()
-end
----------------------------------------------------------------------------------------------------
--- GETTERS
-local function getOffset()
-    return MWarlockSavedVariables.offset or 0
-end
-
-local function getRadius()
-    return MWarlockSavedVariables.radius or 200
-end
-
-local function getFelguardFrameSize()
-    return MWarlockSavedVariables.felguardFrameSize or 45
-end
-
-local function getShardTackerFrameSize()
-    return MWarlockSavedVariables.shardTrackerFrameSize or 45
-end
-
-local function getWatcherFrameSize()
-    return MWarlockSavedVariables.watcherFrameSize or 45
-end
----------------------------------------------------------------------------------------------------
-mw_aboutOptions = {
-	type = "group",
-	args = {
-		version = {
-			order = 1,
-			type = "description",
-			name = function() return "Version: mWarlock- 0.0.1" end,
-
-		}
-	},
-}
-
-function mWarlock:createconfig()
-	local options = {}
-    options.type = "group"
-    options.name = "mWarlock"
-    options.args = {}
-
-    options.args.general = {
-        order = 1, 
-        type = "group",
-        name = "General Options",
-        args = {
-            radius = {
-                order = 1,
-                name = "Radius",
-                desc = "Changes the radius of the timers",
-                type = "range",
-                min  = 65,
-                max = 800,
-                softMin = 65,
-                softMax = 800,
-                step = .01,
-                set = changeRadius,
-                get = getRadius
-                },
-            offset = {
-                order = 2,
-                name = "Offset",
-                desc = "Changes the position around the circle icons draw",
-                type = "range",
-                min  = 0,
-                max = 3,
-                softMin = 0,
-                softMax = 3,
-                step = .001,
-                set = changeOffset,
-                get = getOffset
-                },
-            fgFsize = {
-                    order = 2,
-                    name = "FelGuardIconSize",
-                    desc = "Changes the size of the felguard pet ability icons",
-                    type = "range",
-                    min  = 10,
-                    max = 150,
-                    softMin = 10,
-                    softMax = 150,
-                    step = 1,
-                    set = changeFgfs,
-                    get = getFelguardFrameSize
-                    },
-             stkrFsize = {
-                order = 3,
-                name = "SharTrackerIconSize",
-                desc = "Changes the size of the shard tracker icon",
-                type = "range",
-                min  = 10,
-                max = 1000,
-                softMin = 10,
-                softMax = 1000,
-                step = 1,
-                set = changeShardTracker,
-                get = getShardTackerFrameSize
-            },
-            watcherFsize = {
-               order = 3,
-               name = "WatchersIconSize",
-               desc = "Changes the size of the spell icons",
-               type = "range",
-               min  = 10,
-               max = 1000,
-               softMin = 10,
-               softMax = 1000,
-               step = 1,
-               set = changeWatcherFrameSize,
-               get = getWatcherFrameSize
-           }
-        }
-    }
-    return options
-end
-
-local options
-function mw_createBlizzOptions()
-    options = mWarlock:createconfig()
-
-    mw_config:RegisterOptionsTable("mWarlock-General", options.args.general)
-    local blizzPanel = mw_dialog:AddToBlizOptions("mWarlock-General", options.args.general.name, "mWarlock")
-    return blizzPanel
-end
-
----------------------------------------------------------------------------------------------------
--- STAND ALONE OPTIONS PANE
--- CALL BACKS FOR OPTIONS PANE as this approach sends through widget, cbName, value to the darn functions
-function radiusChangedCB(widget, cbName, value)
-    changeRadius(nil, value)
-end
-
-function offsetChangedCB(widget, cbName, value)
-    changeOffset(nil, value)
-end
-
-function movableCB(widget, cbName, value)
-    mWarlock:setMovable(widget:GetValue())
-end
-
-function fgfsChangedCB(widget, cbName, value)
-    changeFgfs(nil, value)
-end
-
-function shardTrackerChangedCB(widget, cbName, value)
-    changeShardTracker(nil, value)
-end
-
-function watcherFrameSizeChangedCB(widget, cbName, value)
-    changeWatcherFrameSize(nil, value)
+    local function getValue(info)
+        local value = MWarlockSavedVariables[variableName] or defaultValue
+        return value
+    end
+    
+    opt_cbox:SetValue(getValue())
+    opt_cbox:SetCallback("OnValueChanged", setValue)
+    opt_cbox.get = getValue
+    
+    parent:AddChild(opt_cbox)
+    return opt_cbox
 end
 
 -- BUILD PANE
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
     local optionsf = AceGUI:Create("Frame")
-    optionsf:SetWidth(260)
-    optionsf:SetHeight(360)
-    optionsf:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
-    optionsf:SetTitle("MWarlock - Options : " .. specName) 
-    optionsf:SetLayout("List")
+        optionsf:SetWidth(460)
+        optionsf:SetHeight(460)
+        optionsf:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
+        optionsf:SetTitle("MWarlock - Options : " .. specName) 
+        optionsf:SetLayout("List")
+        optionsf:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+        optionsf:SetLayout("Fill")
+    
+    local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
+          scrollcontainer:SetFullWidth(true)
+          scrollcontainer:SetFullHeight(true)
+          scrollcontainer:SetLayout("Fill")
+    optionsf:AddChild(scrollcontainer)
 
-    local opt_move = AceGUI:Create("CheckBox")
-    opt_move:SetValue(false)
-    opt_move:SetLabel("Movable")
-    opt_move:SetCallback("OnValueChanged", movableCB)
-    opt_move:SetDescription("Allow the ui to move around using shift+lmb.")
-    optionsf:AddChild(opt_move)
+    local scrollFrame  = AceGUI:Create("ScrollFrame")
+        scrollFrame:SetLayout("Flow")
+    scrollcontainer:AddChild(scrollFrame)
 
-    local opt_radius = AceGUI:Create("Slider")
-    opt_radius:SetCallback("OnValueChanged", radiusChangedCB)
-    opt_radius:SetValue(getRadius())
-    opt_radius:SetSliderValues(50, 500, 1)
-    opt_radius:SetLabel("Radius: ")
-    optionsf:AddChild(opt_radius)
-
-    local opt_offset = AceGUI:Create("Slider")
-    opt_offset:SetCallback("OnValueChanged", offsetChangedCB)
-    opt_offset:SetValue(getOffset())
-    opt_offset:SetSliderValues(0, 3, .01)
-    opt_offset:SetLabel("Offset: ")
-    optionsf:AddChild(opt_offset)
-
+    local descrip = "Allow the ui to move around using shift+lmb."
+    createCheckBox(scrollFrame, "Movable: ", descrip, "moveable", false, mWarlock.setMovable)
+    
+    -- General shit
+    createSlider(scrollFrame, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
     if specName == "Demonology" then
-        local opt_felguardFSize = AceGUI:Create("Slider")
-        opt_felguardFSize:SetCallback("OnValueChanged", fgfsChangedCB)
-        opt_felguardFSize:SetValue(getFelguardFrameSize())
-        opt_felguardFSize:SetSliderValues(10, 150, 1)
-        opt_felguardFSize:SetLabel("FelGuard Icon Size: ")
-        optionsf:AddChild(opt_felguardFSize)
+        createSlider(scrollFrame, "Felguard Frame Size: ", 10, 150, 1, "felguardFrameSize", 12, mWarlock.setFelguardFramePosAndSize)
     end
-
-    local opt_ShardTrackFrameSize = AceGUI:Create("Slider")
-    opt_ShardTrackFrameSize:SetCallback("OnValueChanged", shardTrackerChangedCB)
-    opt_ShardTrackFrameSize:SetValue(getShardTackerFrameSize())
-    opt_ShardTrackFrameSize:SetSliderValues(10, 1000, 1)
-    opt_ShardTrackFrameSize:SetLabel("ShardTracker Icon Size: ")
-    optionsf:AddChild(opt_ShardTrackFrameSize)
-
-    local opt_WatcherFrameSize = AceGUI:Create("Slider")
-    opt_WatcherFrameSize:SetCallback("OnValueChanged", watcherFrameSizeChangedCB)
-    opt_WatcherFrameSize:SetValue(getShardTackerFrameSize())
-    opt_WatcherFrameSize:SetSliderValues(10, 1000, 1)
-    opt_WatcherFrameSize:SetLabel("Watchers Icon Size: ")
-    optionsf:AddChild(opt_WatcherFrameSize)
+    
+    -- Radial shit
+    local radialGroup = AceGUI:Create("InlineGroup")
+    radialGroup:SetTitle("Radial Icons: ")
+    createSlider(radialGroup, "Watcher Frame Radius: ", 50, 500, 1, "radius", 100, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Watcher Frame Offset: ", 0, 3, .001, "offset", 0, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Watcher Icon Size: ", 10, 1000, 1, "watcherFrameSize", 12, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Watcher Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mWarlock.radialButtonLayout)
+    scrollFrame:AddChild(radialGroup)
+    
+    -- Font shit
+    local fontGroup = AceGUI:Create("InlineGroup")
+    fontGroup:SetTitle("Fonts: ")
+    createSlider(fontGroup, "Count Font Size: ", 2, 55, 1, "countFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "Ready Font Size: ", 2, 55, 1, "readyFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "CoolDown Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.radialButtonLayout)
+    scrollFrame:AddChild(fontGroup)
 end

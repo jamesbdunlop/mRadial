@@ -37,18 +37,18 @@ end
 local blizzPanel
 local registered = false
 
-function mWarlock:CreateConfigPanels()
-	mw_config:RegisterOptionsTable("mWarlock", mw_aboutOptions)
-	local aboutFrame = mw_dialog:AddToBlizOptions("mWarlock", "mWarlock")
-	if not registered then
-        blizzPanel = mw_createBlizzOptions()
-		registered = true
-	end
-end
+-- function mWarlock:CreateConfigPanels()
+-- 	mw_config:RegisterOptionsTable("mWarlock", mw_aboutOptions)
+-- 	local aboutFrame = mw_dialog:AddToBlizOptions("mWarlock", "mWarlock")
+-- 	if not registered then
+--         blizzPanel = mw_createBlizzOptions()
+-- 		registered = true
+-- 	end
+-- end
 
 udOffset = 20
 function mWarlock:OnInitialize()
-    mWarlock:CreateConfigPanels()
+    -- mWarlock:CreateConfigPanels()
     if(mWarlock:isCorrectClass()) then
         local f = CreateFrame("Frame")
         -- Register the event for when the player logs in
@@ -58,7 +58,7 @@ function mWarlock:OnInitialize()
             -- lr stands for leftRight
             if event == "PLAYER_LOGIN" then
                 print("~~~~~~~~~~~~~~~~~~~~")
-                print("Welcome to MWarlock!")
+                print("  !Welcome to MWarlock!")
                 print("~~~~~~~~~~~~~~~~~~~~")
                 ---------------------------------------------------
                 -- setup the UI
@@ -88,10 +88,10 @@ end
 
 function mWarlock:OnEnable()
     -- Called when the addon is enabled
-    print("mWarlock OnEnable called!")
+    -- print("mWarlock OnEnable called!")
 end
 
 function mWarlock:OnDisable()
     -- Called when the addon is disabled
-    print("mWarlock OnDisable called!")
+    -- print("mWarlock OnDisable called!")
 end

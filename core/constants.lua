@@ -20,16 +20,18 @@ summonVFSpellName = "Summon VileFiend" --264119
 netherPortalSpellName = "Nether Portal" --26721
 grimFelGuardSpellName = "Grimoire: Felguard" --111898
 callDreadStealersSpellName = "Call Dreadstalkers" --104316
+implosionSpellName = "Implosion" --196277
 
 demo_spellOrder = {}
 demo_spellOrder[powerSiphonSpellName] = 264130
 demo_spellOrder[callDreadStealersSpellName] = 104316
 demo_spellOrder[inquisitorsGazeSpellName] = 386334
-demo_spellOrder[summonSoulKeeperSpellName] = -1
+demo_spellOrder[summonSoulKeeperSpellName] = 386256
 demo_spellOrder[summonDTSpellName] = 265187
 demo_spellOrder[summonVFSpellName] = 264119
 demo_spellOrder[netherPortalSpellName] = 267217
 demo_spellOrder[grimFelGuardSpellName] = 111898
+demo_spellOrder[implosionSpellName] = 196277
 
 ---------------------------------------------------------------------------------------------------
 spellIcons = {}
@@ -45,5 +47,6 @@ spellIcons[summonVFSpellName] = string.format("%s/Inv_argusfelstalkermount.blp",
 spellIcons[netherPortalSpellName] = string.format("%s/Inv_netherportal.blp", rootIconPath)
 spellIcons[grimFelGuardSpellName] = string.format("%s/Spell_shadow_summonfelguard.blp", rootIconPath)
 spellIcons[callDreadStealersSpellName] = string.format("%s/Spell_warlock_calldreadstalkers.blp", rootIconPath)
+spellIcons[implosionSpellName] = string.format("%s/Inv_implosion.blp", rootIconPath)
 -- Destro
 -- Affy
