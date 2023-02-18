@@ -1,3 +1,14 @@
+-- TO DO
+    -- Add options for
+    -- shard warning size, opacity, and let this position off the radius
+    -- when options mode is enabled, add a feature to trigger the timers, / show shard warning 
+    -- movingup down the timer box positions
+    -- see if I can manage this global cooldown rubbish.
+    -- add on update throttling
+    -- fix the size of the felguard frame text for full duration visibility
+    -- if we don't have power siphon do we still proc demonic core?
+-- ??????MISSING WATCHERS????????
+
 ----GLOBAL SAVED VARS
 if not MWarlockSavedVariables then
     MWarlockSavedVariables = {}
@@ -62,7 +73,7 @@ function mWarlock:OnInitialize()
                 print("~~~~~~~~~~~~~~~~~~~~")
                 ---------------------------------------------------
                 -- setup the UI
-                mWarlock:createMainFrame()
+                mWarlock:CreateMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
                 if (mWarlock:isCorrectSpec()) then
@@ -76,11 +87,12 @@ function mWarlock:OnInitialize()
                     mWarlock:radialButtonLayout()
                     
                     -- Note this can become spec based atm only supporting DEMO!
-                    mWarlock:createHandofGuldanFrame()
+                    -- mWarlock:createHandofGuldanFrame()
                     mWarlock:createFelguardFrames()
                 end
+                
                 self:UnregisterEvent("PLAYER_LOGIN")
-                mWarlock:setMovable(false)
+                mWarlock:SetUIMovable(false)
             end
         end)
     end

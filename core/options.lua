@@ -87,7 +87,7 @@ function mWarlock:OptionsPane()
     scrollcontainer:AddChild(scrollFrame)
 
     local descrip = "Allow the ui to move around using shift+lmb."
-    createCheckBox(scrollFrame, "Movable: ", descrip, "moveable", false, mWarlock.setMovable)
+    createCheckBox(scrollFrame, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
     
     -- General shit
     createSlider(scrollFrame, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
@@ -97,11 +97,11 @@ function mWarlock:OptionsPane()
     
     -- Radial shit
     local radialGroup = AceGUI:Create("InlineGroup")
-    radialGroup:SetTitle("Radial Icons: ")
-    createSlider(radialGroup, "Watcher Frame Radius: ", 50, 500, 1, "radius", 100, mWarlock.radialButtonLayout)
-    createSlider(radialGroup, "Watcher Frame Offset: ", 0, 3, .001, "offset", 0, mWarlock.radialButtonLayout)
-    createSlider(radialGroup, "Watcher Icon Size: ", 10, 1000, 1, "watcherFrameSize", 12, mWarlock.radialButtonLayout)
-    createSlider(radialGroup, "Watcher Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mWarlock.radialButtonLayout)
+    radialGroup:SetTitle("Radial Frame / Icons: ")
+    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", 0, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Icon Size: ", 10, 1000, 1, "watcherFrameSize", 12, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mWarlock.radialButtonLayout)
     scrollFrame:AddChild(radialGroup)
     
     -- Font shit
@@ -110,5 +110,7 @@ function mWarlock:OptionsPane()
     createSlider(fontGroup, "Count Font Size: ", 2, 55, 1, "countFontSize", 12, mWarlock.radialButtonLayout)
     createSlider(fontGroup, "Ready Font Size: ", 2, 55, 1, "readyFontSize", 12, mWarlock.radialButtonLayout)
     createSlider(fontGroup, "CoolDown Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "Timer Font Size: ", 2, 55, 1, "timerFontSize", 12, mWarlock.radialButtonLayout)
     scrollFrame:AddChild(fontGroup)
 end
+

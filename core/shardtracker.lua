@@ -1,20 +1,19 @@
 function mWarlock:createShardCountFrame()
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED
-    shardCounterFrame = CreateFrame("Frame", mw_shardFrameName, UIParent, "BackdropTemplate")
-    shardCounterFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    shardCounterFrame:SetSize(128, 128)
-    shardCounterFrame:SetAlpha(.8)
-    shardCounterFrame:RegisterForDrag("LeftButton")  
-    shardCounterFrame.tex = shardCounterFrame:CreateTexture(nil, "ARTWORK")
-    shardCounterFrame.tex:SetAllPoints(shardCounterFrame)
-    
-    shardCounterFrame.movetex = shardCounterFrame:CreateTexture("OVERLAY")
-    shardCounterFrame.movetex:SetPoint("CENTER", 0, 0)
-    shardCounterFrame.movetex:SetAllPoints(shardCounterFrame)
+    local size = 100
+    shardCounterFrame = mWarlock:CreateMovableFrame(SHARD_FRAMENAME,
+                                        {100, 100},
+                                        UIParent,
+                                        "",
+                                        "",
+                                        "ARTWORK",
+                                        nil,
+                                        true, 
+                                        {size, size}, {size, size})
 
-    mWarlock:moveFrame(shardCounterFrame, UIParent, false)
-    mWarlock:restoreFrame(mw_shardFrameName, shardCounterFrame)
+    shardCounterFrame:SetAlpha(.8)
+    mWarlock:setShardTrackerFramesSize()
 end
 
 function mWarlock:setShardTrackerFramesSize()

@@ -40,6 +40,9 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     -- Create the watcher frame
     if buffName == nil and parentSpellName ~= nil then
         buffName = parentSpellName
+    else
+        buffName = ""
+        print("Failed to setup a watcher!")
     end
     frameName = string.format("Frame_%s", buffName)
     
@@ -90,6 +93,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
     -- Set the OnUpdate function for the frame
     watcher:SetScript("OnUpdate", function(self, elapsed)
+        -- Hide all the UI when mounted.
         if IsMounted() then
             watcher:Hide()
             watcher.tex:Hide()
@@ -106,15 +110,22 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             cooldownText:Show()
         end
 
+        -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
         if parentSpellName ~= nil then
             iconFrame:SetTexture(parentSpellIcon)
         else
             iconFrame:SetTexture(iconPath)
         end 
 
+        -- If we do have a parent spell, if it has a cool down we need to run that cooldown timer.
         if parentSpellName ~= nil and not IsMounted() then
             -- COOLDOWNS FOR PARENT SPELLS
             local start, duration, enabled, modRate = GetSpellCooldown(parentSpellName)
+            -- catch a bug when changing talents.
+            if start == nil then
+                start = 0
+            end
+
             local remaining = start + duration - GetTime()
             local minutes = math.floor(remaining / 60)
             local seconds = math.floor(remaining - minutes * 60)
@@ -137,33 +148,40 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             end
         end
 
-        -- All other buff timers
+        -- Find any "counts" for buffs, eg Implosion etc
         found = false
         local count = GetSpellCount(spellID)
         if count ~= 0 and not IsMounted() then
             countText:Show()
             countText:SetText(tostring(count))
-            if buffName == summonSoulKeeperSpellName then
+            
+            -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
+            -- else we hide the ready for that spell.
+            if buffName == SUMMONSOULKEEPER_SPELLNAME then
                 readyText:Show()
             end
         else
-            if buffName == summonSoulKeeperSpellName then
+            if buffName == SUMMONSOULKEEPER_SPELLNAME then
                 readyText:Hide()
             end
+        end
+
+        if not mWarlock:HasBuff(buffName) and buffName == DEMONICCORE_SPELLNAME then
+            countText:SetText("")
+            countText:Hide()
         end
 
         for idx = 1, 40 do
             local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
             spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
+            
             if name == buffName then
-                if count ~= nil and count > 1 and expirationTime ~= nil then
+                if count ~= 0 and count >= 1 and expirationTime ~= nil then
                     countText:Show()
                     countText:SetText(tostring(count))
-                else
-                    countText:Hide()
                 end
             end
-            
+
             -- TIMERS
             if name ~= nil and name == buffName and expirationTime ~= nil then
                 -- Buff is active -- 
@@ -198,7 +216,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 readyText:SetTextColor(0, 1, 0)
             end
             
-            if buffName == callDreadStealersSpellName and soulShards < 2 then
+            if buffName == CALLDREADSTALKERS_SPELLNAME and soulShards < 2 then
                 readyText:SetText(NOSSSTR)
                 readyText:SetTextColor(1, 0, 0)
             else
@@ -230,9 +248,10 @@ function mWarlock:radialButtonLayout()
     local radius = MWarlockSavedVariables.radius
     local offset = MWarlockSavedVariables.offset
     local spread = MWarlockSavedVariables.watcherFrameSpread or 0
-    local countFontSize = MWarlockSavedVariables.countFontSize or 12
-    local readyFontSize = MWarlockSavedVariables.readyFontSize or 12
-    local coolDownFontSize = MWarlockSavedVariables.coolDownFontSize or 12
+    local countFontSize = MWarlockSavedVariables.countFontSize or 22
+    local readyFontSize = MWarlockSavedVariables.readyFontSize or 22
+    local coolDownFontSize = MWarlockSavedVariables.coolDownFontSize or 22
+    local timerFontSize = MWarlockSavedVariables.timerFontSize or 22
     MWarlockMainFrame:SetSize(radius*2, radius*2)
 
     local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 55
@@ -253,7 +272,7 @@ function mWarlock:radialButtonLayout()
         
         buffTimerText = buffTimerTexts[x]
         buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
-        buffTimerText:SetFont(customFontPath, countFontSize, "OUTLINE, MONOCHROME")
+        buffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
 
         iconFrame = iconFrames[x]
         iconFrame:SetSize(watcherFrameSize*1.25, watcherFrameSize*1.25)

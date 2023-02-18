@@ -43,14 +43,14 @@ function mWarlock:shardtrack()
     local soulShards = mWarlock:getShardCount()
     
     -- Change the texture of the frame
-    iconPath = string.format("%s\\shards_%d.blp", mediaPath, soulShards)
-    shardCounterFrame.tex:SetTexture(iconPath)
+    iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
+    shardCounterFrame.texture:SetTexture(iconPath)
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
-    if soulShards == 0 and not mainFrameIsMoving then
-        MWarlockMainFrame.tex:SetColorTexture(1, 0, 0, 0.09) -- red, 10% opacity
-    elseif not mainFrameIsMoving then
-        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0) -- transparent
+    if soulShards == 0 and not MAINFRAME_ISMOVING then
+        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0.1) -- red, 10% opacity
+    elseif not MAINFRAME_ISMOVING then
+        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0) -- transparent
     end
 end
 

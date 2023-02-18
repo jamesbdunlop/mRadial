@@ -1,47 +1,139 @@
-local playerGUID = UnitGUID("player")
-
-function mWarlock:createMainFrame()
-    -- Main Frame
-    MWarlockMainFrame = CreateFrame("Frame", mainFrameName, UIParent, "BackdropTemplate")
-
-    MWarlockMainFrame.tex = MWarlockMainFrame:CreateTexture(nil, "ARTWORK")
-    MWarlockMainFrame.tex:SetAllPoints(MWarlockMainFrame)
-    MWarlockMainFrame.tex:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
-
-    MWarlockMainFrame.mask = MWarlockMainFrame:CreateMaskTexture("testMask")
-    MWarlockMainFrame.mask:SetAllPoints(MWarlockMainFrame.tex)
-    MWarlockMainFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-    MWarlockMainFrame.tex:AddMaskTexture(MWarlockMainFrame.mask)
+MW_ALLFRAMES = {}
+function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
+    --Creates a moveable frame to be used by mWarlock:SetMoveFrameScripts
+    if template == nil then template = "BackdropTemplate" end
+    print("-- Create Frame called. %s", frameName)
+    local sizeX = frameSize[1] or 100
+    local sizeY = frameSize[2] or 100
+    print("\t Framesize: %d %d", sizeX, sizeY)
     
-    MWarlockMainFrame:RegisterForDrag("LeftButton")  
-    mWarlock:moveFrame(MWarlockMainFrame, UIParent, false)
-    mWarlock:restoreFrame(mainFrameName, MWarlockMainFrame)
+    local frame = CreateFrame("Frame", frameName, parent, template)
+    frame:SetPoint("CENTER", parent, "CENTER", 0, 0)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetSize(sizeX, sizeY)
+    frame:Show()
+    
+    -- Add to the main frames table.
+    MW_ALLFRAMES[frameName] = frame
+
+    -- TEXTURE
+    if texturePath ~= nil then
+        frame.texture = frame:CreateTexture("texture_" .. frameName)
+        frame.texture:SetPoint("CENTER", 0, 0)
+        frame.texture:SetTexture(texturePath)
+        print("\t Set texturePath: %s at level %s", texturePath, strata)
+    end
+    -- MASK
+    if maskPath ~= nil then
+        frame.mask = frame:CreateMaskTexture("mask_" .. frameName)
+        frame.mask:SetPoint("CENTER", 0, 0)
+        frame.mask:SetTexture(maskPath, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+        frame.texture:AddMaskTexture(frame.mask)
+        print("\t Set maskPath: %s", maskPath)
+    end
+
+    -------------------------------------------------
+    -- special frame to show when move mode is active
+    frame.movetex = frame:CreateTexture(nil, "OVERLAY")
+    frame.movetex:SetPoint("CENTER", 0, 0)
+    frame.movetex:SetAllPoints(frame)
+    frame.movetex:SetColorTexture(0, 0, 0, 0)
+
+    if allPoints ~= nil then
+        frame.texture:SetAllPoints(frame)
+        if mask ~= nil then
+            frame.mask:SetAllPoints(frame.texture)
+        end
+    else
+        if textureSize ~= nil then
+            local texSizeX = textureSize[1] or 100
+            local texSizeY = textureSize[1] or 100
+            frame.texture:SetSize(texSizeX, texSizeY)
+        end
+        if mask ~= nil and maskSize ~= nil then
+            local maskSizeX = textureSize[1] or 100
+            local maskSizeY = textureSize[1] or 100
+            frame.mask:SetSize(maskSizeX, maskSizeY)
+        end
+    end
+
+    mWarlock:SetMoveFrameScripts(frame)
+    mWarlock:RestoreFrame(frameName, frame)
+    return frame
+end
+
+function mWarlock:SetMoveFrameScripts(frame)
+    frame:SetScript("OnMouseDown", function(self, button)
+        if not frame:IsMovable() then
+            return
+        end
+
+        if IsShiftKeyDown() and button == "LeftButton" then
+            frame:StartMoving()
+        end
+    end)
+
+    frame:SetScript("OnMouseUp", function(self, button)
+        frame:StopMovingOrSizing()
+        frameName = frame:GetName()
+        local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
+        MWarlockSavedVariables.framePositions[frameName] = {}
+        MWarlockSavedVariables.framePositions[frameName]["point"] = point
+        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
+        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
+        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
+        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
+    end)
+end
+
+function mWarlock:CreateMainFrame()
+    local radius = MWarlockSavedVariables.radius or 150
+    local ooShardsMult = 5
+    local size = radius*ooShardsMult
+    -- Main Frame
+    MWarlockMainFrame = mWarlock:CreateMovableFrame(MAINBG_FRAMENAME,
+                                                    {100, 100},
+                                                    UIParent,
+                                                    "BackdropTemplate",
+                                                    "Interface/Tooltips/UI-Tooltip-Background",
+                                                    "ARTWORK",
+                                                    "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+                                                    false, {size, size}, {size, size})
+    mWarlock:RestoreFrame(MAINBG_FRAMENAME, MWarlockMainFrame)
 end
 
 ---------------------------------------------------------------------------------------------------
 -------- DEMONOLOGY SPECIFIC FRAMES
-function mWarlock:createHandofGuldanFrame()
-    -- CAST HAND OF G TEXT
-    handOfGText = MWarlockMainFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    handOfGText:SetSize(1000, 50)
-    handOfGText:SetPoint("CENTER", UIParent, "CENTER", 0, udOffset+20)
-    handOfGText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
-    local soulShards = UnitPower("player", 7)
-    handOfGText:SetTextColor(.1, 1, .1)
-    handOfGText:Hide()
-end
+-- function mWarlock:createHandofGuldanFrame()
+--     local size = 100
+--     HandOfBGFrame = mWarlock:CreateMovableFrame("TEST",
+--                                                 {size, size},
+--                                                 UIParent,
+--                                                 "BackdropTemplate",
+--                                                 "Interface/Tooltips/UI-Tooltip-Background",
+                                                -- "ARTWORK",
+--                                                 "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+--                                                 true, {size, size}, {size, size})
+
+--     mWarlock:RestoreFrame(HANDOFGUL_FRAMENAME, HandOfBGFrame)
+--     HandOfBGFrame.text = HandOfBGFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+--     HandOfBGFrame.text:SetPoint("CENTER", HandOfBGFrame, "CENTER", 0, 0)
+--     HandOfBGFrame.text:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
+--     HandOfBGFrame.text:SetSize(500, 100)
+--     HandOfBGFrame.text:SetTextColor(.1, 1, .1)
+-- end
 
 felguardFrames = {}
 function mWarlock:createFelguardFrames()
     petSpellData = {
-        ["DemonicStrength"] = {["spellName"] = "Demonic Strength", 
-                               ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", rootIconPath)}, 
-        ["FelStorm"] = {["spellName"] = "FelStorm", 
-                        ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", rootIconPath)}, 
-        ["AxeToss"] = {["spellName"] = "Axe Toss", 
-                            ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", rootIconPath)},
-        ["SoulStrike"] = {["spellName"] = "Soul Strike", 
-                          ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", rootIconPath)}
+        ["DemonicStrength"] = {["spellName"] = "Demonic Strength",
+                               ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)},
+        ["FelStorm"] = {["spellName"] = "FelStorm",
+                        ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", ROOTICONPATH)},
+        ["AxeToss"] = {["spellName"] = "Axe Toss",
+                            ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", ROOTICONPATH)},
+        ["SoulStrike"] = {["spellName"] = "Soul Strike",
+                          ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", ROOTICONPATH)}
     }
 
     for frameName, spellData in pairs(petSpellData) do
@@ -50,25 +142,30 @@ function mWarlock:createFelguardFrames()
         if mWarlock:checkHasSpell(spellName) then
             if felguardFrames[frameName] == nil then
                 -- print("Creating new felguard frame: %s", frameName)
-                local petSpellFrame = CreateFrame("Frame", frameName, UIParent)
-                petSpellFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+                local size = 100
+                local petSpellFrame = mWarlock:CreateMovableFrame(frameName,
+                                                    {100, 100},
+                                                    UIParent,
+                                                    "",
+                                                    spellIcon,
+                                                    "ARTWORK",
+                                                    nil,
+                                                    true, 
+                                                    {size, size}, {size, size})
+
+                
                 petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
                 
-                petSpellFrame.movetex = petSpellFrame:CreateTexture("OVERLAY")
-                petSpellFrame.movetex:SetPoint("CENTER", 0, 0)
-                petSpellFrame.movetex:SetAllPoints(petSpellFrame)
-                
-                petSpellFrame.tex = petSpellFrame:CreateTexture()
-                petSpellFrame.tex:SetTexture(spellIcon)
-                petSpellFrame.tex:SetPoint("CENTER", 0, 0)
-                petSpellFrame.tex:SetAllPoints(petSpellFrame)
-                
-                local petSpellFrameText = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-                petSpellFrameText:SetTextColor(.1, 1, .1)
-                petSpellFrameText:SetText("")
-                petSpellFrameText:SetAllPoints(petSpellFrame.tex)
-                petSpellFrameText:SetFont("Fonts\\FRIZQT__.TTF", 35, "OUTLINE, MONOCHROME")
-                
+                mWarlock:SetMoveFrameScripts(petSpellFrame)
+                mWarlock:RestoreFrame(frameName, petSpellFrame)
+
+                petSpellFrame.text = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+                -- local petSpellFrameText = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+                petSpellFrame.text:SetTextColor(.1, 1, .1)
+                petSpellFrame.text:SetText("")
+                petSpellFrame.text:SetAllPoints(petSpellFrame.tex)
+                petSpellFrame.text:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
+
                 petSpellFrame:SetScript("OnEvent", function(self, event, ...)
                     if not mWarlock:IsFelguardSummoned() then
                         petSpellFrame:Hide()
@@ -84,53 +181,50 @@ function mWarlock:createFelguardFrames()
                             -- Buff is active               
                             local minutes, seconds = mWarlock:GetAuraTimeLeft(expirationTime)
                             if minutes >0 then
-                                petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
+                                petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
                             else
-                                petSpellFrameText:SetText(string.format("%ds", seconds))
+                                petSpellFrame.text:SetText(string.format("%ds", seconds))
                             end
-                            petSpellFrameText:SetTextColor(.1, 1, .1)
-                            local isActive = true
+                            petSpellFrame.text:SetTextColor(.1, 1, .1)
+                            isActive = true
                         end
                     end
-                        
+
                     if not isActive then
-                        petSpellFrameText:SetText("")
+                        petSpellFrame.text:SetText("")
                         local start, duration, enable = GetSpellCooldown(spellName)
                         if enable then
                             local remaining = start + duration - GetTime()
                             local minutes = math.floor(remaining / 60)
                             local seconds = math.floor(remaining - minutes * 60)
-                            
+
                             if remaining < 0 then
-                                petSpellFrame.tex:SetAlpha(1)
-                                petSpellFrameText:SetText("")
-                                petSpellFrameText:SetTextColor(.1, 1, .1)
+                                petSpellFrame.texture:SetAlpha(1)
+                                petSpellFrame.text:SetText("")
+                                petSpellFrame.text:SetTextColor(.1, 1, .1)
                             else
                                 if minutes >0 then
-                                    petSpellFrameText:SetText(string.format("%dm%d", minutes, seconds))
+                                    petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
                                 else
-                                    petSpellFrameText:SetText(string.format("%ds", seconds))
+                                    petSpellFrame.text:SetText(string.format("%ds", seconds))
                                 end
-                                petSpellFrameText:SetTextColor(1, .1, .1)
-                                petSpellFrame.tex:SetAlpha(0.5)
+                                petSpellFrame.text:SetTextColor(1, .1, .1)
+                                petSpellFrame.texture:SetAlpha(0.5)
                             end
                         end
                     end
                 end)
-                
+
                 ---- SCRIPTS
-                mWarlock:moveFrame(petSpellFrame, UIParent, false)
-                
+                mWarlock:SetMoveFrameScripts(petSpellFrame)
+
                 -- Add to the frame table for felguard frames
                 felguardFrames[frameName] = petSpellFrame
-            -- else
-            --     print("Using existing felguard frame: %s", frameName)
-            --     local petSpellFrame = felguardFrames[frameName]
             end
-            
+
             framePositions = MWarlockSavedVariables.framePositions[frameName]
             if framePositions ~= nil then
-                mWarlock:restoreFrame(frameName, felguardFrames[frameName])
+                mWarlock:RestoreFrame(frameName, felguardFrames[frameName])
             end
         end
     end
@@ -141,8 +235,8 @@ function mWarlock:setFelguardFramePosAndSize()
     local frameSize = MWarlockSavedVariables["felguardFrameSize"]
     for frameName, frame in pairs(felguardFrames) do
         frame:SetSize(frameSize, frameSize)
-        
-        mWarlock:restoreFrame(frameName, frame)
+
+        mWarlock:RestoreFrame(frameName, frame)
     end
 end
 ---------------------------------------------------------------------------------------------------
@@ -150,55 +244,16 @@ end
 ---------------------------------------------------------------------------------------------------
 -------- AFFLICTION SPECIFIC FRAMES
 ---------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
--------- FRAME UTILS
-function mWarlock:moveFrame(frame, isMovable)
-    if not isMovable then
-        frame:EnableMouse(false)
-        frame:SetMovable(false)
-        return
-    end
-
-    frame:EnableMouse(true)
-    frame:SetMovable(true)
-    
-    frame:SetScript("OnMouseDown", function(self, button)
-        if not frame:IsMovable() then
-            return
-        end
-
-        if IsShiftKeyDown() and button == "LeftButton" then
-            frame:StartMoving()
-        end
-    end)
-    
-    frame:SetScript("OnMouseUp", function(self, button)
-        frame:StopMovingOrSizing()
-        frameName = frame:GetName()
-        local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
-        MWarlockSavedVariables.framePositions[frameName] = {}
-        MWarlockSavedVariables.framePositions[frameName]["point"] = point
-        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
-        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
-        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
-        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-        
-    end)
-end
-
-function mWarlock:setMovable(isMovable)
-    --[[
-        Sets frames to be moveable or not. Assigns a blue color to their respective 
-        movetex, textures.
-    ]]
-    print("Set moveable called: %s", isMovable)
+function mWarlock:SetUIMovable(isMovable)
+    --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
         isMovable=MWarlockSavedVariables["moveable"]
     end
-    mWarlock:moveFrame(shardCounterFrame, isMovable)
-    mWarlock:moveFrame(MWarlockMainFrame, isMovable)
-    for frameName, frame in pairs(felguardFrames) do
-        mWarlock:moveFrame(frame, isMovable)
+    MAINFRAME_ISMOVING = isMovable
+
+    for frameName, frame in pairs(MW_ALLFRAMES) do
+        frame:EnableMouse(isMovable)
+        frame:SetMovable(isMovable)
         if isMovable then
             frame.movetex:SetColorTexture(0, 0, 1, .5)
         else
@@ -206,18 +261,19 @@ function mWarlock:setMovable(isMovable)
         end
     end
 
-    mainFrameIsMoving = isMovable
-    if isMovable then
-        MWarlockMainFrame.tex:SetColorTexture(0, 0, 1, .5)
-        shardCounterFrame.movetex:SetColorTexture(0, 0, 1, .5)
-    else
-        MWarlockMainFrame.tex:SetColorTexture(0, 0, 0, 0)
-        shardCounterFrame.movetex:SetColorTexture(0, 0, 0, 0)
-    end
 end
 
-function mWarlock:restoreFrame(frameName, frame)
+function mWarlock:RestoreFrame(frameName, frame)
     framePosData = MWarlockSavedVariables.framePositions[frameName]
+    if framePosData == nil then
+        framePosData = {}
+        framePosData["x"] = 0
+        framePosData["y"] = 0
+        framePosData["point"] = "CENTER"
+        framePosData["relativeTo"] = UIParent
+        framePosData["relativePoint"] = "CENTER"
+    end
+
     x = framePosData["x"] or 0
     y = framePosData["y"] or 0
     point = framePosData["point"] or "CENTER"
