@@ -1,3 +1,23 @@
+function mWarlock:GetAuraTimeLeft(expirationTime)
+    if expirationTime == nil then
+        return nil
+    end
+    local timeLeft = expirationTime - GetTime()
+    local minutes = math.floor(timeLeft / 60)
+    local seconds = math.floor(timeLeft - minutes * 60)
+    return minutes, seconds
+end
+
+function mWarlock:HasBuff(buffName)
+    for i = 1, 40 do
+        local name, _, _, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
+        if name and name == buffName then
+            return true
+        end
+    end
+    return false
+end
+
 function mWarlock:checkHasSpell(spellName)
     local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
     if name then
@@ -25,6 +45,36 @@ function mWarlock:isCorrectSpec()
     return true
 end
 
+function mWarlock:getShardCount()
+    return  UnitPower("player", 7)
+end
+
+function mWarlock:hasPetSummoned()
+    local summonedPet = UnitCreatureFamily("pet")
+    if summonedPet then
+      return true, summonedPet
+    end
+
+    return false, nil
+end
+function mWarlock:IsFelguardSummoned()
+    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+    if isSummoned and summonedPet == "Felguard" then
+      return true
+    end
+
+    return false
+end
+
+function mWarlock:IsSuccubusSummoned()
+    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+    if isSummoned and summonedPet == "Succubus" or summonedPet == "Incubus" then
+      return true
+    end
+    
+    return false
+end
+
 function mWarlock:syncDemonologyTalentTree()
     for spellName, _ in pairs(demTree_specialisationData) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
@@ -32,16 +82,4 @@ function mWarlock:syncDemonologyTalentTree()
             demTree_specialisationData[spellName]["active"] = true
         end
     end
-end
-
-function mWarlock:getShardCount()
-    return  UnitPower("player", 7)
-end
-
-function mWarlock:IsFelguardSummoned()
-    local summonedPet = UnitCreatureFamily("pet")
-    if summonedPet and summonedPet == "Felguard" then
-      return true
-    end
-    return false
 end

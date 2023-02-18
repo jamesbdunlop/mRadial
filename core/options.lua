@@ -65,34 +65,38 @@ end
 -- BUILD PANE
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
-    local optionsf = AceGUI:Create("Frame")
-        optionsf:SetWidth(400)
-        optionsf:SetHeight(600)
+    local optionsf = AceGUI:Create("Window")
+        optionsf:SetWidth(900)
+        optionsf:SetHeight(400)
         optionsf:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
         optionsf:SetTitle("MWarlock - Options : " .. specName) 
         optionsf:SetLayout("List")
         optionsf:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         optionsf:SetLayout("Fill")
     
-    local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
-          scrollcontainer:SetFullWidth(true)
-          scrollcontainer:SetFullHeight(true)
-          scrollcontainer:SetLayout("Fill")
-    optionsf:AddChild(scrollcontainer)
-
-    local scrollFrame  = AceGUI:Create("ScrollFrame")
+        local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
+        scrollcontainer:SetFullWidth(true)
+        scrollcontainer:SetFullHeight(true)
+        scrollcontainer:SetLayout("Fill")
+        optionsf:AddChild(scrollcontainer)
+        
+        local scrollFrame  = AceGUI:Create("ScrollFrame")
         scrollFrame:SetLayout("Flow")
-    scrollcontainer:AddChild(scrollFrame)
-
+        scrollcontainer:AddChild(scrollFrame)
+        
+    local generalGroup = AceGUI:Create("InlineGroup")
+    generalGroup:SetTitle("General: ")
     local descrip = "Allow the ui to move around using shift+lmb."
-    createCheckBox(scrollFrame, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
+    createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
+    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mWarlock.HidePetFrames)
     
     -- General shit
-    createSlider(scrollFrame, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
-    createSlider(scrollFrame, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)
+    createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
+    createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)
     if specName == "Demonology" then
-        createSlider(scrollFrame, "Felguard Frame Size: ", 10, 150, 1, "felguardFrameSize", 12, mWarlock.setFelguardFramePosAndSize)
+        createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "felguardFrameSize", 12, mWarlock.setFelguardFramePosAndSize)
     end
+    scrollFrame:AddChild(generalGroup)
     
     -- Radial shit
     local radialGroup = AceGUI:Create("InlineGroup")
@@ -106,10 +110,12 @@ function mWarlock:OptionsPane()
     -- Font shit
     local fontGroup = AceGUI:Create("InlineGroup")
     fontGroup:SetTitle("Fonts: ")
-    createSlider(fontGroup, "Count Font Size: ", 2, 55, 1, "countFontSize", 12, mWarlock.radialButtonLayout)
-    createSlider(fontGroup, "Ready Font Size: ", 2, 55, 1, "readyFontSize", 12, mWarlock.radialButtonLayout)
-    createSlider(fontGroup, "CoolDown Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.radialButtonLayout)
-    createSlider(fontGroup, "Timer Font Size: ", 2, 55, 1, "timerFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.radialButtonLayout)
+    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mWarlock.radialButtonLayout)
     scrollFrame:AddChild(fontGroup)
+
+
 end
 

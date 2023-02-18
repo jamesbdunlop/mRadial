@@ -5,7 +5,7 @@ MAINFRAME_ISMOVING = false
 READYSTR = "RDY"
 NOSSSTR = "N0 SS!"
 READYTEXT = "RDY"
-
+GCD = 1.5
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
 
@@ -27,6 +27,7 @@ NETHERPORTAL_SPELLNAME = "Nether Portal" --26721
 GRIMFELGUARD_SPELLNAME = "Grimoire: Felguard" --111898
 CALLDREADSTALKERS_SPELLNAME = "Call Dreadstalkers" --104316
 IMPLOSION_SPELLNAME = "Implosion" --196277
+SHADOWFURY_SPELLNAME = "ShadowFury" --30283
 
 demo_spellOrder = {}
 demo_spellOrder[POWERSIPHON_SPELLNAME] = 264130
@@ -38,6 +39,7 @@ demo_spellOrder[SUMMONVF_SPELLNAME] = 264119
 demo_spellOrder[NETHERPORTAL_SPELLNAME] = 267217
 demo_spellOrder[GRIMFELGUARD_SPELLNAME] = 111898
 demo_spellOrder[IMPLOSION_SPELLNAME] = 196277
+demo_spellOrder[SHADOWFURY_SPELLNAME] = 30283
 
 ---------------------------------------------------------------------------------------------------
 spellIcons = {}
@@ -52,7 +54,7 @@ spellIcons[DEMONICPOWER_SPELLNAME] = string.format("%s/Inv_summondemonictyrant.b
 spellIcons[SUMMONVF_SPELLNAME] = string.format("%s/Inv_argusfelstalkermount.blp", ROOTICONPATH)
 spellIcons[NETHERPORTAL_SPELLNAME] = string.format("%s/Inv_netherportal.blp", ROOTICONPATH)
 spellIcons[GRIMFELGUARD_SPELLNAME] = string.format("%s/Spell_shadow_summonfelguard.blp", ROOTICONPATH)
-spellIcons[CALLDREADSTALKERS_SPELLNAME] = string.format("%s/Spell_warlock_calldreadstalkers.blp", ROOTICONPATH)
 spellIcons[IMPLOSION_SPELLNAME] = string.format("%s/Inv_implosion.blp", ROOTICONPATH)
+spellIcons[SHADOWFURY_SPELLNAME] = string.format("%s/Ability_warlock_shadowfurytga.blp", ROOTICONPATH)
 -- Destro
 -- Affy

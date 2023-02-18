@@ -5,6 +5,7 @@
 ## License: All Rights Reserved
 ## Notes: Macka's warlock ui for shits and giggles
 ## SavedVariables: MWarlockSavedVariables
+## OptionalDeps: LibDBIcon-1.0
 
 embeds.xml 
 addon.lua

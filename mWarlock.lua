@@ -1,13 +1,8 @@
--- TO DO
-    -- Add options for
-    -- shard warning size, opacity, and let this position off the radius
+-- Add options for
     -- when options mode is enabled, add a feature to trigger the timers, / show shard warning 
     -- movingup down the timer box positions
-    -- see if I can manage this global cooldown rubbish.
     -- add on update throttling
-    -- fix the size of the felguard frame text for full duration visibility
     -- if we don't have power siphon do we still proc demonic core?
--- ??????MISSING WATCHERS????????
 
 ----GLOBAL SAVED VARS
 if not MWarlockSavedVariables then
@@ -34,6 +29,15 @@ function mWarlock:createWatchers(specData, spellOrder)
             local parentSpellName = spellData["parentSpellName"]
             local skipBuff = spellData["skipBuff"]
             local isShardDependant = spellData["isShardDependant"]
+            -- print("spellName: %s", spellName)
+            -- print("spellID: %s", spellID)
+            -- print("iconPath: %s", iconPath)
+            -- print("buffName: %s", buffName)
+            -- print("parentSpellIcon: %s", parentSpellIcon)
+            -- print("parentSpellName: %s", parentSpellName)
+            -- print("skipBuff: %s", skipBuff)
+            -- print("isShardDependant: %s", isShardDependant)
+            -- print("---")
             mWarlock:addWatcher(buffName, 
                         iconPath, 
                         parentSpellIcon, 
@@ -45,7 +49,6 @@ function mWarlock:createWatchers(specData, spellOrder)
         end
     end
 end
-
 
 function mWarlock:OnInitialize()
     -- mWarlock:CreateConfigPanels()
@@ -59,6 +62,7 @@ function mWarlock:OnInitialize()
             if event == "PLAYER_LOGIN" then
                 print("~~~~~~~~~~~~~~~~~~~~")
                 print("  !Welcome to MWarlock!")
+                print("/mw slash commands are: move, lock, options")
                 print("~~~~~~~~~~~~~~~~~~~~")
                 ---------------------------------------------------
                 -- setup the UI
@@ -88,8 +92,27 @@ function mWarlock:OnInitialize()
 end
 
 function mWarlock:OnEnable()
-    -- Called when the addon is enabled
-    -- print("mWarlock OnEnable called!")
+    local LDB = LibStub("LibDataBroker-1.1")
+    local LDBIcon = LibStub("LibDBIcon-1.0")
+    
+    local addonName = "mWarlock"
+    local addonIcon = MEDIAPATH.."\\miniMapIcon"
+    
+    local dataBroker = LDB:NewDataObject(addonName, {
+        type = "data source",
+        icon = addonIcon,
+        OnClick = function(self, button)
+            mWarlock:OptionsPane()
+        end,
+        OnTooltipShow = function(tooltip)
+            -- Add tooltip text
+            tooltip:AddLine("MWarlock - Click to show Options!")
+        end,
+    })
+    
+    LDBIcon:Register(addonName, dataBroker, {
+        hide = false,
+    })
 end
 
 function mWarlock:OnDisable()

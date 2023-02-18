@@ -52,9 +52,9 @@ demTree_specialisationData[SUMMONSOULKEEPER_SPELLNAME]["isShardDependant"]  = fa
 demTree_specialisationData[INQUISITORSGAZE_SPELLNAME] = {}
 demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["active"]             = false
 demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["buffName"]           = false
-demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["iconPath"]           = spellIcons[INQUISITORSGAZE_SPELLNAME]
-demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["parentSpellIcon"]    = false
-demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["parentSpellName"]    = false
+demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["iconPath"]           = false
+demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["parentSpellIcon"]    = spellIcons[INQUISITORSGAZE_SPELLNAME]
+demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["parentSpellName"]    = INQUISITORSGAZE_SPELLNAME
 demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["skipBuff"]           = false
 demTree_specialisationData[INQUISITORSGAZE_SPELLNAME]["isShardDependant"]   = false
 
@@ -84,3 +84,12 @@ demTree_specialisationData[IMPLOSION_SPELLNAME]["parentSpellIcon"]      = spellI
 demTree_specialisationData[IMPLOSION_SPELLNAME]["parentSpellName"]      = IMPLOSION_SPELLNAME
 demTree_specialisationData[IMPLOSION_SPELLNAME]["skipBuff"]             = true
 demTree_specialisationData[IMPLOSION_SPELLNAME]["isShardDependant"]     = false
+
+demTree_specialisationData[SHADOWFURY_SPELLNAME] = {}
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["active"]               = false
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["buffName"]             = false
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["iconPath"]             = spellIcons[SHADOWFURY_SPELLNAME]
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["parentSpellIcon"]      = spellIcons[SHADOWFURY_SPELLNAME]
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["parentSpellName"]      = SHADOWFURY_SPELLNAME
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["skipBuff"]             = true
+demTree_specialisationData[SHADOWFURY_SPELLNAME]["isShardDependant"]     = false

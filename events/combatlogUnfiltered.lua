@@ -6,27 +6,8 @@ mWarlock:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 
 
-
-
+function mWarlock:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
+    print("Player changed spec!")
+end
+mWarlock:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
     
-    -- soulShards = mWarlock:getShardCount()
-    -- if soulShards == 2 then
-    --     HandOfGText:SetText("!Dread Only!")
-    -- elseif soulShards > 2 then
-    --     HandOfGText:SetText("!Hand or Dread!")
-    -- end
-
-    -- -- HAND OF GULDAN FRAME
-    -- local isInCombat = UnitAffectingCombat("player")
-    -- if soulShards <= 1 then
-    --     HandOfGText:Hide()
-
-    -- elseif (soulShards == 5) then
-    --     if isInCombat then
-    --         HandOfGText:Show()
-    --     end
-    -- else
-    --     if isInCombat then
-    --         HandOfGText:Show()
-    --     end
-    -- end 
