@@ -43,10 +43,8 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     opt_cbox:SetDescription(descrip)
     
     local function setValue(table, cbName, value)
-        print(table, cbName, value)
         MWarlockSavedVariables[variableName] = value
         if toexec ~= nil then
-            -- print("calling func : %s", value)
             toexec(value)
         end
     end
@@ -91,6 +89,7 @@ function mWarlock:OptionsPane()
     
     -- General shit
     createSlider(scrollFrame, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
+    createSlider(scrollFrame, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)
     if specName == "Demonology" then
         createSlider(scrollFrame, "Felguard Frame Size: ", 10, 150, 1, "felguardFrameSize", 12, mWarlock.setFelguardFramePosAndSize)
     end

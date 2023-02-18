@@ -23,9 +23,10 @@ if MWarlockSavedVariables.framePositions == nil then
     MWarlockSavedVariables.framePositions = {}
 end
 
+local udOffset = 20
 function mWarlock:createWatchers(specData, spellOrder)
     for spellName, spellID in pairs(spellOrder) do
-        spellData = specData[spellName]
+        local spellData = specData[spellName]
         if spellData["active"] then
             local iconPath = spellData["iconPath"]
             local buffName = spellData["buffName"]
@@ -45,19 +46,7 @@ function mWarlock:createWatchers(specData, spellOrder)
     end
 end
 
-local blizzPanel
-local registered = false
 
--- function mWarlock:CreateConfigPanels()
--- 	mw_config:RegisterOptionsTable("mWarlock", mw_aboutOptions)
--- 	local aboutFrame = mw_dialog:AddToBlizOptions("mWarlock", "mWarlock")
--- 	if not registered then
---         blizzPanel = mw_createBlizzOptions()
--- 		registered = true
--- 	end
--- end
-
-udOffset = 20
 function mWarlock:OnInitialize()
     -- mWarlock:CreateConfigPanels()
     if(mWarlock:isCorrectClass()) then
