@@ -267,8 +267,30 @@ function mWarlock:createPetFrames()
         petSpellData = {
             ["Seduction"] = {["spellName"] = "Seduction",
                              ["spellIcon"] = string.format("%s/Spell_shadow_seduction.blp", ROOTICONPATH)},
-            ["Whiplash"] = {["spellName"] = "Whiplash",
-                            ["spellIcon"] = string.format("%s/Ability_warlock_whiplash.blp", ROOTICONPATH)},
+                             ["Whiplash"] = {["spellName"] = "Whiplash",
+                             ["spellIcon"] = string.format("%s/Ability_warlock_whiplash.blp", ROOTICONPATH)},        
+                            }
+    elseif mWarlock:IsFelhunterSummoned() then 
+        petSpellData = {
+            ["SpelLock"] = {["spellName"] = "Spell Lock",
+                            ["spellIcon"] = string.format("%s/Spell_shadow_mindrot.blp", ROOTICONPATH)},
+            ["DevourMagic"] = {["spellName"] = "Devour Magic",
+                               ["spellIcon"] = string.format("%s/Spell_nature_purge.blp", ROOTICONPATH)},
+                            }
+
+    elseif mWarlock:IsVoidWalkerSummoned() then 
+        petSpellData = {
+            ["ShadowBulwark"] = {["spellName"] = "Shadow Bulwark",
+                            ["spellIcon"] = string.format("%s/Spell_shadow_antishadow.blp", ROOTICONPATH)},
+            ["Suffering"] = {["spellName"] = "Suffering",
+                                ["spellIcon"] = string.format("%s/Spell_shadow_blackplague.blp", ROOTICONPATH)},
+                            }
+    elseif mWarlock:IsFelImpSummoned() then 
+        petSpellData = {
+            ["SingeMagic"] = {["spellName"] = "Singe Magic",
+                            ["spellIcon"] = string.format("%s/Spell_fire_elementaldevastation.blp", ROOTICONPATH)},
+            ["Flee"] = {["spellName"] = "Flee",
+                                ["spellIcon"] = string.format("%s/Ability_heroicleap.blp", ROOTICONPATH)},
                             }
     end
 

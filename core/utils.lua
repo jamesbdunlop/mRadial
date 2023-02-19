@@ -109,6 +109,33 @@ function mWarlock:IsSuccubusSummoned()
     return false
 end
 
+function mWarlock:IsFelhunterSummoned()
+    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+    if isSummoned and summonedPet == "Felhunter" then
+      return true
+    end
+    
+    return false
+end
+
+function mWarlock:IsVoidWalkerSummoned()
+    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+    if isSummoned and summonedPet == "Voidwalker" then
+      return true
+    end
+    
+    return false
+end
+
+function mWarlock:IsFelImpSummoned()
+    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+    if isSummoned and summonedPet == "Fel Imp" then
+      return true
+    end
+    
+    return false
+end
+
 function mWarlock:syncDemonologyTalentTree()
     for spellName, _ in pairs(demTree_specialisationData) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
