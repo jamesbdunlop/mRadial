@@ -11,7 +11,7 @@ end
 MWarlockSavedVariables.framePositions = {}
 MWarlockSavedVariables.radius = 100
 MWarlockSavedVariables.offset = 0
-MWarlockSavedVariables.felguardFrameSize = 35
+MWarlockSavedVariables.PetFramesize = 35
 MWarlockSavedVariables.shardTrackerFrameSize = 128
 ----
 if MWarlockSavedVariables.framePositions == nil then
@@ -81,7 +81,7 @@ function mWarlock:OnInitialize()
                     
                     -- Note this can become spec based atm only supporting DEMO!
                     -- mWarlock:createHandofGuldanFrame()
-                    mWarlock:createFelguardFrames()
+                    mWarlock:createPetFrames()
                 end
                 
                 self:UnregisterEvent("PLAYER_LOGIN")

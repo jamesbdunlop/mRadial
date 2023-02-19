@@ -241,9 +241,15 @@ function mWarlock:CreateMainFrame()
     MWarlockMainFrame.crosshair:SetSize(25, 25)
     MWarlockMainFrame.crosshair:Hide()
 end
-
-local felguardFrames = {}
-function mWarlock:createFelguardFrames()
+---------------------------------------------------------------------------------------------------
+-- PET FRAMES
+PetFrames = {}
+function mWarlock:createPetFrames()
+    for frameName, frame in pairs(PetFrames) do
+        frame:Hide()
+        frame:SetParent(nil)
+    end
+    PetFrames = {}
     local hasSummonedPet, summonedPet = mWarlock:hasPetSummoned()
     local petSpellData = {}
     if mWarlock:IsFelguardSummoned() then 
@@ -266,12 +272,11 @@ function mWarlock:createFelguardFrames()
                             }
     end
 
-    
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if felguardFrames[frameName] == nil then
-            -- print("Creating new felguard frame: %s", frameName)
+        if PetFrames[frameName] == nil then
+            -- print("Creating new pet  frame: %s", frameName)
             local size = 100
             local petSpellFrame = mWarlock:CreateMovableFrame(frameName,
                                                 {100, 100},
@@ -298,16 +303,12 @@ function mWarlock:createFelguardFrames()
 
             petSpellFrame:SetScript("OnEvent", function(self, event, ...)
                 local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
-                
-                if not hasSummonedPet then
+                local hasSummonedPet, _ = mWarlock:hasPetSummoned()
+                if not hasSummonedPet or hidePetFrame then
                     petSpellFrame:Hide()
                     return
                 end
-                if hidePetFrame then
-                    petSpellFrame:Hide()
-                    return
-                end
-                
+
                 local isActive = false
                 for idx = 1, 30 do
                     local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
@@ -333,12 +334,12 @@ function mWarlock:createFelguardFrames()
                         local minutes = math.floor(remaining / 60)
                         local seconds = math.floor(remaining - minutes * 60)
 
-                        if remaining < 0 then
+                        if remaining < GCD then
                             petSpellFrame.texture:SetAlpha(1)
                             petSpellFrame.text:SetText("")
                             petSpellFrame.text:SetTextColor(.1, 1, .1)
                         else
-                            if minutes >0 then
+                            if minutes > 0 then
                                 petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
                             else
                                 petSpellFrame.text:SetText(string.format("%ds", seconds))
@@ -351,15 +352,15 @@ function mWarlock:createFelguardFrames()
             end)
 
             -- Add to the frame table for felguard frames
-            felguardFrames[frameName] = petSpellFrame
+            PetFrames[frameName] = petSpellFrame
         end
     end
-    mWarlock:setFelguardFramePosAndSize()
+    mWarlock:sePetFramePosAndSize()
 end
 
-function mWarlock:setFelguardFramePosAndSize()
-    local frameSize = MWarlockSavedVariables["felguardFrameSize"]
-    for frameName, frame in pairs(felguardFrames) do
+function mWarlock:sePetFramePosAndSize()
+    local frameSize = MWarlockSavedVariables["PetFramesSize"] or 45
+    for frameName, frame in pairs(PetFrames) do
         mWarlock:RestoreFrame(frameName, frame)
         frame:SetSize(frameSize, frameSize)
     end
@@ -367,7 +368,7 @@ end
 
 function mWarlock:HidePetFrames()
     local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
-    for _, frame in pairs(felguardFrames) do
+    for _, frame in pairs(PetFrames) do
         if hidePetFrame then
             frame:Hide()
         else
@@ -375,6 +376,7 @@ function mWarlock:HidePetFrames()
         end
     end
 end
+
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
 function mWarlock:radialButtonLayout()
@@ -391,7 +393,16 @@ function mWarlock:radialButtonLayout()
     local coolDownFontSize = MWarlockSavedVariables.coolDownFontSize or 22
     local timerFontSize = MWarlockSavedVariables.timerFontSize or 22
 
-    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 55
+    local radialUDOffset = MWarlockSavedVariables.radialUDOffset or 0
+    local radialLROffset = MWarlockSavedVariables.radialLROffset or -10
+
+    local cdUDOffset = MWarlockSavedVariables.cdUDOffset or 0
+    local cdLROffset = MWarlockSavedVariables.cdLROffset or -10
+
+    local countUDOffset = MWarlockSavedVariables.countUDOffset or 0
+    local countLROffset = MWarlockSavedVariables.countLROffset or -10
+
+    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 45
 
     local angleStep = math.pi / #MW_WatcherFrames + spread
     for x = 1, #MW_WatcherFrames do
@@ -412,13 +423,14 @@ function mWarlock:radialButtonLayout()
         watcher.cooldownText:SetFont(customFontPath, coolDownFontSize, "THICKOUTLINE")
         watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
         
+        watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
+        watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUDOffset)
+
         -- Move the watcher around the center of the frame
         watcher:Show()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
         
         -- We don't do ANY SHOW HIDE HERE!!
-        local radialUDOffset = 0
-        local radialLROffset = -10
         watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         if cosAng <= 0 then
             watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUDOffset)

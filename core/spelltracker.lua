@@ -6,8 +6,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
-    -- of casting this to keep track of...
-    -- If we don't  have a buff name, we're tracking the parent spell entirely.
+    -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
     if not buffName then
         buffName = parentSpellName
     end
@@ -82,7 +81,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         end
 
         -- Find any "counts" for buffs, eg Implosion etc
-        found = false
+        local found = false
         local count = GetSpellCount(spellID)
         if count ~= 0 and not IsMounted() and not MAINFRAME_ISMOVING then
             watcher.countText:Show()

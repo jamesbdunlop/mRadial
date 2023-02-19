@@ -25,3 +25,4 @@ core\spelltracker.lua
 core\slashcmds.lua
 events\unitSpellCastSucceeded.lua
 events\combatlogUnfiltered.lua
+events\unitPet.lua
