@@ -1,8 +1,6 @@
--- ROOTICONPATH ="Interface/ICONS"
-
 -- Gather only the spells we're interested in! It's bit hard codey but I don't care atm...
-demTree_specialisationData = {}
 --buffName, _, _, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant
+demTree_specialisationData = {}
 
 demTree_specialisationData[GRIMFELGUARD_SPELLNAME] = {}
 demTree_specialisationData[GRIMFELGUARD_SPELLNAME]["active"]            = false

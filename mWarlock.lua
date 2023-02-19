@@ -69,20 +69,11 @@ function mWarlock:OnInitialize()
                 mWarlock:CreateMainFrame()
                 mWarlock:createShardCountFrame()
                 ---------------------------------------------------
-                if (mWarlock:isCorrectSpec()) then
-                    -- SUPPORTING ONLY DEMO ATM.
-                    mWarlock:syncDemonologyTalentTree()
-                    
-                    spellOrder = demo_spellOrder
-                    specData = demTree_specialisationData
-                    
-                    mWarlock:createWatchers(specData, spellOrder)
-                    mWarlock:radialButtonLayout()
-                    
-                    -- Note this can become spec based atm only supporting DEMO!
-                    -- mWarlock:createHandofGuldanFrame()
-                    mWarlock:createPetFrames()
-                end
+                local spellOrder, specData = mWarlock:SyncSpec()
+                mWarlock:createWatchers(specData, spellOrder)
+                mWarlock:radialButtonLayout()
+                
+                mWarlock:createPetFrames()
                 
                 self:UnregisterEvent("PLAYER_LOGIN")
                 mWarlock:SetUIMovable(false)

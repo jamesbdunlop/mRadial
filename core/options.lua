@@ -1,9 +1,6 @@
 local mw_config = LibStub("AceConfig-3.0")
 local mw_dialog = LibStub("AceConfigDialog-3.0")
 
-local spec = GetSpecialization()
-local specNames = {"Affliciton", "Demonology", "Destruction"}
-local specName = specNames[spec]
 
 local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
     local AceGUI = LibStub("AceGUI-3.0")
@@ -64,7 +61,7 @@ function mWarlock:OptionsPane()
     optionsf:SetWidth(400)
     optionsf:SetHeight(600)
     optionsf:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
-    optionsf:SetTitle("MWarlock - Options : " .. specName) 
+    optionsf:SetTitle("MWarlock - Options : " .. mWarlock:GetSpecName()) 
     optionsf:SetLayout("Fill")
     optionsf:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 

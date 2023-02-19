@@ -41,6 +41,9 @@ demo_spellOrder[GRIMFELGUARD_SPELLNAME] = 111898
 demo_spellOrder[IMPLOSION_SPELLNAME] = 196277
 demo_spellOrder[SHADOWFURY_SPELLNAME] = 30283
 
+aff_spellOrder = {}
+destro_spellOrder = {}
+
 ---------------------------------------------------------------------------------------------------
 spellIcons = {}
 -- Demo

@@ -45,6 +45,40 @@ function mWarlock:isCorrectSpec()
     return true
 end
 
+function mWarlock:GetSpec()
+    -- Check if player has selected demonology as their spec
+    return GetSpecialization()
+end
+
+function mWarlock:GetSpecName()
+    -- Check if player has selected demonology as their spec
+    local spec = mWarlock:GetSpec()
+    local specNames = {"Affliciton", "Demonology", "Destruction"}
+    local specName = specNames[spec]
+    return specName
+end
+
+function mWarlock:SyncSpec()
+    local spec = mWarlock:GetSpec()
+    local specData = nil
+    local spellOrder = nil
+    if spec == 1 then
+        mWarlock:syncAfflictionTalentTree()
+        spellOrder = aff_spellOrder
+        specData = affTree_specialisationData
+    elseif spec == 2 then
+        mWarlock:syncDemonologyTalentTree()
+        spellOrder = demo_spellOrder
+        specData = demTree_specialisationData
+    else
+        mWarlock:syncDestructionTalentTree()
+        spellOrder = destro_spellOrder
+        specData = destro_specialisationData
+    end
+
+    return spellOrder, specData
+end
+
 function mWarlock:getShardCount()
     return  UnitPower("player", 7)
 end
@@ -80,6 +114,24 @@ function mWarlock:syncDemonologyTalentTree()
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
         if name then
             demTree_specialisationData[spellName]["active"] = true
+        end
+    end
+end
+
+function mWarlock:syncAfflictionTalentTree()
+    for spellName, _ in pairs(affTree_specialisationData) do
+        local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
+        if name then
+            affTree_specialisationData[spellName]["active"] = true
+        end
+    end
+end
+
+function mWarlock:syncDestructionTalentTree()
+    for spellName, _ in pairs(destro_specialisationData) do
+        local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
+        if name then
+            destro_specialisationData[spellName]["active"] = true
         end
     end
 end

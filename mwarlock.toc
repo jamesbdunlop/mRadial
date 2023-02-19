@@ -12,6 +12,8 @@ addon.lua
 core\constants.lua
 
 specs\demo.lua
+specs\affliction.lua
+specs\destruction.lua
 
 core\utils.lua
 core\frames.lua
@@ -26,3 +28,4 @@ core\slashcmds.lua
 events\unitSpellCastSucceeded.lua
 events\combatlogUnfiltered.lua
 events\unitPet.lua
+events\specChanged.lua
