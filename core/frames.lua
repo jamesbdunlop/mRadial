@@ -324,6 +324,11 @@ function mWarlock:createPetFrames()
             petSpellFrame.text:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
 
             petSpellFrame:SetScript("OnEvent", function(self, event, ...)
+                local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, playerGUID = ...
+                if playerGUID ~= UnitGUID("player") then
+                    return
+                end
+
                 local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
                 local hasSummonedPet, _ = mWarlock:hasPetSummoned()
                 if not hasSummonedPet or hidePetFrame then

@@ -39,7 +39,7 @@ function mWarlock:shardtrack()
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     if soulShards == 0 and not MAINFRAME_ISMOVING then
-        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .1) -- red, 10% opacity
+        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
     elseif not MAINFRAME_ISMOVING then
         MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0) -- transparent
     end

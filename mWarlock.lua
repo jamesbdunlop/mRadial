@@ -1,6 +1,4 @@
 -- Add options for
-    -- when options mode is enabled, add a feature to trigger the timers, / show shard warning 
-    -- movingup down the timer box positions
     -- add on update throttling
     -- if we don't have power siphon do we still proc demonic core?
 
@@ -77,6 +75,7 @@ function mWarlock:OnInitialize()
                 
                 self:UnregisterEvent("PLAYER_LOGIN")
                 mWarlock:SetUIMovable(false)
+                mWarlock:shardtrack()
             end
         end)
     end

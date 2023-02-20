@@ -25,7 +25,8 @@ core\shardtracker.lua
 core\spelltracker.lua
 
 core\slashcmds.lua
-events\unitSpellCastSucceeded.lua
 events\combatlogUnfiltered.lua
 events\unitPet.lua
 events\specChanged.lua
+events\unitpowerupdate.lua
+events\companionUpdate.lua

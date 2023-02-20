@@ -3,6 +3,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
+local last = 0
 function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
@@ -27,7 +28,12 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         watcher.iconFrame:SetTexture(iconPath)
     end 
 
+    
     watcher:SetScript("OnUpdate", function(self, elapsed)
+        last = last + elapsed
+        if last <= .5 then
+            return
+        end
         -- Hide all the UI when mounted.
         if IsMounted() then
             watcher:Hide()
@@ -105,8 +111,10 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
         if not MAINFRAME_ISMOVING then 
             for idx = 1, 40 do
-                local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
-                spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
+                -- local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
+                -- spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
+                local name, _, count, _, _, expirationTime, _, _, _,
+                _, _, _, _, _, _ = UnitBuff("player", idx)
                 
                 if name == buffName then
                     if count ~= 0 and count >= 1 and expirationTime ~= nil then
@@ -158,8 +166,6 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 end
             end
         end
-        -- too dooo debug the frames vanishing entirely..
-        mWarlock:radialButtonLayout()
     end)
 
     watcher:Show()
