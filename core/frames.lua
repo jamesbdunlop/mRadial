@@ -244,6 +244,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 PetFrames = {}
+local last = 0
 function mWarlock:createPetFrames()
     for frameName, frame in pairs(PetFrames) do
         frame:Hide()
@@ -295,6 +296,7 @@ function mWarlock:createPetFrames()
     end
 
     for frameName, spellData in pairs(petSpellData) do
+        
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
         if PetFrames[frameName] == nil then
@@ -309,10 +311,7 @@ function mWarlock:createPetFrames()
                                                 nil,
                                                 true, 
                                                 {size, size}, {size, size})
-
-            
-            petSpellFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-            
+          
             mWarlock:SetMoveFrameScripts(petSpellFrame)
             mWarlock:RestoreFrame(frameName, petSpellFrame)
 
@@ -322,24 +321,39 @@ function mWarlock:createPetFrames()
             petSpellFrame.text:SetText("")
             petSpellFrame.text:SetAllPoints(petSpellFrame.texture)
             petSpellFrame.text:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
-
-            petSpellFrame:SetScript("OnEvent", function(self, event, ...)
-                local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, playerGUID = ...
-                if playerGUID ~= UnitGUID("player") then
+            
+            petSpellFrame:SetScript("OnUpdate", function(self, elapsed)
+                last = last + elapsed
+                if last <= .5 then
                     return
                 end
 
-                local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
-                local hasSummonedPet, _ = mWarlock:hasPetSummoned()
-                if not hasSummonedPet or hidePetFrame then
-                    petSpellFrame:Hide()
+                petSpellFrame.text:SetText("")
+                local start, duration, enable = GetSpellCooldown(spellName)
+                if enable then
+                    local remaining = start + duration - GetTime()
+                    local minutes = math.floor(remaining / 60)
+                    local seconds = math.floor(remaining - minutes * 60)
+
+                    if remaining < GCD then
+                        petSpellFrame.texture:SetAlpha(1)
+                        petSpellFrame.text:SetText("")
+                        petSpellFrame.text:SetTextColor(.1, 1, .1)
+                    else
+                        if minutes > 0 then
+                            petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
+                        else
+                            petSpellFrame.text:SetText(string.format("%ds", seconds))
+                        end
+                        petSpellFrame.text:SetTextColor(1, .1, .1)
+                        petSpellFrame.texture:SetAlpha(0.5)
+                    end
                     return
                 end
 
-                local isActive = false
                 for idx = 1, 30 do
-                    local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
-                    spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("pet", idx)
+                    local name, _, _, _, _, expirationTime, _, _, _,
+                    _, _, _, _, _, _ = UnitBuff("pet", idx)
                     if name == spellName then
                         -- Buff is active               
                         local minutes, seconds = mWarlock:GetAuraTimeLeft(expirationTime)
@@ -349,31 +363,6 @@ function mWarlock:createPetFrames()
                             petSpellFrame.text:SetText(string.format("%ds", seconds))
                         end
                         petSpellFrame.text:SetTextColor(.1, 1, .1)
-                        isActive = true
-                    end
-                end
-
-                if not isActive then
-                    petSpellFrame.text:SetText("")
-                    local start, duration, enable = GetSpellCooldown(spellName)
-                    if enable then
-                        local remaining = start + duration - GetTime()
-                        local minutes = math.floor(remaining / 60)
-                        local seconds = math.floor(remaining - minutes * 60)
-
-                        if remaining < GCD then
-                            petSpellFrame.texture:SetAlpha(1)
-                            petSpellFrame.text:SetText("")
-                            petSpellFrame.text:SetTextColor(.1, 1, .1)
-                        else
-                            if minutes > 0 then
-                                petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
-                            else
-                                petSpellFrame.text:SetText(string.format("%ds", seconds))
-                            end
-                            petSpellFrame.text:SetTextColor(1, .1, .1)
-                            petSpellFrame.texture:SetAlpha(0.5)
-                        end
                     end
                 end
             end)
