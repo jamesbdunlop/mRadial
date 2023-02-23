@@ -7,6 +7,8 @@
 local playerName = UnitName("player")
 local playerSpec = mWarlock:getSpecName()
 
+local udOffset = 20
+
 function mWarlock:CreatePlayerSavedVars()
     if not PerPlayerPerSpecSavedVars then
         print("Creating new PerPlayerPerSpecSavedVars tables now.")
@@ -34,12 +36,9 @@ else
     MWarlockSavedVariables.shardTrackerFrameSize = 128
 end
 
-
-
-local udOffset = 20
 function mWarlock:createWatchers(spellOrder, activeSpellData)
     for spellName, spellInfo in pairs(spellOrder) do
-        local skipBuff, buffName, isShardDependant, isDebuff = unpack(spellInfo)
+        local skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
         -- print("Seaching for %s ", spellName)
         local spellData = activeSpellData[spellName]
         -- print("spellData %s ", spellData)
@@ -60,14 +59,13 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
             -- print("iconPath: %s", iconPath)
             -- print("parentSpellIcon: %s", parentSpellIcon)
             -- print("parentSpellName: %s", parentSpellName)
-            -- print("isShardDependant: %s", isShardDependant)
+            -- print("isUnitPowerDependant: UnitPowerCount, %s", isUnitPowerDependant) UnitPowerCount,
             -- print("---")
             mWarlock:addWatcher(buffName, 
                                 iconPath, 
                                 parentSpellIcon, 
                                 parentSpellName, 
-                                skipBuff, 
-                                isShardDependant, 
+                                isUnitPowerDependant, UnitPowerCount, 
                                 spellID,
                                 isDebuff or false)
                                 udOffset = udOffset + 32

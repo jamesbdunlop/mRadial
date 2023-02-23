@@ -94,17 +94,23 @@ function mWarlock:CreateWatcherFrame(frameName)
     watcher.texture:SetAllPoints(watcher)
     watcher.texture:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
     watcher.texture:SetColorTexture(0, 0, 0, 1)
-
+    
+    -- TEXTURES
     watcher.mask = watcher:CreateMaskTexture()
-    watcher.mask:SetAllPoints(watcher.texture)
+    watcher.mask:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
     watcher.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     
     watcher.texture:AddMaskTexture(watcher.mask)
-
-    watcher.iconFrame = watcher:CreateTexture(nil, "ARTWORK")
-    watcher.iconFrame:SetPoint("CENTER", watcher, "CENTER", 0, 0)
+    
+    watcher.iconFrame = watcher:CreateTexture(nil, "BACKGROUND")
+    watcher.iconFrame:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
     watcher.iconFrame:AddMaskTexture(watcher.mask)
-
+    
+    watcher.borderFrame = watcher:CreateTexture(nil, "ARTWORK")
+    watcher.borderFrame:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
+    watcher.borderFrame:SetTexture("Interface/ARTIFACTS/Artifacts-PerkRing-Final-Mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+    watcher.borderFrame:SetAlpha(.5)
+    -- TEXTS
     watcher.countText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     watcher.countText:SetTextColor(0, 1, 1)
     watcher.countText:SetPoint("CENTER", watcher.iconFrame, "TOP", 00, -15)
@@ -119,15 +125,17 @@ function mWarlock:CreateWatcherFrame(frameName)
     watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, -20)
 
     watcher.readyText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    watcher.readyText:SetPoint("CENTER", watcher, "CENTER", 0, -10)
+    watcher.readyText:SetPoint("CENTER", watcher, "CENTER", 0, 0)
     watcher.readyText:SetTextColor(.1, 1, .1)
     watcher.readyText:SetText(READYSTR)
 
+    -- SPECIAL MOVE FRAME TEXTURE
     watcher.movetex = watcher:CreateTexture(nil, "OVERLAY")
     watcher.movetex:SetPoint("CENTER", 0, 0)
     watcher.movetex:SetAllPoints(watcher)
     watcher.movetex:SetColorTexture(0, 0, 0, 0)
     watcher.movetex:AddMaskTexture(watcher.mask)
+
     watcher.isWatcher = true
 
     MW_WatcherFrames[#MW_WatcherFrames+1] = watcher
@@ -430,17 +438,24 @@ function mWarlock:radialButtonLayout()
         local watcher = MW_WatcherFrames[x]
         
         watcher:SetSize(watcherFrameSize, watcherFrameSize)
-        watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
-        watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
-        watcher.iconFrame:SetSize(watcherFrameSize*1.25, watcherFrameSize*1.25)
+        watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
+        watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
+        watcher.borderFrame:SetSize(watcherFrameSize*1.5, watcherFrameSize*1.5)
         
+        watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
+        
+        -- TEXT
+        watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
+        watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
+        watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
+        watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUDOffset)
+        
+        -- SET FONT
         watcher.buffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
         watcher.countText:SetFont(customFontPath, countFontSize, "THICKOUTLINE")
         watcher.cooldownText:SetFont(customFontPath, coolDownFontSize, "THICKOUTLINE")
         watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
         
-        watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
-        watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUDOffset)
 
         -- Move the watcher around the center of the frame
         watcher:Show()

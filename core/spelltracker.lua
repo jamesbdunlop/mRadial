@@ -4,7 +4,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID, isDebuff)
+function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, isUnitPowerDependant, UnitPowerCount, spellID, isDebuff)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -21,14 +21,14 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     
     -- print("Creating watcherFrame now for: %s", frameName)
     local watcher = mWarlock:CreateWatcherFrame(frameName)
+    watcher.spellName = buffName
     -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
     if parentSpellIcon ~= "" then
         watcher.iconFrame:SetTexture(parentSpellIcon)
     else
         watcher.iconFrame:SetTexture(iconPath)
     end 
-    print("buffName: %s", buffName)
-    print("isDebuff: %s", isDebuff)
+
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
         if last <= .5 then
@@ -86,7 +86,6 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                     watcher.readyText:Show()
                 end
             end
-            return
         end
 
         if parentSpellName and not isDebuff and not IsMounted() and not MAINFRAME_ISMOVING then
@@ -95,7 +94,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             local start, duration, enabled, modRate = GetSpellCooldown(parentSpellName)
             start = start or GetTime()
             duration = duration or 0
-            remaining = start + duration - GetTime()
+            local remaining = start + duration - GetTime()
 
             local minutes = math.floor(remaining / 60)
             local seconds = math.floor(remaining - minutes * 60)
@@ -182,22 +181,26 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 watcher.buffTimerText:Hide()
                 watcher.buffTimerTextBG:Hide()
             end
-            if isShardDependant then
-                local soulShards = UnitPower("player", 7)
-                if soulShards == 0 then
-                    watcher.readyText:SetText(NOSSSTR)
-                    watcher.readyText:SetTextColor(1, 0, 0)
+            
+            if isUnitPowerDependant then
+                local unitpower = 0
+                if mWarlock:IsWarlock() then
+                    unitpower = UnitPower("player", 7)
                 else
-                    watcher.readyText:SetText(READYSTR)
-                    watcher.readyText:SetTextColor(0, 1, 0)
+                    unitpower = UnitPower("player")--, 7)
                 end
-                
-                if buffName == CALLDREADSTALKERS_SPELLNAME and soulShards < 2 then
+
+                -- print("%s is unitPower dependant", buffName)
+                -- print("unitpower: %d", unitpower)
+                if unitpower == 0 or unitpower < UnitPowerCount then
                     watcher.readyText:SetText(NOSSSTR)
                     watcher.readyText:SetTextColor(1, 0, 0)
+                    watcher.movetex:Show()
+                    watcher.movetex:SetColorTexture(1, 0, 0, .5)
                 else
                     watcher.readyText:SetText(READYSTR)
                     watcher.readyText:SetTextColor(0, 1, 0)
+                    watcher.movetex:Hide()
                 end
             end
         end

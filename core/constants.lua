@@ -5,7 +5,7 @@ ROOTICONPATH ="Interface/ICONS"
 MEDIAPATH = "Interface\\AddOns\\mWarlock\\media"
 MAINFRAME_ISMOVING = false
 READYSTR = "RDY"
-NOSSSTR = "N0 SS!"
+NOSSSTR = "N/A"
 READYTEXT = "RDY"
 GCD = 1.5
 DEFAULT_FRAMESIZE = 150
@@ -17,7 +17,7 @@ HANDOFGUL_FRAMENAME = "HandOfGulFrame"
 FELLSTORM_SPELLNAME = "Felstorm"
 SHARD_FRAMENAME = "MWShardFrame"
 ---------------------------------------------------------------------------------------------------
-----SPELL INFO - HARD CODED FOR NOW....
+----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECITONS YET
 ---------------------------------------------------------------------------------------------------
 -- Demo Spells of interest
 POWERSIPHON_SPELLNAME = "Power Siphon"
@@ -33,18 +33,18 @@ CALLDREADSTALKERS_SPELLNAME = "Call Dreadstalkers"
 IMPLOSION_SPELLNAME = "Implosion"
 SHADOWFURY_SPELLNAME = "ShadowFury"
 
---skipBuff, buffName, isShardDependant, isDebuff = spellInfo
+--skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = spellInfo
 demo_spellOrder = {}
-demo_spellOrder[POWERSIPHON_SPELLNAME] = {false, DEMONICCORE_SPELLNAME, false}
-demo_spellOrder[CALLDREADSTALKERS_SPELLNAME] = {true, nil, true}
-demo_spellOrder[INQUISITORSGAZE_SPELLNAME] = {false, nil, false}
-demo_spellOrder[SUMMONSOULKEEPER_SPELLNAME] = {false, nil, false}
-demo_spellOrder[SUMMONDT_SPELLNAME] = {false, nil, false}
-demo_spellOrder[SUMMONVF_SPELLNAME] = {false, nil, false}
-demo_spellOrder[NETHERPORTAL_SPELLNAME] = {true, nil, true}
-demo_spellOrder[GRIMFELGUARD_SPELLNAME] = {true, nil, true}
-demo_spellOrder[IMPLOSION_SPELLNAME] = {true, nil, true}
-demo_spellOrder[SHADOWFURY_SPELLNAME] = {true, nil, false}
+demo_spellOrder[POWERSIPHON_SPELLNAME] = {false, DEMONICCORE_SPELLNAME, false, 0, false}
+demo_spellOrder[CALLDREADSTALKERS_SPELLNAME] = {true, nil, true, 2, false}
+demo_spellOrder[INQUISITORSGAZE_SPELLNAME] = {false, nil, false, 0, false}
+demo_spellOrder[SUMMONSOULKEEPER_SPELLNAME] = {false, nil, false, 0, false}
+demo_spellOrder[SUMMONDT_SPELLNAME] = {false, nil, false, 0, false}
+demo_spellOrder[SUMMONVF_SPELLNAME] = {false, nil, false, 0, false}
+demo_spellOrder[NETHERPORTAL_SPELLNAME] = {true, nil, true, 1, false}
+demo_spellOrder[GRIMFELGUARD_SPELLNAME] = {true, nil, true, 1, false}
+demo_spellOrder[IMPLOSION_SPELLNAME] = {true, nil, false, 0, false}
+demo_spellOrder[SHADOWFURY_SPELLNAME] = {true, nil, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 -- Affliction Spells of interest
@@ -54,10 +54,10 @@ AGONY_SPELLNAME = "Agony"
 DEATHBOLT_SPELLNAME = "Deathbolt"
 
 aff_spellOrder = {}
-aff_spellOrder[CORRUPTION_SPELLNAME] = {true, nil, false, true}
-aff_spellOrder[UNSTABLEAFFLICTION_SPELLNAME] = {true, nil, false, true}
-aff_spellOrder[AGONY_SPELLNAME] = {true, nil, false, true}
-aff_spellOrder[DEATHBOLT_SPELLNAME] = {true, nil, false, true}
+aff_spellOrder[CORRUPTION_SPELLNAME] = {true, nil, false, 0, false}
+aff_spellOrder[UNSTABLEAFFLICTION_SPELLNAME] = {true, nil, false, 0, false}
+aff_spellOrder[AGONY_SPELLNAME] = {true, nil, false, 0, false}
+aff_spellOrder[DEATHBOLT_SPELLNAME] = {true, nil, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 -- Destruction Spells of interest
@@ -75,15 +75,14 @@ MINDBLAST_SPELLNAME = "Mind Blast"
 SHADOWYINSIGHT_SPELLNAME ="Shadowy Insight"
 
 
---skipBuff, buffName, isShardDependant, isDebuff = spellInfo
 shadow_spellOrder = {}
-shadow_spellOrder[DARKASCENSION_SPELLNAME] = {true, nil, false}
-shadow_spellOrder[DISPERSION_SPELLNAME] = {true, nil, false}
-shadow_spellOrder[MINDGAMES_SPELLNAME] = {true, nil, false}
-shadow_spellOrder[HALO_SPELLNAME] = {true, nil, false}
-shadow_spellOrder[VAMPIRICTOUCH_SPELLNAME] = {true, nil, false, true}
-shadow_spellOrder[DEVOURINGPLAGUE_SPELLNAME] = {true, nil, false, true}
-shadow_spellOrder[MINDBLAST_SPELLNAME] = {false, SHADOWYINSIGHT_SPELLNAME, false}
+shadow_spellOrder[MINDBLAST_SPELLNAME] = {false, SHADOWYINSIGHT_SPELLNAME, false, 0, false}
+shadow_spellOrder[VAMPIRICTOUCH_SPELLNAME] = {true, nil, false, 0, true}
+shadow_spellOrder[DEVOURINGPLAGUE_SPELLNAME] = {true, nil, true, 50, true}
+shadow_spellOrder[MINDGAMES_SPELLNAME] = {true, nil, false, 0, true}
+shadow_spellOrder[DARKASCENSION_SPELLNAME] = {true, nil, false, 0, true}
+shadow_spellOrder[DISPERSION_SPELLNAME] = {true, nil, false, 0, true}
+shadow_spellOrder[HALO_SPELLNAME] = {true, nil, false, 0, true}
 
 ---------------------------------------------------------------------------------------------------
 ----ICONS

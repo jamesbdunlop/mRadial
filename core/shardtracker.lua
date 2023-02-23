@@ -1,24 +1,24 @@
 function mWarlock:createShardCountFrame()
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED
-    local size = 100
+    local size = 500
     shardCounterFrame = mWarlock:CreateMovableFrame(SHARD_FRAMENAME,
                                         {100, 100},
                                         UIParent,
                                         "",
                                         "",
-                                        "ARTWORK",
+                                        "BACKGROUND",
                                         nil,
                                         true, 
                                         {size, size}, {size, size})
 
-    shardCounterFrame:SetAlpha(.8)
+    shardCounterFrame:SetAlpha(.5)
     mWarlock:setShardTrackerFramesSize()
 end
 
 function mWarlock:setShardTrackerFramesSize()
     -- For options to use to change the size of the frame.
-    local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"] or 45
+    local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"] or 450
     if shardCounterFrame ~= nil then
         shardCounterFrame:SetSize(frameSize, frameSize)
     end
@@ -26,7 +26,7 @@ end
 
 function mWarlock:setOOSShardFramesSize()
     -- For options to use to change the size of the frame.
-    local frameSize = MWarlockSavedVariables["shardOutOfFrameSize"] or 45
+    local frameSize = MWarlockSavedVariables["shardOutOfFrameSize"] or 450
     MWarlockMainFrame:SetSize(frameSize, frameSize)
     MWarlockMainFrame.texture:SetSize(frameSize, frameSize)
     MWarlockMainFrame.mask:SetSize(frameSize, frameSize)

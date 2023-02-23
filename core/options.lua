@@ -55,13 +55,13 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 end
 
 -- BUILD PANE
-OptionsPane = nil
+-- OptionsPane = nil
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
-    if OptionsPane ~= nil then
-        OptionsPane:Show()
-        return
-    end
+    -- if OptionsPane ~= nil then
+    --     OptionsPane:Show()
+    --     return
+    -- end
 
     OptionsPane = AceGUI:Create("Window")
     OptionsPane:SetWidth(400)
