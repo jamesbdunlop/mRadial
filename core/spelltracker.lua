@@ -4,7 +4,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID)
+function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, skipBuff, isShardDependant, spellID, isDebuff)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -22,13 +22,13 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     -- print("Creating watcherFrame now for: %s", frameName)
     local watcher = mWarlock:CreateWatcherFrame(frameName)
     -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
-    if parentSpellName then
+    if parentSpellIcon ~= "" then
         watcher.iconFrame:SetTexture(parentSpellIcon)
     else
         watcher.iconFrame:SetTexture(iconPath)
     end 
-
-    
+    print("buffName: %s", buffName)
+    print("isDebuff: %s", isDebuff)
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
         if last <= .5 then
@@ -51,20 +51,55 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             watcher.cooldownText:Show()
         end
 
-        -- If we do have a parent spell, if it has a cool down we need to run that cooldown timer.
-        if parentSpellName and not IsMounted() and not MAINFRAME_ISMOVING then
+        if isDebuff and not IsMounted() and not MAINFRAME_ISMOVING then
+            -- DEBUFF TIMERS
+            local remaining = 0
+            for idx = 1, 40 do
+                local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitDebuff("target", idx)
+                if name == parentSpellName then 
+                    -- print("name: %d", name)
+                    -- print("rank: %d", rank)
+                    -- print("icon: %d", icon)
+                    -- print("count: %d", count)
+                    -- print("dispelType: %d", dispelType)
+                    -- print("duration: %d", duration)
+                    -- print("expirationTime: %d", expirationTime)
+                    -- print("source: %d", source)
+                    -- print("isStealable: %d", isStealable)
+                    -- print("spellId: %d", spellId)
+                    remaining = expirationTime - GetTime()
+                    break
+                end
+            end
+            if remaining > GCD then
+                watcher.cooldownText:Show()
+                watcher.readyText:Hide()
+                watcher.cooldownText:SetText(string.format("%ds", remaining))
+                watcher.cooldownText:SetTextColor(1, .1, .1)
+                watcher.iconFrame:SetAlpha(0.5)
+                watcher.movetex:SetColorTexture(1, 0, 0, .2)
+            else
+                watcher.cooldownText:Hide()
+                watcher.iconFrame:SetAlpha(1)
+                watcher.movetex:SetColorTexture(1, 0, 0, 0)
+                if not IsMounted() then
+                    watcher.readyText:Show()
+                end
+            end
+            return
+        end
+
+        if parentSpellName and not isDebuff and not IsMounted() and not MAINFRAME_ISMOVING then
+            -- If we do have a parent spell, if it has a cool down we need to run that cooldown timer.
             -- COOLDOWNS FOR PARENT SPELLS
             local start, duration, enabled, modRate = GetSpellCooldown(parentSpellName)
-            -- catch a bug when changing talents.
-            if start == nil then
-                start = 0
-            end
-            if duration == nil then
-                duration = 0
-            end
-            local remaining = start + duration - GetTime()
+            start = start or GetTime()
+            duration = duration or 0
+            remaining = start + duration - GetTime()
+
             local minutes = math.floor(remaining / 60)
             local seconds = math.floor(remaining - minutes * 60)
+            
             if enabled and remaining > GCD then
                 watcher.cooldownText:Show()
                 watcher.readyText:Hide()
@@ -88,7 +123,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
         -- Find any "counts" for buffs, eg Implosion etc
         local found = false
-        local count = GetSpellCount(spellID)
+        local count = GetSpellCount(spellID) or ""
         if count ~= 0 and not IsMounted() and not MAINFRAME_ISMOVING then
             watcher.countText:Show()
             watcher.countText:SetText(tostring(count))

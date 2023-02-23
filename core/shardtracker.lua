@@ -18,19 +18,25 @@ end
 
 function mWarlock:setShardTrackerFramesSize()
     -- For options to use to change the size of the frame.
-    local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"]
-    shardCounterFrame:SetSize(frameSize, frameSize)
+    local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"] or 45
+    if shardCounterFrame ~= nil then
+        shardCounterFrame:SetSize(frameSize, frameSize)
+    end
 end
 
 function mWarlock:setOOSShardFramesSize()
     -- For options to use to change the size of the frame.
-    local frameSize = MWarlockSavedVariables["shardOutOfFrameSize"]
+    local frameSize = MWarlockSavedVariables["shardOutOfFrameSize"] or 45
     MWarlockMainFrame:SetSize(frameSize, frameSize)
     MWarlockMainFrame.texture:SetSize(frameSize, frameSize)
     MWarlockMainFrame.mask:SetSize(frameSize, frameSize)
 end
 
 function mWarlock:shardtrack()
+    if not mWarlock:IsWarlock() then
+        return
+    end
+    
     local soulShards = mWarlock:getShardCount()
     
     -- Change the texture of the frame

@@ -14,7 +14,8 @@ function mWarlock:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
         frame:SetParent(nil)
     end
 
-    local spellOrder, specData = mWarlock:SyncSpec()
+    MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
+    local spellOrder, specData = mWarlock:syncSpec()
     MW_WatcherFrames = {}
     mWarlock:createWatchers(specData, spellOrder)
     mWarlock:radialButtonLayout()

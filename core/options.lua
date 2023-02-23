@@ -55,19 +55,25 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 end
 
 -- BUILD PANE
+OptionsPane = nil
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
-    local optionsf = AceGUI:Create("Window")
-    optionsf:SetWidth(400)
-    optionsf:SetHeight(600)
-    optionsf:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
-    optionsf:SetTitle("MWarlock - Options : " .. mWarlock:GetSpecName()) 
-    optionsf:SetLayout("Fill")
-    optionsf:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+    if OptionsPane ~= nil then
+        OptionsPane:Show()
+        return
+    end
+
+    OptionsPane = AceGUI:Create("Window")
+    OptionsPane:SetWidth(400)
+    OptionsPane:SetHeight(600)
+    OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
+    OptionsPane:SetTitle("MWarlock - Options : " .. mWarlock:GetSpecName()) 
+    OptionsPane:SetLayout("Fill")
+    OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 
     local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
     scrollcontainer:SetLayout("Fill")
-    optionsf:AddChild(scrollcontainer)
+    OptionsPane:AddChild(scrollcontainer)
     scrollcontainer:SetFullWidth(true)
     scrollcontainer:SetFullHeight(true)
     

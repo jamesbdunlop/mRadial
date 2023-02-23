@@ -27,13 +27,23 @@ function mWarlock:checkHasSpell(spellName)
     end
 end
 
+function mWarlock:IsWarlock()
+    return UnitClass("player") == "Warlock"
+end
+
+function mWarlock:IsPriest()
+    return UnitClass("player") == "Priest"
+end
+
 function mWarlock:isCorrectClass()
-    local playerClass = UnitClass("player")
     -- Check if the player's class is "Warlock"
-    if playerClass == "Warlock" then
+    if mWarlock:IsWarlock() then
         return true
+    elseif mWarlock:IsPriest() then
+        return true
+    else
+        return false
     end
-    return false
 end
 
 function mWarlock:isCorrectSpec()
@@ -58,25 +68,73 @@ function mWarlock:GetSpecName()
     return specName
 end
 
-function mWarlock:SyncSpec()
-    local spec = mWarlock:GetSpec()
-    local specData = nil
-    local spellOrder = nil
-    if spec == 1 then
-        mWarlock:syncAfflictionTalentTree()
-        spellOrder = aff_spellOrder
-        specData = affTree_specialisationData
-    elseif spec == 2 then
-        mWarlock:syncDemonologyTalentTree()
-        spellOrder = demo_spellOrder
-        specData = demTree_specialisationData
-    else
-        mWarlock:syncDestructionTalentTree()
-        spellOrder = destro_spellOrder
-        specData = destro_specialisationData
-    end
+function mWarlock:getSpecName()
+    local currentSpec = GetSpecialization()
+    local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+    return currentSpecName
+end
 
-    return spellOrder, specData
+function mWarlock:BuffHasSpellParent()
+end
+
+function mWarlock:getAllSpells()
+    local spellData = {}
+    --- Trawl the entire spell book for pells.
+    --- Sick of trying to figure out the most important! Going to leave this up to the user.
+    local numTabs = GetNumSpellTabs()
+    for i=1,numTabs do
+        local name, _, offset, numSpells = GetSpellTabInfo(i)
+        -- print("name: %s", name)
+        for x=offset+1, offset + numSpells do
+            local spellName, rank, icon, castingTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(x, "spell")
+            -- SOME WEIRD BUG WITH SHADOWFURY the names don't match??! Yet you print it and it's the same fkin name!
+            if spellID == 30283 then
+                spellName = SHADOWFURY_SPELLNAME
+            end
+            if spellName and spellID and not IsPassiveSpell(spellID) then
+                -- print(spellName, icon, "active!")
+                local spellInfo = {}
+                      spellInfo['rank'] = rank
+                      spellInfo['icon'] = icon
+                      spellInfo['castingTime'] = castingTime --returns in milliseconds so we should do *.001
+                      spellInfo['minRange'] = minRange
+                      spellInfo['maxRange'] = maxRange
+                      spellInfo['spellID'] = spellID
+                spellData[spellName] = spellInfo
+    end end end
+    -- THIS IS A TEST OF THE BULLSHIT DYNAMIC SPELLS IN THE SPELL BOOK THAT SHOW AND HIDE THERE!!!
+    spellData[DEATHBOLT_SPELLNAME] = {}
+    local _, rank, icon, castingTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(DEATHBOLT_SPELLNAME)
+    spellData[DEATHBOLT_SPELLNAME]['rank'] = rank
+    spellData[DEATHBOLT_SPELLNAME]['icon'] = icon
+    spellData[DEATHBOLT_SPELLNAME]['castingTime'] = castingTime --returns in milliseconds so we should do *.001
+    spellData[DEATHBOLT_SPELLNAME]['minRange'] = minRange
+    spellData[DEATHBOLT_SPELLNAME]['maxRange'] = maxRange
+    spellData[DEATHBOLT_SPELLNAME]['spellID'] = spellID
+
+    return spellData
+end
+
+function mWarlock:syncSpec()
+    local spellOrder = nil
+    local spec = mWarlock:GetSpec()
+    if mWarlock:IsWarlock() then 
+        if spec == 1 then
+            print("Affliction warlock detected!")
+            return aff_spellOrder, mWarlock:getAllSpells()
+        elseif spec == 2 then
+            print("Demo warlock detected!")
+            return demo_spellOrder, mWarlock:getAllSpells()
+        else
+            print("Destro warlock detected!")
+            return destro_spellOrder, mWarlock:getAllSpells()
+        end
+    elseif mWarlock:IsPriest() then
+        if spec == 3 then
+            print("Shadow Priest detected!")
+            return shadow_spellOrder, mWarlock:getAllSpells()
+        end
+    end
 end
 
 function mWarlock:getShardCount()
@@ -91,6 +149,7 @@ function mWarlock:hasPetSummoned()
 
     return false, nil
 end
+
 function mWarlock:IsFelguardSummoned()
     local isSummoned, summonedPet = mWarlock:hasPetSummoned()
     if isSummoned and summonedPet == "Felguard" then
@@ -136,29 +195,11 @@ function mWarlock:IsFelImpSummoned()
     return false
 end
 
-function mWarlock:syncDemonologyTalentTree()
-    for spellName, _ in pairs(demTree_specialisationData) do
+function mWarlock:syncTalentTree(treeTable)
+    for spellName, _ in pairs(treeTable) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
         if name then
-            demTree_specialisationData[spellName]["active"] = true
-        end
-    end
-end
-
-function mWarlock:syncAfflictionTalentTree()
-    for spellName, _ in pairs(affTree_specialisationData) do
-        local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
-        if name then
-            affTree_specialisationData[spellName]["active"] = true
-        end
-    end
-end
-
-function mWarlock:syncDestructionTalentTree()
-    for spellName, _ in pairs(destro_specialisationData) do
-        local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
-        if name then
-            destro_specialisationData[spellName]["active"] = true
+            treeTable[spellName]["active"] = true
         end
     end
 end
