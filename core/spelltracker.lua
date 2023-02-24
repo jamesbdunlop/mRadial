@@ -77,7 +77,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
         -- Find any "counts" for buffs, eg Implosion etc
         local found = false
-        local count = GetSpellCount(spellID) or ""
+        local count = GetSpellCount(spellID) or 0
         watcher.countText:SetText("")
         if count ~= 0 and not IsMounted() and not MAINFRAME_ISMOVING then
             watcher.countText:Show()
@@ -87,6 +87,9 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             if buffName == SUMMONSOULKEEPER_SPELLNAME then
                 watcher.readyText:Show()
             end
+        elseif MAINFRAME_ISMOVING then
+            watcher.countText:Show()
+            watcher.countText:SetText("00")
         else
             if buffName == SUMMONSOULKEEPER_SPELLNAME then
                 watcher.readyText:Hide()
