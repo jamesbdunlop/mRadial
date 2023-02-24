@@ -37,8 +37,8 @@ else
 end
 
 function mWarlock:createWatchers(spellOrder, activeSpellData)
-    for spellName, spellInfo in pairs(spellOrder) do
-        local skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
+    for idx, spellInfo in ipairs(spellOrder) do
+        local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
         -- print("Seaching for %s ", spellName)
         local spellData = activeSpellData[spellName]
         -- print("spellData %s ", spellData)
@@ -65,7 +65,8 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
                                 iconPath, 
                                 parentSpellIcon, 
                                 parentSpellName, 
-                                isUnitPowerDependant, UnitPowerCount, 
+                                isUnitPowerDependant, 
+                                UnitPowerCount, 
                                 spellID,
                                 isDebuff or false)
                                 udOffset = udOffset + 32

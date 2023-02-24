@@ -33,18 +33,18 @@ CALLDREADSTALKERS_SPELLNAME = "Call Dreadstalkers"
 IMPLOSION_SPELLNAME = "Implosion"
 SHADOWFURY_SPELLNAME = "ShadowFury"
 
---skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = spellInfo
+--skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = demo_spellOrder
 demo_spellOrder = {}
-demo_spellOrder[POWERSIPHON_SPELLNAME] = {false, DEMONICCORE_SPELLNAME, false, 0, false}
-demo_spellOrder[CALLDREADSTALKERS_SPELLNAME] = {true, nil, true, 2, false}
-demo_spellOrder[INQUISITORSGAZE_SPELLNAME] = {false, nil, false, 0, false}
-demo_spellOrder[SUMMONSOULKEEPER_SPELLNAME] = {false, nil, false, 0, false}
-demo_spellOrder[SUMMONDT_SPELLNAME] = {false, nil, false, 0, false}
-demo_spellOrder[SUMMONVF_SPELLNAME] = {false, nil, false, 0, false}
-demo_spellOrder[NETHERPORTAL_SPELLNAME] = {true, nil, true, 1, false}
-demo_spellOrder[GRIMFELGUARD_SPELLNAME] = {true, nil, true, 1, false}
-demo_spellOrder[IMPLOSION_SPELLNAME] = {true, nil, false, 0, false}
-demo_spellOrder[SHADOWFURY_SPELLNAME] = {true, nil, false, 0, false}
+demo_spellOrder[1] = {POWERSIPHON_SPELLNAME, false, DEMONICCORE_SPELLNAME, false, 0, false}
+demo_spellOrder[2] = {CALLDREADSTALKERS_SPELLNAME, true, nil, true, 2, false}
+demo_spellOrder[3] = {INQUISITORSGAZE_SPELLNAME, false, nil, false, 0, false}
+demo_spellOrder[4] = {SUMMONSOULKEEPER_SPELLNAME, false, nil, false, 0, false}
+demo_spellOrder[5] = {SUMMONDT_SPELLNAME, false, nil, false, 0, false}
+demo_spellOrder[6] = {SUMMONVF_SPELLNAME, false, nil, false, 0, false}
+demo_spellOrder[7] = {NETHERPORTAL_SPELLNAME, true, nil, true, 1, false}
+demo_spellOrder[8] = {GRIMFELGUARD_SPELLNAME, true, nil, true, 1, false}
+demo_spellOrder[9] = {IMPLOSION_SPELLNAME, true, nil, false, 0, false}
+demo_spellOrder[10] = {SHADOWFURY_SPELLNAME, true, nil, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 -- Affliction Spells of interest
@@ -53,11 +53,12 @@ UNSTABLEAFFLICTION_SPELLNAME = "Unstable Affliction"
 AGONY_SPELLNAME = "Agony"
 DEATHBOLT_SPELLNAME = "Deathbolt"
 
+--skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = aff_spellOrder
 aff_spellOrder = {}
-aff_spellOrder[CORRUPTION_SPELLNAME] = {true, nil, false, 0, false}
-aff_spellOrder[UNSTABLEAFFLICTION_SPELLNAME] = {true, nil, false, 0, false}
-aff_spellOrder[AGONY_SPELLNAME] = {true, nil, false, 0, false}
-aff_spellOrder[DEATHBOLT_SPELLNAME] = {true, nil, false, 0, false}
+aff_spellOrder[0] = {CORRUPTION_SPELLNAME, true, nil, false, 0, false}
+aff_spellOrder[1] = {UNSTABLEAFFLICTION_SPELLNAME, true, nil, false, 0, false}
+aff_spellOrder[2] = {AGONY_SPELLNAME, true, nil, false, 0, false}
+aff_spellOrder[3] = {DEATHBOLT_SPELLNAME, true, nil, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 -- Destruction Spells of interest
@@ -73,16 +74,19 @@ VAMPIRICTOUCH_SPELLNAME = "Vampiric Touch"
 DEVOURINGPLAGUE_SPELLNAME = "Devouring Plague"
 MINDBLAST_SPELLNAME = "Mind Blast"
 SHADOWYINSIGHT_SPELLNAME ="Shadowy Insight"
+MINDSPIKE_SPELLNAME ="Mind Spike"
+MINDMELT_SPELLNAME ="Mind Melt"
 
-
+--skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shadow_spellOrder = {}
-shadow_spellOrder[MINDBLAST_SPELLNAME] = {false, SHADOWYINSIGHT_SPELLNAME, false, 0, false}
-shadow_spellOrder[VAMPIRICTOUCH_SPELLNAME] = {true, nil, false, 0, true}
-shadow_spellOrder[DEVOURINGPLAGUE_SPELLNAME] = {true, nil, true, 50, true}
-shadow_spellOrder[MINDGAMES_SPELLNAME] = {true, nil, false, 0, true}
-shadow_spellOrder[DARKASCENSION_SPELLNAME] = {true, nil, false, 0, true}
-shadow_spellOrder[DISPERSION_SPELLNAME] = {true, nil, false, 0, true}
-shadow_spellOrder[HALO_SPELLNAME] = {true, nil, false, 0, true}
+shadow_spellOrder[1] = {MINDBLAST_SPELLNAME, false, SHADOWYINSIGHT_SPELLNAME, false, 0, false}
+shadow_spellOrder[2] = {MINDSPIKE_SPELLNAME, false, MINDMELT_SPELLNAME, false, 0, false}
+shadow_spellOrder[3] = {VAMPIRICTOUCH_SPELLNAME, true, nil, false, 0, true}
+shadow_spellOrder[4] = {DEVOURINGPLAGUE_SPELLNAME, true, nil, true, 50, true}
+shadow_spellOrder[5] = {MINDGAMES_SPELLNAME, true, MINDGAMES_SPELLNAME, false, 0, true}
+shadow_spellOrder[6] = {DARKASCENSION_SPELLNAME, true, nil, false, 0, true}
+shadow_spellOrder[7] = {DISPERSION_SPELLNAME, true, nil, false, 0, true}
+shadow_spellOrder[8] = {HALO_SPELLNAME, true, nil, false, 0, true}
 
 ---------------------------------------------------------------------------------------------------
 ----ICONS
@@ -125,3 +129,5 @@ spellIcons[MINDGAMES_SPELLNAME] = string.format("%s/Ability_revendreth_priest.bl
 spellIcons[HALO_SPELLNAME] = string.format("%s/Ability_priest_halo_shadow.blp", ROOTICONPATH)
 spellIcons[VAMPIRICTOUCH_SPELLNAME] = string.format("%s/Spell_holy_stoicism.blp", ROOTICONPATH)
 spellIcons[DEVOURINGPLAGUE_SPELLNAME] = string.format("%s/Spell_shadow_devouringplague.blp", ROOTICONPATH)
+spellIcons[MINDSPIKE_SPELLNAME] = string.format("%s/Spell_priest_mindspike.blp", ROOTICONPATH)
+spellIcons[MINDMELT_SPELLNAME] = string.format("%s/Spell_shadow_skull.blp", ROOTICONPATH)
