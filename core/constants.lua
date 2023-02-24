@@ -76,7 +76,6 @@ MINDBLAST_SPELLNAME = "Mind Blast"
 SHADOWYINSIGHT_SPELLNAME ="Shadowy Insight"
 MINDSPIKE_SPELLNAME ="Mind Spike"
 MINDMELT_SPELLNAME ="Mind Melt"
-
 --skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shadow_spellOrder = {}
 shadow_spellOrder[1] = {MINDBLAST_SPELLNAME, false, SHADOWYINSIGHT_SPELLNAME, false, 0, false}
@@ -87,6 +86,17 @@ shadow_spellOrder[5] = {MINDGAMES_SPELLNAME, true, MINDGAMES_SPELLNAME, false, 0
 shadow_spellOrder[6] = {DARKASCENSION_SPELLNAME, true, nil, false, 0, true}
 shadow_spellOrder[7] = {DISPERSION_SPELLNAME, true, nil, false, 0, true}
 shadow_spellOrder[8] = {HALO_SPELLNAME, true, nil, false, 0, true}
+
+---------------------------------------------------------------------------------------------------
+-- SHAMAN
+CAPACITOR_SPELLNAME = "Capacitor Totem"
+EARTHBOUND_SPELLNAME = "Earthbind Totem"
+HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
+--skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
+shaman_spellOrder = {}
+shaman_spellOrder[1] = {CAPACITOR_SPELLNAME, false, CAPACITOR_SPELLNAME, false, 0, false}
+shaman_spellOrder[2] = {EARTHBOUND_SPELLNAME, false, EARTHBOUND_SPELLNAME, false, 0, false}
+shaman_spellOrder[3] = {HEALINGSTREAM_SPELLNAME, false, HEALINGSTREAM_SPELLNAME, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 ----ICONS
@@ -117,10 +127,8 @@ spellIcons[MINDBLAST_SPELLNAME] = string.format("%s/Spell_shadow_unholyfrenzy.bl
 spellIcons[SHADOWYINSIGHT_SPELLNAME] = string.format("%s/Spell_shadow_possession.blp", ROOTICONPATH)
 ---------------------------------------------------------------------------------------------------------
 -- DESTRO
-
 ---------------------------------------------------------------------------------------------------------
 -- AFFFLICTION
-
 ---------------------------------------------------------------------------------------------------------
 -- SHADOW PRIEST
 spellIcons[DARKASCENSION_SPELLNAME] = string.format("%s/Ability_priest_darkarchangel.blp", ROOTICONPATH)
@@ -131,3 +139,8 @@ spellIcons[VAMPIRICTOUCH_SPELLNAME] = string.format("%s/Spell_holy_stoicism.blp"
 spellIcons[DEVOURINGPLAGUE_SPELLNAME] = string.format("%s/Spell_shadow_devouringplague.blp", ROOTICONPATH)
 spellIcons[MINDSPIKE_SPELLNAME] = string.format("%s/Spell_priest_mindspike.blp", ROOTICONPATH)
 spellIcons[MINDMELT_SPELLNAME] = string.format("%s/Spell_shadow_skull.blp", ROOTICONPATH)
+---------------------------------------------------------------------------------------------------------
+-- SHAMAN
+spellIcons[CAPACITOR_SPELLNAME] = string.format("%s/Spell_nature_brilliance.blp", ROOTICONPATH)
+spellIcons[EARTHBOUND_SPELLNAME] = string.format("%s/Spell_nature_strengthofearthtotem02.blp", ROOTICONPATH)
+spellIcons[HEALINGSTREAM_SPELLNAME] = string.format("%s/Inv_spear_04.blp", ROOTICONPATH)

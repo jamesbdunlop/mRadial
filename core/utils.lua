@@ -35,6 +35,10 @@ function mWarlock:IsPriest()
     return UnitClass("player") == "Priest"
 end
 
+function mWarlock:IsShaman()
+    return UnitClass("player") == "Shaman"
+end
+
 function mWarlock:isCorrectClass()
     -- Check if the player's class is "Warlock"
     if mWarlock:IsWarlock() then
@@ -77,6 +81,7 @@ end
 function mWarlock:BuffHasSpellParent()
 end
 
+
 function mWarlock:getAllSpells()
     local spellData = {}
     --- Trawl the entire spell book for pells.
@@ -115,6 +120,7 @@ function mWarlock:getAllSpells()
     return spellData
 end
 
+ 
 function mWarlock:syncSpec()
     local spellOrder = nil
     local spec = mWarlock:GetSpec()
@@ -132,6 +138,11 @@ function mWarlock:syncSpec()
     elseif mWarlock:IsPriest() then
         if spec == 3 then
             print("Shadow Priest detected!")
+            return shadow_spellOrder, mWarlock:getAllSpells()
+        end
+    elseif mWarlock:IsShaman() then
+        if spec == 1 then
+            print("Shaman Noob detected!")
             return shadow_spellOrder, mWarlock:getAllSpells()
         end
     end

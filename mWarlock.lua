@@ -76,6 +76,10 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
 end
 
 function mWarlock:INITUI()
+    if shardCounterFrame ~= nil then
+        shardCounterFrame:SetParent(nil)
+        shardCounterFrame:Hide()
+    end
     if MW_WatcherFrames ~= nil then
         for _, frame in pairs(MW_WatcherFrames) do
             frame:SetParent(nil)
