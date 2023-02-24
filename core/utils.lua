@@ -143,7 +143,7 @@ function mWarlock:syncSpec()
     elseif mWarlock:IsShaman() then
         if spec == 1 then
             print("Shaman Noob detected!")
-            return shadow_spellOrder, mWarlock:getAllSpells()
+            return shaman_spellOrder, mWarlock:getAllSpells()
         end
     end
 end
