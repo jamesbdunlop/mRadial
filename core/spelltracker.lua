@@ -21,7 +21,22 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     
     -- print("Creating watcherFrame now for: %s", frameName)
     local watcher = mWarlock:CreateWatcherFrame(frameName)
+    local asButtons = MWarlockSavedVariables["asbuttons"] or false
     watcher.spellName = buffName
+    if asButtons then
+        watcher:SetAttribute("spell", parentSpellName)
+        -- set the button tooltip
+        watcher:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText("Cast ".. parentSpellName)
+            GameTooltip:SetSize(80, 50)
+            GameTooltip:Show()
+        end)
+        watcher:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
+
     -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
     if parentSpellIcon ~= "" then
         watcher.iconFrame:SetTexture(parentSpellIcon)

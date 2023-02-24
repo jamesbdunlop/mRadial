@@ -1,4 +1,5 @@
 MW_ALLFRAMES = {}
+
 function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
     --Creates a moveable frame to be used by mWarlock:SetMoveFrameScripts
     if template == nil then template = "BackdropTemplate" end
@@ -87,9 +88,20 @@ function mWarlock:SetMoveFrameScripts(frame)
     end)
 end
 
-MW_WatcherFrames = {}
 function mWarlock:CreateWatcherFrame(frameName)
-    local watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
+    local watcher
+    local asButtons = MWarlockSavedVariables["asbuttons"] or false
+    if asButtons then
+        watcher = CreateFrame("Button", "frameName", MWarlockMainFrame, "SecureActionButtonTemplate")  
+        watcher:SetEnabled(true)
+        watcher:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        watcher:SetAttribute("type", "spell")
+        watcher:SetAttribute("unit", "target")
+
+    else
+        watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
+    end
+
     watcher.texture = watcher:CreateTexture(nil, "BACKGROUND")
     watcher.texture:SetAllPoints(watcher)
     watcher.texture:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
@@ -151,13 +163,15 @@ function mWarlock:SetUIMovable(isMovable)
     MAINFRAME_ISMOVING = isMovable
 
     for _, frame in pairs(MW_ALLFRAMES) do
-        frame:EnableMouse(isMovable)
-        frame:SetMovable(isMovable)
         if isMovable and not frame.isWatcher then
+            frame:EnableMouse(isMovable)
+            frame:SetMovable(isMovable)
             frame.movetex:SetColorTexture(0, 0, 1, .5)
             MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .5)
             MWarlockMainFrame.crosshair:Show()
         elseif not frame.isWatcher then
+            frame:EnableMouse(isMovable)
+            frame:SetMovable(isMovable)
             frame.movetex:SetColorTexture(0, 0, 0, 0)
             MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0)
             MWarlockMainFrame.crosshair:Hide()

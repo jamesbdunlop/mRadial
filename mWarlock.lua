@@ -37,7 +37,8 @@ else
 end
 
 function mWarlock:createWatchers(spellOrder, activeSpellData)
-    for idx, spellInfo in ipairs(spellOrder) do
+    MW_WatcherFrames = {}
+    for _, spellInfo in ipairs(spellOrder) do
         local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
         -- print("Seaching for %s ", spellName)
         local spellData = activeSpellData[spellName]
@@ -74,6 +75,37 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
     end
 end
 
+function mWarlock:INITUI()
+    if MW_WatcherFrames ~= nil then
+        for _, frame in pairs(MW_WatcherFrames) do
+            frame:SetParent(nil)
+            frame:Hide()
+        end
+    end
+
+    MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
+    if MWarlockSavedVariables["framePositions"] == nil then
+        MWarlockSavedVariables["framePositions"] = {}
+    end
+
+    local spellOrder, activeSpellData = mWarlock:syncSpec()
+    ---------------------------------------------------
+    -- setup the UI
+    mWarlock:CreateMainFrame()
+    if mWarlock:IsWarlock() then
+        mWarlock:createShardCountFrame()
+    end
+    ---------------------------------------------------
+    
+    mWarlock:createWatchers(spellOrder, activeSpellData)
+    mWarlock:radialButtonLayout()
+    
+    mWarlock:createPetFrames()
+    
+    mWarlock:SetUIMovable(false)
+    mWarlock:shardtrack()
+end
+
 function mWarlock:OnInitialize()
     if(mWarlock:isCorrectClass()) then
         local f = CreateFrame("Frame")
@@ -83,28 +115,8 @@ function mWarlock:OnInitialize()
             -- ud stands for UpDown
             -- lr stands for leftRight
             if event == "PLAYER_LOGIN" then
-                MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
-                if MWarlockSavedVariables["framePositions"] == nil then
-                    MWarlockSavedVariables["framePositions"] = {}
-                end
-
-                local spellOrder, activeSpellData = mWarlock:syncSpec()
-                ---------------------------------------------------
-                -- setup the UI
-                mWarlock:CreateMainFrame()
-                if mWarlock:IsWarlock() then
-                    mWarlock:createShardCountFrame()
-                end
-                ---------------------------------------------------
-                
-                mWarlock:createWatchers(spellOrder, activeSpellData)
-                mWarlock:radialButtonLayout()
-                
-                mWarlock:createPetFrames()
-                
+                mWarlock:INITUI()
                 self:UnregisterEvent("PLAYER_LOGIN")
-                mWarlock:SetUIMovable(false)
-                mWarlock:shardtrack()
             end
         end)
     end

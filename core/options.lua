@@ -55,14 +55,8 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 end
 
 -- BUILD PANE
--- OptionsPane = nil
 function mWarlock:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
-    -- if OptionsPane ~= nil then
-    --     OptionsPane:Show()
-    --     return
-    -- end
-
     OptionsPane = AceGUI:Create("Window")
     OptionsPane:SetWidth(400)
     OptionsPane:SetHeight(600)
@@ -89,6 +83,7 @@ function mWarlock:OptionsPane()
     -- generalGroup:SetFullHeight(true)
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
+    createCheckBox(generalGroup, "AsButtons: ", descrip, "asbuttons", false, mWarlock.INITUI)
     createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mWarlock.HidePetFrames)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)
