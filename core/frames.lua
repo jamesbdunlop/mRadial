@@ -96,7 +96,6 @@ function mWarlock:CreateWatcherFrame(frameName)
         watcher:SetEnabled(true)
         watcher:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
         watcher:SetAttribute("type", "spell")
-
     else
         watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
     end

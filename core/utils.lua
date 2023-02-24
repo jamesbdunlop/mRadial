@@ -85,7 +85,7 @@ end
 
 function mWarlock:getAllSpells()
     local spellData = {}
-    --- Trawl the entire spell book for pells.
+    --- Trawl the entire spell book for spells.
     --- Sick of trying to figure out the most important! Going to leave this up to the user.
     local numTabs = GetNumSpellTabs()
     for i=1,numTabs do
@@ -106,7 +106,11 @@ function mWarlock:getAllSpells()
                       spellInfo['minRange'] = minRange
                       spellInfo['maxRange'] = maxRange
                       spellInfo['spellID'] = spellID
-                spellData[spellName] = spellInfo
+                if name ~= mWarlock:getSpecName() and mWarlock:IsShaman() then 
+                    spellData[spellName] = {}
+                else
+                    spellData[spellName] = spellInfo
+                end  
     end end end
     -- THIS IS A TEST OF THE BULLSHIT DYNAMIC SPELLS IN THE SPELL BOOK THAT SHOW AND HIDE THERE!!!
     spellData[DEATHBOLT_SPELLNAME] = {}
@@ -141,10 +145,8 @@ function mWarlock:syncSpec()
             return shadow_spellOrder, mWarlock:getAllSpells()
         end
     elseif mWarlock:IsShaman() then
-        if spec == 1 then
-            print("Shaman Noob detected!")
-            return shaman_spellOrder, mWarlock:getAllSpells()
-        end
+        print("Shaman Noob detected!")
+        return shaman_spellOrder, mWarlock:getAllSpells()
     end
 end
 
