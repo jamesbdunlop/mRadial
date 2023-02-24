@@ -106,8 +106,8 @@ function mWarlock:getAllSpells()
                       spellInfo['minRange'] = minRange
                       spellInfo['maxRange'] = maxRange
                       spellInfo['spellID'] = spellID
-                if name ~= mWarlock:getSpecName() and mWarlock:IsShaman() then 
-                    spellData[spellName] = {}
+                if name ~= mWarlock:getSpecName() and mWarlock:IsShaman() and name ~= "Shaman" then 
+                    spellData[spellName] = nil
                 else
                     spellData[spellName] = spellInfo
                 end  
