@@ -8,6 +8,7 @@ local playerName = UnitName("player")
 local playerSpec = mWarlock:getSpecName()
 
 local udOffset = 20
+MW_WatcherFrames = {}
 
 function mWarlock:CreatePlayerSavedVars()
     if not PerPlayerPerSpecSavedVars then

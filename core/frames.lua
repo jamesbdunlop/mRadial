@@ -417,6 +417,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
+MW_WatcherFrames = {}
 function mWarlock:radialButtonLayout()
     -- print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
