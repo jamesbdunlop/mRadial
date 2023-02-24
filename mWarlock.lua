@@ -33,14 +33,15 @@ else
     MWarlockSavedVariables.framePositions = {}
     MWarlockSavedVariables.radius = 100
     MWarlockSavedVariables.offset = 0
-    MWarlockSavedVariables.PetFramesize = 35
-    MWarlockSavedVariables.shardTrackerFrameSize = 128
+    MWarlockSavedVariables.PetFramesize = 200
+    MWarlockSavedVariables.shardTrackerFrameSize = 200
 end
 
 function mWarlock:createWatchers(spellOrder, activeSpellData)
     MW_WatcherFrames = {}
     for _, spellInfo in ipairs(spellOrder) do
         local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
+        print("Creating watcher for %s", spellName)
         -- print("Seaching for %s ", spellName)
         local spellData = activeSpellData[spellName]
         -- print("spellData %s ", spellData)
@@ -82,6 +83,7 @@ function mWarlock:INITUI()
         shardCounterFrame:Hide()
     end
     if MW_WatcherFrames ~= nil then
+        print("Clearing previous watchers...")
         for _, frame in pairs(MW_WatcherFrames) do
             frame:SetParent(nil)
             frame:Hide()

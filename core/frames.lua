@@ -158,7 +158,7 @@ end
 function mWarlock:SetUIMovable(isMovable)
     --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
-        isMovable=MWarlockSavedVariables["moveable"]
+        isMovable=MWarlockSavedVariables["moveable"] or false
     end
     MAINFRAME_ISMOVING = isMovable
 
@@ -241,7 +241,7 @@ end
 ---------------------------------------------------------------------------------------------------
 function mWarlock:CreateMainFrame()
     local radius = MWarlockSavedVariables.radius or DEFAULT_RADIUS
-    local ooShardsMult = MWarlockSavedVariables.shardOutOfFrameSize or 1
+    local ooShardsMult = MWarlockSavedVariables.shardOutOfFrameSize or 150
     local size = radius*ooShardsMult
     -- Main Frame
     MWarlockMainFrame = mWarlock:CreateMovableFrame(MAINBG_FRAMENAME,
@@ -417,7 +417,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
-MW_WatcherFrames = {}
+
 function mWarlock:radialButtonLayout()
     -- print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
@@ -441,7 +441,7 @@ function mWarlock:radialButtonLayout()
     local countUDOffset = MWarlockSavedVariables.countUDOffset or 0
     local countLROffset = MWarlockSavedVariables.countLROffset or -10
 
-    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 45
+    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 145
 
     local angleStep = math.pi / #MW_WatcherFrames + spread
     for x = 1, #MW_WatcherFrames do
@@ -471,7 +471,6 @@ function mWarlock:radialButtonLayout()
         watcher.cooldownText:SetFont(customFontPath, coolDownFontSize, "THICKOUTLINE")
         watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
         
-
         -- Move the watcher around the center of the frame
         watcher:Show()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)

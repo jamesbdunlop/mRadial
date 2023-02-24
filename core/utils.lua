@@ -45,6 +45,8 @@ function mWarlock:isCorrectClass()
         return true
     elseif mWarlock:IsPriest() then
         return true
+    elseif mWarlock:IsShaman() then
+        return true
     else
         return false
     end

@@ -33,7 +33,7 @@ CALLDREADSTALKERS_SPELLNAME = "Call Dreadstalkers"
 IMPLOSION_SPELLNAME = "Implosion"
 SHADOWFURY_SPELLNAME = "ShadowFury"
 
---skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = demo_spellOrder
+--spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = demo_spellOrder
 demo_spellOrder = {}
 demo_spellOrder[1] = {POWERSIPHON_SPELLNAME, false, DEMONICCORE_SPELLNAME, false, 0, false}
 demo_spellOrder[2] = {CALLDREADSTALKERS_SPELLNAME, true, nil, true, 2, false}
@@ -76,7 +76,7 @@ MINDBLAST_SPELLNAME = "Mind Blast"
 SHADOWYINSIGHT_SPELLNAME ="Shadowy Insight"
 MINDSPIKE_SPELLNAME ="Mind Spike"
 MINDMELT_SPELLNAME ="Mind Melt"
---skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
+--spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shadow_spellOrder = {}
 shadow_spellOrder[1] = {MINDBLAST_SPELLNAME, false, SHADOWYINSIGHT_SPELLNAME, false, 0, false}
 shadow_spellOrder[2] = {MINDSPIKE_SPELLNAME, false, MINDMELT_SPELLNAME, false, 0, false}
@@ -90,12 +90,12 @@ shadow_spellOrder[8] = {HALO_SPELLNAME, true, nil, false, 0, true}
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
 CAPACITOR_SPELLNAME = "Capacitor Totem"
-EARTHBOUND_SPELLNAME = "Earthbind Totem"
+EARTHBIND_SPELLNAME = "Earthbind Totem"
 HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
---skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
+--spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shaman_spellOrder = {}
 shaman_spellOrder[1] = {CAPACITOR_SPELLNAME, false, CAPACITOR_SPELLNAME, false, 0, false}
-shaman_spellOrder[2] = {EARTHBOUND_SPELLNAME, false, EARTHBOUND_SPELLNAME, false, 0, false}
+shaman_spellOrder[2] = {EARTHBIND_SPELLNAME, false, EARTHBIND_SPELLNAME, false, 0, false}
 shaman_spellOrder[3] = {HEALINGSTREAM_SPELLNAME, false, HEALINGSTREAM_SPELLNAME, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ spellIcons[CORRUPTION_SPELLNAME] = string.format("%s/Spell_shadow_abominationexp
 spellIcons[UNSTABLEAFFLICTION_SPELLNAME] = string.format("%s/Spell_shadow_unstableaffliction_3.blp", ROOTICONPATH)
 spellIcons[AGONY_SPELLNAME] = string.format("%s/Spell_shadow_curseofsargeras.blp", ROOTICONPATH)
 spellIcons[DEATHBOLT_SPELLNAME] = string.format("%s/Spell_fire_twilightflamebolt.blp", ROOTICONPATH)
-
+---------------------------------------------------------------------------------------------------------
 -- Priest
 -- Shadow
 spellIcons[MINDBLAST_SPELLNAME] = string.format("%s/Spell_shadow_unholyfrenzy.blp", ROOTICONPATH)
@@ -142,5 +142,5 @@ spellIcons[MINDMELT_SPELLNAME] = string.format("%s/Spell_shadow_skull.blp", ROOT
 ---------------------------------------------------------------------------------------------------------
 -- SHAMAN
 spellIcons[CAPACITOR_SPELLNAME] = string.format("%s/Spell_nature_brilliance.blp", ROOTICONPATH)
-spellIcons[EARTHBOUND_SPELLNAME] = string.format("%s/Spell_nature_strengthofearthtotem02.blp", ROOTICONPATH)
+spellIcons[EARTHBIND_SPELLNAME] = string.format("%s/Spell_nature_strengthofearthtotem02.blp", ROOTICONPATH)
 spellIcons[HEALINGSTREAM_SPELLNAME] = string.format("%s/Inv_spear_04.blp", ROOTICONPATH)
