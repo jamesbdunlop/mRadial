@@ -21,8 +21,15 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     
     -- print("Creating watcherFrame now for: %s", frameName)
     local watcher = mWarlock:CreateWatcherFrame(frameName)
-    local asButtons = MWarlockSavedVariables["asbuttons"] or false
     watcher.spellName = buffName
+    -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
+    if parentSpellIcon ~= "" then
+        watcher.iconFrame:SetTexture(parentSpellIcon)
+    else
+        watcher.iconFrame:SetTexture(iconPath)
+    end 
+
+    local asButtons = MWarlockSavedVariables["asbuttons"] or false
     if asButtons then
         watcher:SetAttribute("spell", parentSpellName)
         -- set the button tooltip
@@ -36,14 +43,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             GameTooltip:Hide()
         end)
     end
-
-    -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
-    if parentSpellIcon ~= "" then
-        watcher.iconFrame:SetTexture(parentSpellIcon)
-    else
-        watcher.iconFrame:SetTexture(iconPath)
-    end 
-
+    
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
         if last <= .5 then

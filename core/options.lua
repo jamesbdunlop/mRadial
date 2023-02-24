@@ -83,7 +83,7 @@ function mWarlock:OptionsPane()
     -- generalGroup:SetFullHeight(true)
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
-    createCheckBox(generalGroup, "AsButtons: ", descrip, "asbuttons", false, mWarlock.INITUI)
+    createCheckBox(generalGroup, "AsButtons: ", descrip, "asbuttons", false, nil)
     createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mWarlock.HidePetFrames)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)

@@ -83,7 +83,6 @@ end
 function mWarlock:BuffHasSpellParent()
 end
 
-
 function mWarlock:getAllSpells()
     local spellData = {}
     --- Trawl the entire spell book for pells.
@@ -121,7 +120,6 @@ function mWarlock:getAllSpells()
 
     return spellData
 end
-
  
 function mWarlock:syncSpec()
     local spellOrder = nil

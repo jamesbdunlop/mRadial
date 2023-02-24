@@ -96,7 +96,6 @@ function mWarlock:CreateWatcherFrame(frameName)
         watcher:SetEnabled(true)
         watcher:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
         watcher:SetAttribute("type", "spell")
-        watcher:SetAttribute("unit", "target")
 
     else
         watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
@@ -130,19 +129,19 @@ function mWarlock:CreateWatcherFrame(frameName)
     watcher.buffTimerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
     watcher.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
 
-    watcher.buffTimerText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    watcher.buffTimerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     watcher.buffTimerText:SetTextColor(.1, 1, .1)
 
-    watcher.cooldownText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    watcher.cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, -20)
 
-    watcher.readyText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    watcher.readyText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     watcher.readyText:SetPoint("CENTER", watcher, "CENTER", 0, 0)
     watcher.readyText:SetTextColor(.1, 1, .1)
     watcher.readyText:SetText(READYSTR)
 
     -- SPECIAL MOVE FRAME TEXTURE
-    watcher.movetex = watcher:CreateTexture(nil, "OVERLAY")
+    watcher.movetex = watcher:CreateTexture(nil, "ARTWORK")
     watcher.movetex:SetPoint("CENTER", 0, 0)
     watcher.movetex:SetAllPoints(watcher)
     watcher.movetex:SetColorTexture(0, 0, 0, 0)
@@ -166,6 +165,7 @@ function mWarlock:SetUIMovable(isMovable)
         if isMovable and not frame.isWatcher then
             frame:EnableMouse(isMovable)
             frame:SetMovable(isMovable)
+            frame.movetex:Show()
             frame.movetex:SetColorTexture(0, 0, 1, .5)
             MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .5)
             MWarlockMainFrame.crosshair:Show()
@@ -173,6 +173,7 @@ function mWarlock:SetUIMovable(isMovable)
             frame:EnableMouse(isMovable)
             frame:SetMovable(isMovable)
             frame.movetex:SetColorTexture(0, 0, 0, 0)
+            frame.movetex:Hide()
             MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0)
             MWarlockMainFrame.crosshair:Hide()
         elseif frame.isWatcher then
@@ -201,6 +202,12 @@ function mWarlock:SetUIMovable(isMovable)
                 frame.countText:SetText("")
                 frame.cooldownText:SetText("")
                 frame.movetex:SetColorTexture(1, 0, 0, 0)
+            end
+            local asButtons = MWarlockSavedVariables["asbuttons"] or false
+            if asButtons then
+                frame:EnableMouse(true)
+                frame:SetEnabled(true)
+                frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
             end
         end
     end
