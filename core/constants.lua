@@ -89,14 +89,19 @@ shadow_spellOrder[8] = {HALO_SPELLNAME, true, nil, false, 0, true}
 
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
+-- SHAMAN
 CAPACITOR_SPELLNAME = "Capacitor Totem"
 EARTHBIND_SPELLNAME = "Earthbind Totem"
 HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
+HEALINGTIDETOTEM_SPELLNAME = "Healing Tide Totem"
+SPIRITLINKTOTEM_SPELLNAME = "Spirit Link Totem"
 --spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shaman_spellOrder = {}
 shaman_spellOrder[1] = {CAPACITOR_SPELLNAME, false, CAPACITOR_SPELLNAME, false, 0, false}
 shaman_spellOrder[2] = {EARTHBIND_SPELLNAME, false, EARTHBIND_SPELLNAME, false, 0, false}
 shaman_spellOrder[3] = {HEALINGSTREAM_SPELLNAME, false, HEALINGSTREAM_SPELLNAME, false, 0, false}
+shaman_spellOrder[4] = {HEALINGTIDETOTEM_SPELLNAME, false, HEALINGTIDETOTEM_SPELLNAME, false, 0, false}
+shaman_spellOrder[5] = {SPIRITLINKTOTEM_SPELLNAME, false, SPIRITLINKTOTEM_SPELLNAME, false, 0, false}
 
 ---------------------------------------------------------------------------------------------------
 ----ICONS
@@ -144,3 +149,5 @@ spellIcons[MINDMELT_SPELLNAME] = string.format("%s/Spell_shadow_skull.blp", ROOT
 spellIcons[CAPACITOR_SPELLNAME] = string.format("%s/Spell_nature_brilliance.blp", ROOTICONPATH)
 spellIcons[EARTHBIND_SPELLNAME] = string.format("%s/Spell_nature_strengthofearthtotem02.blp", ROOTICONPATH)
 spellIcons[HEALINGSTREAM_SPELLNAME] = string.format("%s/Inv_spear_04.blp", ROOTICONPATH)
+spellIcons[HEALINGTIDETOTEM_SPELLNAME] = string.format("%s/Ability_shaman_healingtide.blp", ROOTICONPATH)
+spellIcons[SPIRITLINKTOTEM_SPELLNAME] = string.format("%s/Spell_shaman_spiritlink.blp", ROOTICONPATH)
