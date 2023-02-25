@@ -78,13 +78,13 @@ function mWarlock:CreateFrameTimerElements(frame)
     frame.buffTimerTextBG = frame:CreateTexture(nil, "BACKGROUND")
     frame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
 
-    frame.buffTimerText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.buffTimerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.buffTimerText:SetTextColor(.1, 1, .1)
 
-    frame.cooldownText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.cooldownText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", 0, -20)
 
-    frame.readyText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.readyText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.readyText:SetPoint("CENTER", frame, "CENTER", 0, 0)
     frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)

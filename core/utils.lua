@@ -97,7 +97,7 @@ function mWarlock:getAllSpells()
             if spellID == 30283 then
                 spellName = SHADOWFURY_SPELLNAME
             end
-            if spellName and spellID and not IsPassiveSpell(spellID) then
+            if spellName and spellID then --and not IsPassiveSpell(spellID) then
                 -- print(spellName, icon, "active!")
                 local spellInfo = {}
                       spellInfo['rank'] = rank
