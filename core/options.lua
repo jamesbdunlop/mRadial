@@ -97,6 +97,8 @@ function mWarlock:OptionsPane()
     createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", 0, mWarlock.radialButtonLayout)
     createSlider(radialGroup, "Icon Size: ", 10, 1000, 1, "watcherFrameSize", 12, mWarlock.radialButtonLayout)
     createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Width Oval: ", .1, 10, .01, "widthDeform", 0, mWarlock.radialButtonLayout)
+    createSlider(radialGroup, "Height Oval: ", .1, 10, .01, "heightDeform", 0, mWarlock.radialButtonLayout)
     
     local timerGroup = AceGUI:Create("InlineGroup")
     timerGroup:SetTitle("Timers: (set movable on to see)")

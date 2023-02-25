@@ -410,6 +410,8 @@ function mWarlock:radialButtonLayout()
     local radius = MWarlockSavedVariables.radius or 100
     local offset = MWarlockSavedVariables.offset or 0
     local spread = MWarlockSavedVariables.watcherFrameSpread or 0
+    local widthDeform = MWarlockSavedVariables.widthDeform or 1
+    local heightDeform = MWarlockSavedVariables.heightDeform or 1
 
     local countFontSize = MWarlockSavedVariables.countFontSize or 22
     local readyFontSize = MWarlockSavedVariables.readyFontSize or 22
@@ -432,8 +434,8 @@ function mWarlock:radialButtonLayout()
         local angle = (x-1)*angleStep + offset*math.pi
         local sinAng = math.sin(angle)
         local cosAng = math.cos(angle)
-        local w = cosAng*radius
-        local h = sinAng*radius
+        local w = cosAng*radius*widthDeform
+        local h = sinAng*radius*heightDeform
         local watcher = MW_WatcherFrames[x]
 
         watcher:SetSize(watcherFrameSize, watcherFrameSize)
