@@ -38,6 +38,10 @@ else
 end
 
 function mWarlock:createWatchers(spellOrder, activeSpellData)
+    if spellOrder == nil then
+        return
+    end
+    
     MW_WatcherFrames = {}
     for _, spellInfo in ipairs(spellOrder) do
         local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)

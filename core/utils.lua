@@ -148,6 +148,7 @@ function mWarlock:syncSpec()
         print("Shaman Noob detected!")
         return shaman_spellOrder, mWarlock:getAllSpells()
     end
+    return spellOrder, mWarlock:getAllSpells()
 end
 
 function mWarlock:getShardCount()
