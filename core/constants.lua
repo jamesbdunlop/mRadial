@@ -17,7 +17,7 @@ HANDOFGUL_FRAMENAME = "HandOfGulFrame"
 FELLSTORM_SPELLNAME = "Felstorm"
 SHARD_FRAMENAME = "MWShardFrame"
 ---------------------------------------------------------------------------------------------------
-----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECITONS YET
+----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECTIONS YET
 ---------------------------------------------------------------------------------------------------
 -- Demo Spells of interest
 POWERSIPHON_SPELLNAME = "Power Siphon"

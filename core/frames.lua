@@ -1,12 +1,23 @@
 MW_ALLFRAMES = {}
 
-function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
-    --Creates a moveable frame to be used by mWarlock:SetMoveFrameScripts
+function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
     if template == nil then template = "BackdropTemplate" end
     local sizeX = frameSize[1] or DEFAULT_FRAMESIZE
     local sizeY = frameSize[2] or DEFAULT_FRAMESIZE
-    
-    local frame = CreateFrame("Frame", frameName, parent, template)
+    -- If we don't explicity set as buttons use the global saved variable.
+    if asbutton == nil then
+        asbutton = MWarlockSavedVariables["asbuttons"]
+    end
+    local frame
+    if asbutton then
+        frame = CreateFrame("Button", "frameName", parent, "SecureActionButtonTemplate")  
+        frame:SetEnabled(true)
+        frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        frame:SetAttribute("type", "spell")
+    else
+        frame = CreateFrame("Frame", frameName, parent, template)        
+    end
+    -- local frame = CreateFrame("Frame", frameName, parent, template)
     frame:SetPoint("CENTER", parent, "CENTER", 0, 0)
     frame:RegisterForDrag("LeftButton")
     frame:SetSize(sizeX, sizeY)
@@ -18,16 +29,16 @@ function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, tex
 
     -- TEXTURE
     if texturePath ~= nil then
-        frame.texture = frame:CreateTexture("texture_" .. frameName)
-        frame.texture:SetPoint("CENTER", 0, 0)
-        frame.texture:SetTexture(texturePath)
+        frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
+        frame.iconFrame:SetPoint("CENTER", 0, 0)
+        frame.iconFrame:SetTexture(texturePath)
     end
     -- MASK
     if maskPath ~= nil then
         frame.mask = frame:CreateMaskTexture("mask_" .. frameName)
         frame.mask:SetPoint("CENTER", 0, 0)
         frame.mask:SetTexture(maskPath, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-        frame.texture:AddMaskTexture(frame.mask)
+        frame.iconFrame:AddMaskTexture(frame.mask)
     end
 
     -------------------------------------------------
@@ -38,27 +49,57 @@ function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, tex
     frame.movetex:SetColorTexture(0, 0, 0, 0)
 
     if allPoints ~= nil then
-        frame.texture:SetAllPoints(frame)
-        if mask ~= nil then
-            frame.mask:SetAllPoints(frame.texture)
+        frame.iconFrame:SetAllPoints(frame)
+        if frame.mask ~= nil then
+            frame.mask:SetAllPoints(frame.iconFrame)
         end
     else
         if textureSize ~= nil then
             local texSizeX = textureSize[1] or 100
             local texSizeY = textureSize[1] or 100
-            frame.texture:SetSize(texSizeX, texSizeY)
+            frame.iconFrame:SetSize(texSizeX, texSizeY)
         end
-        if mask ~= nil and maskSize ~= nil then
+        if frame.mask ~= nil and maskSize ~= nil then
             local maskSizeX = textureSize[1] or 100
             local maskSizeY = textureSize[1] or 100
             frame.mask:SetSize(maskSizeX, maskSizeY)
         end
     end
 
+    return frame
+end
+
+function mWarlock:CreateFrameTimerElements(frame)
+    -- TEXTS
+    frame.countText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    frame.countText:SetTextColor(0, 1, 1)
+    frame.countText:SetPoint("CENTER", frame.iconFrame, "TOP", 00, -15)
+
+    frame.buffTimerTextBG = frame:CreateTexture(nil, "BACKGROUND")
+    frame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
+
+    frame.buffTimerText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.buffTimerText:SetTextColor(.1, 1, .1)
+
+    frame.cooldownText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", 0, -20)
+
+    frame.readyText = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    frame.readyText:SetPoint("CENTER", frame, "CENTER", 0, 0)
+    frame.readyText:SetTextColor(.1, 1, .1)
+    frame.readyText:SetText(READYSTR)
+
+end
+
+function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
+    -- Creates a moveable icon frame to be used by mWarlock:SetMoveFrameScripts
+    local frame = mWarlock:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
+    if asTimer then
+        mWarlock:CreateFrameTimerElements(frame)
+    end
     mWarlock:SetMoveFrameScripts(frame)
     -- Now put it all back to where it was previously set by the user if these exist.
     mWarlock:RestoreFrame(frameName, frame)
-    
     return frame
 end
 
@@ -88,64 +129,34 @@ function mWarlock:SetMoveFrameScripts(frame)
     end)
 end
 
-function mWarlock:CreateWatcherFrame(frameName)
-    local watcher
+function mWarlock:CreateRadialWatcherFrame(frameName)
+    -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
+    
     local asButtons = MWarlockSavedVariables["asbuttons"] or false
-    if asButtons then
-        watcher = CreateFrame("Button", "frameName", MWarlockMainFrame, "SecureActionButtonTemplate")  
-        watcher:SetEnabled(true)
-        watcher:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
-        watcher:SetAttribute("type", "spell")
-    else
-        watcher = CreateFrame("Frame", frameName, MWarlockMainFrame, "BackdropTemplate")        
-    end
-
-    watcher.texture = watcher:CreateTexture(nil, "BACKGROUND")
-    watcher.texture:SetAllPoints(watcher)
-    watcher.texture:SetTexture("Interface/Tooltips/UI-Tooltip-Background")
-    watcher.texture:SetColorTexture(0, 0, 0, 1)
-    
-    -- TEXTURES
-    watcher.mask = watcher:CreateMaskTexture()
-    watcher.mask:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
-    watcher.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-    
-    watcher.texture:AddMaskTexture(watcher.mask)
-    
-    watcher.iconFrame = watcher:CreateTexture(nil, "BACKGROUND")
-    watcher.iconFrame:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
-    watcher.iconFrame:AddMaskTexture(watcher.mask)
-    
+    -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
+    local size = 200
+    local watcher = mWarlock:CreateIconFrame(frameName, 
+                                            {size, size}, 
+                                            UIParent, 
+                                            "BackdropTemplate", 
+                                            "Interface/Tooltips/UI-Tooltip-Background", 
+                                            "ARTWORK", 
+                                            "Interface/CHARACTERFRAME/TempPortraitAlphaMask", 
+                                            true, 
+                                            {size, size}, 
+                                            {size, size}, 
+                                            asButtons)
+    mWarlock:CreateFrameTimerElements(watcher)
+    -- Assign a nice littler border..
     watcher.borderFrame = watcher:CreateTexture(nil, "ARTWORK")
     watcher.borderFrame:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
     watcher.borderFrame:SetTexture("Interface/ARTIFACTS/Artifacts-PerkRing-Final-Mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     watcher.borderFrame:SetAlpha(.5)
-    -- TEXTS
-    watcher.countText = watcher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    watcher.countText:SetTextColor(0, 1, 1)
-    watcher.countText:SetPoint("CENTER", watcher.iconFrame, "TOP", 00, -15)
-
-    watcher.buffTimerTextBG = watcher:CreateTexture(nil, "BACKGROUND")
-    watcher.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
-
-    watcher.buffTimerText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    watcher.buffTimerText:SetTextColor(.1, 1, .1)
-
-    watcher.cooldownText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, -20)
-
-    watcher.readyText = watcher:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    watcher.readyText:SetPoint("CENTER", watcher, "CENTER", 0, 0)
-    watcher.readyText:SetTextColor(.1, 1, .1)
-    watcher.readyText:SetText(READYSTR)
-
-    -- SPECIAL MOVE FRAME TEXTURE
-    watcher.movetex = watcher:CreateTexture(nil, "ARTWORK")
-    watcher.movetex:SetPoint("CENTER", 0, 0)
-    watcher.movetex:SetAllPoints(watcher)
-    watcher.movetex:SetColorTexture(0, 0, 0, 0)
+    
+    -- make sure to mask the base icons the same as the 
     watcher.movetex:AddMaskTexture(watcher.mask)
 
+    -- special tag for helping determine this is a raidal button.
     watcher.isWatcher = true
 
     MW_WatcherFrames[#MW_WatcherFrames+1] = watcher
@@ -166,18 +177,18 @@ function mWarlock:SetUIMovable(isMovable)
             frame:SetMovable(isMovable)
             frame.movetex:Show()
             frame.movetex:SetColorTexture(0, 0, 1, .5)
-            MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .5)
+            MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
             MWarlockMainFrame.crosshair:Show()
         elseif not frame.isWatcher then
             frame:EnableMouse(isMovable)
             frame:SetMovable(isMovable)
             frame.movetex:SetColorTexture(0, 0, 0, 0)
             frame.movetex:Hide()
-            MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0)
+            MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
             MWarlockMainFrame.crosshair:Hide()
         elseif frame.isWatcher then
             if isMovable then
-                frame.texture:Show()
+                -- frame.texture:Show()
                 frame.readyText:Show()
                 frame.iconFrame:Show()
                 frame.countText:Show()
@@ -190,7 +201,7 @@ function mWarlock:SetUIMovable(isMovable)
                 frame.countText:SetText("00")
                 frame.cooldownText:SetText("00")
             else
-                frame.texture:Hide()
+                -- frame.texture:Hide()
                 frame.readyText:Hide()
                 frame.iconFrame:Hide()
                 frame.countText:Hide()
@@ -279,7 +290,6 @@ function mWarlock:createPetFrames()
         frame:SetParent(nil)
     end
     PetFrames = {}
-    local hasSummonedPet, summonedPet = mWarlock:hasPetSummoned()
     local petSpellData = {}
     if mWarlock:IsFelguardSummoned() then 
         petSpellData = {
@@ -324,7 +334,6 @@ function mWarlock:createPetFrames()
     end
 
     for frameName, spellData in pairs(petSpellData) do
-        
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
         if PetFrames[frameName] == nil then
@@ -338,71 +347,28 @@ function mWarlock:createPetFrames()
                                                 "ARTWORK",
                                                 nil,
                                                 true, 
-                                                {size, size}, {size, size})
+                                                {size, size}, {size, size},
+                                                true)
           
-            mWarlock:SetMoveFrameScripts(petSpellFrame)
-            mWarlock:RestoreFrame(frameName, petSpellFrame)
-
-            petSpellFrame.text = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-            -- local petSpellFrameText = petSpellFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-            petSpellFrame.text:SetTextColor(.1, 1, .1)
-            petSpellFrame.text:SetText("")
-            petSpellFrame.text:SetAllPoints(petSpellFrame.texture)
-            petSpellFrame.text:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
+            petSpellFrame.cooldownText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
             
             petSpellFrame:SetScript("OnUpdate", function(self, elapsed)
                 last = last + elapsed
                 if last <= .5 then
                     return
                 end
-
-                petSpellFrame.text:SetText("")
-                local start, duration, enable = GetSpellCooldown(spellName)
-                if enable then
-                    local remaining = start + duration - GetTime()
-                    local minutes = math.floor(remaining / 60)
-                    local seconds = math.floor(remaining - minutes * 60)
-
-                    if remaining < GCD then
-                        petSpellFrame.texture:SetAlpha(1)
-                        petSpellFrame.text:SetText("")
-                        petSpellFrame.text:SetTextColor(.1, 1, .1)
-                    else
-                        if minutes > 0 then
-                            petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
-                        else
-                            petSpellFrame.text:SetText(string.format("%ds", seconds))
-                        end
-                        petSpellFrame.text:SetTextColor(1, .1, .1)
-                        petSpellFrame.texture:SetAlpha(0.5)
-                    end
-                    return
-                end
-
-                for idx = 1, 30 do
-                    local name, _, _, _, _, expirationTime, _, _, _,
-                    _, _, _, _, _, _ = UnitBuff("pet", idx)
-                    if name == spellName then
-                        -- Buff is active               
-                        local minutes, seconds = mWarlock:GetAuraTimeLeft(expirationTime)
-                        if minutes >0 then
-                            petSpellFrame.text:SetText(string.format("%dm%d", minutes, seconds))
-                        else
-                            petSpellFrame.text:SetText(string.format("%ds", seconds))
-                        end
-                        petSpellFrame.text:SetTextColor(.1, 1, .1)
-                    end
-                end
+                mWarlock:DoSpellFrameCooldown(spellName, petSpellFrame)
+                mWarlock:DoPetFrameAuraTimer(spellName, petSpellFrame)
             end)
 
             -- Add to the frame table for felguard frames
             PetFrames[frameName] = petSpellFrame
         end
     end
-    mWarlock:sePetFramePosAndSize()
+    mWarlock:setPetFramePosAndSize()
 end
 
-function mWarlock:sePetFramePosAndSize()
+function mWarlock:setPetFramePosAndSize()
     local frameSize = MWarlockSavedVariables["PetFramesSize"] or 45
     for frameName, frame in pairs(PetFrames) do
         mWarlock:RestoreFrame(frameName, frame)

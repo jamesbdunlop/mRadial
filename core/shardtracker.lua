@@ -28,7 +28,7 @@ function mWarlock:setOOSShardFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MWarlockSavedVariables["shardOutOfFrameSize"] or 450
     MWarlockMainFrame:SetSize(frameSize, frameSize)
-    MWarlockMainFrame.texture:SetSize(frameSize, frameSize)
+    MWarlockMainFrame.iconFrame:SetSize(frameSize, frameSize)
     MWarlockMainFrame.mask:SetSize(frameSize, frameSize)
 end
 
@@ -41,12 +41,12 @@ function mWarlock:shardtrack()
     
     -- Change the texture of the frame
     local iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
-    shardCounterFrame.texture:SetTexture(iconPath)
+    shardCounterFrame.iconFrame:SetTexture(iconPath)
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     if soulShards == 0 and not MAINFRAME_ISMOVING then
-        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
+        MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
     elseif not MAINFRAME_ISMOVING then
-        MWarlockMainFrame.texture:SetColorTexture(1, 0, 0, 0) -- transparent
+        MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
     end
 end

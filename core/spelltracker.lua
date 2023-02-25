@@ -20,7 +20,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     end
     
     -- print("Creating watcherFrame now for: %s", frameName)
-    local watcher = mWarlock:CreateWatcherFrame(frameName)
+    local watcher = mWarlock:CreateRadialWatcherFrame(frameName)
     watcher.spellName = buffName
     -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
     if parentSpellIcon ~= "" then
@@ -52,14 +52,12 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         -- Hide all the UI when mounted.
         if IsMounted() then
             watcher:Hide()
-            watcher.texture:Hide()
             watcher.iconFrame:Hide()
             watcher.readyText:Hide()
             watcher.countText:Hide()
             watcher.cooldownText:Hide()
         else
             watcher:Show()
-            watcher.texture:Show()
             watcher.readyText:Show()
             watcher.iconFrame:Show()
             watcher.countText:Show()
@@ -72,7 +70,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
         if parentSpellName and not isDebuff and not IsMounted() and not MAINFRAME_ISMOVING then
             -- If we do have a parent spell, if it has a cool down we need to run that cooldown timer.
-            mWarlock:DoSpellCooldown(parentSpellName, watcher)
+            mWarlock:DoSpellFrameCooldown(parentSpellName, watcher)
         end
 
         -- Find any "counts" for buffs, eg Implosion etc
