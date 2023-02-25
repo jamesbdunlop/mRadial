@@ -142,13 +142,13 @@ function mWarlock:CreateRadialWatcherFrame(frameName)
                                             "Interface/Tooltips/UI-Tooltip-Background", 
                                             "ARTWORK", 
                                             "Interface/CHARACTERFRAME/TempPortraitAlphaMask", 
-                                            true, 
+                                            nil, 
                                             {size, size}, 
                                             {size, size}, 
                                             asButtons)
     mWarlock:CreateFrameTimerElements(watcher)
     -- Assign a nice littler border..
-    watcher.borderFrame = watcher:CreateTexture(nil, "ARTWORK")
+    watcher.borderFrame = watcher:CreateTexture(nil, "OVERLAY")
     watcher.borderFrame:SetPoint("CENTER", watcher, "CENTER") -- allows scaling.
     watcher.borderFrame:SetTexture("Interface/ARTIFACTS/Artifacts-PerkRing-Final-Mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     watcher.borderFrame:SetAlpha(.5)
@@ -425,9 +425,13 @@ function mWarlock:radialButtonLayout()
         local watcher = MW_WatcherFrames[x]
         
         watcher:SetSize(watcherFrameSize, watcherFrameSize)
+        -- expand the iconFrame a little so we don't get strange squares in the circles.
         watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
+        
         watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
-        watcher.borderFrame:SetSize(watcherFrameSize*1.5, watcherFrameSize*1.5)
+        
+        -- because the graphic for the border is a little smaller.. we wanna handle the scale now
+        watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
         
         watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
         
