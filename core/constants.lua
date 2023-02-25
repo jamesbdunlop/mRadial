@@ -80,6 +80,9 @@ VOIDERUPTION_SPELLNAME = "Void Eruption"
 VOIDBOLT_SPELLNAME = "Void Bolt"
 MINDDEVOURER_SPELLNAME = "Mind Devourer"
 SHADOWWORDDEATH_SPELLNAME = "Shadow Word: Death"
+SHADOWWORDPAIN_SPELLNAME = "Shadow Word: Pain"
+VOIDFORM_SPELLNAME = "Voidform"
+MINDSEAR_SPELLNAME = "Mind Sear"
 -- Mind Devourer
 --spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = shadow_spellOrder
 shadow_spellOrder = {}
@@ -91,8 +94,10 @@ shadow_spellOrder[5] = {MINDGAMES_SPELLNAME, true, MINDGAMES_SPELLNAME, false, 0
 shadow_spellOrder[6] = {DARKASCENSION_SPELLNAME, true, nil, false, 0, true}
 shadow_spellOrder[7] = {DISPERSION_SPELLNAME, true, nil, false, 0, true}
 shadow_spellOrder[8] = {HALO_SPELLNAME, true, nil, false, 0, true}
-shadow_spellOrder[9] = {VOIDERUPTION_SPELLNAME, true, VOIDERUPTION_SPELLNAME, false, 0, false}
-shadow_spellOrder[10] = {SHADOWWORDDEATH_SPELLNAME, true, nil, false, 0, false}
+shadow_spellOrder[9] = {VOIDERUPTION_SPELLNAME, false, VOIDFORM_SPELLNAME, false, 0, false}
+shadow_spellOrder[10] = {SHADOWWORDPAIN_SPELLNAME, true, nil, false, 0, true}
+shadow_spellOrder[11] = {MINDSEAR_SPELLNAME, false, MINDDEVOURER_SPELLNAME, true, 50, false}
+shadow_spellOrder[12] = {SHADOWWORDDEATH_SPELLNAME, true, nil, false, 0, false}
 -- shadow_spellOrder[10] = {VOIDBOLT_SPELLNAME, true, nil, false, 0, false}
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
@@ -151,6 +156,9 @@ spellIcons[VOIDERUPTION_SPELLNAME] = string.format("%s/Spell_shadow_shadowfury.b
 spellIcons[VOIDBOLT_SPELLNAME] = string.format("%s/Ability_ironmaidens_convulsiveshadows.blp", ROOTICONPATH)
 spellIcons[MINDDEVOURER_SPELLNAME] = string.format("%s/Spell_arcane_mindmastery.blp", ROOTICONPATH)
 spellIcons[SHADOWWORDDEATH_SPELLNAME] = string.format("%s/Spell_shadow_demonicfortitude.blp", ROOTICONPATH)
+spellIcons[VOIDFORM_SPELLNAME] = string.format("%s/Spell_priest_voidform.blp", ROOTICONPATH)
+spellIcons[MINDSEAR_SPELLNAME] = string.format("%s/Spell_shadow_mindshear.blp", ROOTICONPATH)
+spellIcons[SHADOWWORDPAIN_SPELLNAME] = string.format("%s/Spell_shadow_shadowwordpain.blp", ROOTICONPATH)
 
 ---------------------------------------------------------------------------------------------------------
 -- Shaman

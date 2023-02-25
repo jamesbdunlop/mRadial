@@ -4,7 +4,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, isUnitPowerDependant, UnitPowerCount, spellID, isDebuff)
+function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellName, isUnitPowerDependant, UnitPowerCount, spellID, isDebuff, isProc)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
