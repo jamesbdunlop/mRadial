@@ -8,10 +8,11 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
     if asbutton == nil then
         asbutton = MWarlockSavedVariables["asbuttons"]
     end
-    local parentFrame = CreateFrame("Frame", "frameName", parent, "BackdropTemplate")  
+    local parentName = "%s_parent", frameName
+    local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")  
     local frame
     if asbutton then
-        frame = CreateFrame("Button", "frameName", parentFrame, "SecureActionButtonTemplate")  
+        frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  
         frame:SetEnabled(true)
         frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
         frame:SetAttribute("type", "spell")
@@ -102,7 +103,7 @@ function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, tex
     end
     -- Now put it all back to where it was previously set by the user if these exist.
     mWarlock:RestoreFrame(frameName, frame)
-   
+    mWarlock:SetMoveFrameScripts(frame)
     return frame
 end
 
