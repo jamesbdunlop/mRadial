@@ -14,6 +14,7 @@ function mWarlock:createShardCountFrame()
 
     shardCounterFrame:SetAlpha(.5)
     mWarlock:setShardTrackerFramesSize()
+    mWarlock:SetMountScripts(shardCounterFrame)
 end
 
 function mWarlock:setShardTrackerFramesSize()
@@ -36,9 +37,8 @@ function mWarlock:shardtrack()
     if not mWarlock:IsWarlock() then
         return
     end
-    
+
     local soulShards = mWarlock:getShardCount()
-    
     -- Change the texture of the frame
     local iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
     shardCounterFrame.iconFrame:SetTexture(iconPath)

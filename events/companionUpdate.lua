@@ -1,10 +1,12 @@
-function mWarlock:COMPANION_UPDATE(eventName, arg1, arg2)
+-- function mWarlock:COMPANION_UPDATE(eventName, arg1, arg2, arg3)
+    -- this fires when anyone around you mounts, and there is no arg to check "player "
     -- print("eventName: %s", eventName)
     -- print("arg1: %s", arg1)
     -- print("arg2: %s", arg2)
-    if arg1 == "MOUNT" then
-        mWarlock:radialButtonLayout()
-    end
-end
+    -- print("arg3: %s", arg3)
+    -- if arg1 == "MOUNT" then
+    --     mWarlock:radialButtonLayout()
+    -- end
+-- end
 
-mWarlock:RegisterEvent("COMPANION_UPDATE")
+-- mWarlock:RegisterEvent("COMPANION_UPDATE")

@@ -41,11 +41,11 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
     if spellOrder == nil then
         return
     end
-    
+
     MW_WatcherFrames = {}
     for _, spellInfo in ipairs(spellOrder) do
         local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
-        print("Creating watcher for %s", spellName)
+        -- print("Creating watcher for %s", spellName)
         -- print("Seaching for %s ", spellName)
         local spellData = activeSpellData[spellName]
         -- print("spellData %s ", spellData)
@@ -82,12 +82,14 @@ function mWarlock:createWatchers(spellOrder, activeSpellData)
 end
 
 function mWarlock:INITUI()
+    -- print("INITUI CALLED....")
+    -- Clear out existing frames for a full refresh.
     if shardCounterFrame ~= nil then
         shardCounterFrame:SetParent(nil)
         shardCounterFrame:Hide()
     end
     if MW_WatcherFrames ~= nil then
-        print("Clearing previous watchers...")
+        -- print("Clearing previous watchers...")
         for _, frame in pairs(MW_WatcherFrames) do
             frame:SetParent(nil)
             frame:Hide()
@@ -106,7 +108,6 @@ function mWarlock:INITUI()
     if mWarlock:IsWarlock() then
         mWarlock:createShardCountFrame()
     end
-    ---------------------------------------------------
     
     mWarlock:createWatchers(spellOrder, activeSpellData)
     mWarlock:radialButtonLayout()

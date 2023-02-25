@@ -20,7 +20,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
     end
     
     -- print("Creating watcherFrame now for: %s", frameName)
-    local watcher = mWarlock:CreateRadialWatcherFrame(frameName)
+    local watcher = mWarlock:CreateRadialWatcherFrame(frameName, buffName)
     watcher.spellName = buffName
     -- Swap the icon if we have a parent spell, eg: Power Siphon buffs Demonic Core.
     if parentSpellIcon ~= "" then
@@ -29,6 +29,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         watcher.iconFrame:SetTexture(iconPath)
     end 
 
+    -- Assign the spell to cast if we're a button
     local asButtons = MWarlockSavedVariables["asbuttons"] or false
     if asButtons then
         watcher:SetAttribute("spell", parentSpellName)
@@ -48,20 +49,6 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
         last = last + elapsed
         if last <= .5 then
             return
-        end
-        -- Hide all the UI when mounted.
-        if IsMounted() then
-            watcher:Hide()
-            watcher.iconFrame:Hide()
-            watcher.readyText:Hide()
-            watcher.countText:Hide()
-            watcher.cooldownText:Hide()
-        else
-            watcher:Show()
-            watcher.readyText:Show()
-            watcher.iconFrame:Show()
-            watcher.countText:Show()
-            watcher.cooldownText:Show()
         end
 
         if isDebuff and not IsMounted() and not MAINFRAME_ISMOVING then
@@ -160,6 +147,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
                 end
             end
         end
+        last = elapsed
     end)
 
     watcher:Show()
