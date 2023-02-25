@@ -427,7 +427,7 @@ function mWarlock:radialButtonLayout()
     local countUDOffset = MWarlockSavedVariables.countUDOffset or 0
     local countLROffset = MWarlockSavedVariables.countLROffset or -10
 
-    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 145
+    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 45
 
     local angleStep = math.pi / #MW_WatcherFrames + spread
     for x = 1, #MW_WatcherFrames do
@@ -460,7 +460,6 @@ function mWarlock:radialButtonLayout()
         watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
         
         -- Move the watcher around the center of the frame
-        watcher:Show()
         watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
         
         -- We don't do ANY SHOW HIDE HERE!!

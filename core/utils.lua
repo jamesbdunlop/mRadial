@@ -126,6 +126,10 @@ function mWarlock:getAllSpells()
 end
  
 function mWarlock:syncSpec()
+    -- main loop to figure out if the spells in the constants are present and should be added 
+    -- to the radial menu
+    -- note: it would be good to use https://wowpedia.fandom.com/wiki/API_GetTalentInfo to get all avail talents
+    -- check those against the spell book as being "active" and then offering these up as check boxes in the options for and opt in feature set.
     local spellOrder = nil
     local spec = mWarlock:GetSpec()
     if mWarlock:IsWarlock() then 
