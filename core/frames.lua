@@ -30,15 +30,15 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
     MW_ALLFRAMES[frameName] = frame
 
     -- TEXTURE
+    frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
+    frame.iconFrame:SetPoint("CENTER", 0, 0)
     if texturePath ~= nil then
-        frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
-        frame.iconFrame:SetPoint("CENTER", 0, 0)
         frame.iconFrame:SetTexture(texturePath)
         frame.iconFrame:Show()
     end
     -- MASK
+    frame.mask = frame:CreateMaskTexture("mask_" .. frameName)
     if maskPath ~= nil then
-        frame.mask = frame:CreateMaskTexture("mask_" .. frameName)
         frame.mask:SetPoint("CENTER", 0, 0)
         frame.mask:SetTexture(maskPath, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
         frame.iconFrame:AddMaskTexture(frame.mask)

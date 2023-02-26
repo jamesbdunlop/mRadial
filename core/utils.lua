@@ -8,7 +8,7 @@ function mWarlock:GetAuraTimeLeft(expirationTime)
     return minutes, seconds
 end
 
-function mWarlock:HasBuff(buffName)
+function mWarlock:HasActiveBuff(buffName)
     for i = 1, 40 do
         local name, _, _, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
         if name and name == buffName then
@@ -16,6 +16,18 @@ function mWarlock:HasBuff(buffName)
         end
     end
     return false
+end
+
+function mWarlock:IsSpellUnitPowerDependant(spellID)
+    local costInfo = GetSpellPowerCost(spellID)
+    if costInfo[1] ~= nil then
+        if costInfo[1]["name"] ~= "MANA" then
+            return costInfo[1]["name"], costInfo[1]["minCost"]
+        else
+            return false, 0
+        end
+    end
+    return false, 0
 end
 
 function mWarlock:checkHasSpell(spellName)
@@ -125,6 +137,73 @@ function mWarlock:getAllSpells()
     return spellData
 end
  
+function mWarlock:GetTalentTreeSpellIDList()
+    local list = {}
+
+    local configID = C_ClassTalents.GetActiveConfigID()
+    if configID == nil then return end
+
+    local configInfo = C_Traits.GetConfigInfo(configID)
+    if configInfo == nil then return end
+
+    for _, treeID in ipairs(configInfo.treeIDs) do -- in the context of talent trees, there is only 1 treeID
+        local nodes = C_Traits.GetTreeNodes(treeID)
+        for i, nodeID in ipairs(nodes) do
+            local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID)
+            for _, entryID in ipairs(nodeInfo.entryIDs) do -- each node can have multiple entries (e.g. choice nodes have 2)
+                local entryInfo = C_Traits.GetEntryInfo(configID, entryID)
+                if entryInfo and entryInfo.definitionID then
+                    local definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+                    if definitionInfo.spellID then
+                        table.insert(list, definitionInfo.spellID)
+                    end
+                end
+            end
+        end
+    end
+    return list
+end
+
+function mWarlock:GetAllPassiveTalentTreeSpells()
+    local activeSpellData = mWarlock:GetTalentTreeSpellIDList()
+    local active = {}
+    for _, spellID in ipairs(activeSpellData) do
+        -- local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
+        local buffName, _, iconPath, _, minRange, maxRange, _, parentSpellIcon = GetSpellInfo(spellID)
+        local isKnown
+        if spellID == nil then
+            isKnown = false
+        else
+            isKnown = IsPlayerSpell(spellID)
+        end
+        -- print("Creating watcher for %s", spellName)
+        local isPassive = IsPassiveSpell(spellID)
+        if isKnown and isPassive then
+            table.insert(active, {buffName, spellID})
+        end
+    end
+    return active
+end
+
+function mWarlock:GetAllActiveTalentTreeSpells()
+    local activeSpellData = mWarlock:GetTalentTreeSpellIDList()
+    local active = {}
+    for _, spellID in ipairs(activeSpellData) do
+        local spellName, _, iconPath, _, minRange, maxRange, _, parentSpellIcon = GetSpellInfo(spellID)
+        local isKnown
+        if spellID == nil then
+            isKnown = false
+        else
+            isKnown = IsPlayerSpell(spellID)
+        end
+        local isPassive = IsPassiveSpell(spellID)
+        if isKnown and not isPassive then
+            table.insert(active, {spellName, spellID})
+        end
+    end
+    return active
+end
+
 function mWarlock:syncSpec()
     -- main loop to figure out if the spells in the constants are present and should be added 
     -- to the radial menu
@@ -138,7 +217,7 @@ function mWarlock:syncSpec()
             return aff_spellOrder, mWarlock:getAllSpells()
         elseif spec == 2 then
             print("Demo warlock detected!")
-            return demo_spellOrder, mWarlock:getAllSpells()
+            return demo_spellOrder, mWarlock:GetTalentTreeSpellIDList()
         else
             print("Destro warlock detected!")
             return destro_spellOrder, mWarlock:getAllSpells()
@@ -146,7 +225,7 @@ function mWarlock:syncSpec()
     elseif mWarlock:IsPriest() then
         if spec == 3 then
             print("Shadow Priest detected!")
-            return shadow_spellOrder, mWarlock:getAllSpells()
+            return shadow_spellOrder, mWarlock:GetTalentTreeSpellIDList()-- mWarlock:getAllSpells()
         end
     elseif mWarlock:IsShaman() then
         print("Shaman Noob detected!")

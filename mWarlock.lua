@@ -37,46 +37,73 @@ else
     MWarlockSavedVariables.shardTrackerFrameSize = 200
 end
 
-function mWarlock:createWatchers(spellOrder, activeSpellData)
-    if spellOrder == nil then
-        return
-    end
-
+function mWarlock:createWatchers()
     MW_WatcherFrames = {}
-    for _, spellInfo in ipairs(spellOrder) do
-        local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
-        -- print("Creating watcher for %s", spellName)
-        -- print("Seaching for %s ", spellName)
-        local spellData = activeSpellData[spellName]
-        -- print("spellData %s ", spellData)
-        if spellData ~= nil then
-            local spellID = spellData["spellID"]
-            local iconPath = spellIcons[buffName]
-            local parentSpellName = spellName
-            local parentSpellIcon = spellIcons[spellName]
-            if skipBuff then
-                buffName = parentSpellName
-                iconPath = spellIcons[spellName]
+    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    for _, spellInfo in ipairs(activeTalentTreeSpells) do
+        local spellName = spellInfo[1]
+        local spellId = spellInfo[2]
+        print("Creating watcher for %s", spellName)
+        print("spellId %d", spellId)
+        local isDebuff = false
+        local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
+        local isActive
+        if spellName ~= nil then 
+            isActive = MWarlockSavedVariables["isActive"..spellName] or false
+        else
+            isActive = false
+        end
+        print("isActive: %s", isActive)
+        if isActive then
+            local isKnown
+            if spellID == nil then
+                isKnown = false
+            else
+                isKnown = IsPlayerSpell(spellID)
             end
-            -- print("---")
-            -- print("spellName: %s", spellName)
-            -- print("spellID: %s", spellID)
-            -- print("skipBuff: %s", skipBuff)
-            -- print("buffName: %s", buffName)
-            -- print("iconPath: %s", iconPath)
-            -- print("parentSpellIcon: %s", parentSpellIcon)
-            -- print("parentSpellName: %s", parentSpellName)
-            -- print("isUnitPowerDependant: UnitPowerCount, %s", isUnitPowerDependant) UnitPowerCount,
-            -- print("---")
-            mWarlock:addWatcher(buffName, 
-                                iconPath, 
-                                parentSpellIcon, 
-                                parentSpellName, 
-                                isUnitPowerDependant, 
-                                UnitPowerCount, 
-                                spellID,
-                                isDebuff or false)
-                                udOffset = udOffset + 32
+            
+            local isPassive = IsPassiveSpell(spellID)
+            local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
+            local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
+            local disabled = C_SpellBook.IsSpellDisabled(spellID)
+            if spellName == "Devouring Plague" then
+                print("---")
+                print("spellName: %s ID: %d", spellName, spellID)
+                print("iconPath: %s", iconPath)
+                print("rank: %s", rank)
+                print("castTime: %d", castTime)
+                print("minRange: %d", minRange)
+                print("maxRange: %d", maxRange)
+
+                -- print("pSpellName: %s", pSpellName)
+                -- print("pIconPath: %s", pIconPath)
+                -- print("isUnitPowerDependant: %s", isUnitPowerDependant)
+                -- print("UnitPowerCount: %s", UnitPowerCount)
+                -- print("overrideSpellID: %d", overrideSpellID)
+                -- print("disabled: %d", disabled)
+                -- print("isPassive: %d", isPassive)
+            end 
+            local isUnitPowerDependant, UnitPowerCount= mWarlock:IsSpellUnitPowerDependant(spellID)
+            if isKnown and not isPassive then
+                -- local spellID = spellData["spellID"]
+                local iconPath = spellIcons[spellName]
+                local parentSpellName = spellName
+                -- local parentSpellIcon = spellIcons[spellName]
+                if skipBuff then
+                    spellName = parentSpellName
+                    iconPath = spellIcons[spellName]
+                end
+
+                mWarlock:addWatcher(spellName, 
+                                    iconPath, 
+                                    pIconPath, 
+                                    pSpellName, 
+                                    isUnitPowerDependant, 
+                                    UnitPowerCount, 
+                                    spellID,
+                                    isDebuff or false)
+                                    udOffset = udOffset + 32
+            end
         end
     end
 end
@@ -101,7 +128,6 @@ function mWarlock:INITUI()
         MWarlockSavedVariables["framePositions"] = {}
     end
 
-    local spellOrder, activeSpellData = mWarlock:syncSpec()
     ---------------------------------------------------
     -- setup the UI
     mWarlock:CreateMainFrame()
@@ -109,7 +135,7 @@ function mWarlock:INITUI()
         mWarlock:createShardCountFrame()
     end
     
-    mWarlock:createWatchers(spellOrder, activeSpellData)
+    mWarlock:createWatchers()
     mWarlock:radialButtonLayout()
     
     mWarlock:createPetFrames()

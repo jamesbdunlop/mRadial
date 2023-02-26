@@ -81,7 +81,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
             end
         end
 
-        if not mWarlock:HasBuff(buffName) and buffName == DEMONICCORE_SPELLNAME and not MAINFRAME_ISMOVING then
+        if not mWarlock:HasActiveBuff(buffName) and buffName == DEMONICCORE_SPELLNAME and not MAINFRAME_ISMOVING then
             watcher.countText:SetText("")
             watcher.countText:Hide()
         end
@@ -152,3 +152,7 @@ function mWarlock:addWatcher(buffName, iconPath, parentSpellIcon, parentSpellNam
 
     watcher:Show()
 end
+
+--https://wowpedia.fandom.com/wiki/API_C_SpellBook.GetOverrideSpell
+--https://wowpedia.fandom.com/wiki/PLAYER_TOTEM_UPDATE
+--https://wowpedia.fandom.com/wiki/API_C_SpellBook.IsSpellDisabled
