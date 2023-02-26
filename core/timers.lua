@@ -14,14 +14,10 @@ end
 
 function mWarlock:DoSpellFrameCooldown(spellName, watcher)
     -- COOLDOWNS FOR PARENT SPELLS
-    --start, duration, enabled, modRate =
-    -- local start, duration, enabled, _ = GetSpellCooldown(spellName)
-    -- start = start or GetTime()
-    -- duration = duration or 0
-    -- local remaining = start + duration - GetTime()
+    if MAINFRAME_ISMOVING then
+        return
+    end
 
-    -- local minutes = math.floor(remaining / 60)
-    -- local seconds = math.floor(remaining - minutes * 60)
     local enabled, remaining, minutes, seconds = mWarlock:GetSpellRemaining(spellName)
     if enabled and remaining > GCD then
         watcher.cooldownText:Show()
@@ -48,6 +44,10 @@ end
 
 function mWarlock:DoDebuffTimer(spellName, watcher)
     -- DEBUFF TIMERS
+    if MAINFRAME_ISMOVING then
+        return
+    end
+
     local remaining = 0
     for idx = 1, 40 do
         -- name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
@@ -71,6 +71,9 @@ function mWarlock:DoDebuffTimer(spellName, watcher)
 end
 
 function mWarlock:DoPetFrameAuraTimer(spellName, frame)
+    if MAINFRAME_ISMOVING then
+        return
+    end
     for idx = 1, 30 do
         local name, _, _, _, _, expirationTime, _, _, _,
         _, _, _, _, _, _ = UnitBuff("pet", idx)
@@ -89,6 +92,9 @@ end
 
 function mWarlock:DoBuffTimer(spellName, watcher, iconPath)
     local found = false
+    if MAINFRAME_ISMOVING then
+        return
+    end
     for idx = 1, 40 do
         -- local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
         -- spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)

@@ -45,6 +45,10 @@ function mWarlock:addWatcher(spellID)
         if last <= .25 then
             return
         end
+        if MAINFRAME_ISMOVING then
+            return
+        end
+        
         if not MAINFRAME_ISMOVING or not IsMounted() then 
             if isUnitPowerDependant then
                 -- Do we have enough shards to allow this to show timers / cast from?
