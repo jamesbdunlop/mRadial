@@ -85,6 +85,9 @@ function mWarlock:CreateFrameTimerElements(frame)
     frame.buffTimerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.buffTimerText:SetTextColor(.1, 1, .1)
 
+    frame.debuffTimerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    frame.debuffTimerText:SetTextColor(1, 0, 0)
+
     frame.cooldownText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", 0, -20)
 
@@ -155,7 +158,7 @@ function mWarlock:SetMountScripts(frame)
     end)
 end
 
-function mWarlock:CreateRadialWatcherFrame(frameName, spellName)
+function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
     
     local asButtons = MWarlockSavedVariables["asbuttons"] or false
@@ -165,7 +168,7 @@ function mWarlock:CreateRadialWatcherFrame(frameName, spellName)
                                             {size, size}, 
                                             MWarlockMainFrame, 
                                             "BackdropTemplate", 
-                                            spellIcons[spellName], 
+                                            iconPath, 
                                             "ARTWORK", 
                                             "Interface/CHARACTERFRAME/TempPortraitAlphaMask", 
                                             nil, 
@@ -449,12 +452,14 @@ function mWarlock:radialButtonLayout()
         
         -- TEXT
         watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
+        watcher.debuffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
         watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
         watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUDOffset)
         watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUDOffset)
         
         -- SET FONT
         watcher.buffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
+        watcher.debuffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
         watcher.countText:SetFont(customFontPath, countFontSize, "THICKOUTLINE")
         watcher.cooldownText:SetFont(customFontPath, coolDownFontSize, "THICKOUTLINE")
         watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
@@ -464,13 +469,17 @@ function mWarlock:radialButtonLayout()
         
         -- We don't do ANY SHOW HIDE HERE!!
         watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
+        watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         if cosAng <= 0 then
             watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUDOffset)
+            watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUDOffset)
         elseif cosAng == 0 then
             -- Bottom of the circle, we want to keep the text UNDER the icon here
             watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUDOffset)
+            watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUDOffset)
         else
             watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUDOffset)
+            watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUDOffset)
         end
     end
 end

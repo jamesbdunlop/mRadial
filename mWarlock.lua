@@ -5,7 +5,7 @@
 
 ----GLOBAL SAVED VARS
 local playerName = UnitName("player")
-local playerSpec = mWarlock:getSpecName()
+local playerSpec = mWarlock:GetSpecName()
 
 local udOffset = 20
 MW_WatcherFrames = {}
@@ -40,69 +40,21 @@ end
 function mWarlock:createWatchers()
     MW_WatcherFrames = {}
     local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    if activeTalentTreeSpells == nil then
+        return
+    end
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
-        local spellName = spellInfo[1]
         local spellId = spellInfo[2]
-        print("Creating watcher for %s", spellName)
-        print("spellId %d", spellId)
-        local isDebuff = false
         local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
-        local isActive
+        local isActive  = false
         if spellName ~= nil then 
             isActive = MWarlockSavedVariables["isActive"..spellName] or false
-        else
-            isActive = false
-        end
-        print("isActive: %s", isActive)
-        if isActive then
-            local isKnown
-            if spellID == nil then
-                isKnown = false
-            else
-                isKnown = IsPlayerSpell(spellID)
-            end
             
+            local isKnown  = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
-            local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
-            local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
-            local disabled = C_SpellBook.IsSpellDisabled(spellID)
-            if spellName == "Devouring Plague" then
-                print("---")
-                print("spellName: %s ID: %d", spellName, spellID)
-                print("iconPath: %s", iconPath)
-                print("rank: %s", rank)
-                print("castTime: %d", castTime)
-                print("minRange: %d", minRange)
-                print("maxRange: %d", maxRange)
-
-                -- print("pSpellName: %s", pSpellName)
-                -- print("pIconPath: %s", pIconPath)
-                -- print("isUnitPowerDependant: %s", isUnitPowerDependant)
-                -- print("UnitPowerCount: %s", UnitPowerCount)
-                -- print("overrideSpellID: %d", overrideSpellID)
-                -- print("disabled: %d", disabled)
-                -- print("isPassive: %d", isPassive)
-            end 
-            local isUnitPowerDependant, UnitPowerCount= mWarlock:IsSpellUnitPowerDependant(spellID)
-            if isKnown and not isPassive then
-                -- local spellID = spellData["spellID"]
-                local iconPath = spellIcons[spellName]
-                local parentSpellName = spellName
-                -- local parentSpellIcon = spellIcons[spellName]
-                if skipBuff then
-                    spellName = parentSpellName
-                    iconPath = spellIcons[spellName]
-                end
-
-                mWarlock:addWatcher(spellName, 
-                                    iconPath, 
-                                    pIconPath, 
-                                    pSpellName, 
-                                    isUnitPowerDependant, 
-                                    UnitPowerCount, 
-                                    spellID,
-                                    isDebuff or false)
-                                    udOffset = udOffset + 32
+            if isActive and isKnown and not isPassive then
+                mWarlock:addWatcher(spellID)
+                udOffset = udOffset + 32
             end
         end
     end
@@ -145,19 +97,17 @@ function mWarlock:INITUI()
 end
 
 function mWarlock:OnInitialize()
-    if(mWarlock:isCorrectClass()) then
-        local f = CreateFrame("Frame")
-        -- Register the event for when the player logs in
-        f:RegisterEvent("PLAYER_LOGIN")
-        f:SetScript("OnEvent", function(self, event, ...)
-            -- ud stands for UpDown
-            -- lr stands for leftRight
-            if event == "PLAYER_LOGIN" then
-                mWarlock:INITUI()
-                self:UnregisterEvent("PLAYER_LOGIN")
-            end
-        end)
-    end
+    local f = CreateFrame("Frame")
+    -- Register the event for when the player logs in
+    f:RegisterEvent("PLAYER_LOGIN")
+    f:SetScript("OnEvent", function(self, event, ...)
+        -- ud stands for UpDown
+        -- lr stands for leftRight
+        if event == "PLAYER_LOGIN" then
+            mWarlock:INITUI()
+            self:UnregisterEvent("PLAYER_LOGIN")
+        end
+    end)
 end
 
 function mWarlock:OnEnable()

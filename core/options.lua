@@ -128,10 +128,15 @@ function mWarlock:OptionsPane()
     spellsGroup:SetFullWidth(true)
     spellsGroup:SetLayout("Flow")
 
-    for i, spellData in ipairs(mWarlock:GetAllActiveTalentTreeSpells()) do
-        -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
-        local spellName = spellData[1]
-        createCheckBox(spellsGroup, spellName, "", "isActive"..spellName, true, mWarlock.INITUI)
+    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    -- lower level classes might not have an active talent tree.
+    if activeTalentTreeSpells ~= nil then
+        for i, spellData in ipairs(mWarlock:GetAllActiveTalentTreeSpells()) do
+            -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+            local spellName = spellData[1]
+            desc = GetSpellDescription(spellData[2])
+            createCheckBox(spellsGroup, spellName, "", "isActive"..spellName, true, mWarlock.INITUI)
+        end
     end
 
     --- FINAL LAYOUT
