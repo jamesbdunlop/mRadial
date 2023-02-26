@@ -58,7 +58,7 @@ end
 
 function mWarlock:GetSpecName()
     local currentSpec = GetSpecialization()
-    local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+    local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
     return currentSpecName
 end
 
@@ -240,4 +240,30 @@ function mWarlock:syncTalentTree(treeTable)
             treeTable[spellName]["active"] = true
         end
     end
+end
+
+
+
+--- FUN STUFF
+function mWarlock:listBagItems(t)
+    t = t and wipe(t) or {}
+    for bag = 0, 4 do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
+          local itemLink = C_Container.GetContainerItemLink(bag, slot)
+          if itemLink then
+            local itemName = GetItemInfo(itemLink)
+            local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
+                if itemName ~= nil then
+                    local url = "https://www.wowhead.com/item="..itemInfo["itemID"] .."/" .. itemName .. "#comments"
+                    -- format the URL as a clickable chat link
+                    local urlLink = "|Hurl:"..url.."|h"..itemName.."|h"
+                    -- print the text and the clickable URL
+                    print("added: ".. itemName) --urlLink)
+                    table.insert(t, url)
+                end
+            end
+        end
+      end
+      print("Bag dump complete!")
+      return t
 end

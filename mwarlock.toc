@@ -4,7 +4,7 @@
 ## Version: 0.0.1
 ## License: All Rights Reserved
 ## Notes: Macka's warlock ui for shits and giggles
-## SavedVariables: MWarlockSavedVariables, PerPlayerPerSpecSavedVars
+## SavedVariables: MWarlockSavedVariables, PerPlayerPerSpecSavedVars, BAGDUMPV1
 ## OptionalDeps: LibDBIcon-1.0
 
 embeds.xml 

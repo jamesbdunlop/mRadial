@@ -251,7 +251,7 @@ function mWarlock:RestoreFrame(frameName, frame)
         framePosData["x"] = 0
         framePosData["y"] = 0
         framePosData["point"] = "CENTER"
-        framePosData["relativeTo"] = UIParent
+        framePosData["relativeTo"] = "UIParent"
         framePosData["relativePoint"] = "CENTER"
         framePosData["size"] = {50, 50}
     end
@@ -275,6 +275,21 @@ function mWarlock:RestoreFrame(frameName, frame)
     -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
 end
 
+function mWarlock:RemoveAllWatcherFrames()
+    for x = 1, #MW_WatcherFrames do
+        local frame = MW_WatcherFrames[x]
+        -- print("Removing: %s", frame:GetName())
+        
+        local frameName = frame:GetName()
+        for index, frame in ipairs(MW_ALLFRAMES) do
+            if frameName == frame:GetName() then
+                MW_ALLFRAMES.remove(index)
+            end
+        end
+        frame:Hide()
+        frame:SetParent(nil)
+    end
+end
 ---------------------------------------------------------------------------------------------------
 function mWarlock:CreateMainFrame()
     local radius = MWarlockSavedVariables.radius or DEFAULT_RADIUS
