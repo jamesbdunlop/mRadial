@@ -28,11 +28,11 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     return opt_slider
 end
 
-local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec)
+local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT)
     local AceGUI = LibStub("AceGUI-3.0")
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
-    opt_cbox:SetDescription(descrip)
+    
     
     local function setValue(table, cbName, value)
         MWarlockSavedVariables[variableName] = value
@@ -50,6 +50,17 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     opt_cbox:SetCallback("OnValueChanged", setValue)
     opt_cbox.get = getValue
     
+    if descAsTT then
+        opt_cbox:SetCallback("OnEnter", function(widget, event)
+            GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
+            GameTooltip:SetText(descrip)
+            GameTooltip:SetSize(80, 50)
+            GameTooltip:SetWidth(80)
+            GameTooltip:Show()
+        end)
+    else
+        opt_cbox:SetDescription(descrip)
+    end
     parent:AddChild(opt_cbox)
     return opt_cbox
 end
@@ -135,7 +146,7 @@ function mWarlock:OptionsPane()
             -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
             local spellName = spellData[1]
             desc = GetSpellDescription(spellData[2])
-            createCheckBox(spellsGroup, spellName, "", "isActive"..spellName, true, mWarlock.INITUI)
+            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, true, mWarlock.INITUI, true)
         end
     end
 

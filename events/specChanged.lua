@@ -15,10 +15,7 @@ function mWarlock:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
     end
 
     MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
-    local spellOrder, specData = mWarlock:syncSpec()
-    MW_WatcherFrames = {}
-    mWarlock:createWatchers(specData, spellOrder)
-    mWarlock:radialButtonLayout()
+    mWarlock:INITUI()
 end
 mWarlock:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
     

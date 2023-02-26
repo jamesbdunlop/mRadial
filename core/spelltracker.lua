@@ -45,32 +45,30 @@ function mWarlock:addWatcher(spellID)
         if last <= .25 then
             return
         end
-        
-        if isUnitPowerDependant then
-            -- Do we have enough shards to allow this to show timers / cast from?
-            local unitpower = 0
-            if mWarlock:IsWarlock() then
-                unitpower = UnitPower("player", 7) -- soul shards
-            else
-                unitpower = UnitPower("player") -- hopefully the rest list insanity etc
+        if not MAINFRAME_ISMOVING or not IsMounted() then 
+            if isUnitPowerDependant then
+                -- Do we have enough shards to allow this to show timers / cast from?
+                local unitpower = 0
+                if mWarlock:IsWarlock() then
+                    unitpower = UnitPower("player", 7) -- soul shards
+                else
+                    unitpower = UnitPower("player") -- hopefully the rest list insanity etc
+                end
+    
+                if unitpower == 0 or unitpower < UnitPowerCount then
+                    watcher.readyText:SetText(NOSSSTR)
+                    watcher.readyText:SetTextColor(1, 0, 0)
+                    watcher.movetex:Show()
+                    watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                    last = 0
+                    return
+                else
+                    watcher.readyText:SetText(READYSTR)
+                    watcher.readyText:SetTextColor(0, 1, 0)
+                    watcher.movetex:Hide()
+                end
             end
 
-            if unitpower == 0 or unitpower < UnitPowerCount then
-                watcher.readyText:SetText(NOSSSTR)
-                watcher.readyText:SetTextColor(1, 0, 0)
-                watcher.movetex:Show()
-                watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                last = 0
-                return
-            else
-                watcher.readyText:SetText(READYSTR)
-                watcher.readyText:SetTextColor(0, 1, 0)
-                watcher.movetex:Hide()
-            end
-        end
-        
-        -- Now look for any debuffs / cooldowns
-        if not MAINFRAME_ISMOVING or not IsMounted() then 
             mWarlock:DoDebuffTimer(spellName, watcher)
             mWarlock:DoSpellFrameCooldown(spellName, watcher)
             -- LINKED SPELLS!!!!
