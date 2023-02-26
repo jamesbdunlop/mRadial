@@ -5,7 +5,7 @@
 
 ----GLOBAL SAVED VARS
 local playerName = UnitName("player")
-local playerSpec = mWarlock:getSpecName()
+local playerSpec = mWarlock:GetSpecName()
 
 local udOffset = 20
 MW_WatcherFrames = {}
@@ -37,46 +37,25 @@ else
     MWarlockSavedVariables.shardTrackerFrameSize = 200
 end
 
-function mWarlock:createWatchers(spellOrder, activeSpellData)
-    if spellOrder == nil then
+function mWarlock:createWatchers()
+    MW_WatcherFrames = {}
+    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    if activeTalentTreeSpells == nil then
         return
     end
-
-    MW_WatcherFrames = {}
-    for _, spellInfo in ipairs(spellOrder) do
-        local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
-        -- print("Creating watcher for %s", spellName)
-        -- print("Seaching for %s ", spellName)
-        local spellData = activeSpellData[spellName]
-        -- print("spellData %s ", spellData)
-        if spellData ~= nil then
-            local spellID = spellData["spellID"]
-            local iconPath = spellIcons[buffName]
-            local parentSpellName = spellName
-            local parentSpellIcon = spellIcons[spellName]
-            if skipBuff then
-                buffName = parentSpellName
-                iconPath = spellIcons[spellName]
+    for _, spellInfo in ipairs(activeTalentTreeSpells) do
+        local spellId = spellInfo[2]
+        local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
+        local isActive  = false
+        if spellName ~= nil then 
+            isActive = MWarlockSavedVariables["isActive"..spellName] or false
+            
+            local isKnown  = IsPlayerSpell(spellId)
+            local isPassive = IsPassiveSpell(spellID)
+            if isActive and isKnown and not isPassive then
+                mWarlock:addWatcher(spellID)
+                udOffset = udOffset + 32
             end
-            -- print("---")
-            -- print("spellName: %s", spellName)
-            -- print("spellID: %s", spellID)
-            -- print("skipBuff: %s", skipBuff)
-            -- print("buffName: %s", buffName)
-            -- print("iconPath: %s", iconPath)
-            -- print("parentSpellIcon: %s", parentSpellIcon)
-            -- print("parentSpellName: %s", parentSpellName)
-            -- print("isUnitPowerDependant: UnitPowerCount, %s", isUnitPowerDependant) UnitPowerCount,
-            -- print("---")
-            mWarlock:addWatcher(buffName, 
-                                iconPath, 
-                                parentSpellIcon, 
-                                parentSpellName, 
-                                isUnitPowerDependant, 
-                                UnitPowerCount, 
-                                spellID,
-                                isDebuff or false)
-                                udOffset = udOffset + 32
         end
     end
 end
@@ -101,7 +80,6 @@ function mWarlock:INITUI()
         MWarlockSavedVariables["framePositions"] = {}
     end
 
-    local spellOrder, activeSpellData = mWarlock:syncSpec()
     ---------------------------------------------------
     -- setup the UI
     mWarlock:CreateMainFrame()
@@ -109,7 +87,7 @@ function mWarlock:INITUI()
         mWarlock:createShardCountFrame()
     end
     
-    mWarlock:createWatchers(spellOrder, activeSpellData)
+    mWarlock:createWatchers()
     mWarlock:radialButtonLayout()
     
     mWarlock:createPetFrames()
@@ -119,19 +97,17 @@ function mWarlock:INITUI()
 end
 
 function mWarlock:OnInitialize()
-    if(mWarlock:isCorrectClass()) then
-        local f = CreateFrame("Frame")
-        -- Register the event for when the player logs in
-        f:RegisterEvent("PLAYER_LOGIN")
-        f:SetScript("OnEvent", function(self, event, ...)
-            -- ud stands for UpDown
-            -- lr stands for leftRight
-            if event == "PLAYER_LOGIN" then
-                mWarlock:INITUI()
-                self:UnregisterEvent("PLAYER_LOGIN")
-            end
-        end)
-    end
+    local f = CreateFrame("Frame")
+    -- Register the event for when the player logs in
+    f:RegisterEvent("PLAYER_LOGIN")
+    f:SetScript("OnEvent", function(self, event, ...)
+        -- ud stands for UpDown
+        -- lr stands for leftRight
+        if event == "PLAYER_LOGIN" then
+            mWarlock:INITUI()
+            self:UnregisterEvent("PLAYER_LOGIN")
+        end
+    end)
 end
 
 function mWarlock:OnEnable()

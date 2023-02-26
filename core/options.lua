@@ -42,7 +42,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     end
 
     local function getValue(info)
-        local value = MWarlockSavedVariables[variableName] or defaultValue
+        local value = MWarlockSavedVariables[variableName]
         return value
     end
     
@@ -123,9 +123,27 @@ function mWarlock:OptionsPane()
     createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.radialButtonLayout)
     createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mWarlock.radialButtonLayout)
     
+    local spellsGroup = AceGUI:Create("InlineGroup")
+    spellsGroup:SetTitle("Radial Spells: ")
+    spellsGroup:SetFullWidth(true)
+    spellsGroup:SetLayout("Flow")
+
+    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    -- lower level classes might not have an active talent tree.
+    if activeTalentTreeSpells ~= nil then
+        for i, spellData in ipairs(mWarlock:GetAllActiveTalentTreeSpells()) do
+            -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+            local spellName = spellData[1]
+            desc = GetSpellDescription(spellData[2])
+            createCheckBox(spellsGroup, spellName, "", "isActive"..spellName, true, mWarlock.INITUI)
+        end
+    end
+
+    --- FINAL LAYOUT
     scrollFrame:AddChild(generalGroup)
     scrollFrame:AddChild(radialGroup)
     scrollFrame:AddChild(timerGroup)
     scrollFrame:AddChild(fontGroup)
+    scrollFrame:AddChild(spellsGroup)
 end
 
