@@ -36,6 +36,7 @@ CORRUPTION_SPELLNAME = "Corruption"
 UNSTABLEAFFLICTION_SPELLNAME = "Unstable Affliction"
 AGONY_SPELLNAME = "Agony"
 DEATHBOLT_SPELLNAME = "Deathbolt"
+HANDOFGULDAN_SPELLNAME = "Hand of Gul'dan"
 ---------------------------------------------------------------------------------------------------
 --- SHADOW PRIEST
 DARKASCENSION_SPELLNAME = "Dark Ascension"
@@ -55,6 +56,8 @@ SHADOWWORDDEATH_SPELLNAME = "Shadow Word: Death"
 SHADOWWORDPAIN_SPELLNAME = "Shadow Word: Pain"
 VOIDFORM_SPELLNAME = "Voidform"
 MINDSEAR_SPELLNAME = "Mind Sear"
+MINDFLAYINSANITY_SPELLNAME = "Mind Flay: Insanity"
+MINDFLAY_SPELLNAME = "Mind Flay"
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
 CAPACITOR_SPELLNAME = "Capacitor Totem"
@@ -62,13 +65,12 @@ EARTHBIND_SPELLNAME = "Earthbind Totem"
 HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
 HEALINGTIDETOTEM_SPELLNAME = "Healing Tide Totem"
 SPIRITLINKTOTEM_SPELLNAME = "Spirit Link Totem"
-
-
 ---------------------------------------------------------------------------------------------------
 linkedSpells = {}
-linkedSpells[POWERSIPHON_SPELLNAME] = {DEMONICCORE_SPELLNAME, 571321}
+linkedSpells[HANDOFGULDAN_SPELLNAME] = {DEMONICCORE_SPELLNAME, 571321}
 linkedSpells[MINDBLAST_SPELLNAME] = {SHADOWYINSIGHT_SPELLNAME, 136183}
-linkedSpells[MINDSPIKE_SPELLNAME] = {MINDMELT_SPELLNAME, 237569}
+linkedSpells[MINDSPIKE_SPELLNAME] = {MINDMELT_SPELLNAME, 391092}
 linkedSpells[DEVOURINGPLAGUE_SPELLNAME] = {MINDDEVOURER_SPELLNAME, 252996}
 linkedSpells[VOIDERUPTION_SPELLNAME] ={VOIDFORM_SPELLNAME, 1386550}
 linkedSpells[MINDSEAR_SPELLNAME] = {MINDDEVOURER_SPELLNAME, 135740}
+linkedSpells[MINDFLAY_SPELLNAME] = {MINDFLAYINSANITY_SPELLNAME, 391401}

@@ -10,12 +10,12 @@ end
 
 function mWarlock:HasActiveBuff(buffName)
     for i = 1, 40 do
-        local name, _, _, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
+        local name, _, scount, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
         if name and name == buffName then
-            return true
+            return true, scount
         end
     end
-    return false
+    return false, 0
 end
 
 function mWarlock:IsSpellUnitPowerDependant(spellID)

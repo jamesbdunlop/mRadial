@@ -45,6 +45,7 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
         frame.mask:Show()
     end
 
+
     -------------------------------------------------
     -- special frame to show when move mode is active
     frame.movetex = frame:CreateTexture(nil, "OVERLAY")
@@ -69,6 +70,8 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
             frame.mask:SetSize(maskSizeX, maskSizeY)
         end
     end
+
+
     mWarlock:SetMountScripts(parentFrame)
     return frame
 end
@@ -185,6 +188,12 @@ function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     
     -- make sure to mask the base icons the same as the 
     watcher.movetex:AddMaskTexture(watcher.mask)
+    
+    watcher.aura = watcher:CreateTexture(nil, "OVERLAY")
+    watcher.aura:SetPoint("CENTER", 0, 0)
+    watcher.aura:SetTexture("Interface/COMMON/portrait-ring-withbg-highlight", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+    watcher.aura:Hide()
+    -- watcher.aura:AddMaskTexture(watcher.mask)
 
     -- special tag for helping determine this is a raidal button.
     watcher.isWatcher = true
@@ -446,6 +455,7 @@ function mWarlock:radialButtonLayout()
         watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
         -- because the graphic for the border is a little smaller.. we wanna handle the scale now too
         watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
+        watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
         
         watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
         watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)

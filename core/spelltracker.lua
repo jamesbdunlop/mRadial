@@ -39,7 +39,6 @@ function mWarlock:addWatcher(spellID)
         end)
     end
     
-
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
         if last <= .25 then
@@ -72,7 +71,6 @@ function mWarlock:addWatcher(spellID)
                     watcher.movetex:Hide()
                 end
             end
-
             mWarlock:DoDebuffTimer(spellName, watcher)
             mWarlock:DoSpellFrameCooldown(spellName, watcher)
             -- LINKED SPELLS!!!!
@@ -90,8 +88,16 @@ function mWarlock:addWatcher(spellID)
                 local linkedIconPath
                 _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
                 mWarlock:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
+                
+                if mWarlock:HasActiveBuff(linkedSpellName) then
+                    watcher.aura:Show()
+                    -- watcher.aura:SetColorTexture(0, 1, 0, 1)
+                else
+                    watcher.aura:Hide()
+                end
             else
                 mWarlock:DoBuffTimer(spellName, watcher, iconPath)
+                watcher.aura:Hide()
             end
 
             -- Now set the count on the frame regardless.
@@ -99,10 +105,9 @@ function mWarlock:addWatcher(spellID)
             if getLinked ~= nil then
                 local linkedSpellName = getLinked[1] 
                 local linkedSpellID = getLinked[2]
-                if mWarlock:HasActiveBuff(linkedSpellName) then
-                    count = GetSpellCount(linkedSpellID)
-                else
-                    count = 0
+                local hasActiveBuff, scount = mWarlock:HasActiveBuff(linkedSpellName)
+                if  hasActiveBuff then
+                    count = scount
                 end
             else
                 count = GetSpellCount(spellID)
