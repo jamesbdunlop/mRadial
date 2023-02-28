@@ -4,12 +4,12 @@
 ## Version: 0.0.1
 ## License: All Rights Reserved
 ## Notes: Macka's warlock ui for shits and giggles
-## SavedVariables: MWarlockSavedVariables, PerPlayerPerSpecSavedVars, BAGDUMPV1
+## SavedVariables: MWarlockSavedVariables, PerPlayerPerSpecSavedVars
 ## OptionalDeps: LibDBIcon-1.0
 
 embeds.xml 
 addon.lua
-
+core\ArtTextureID.lua
 core\timers.lua
 core\constants.lua
 core\utils.lua

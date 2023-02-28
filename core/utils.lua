@@ -245,25 +245,74 @@ end
 
 
 --- FUN STUFF
-function mWarlock:listBagItems(t)
-    t = t and wipe(t) or {}
-    for bag = 0, 4 do
+
+function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
+    local url = "https://www.wowhead.com/item="..itemInfo["itemID"]
+    local finalurl = "|Hurl:" ..url .. "|h[" .. itemName .. "]|h"
+    local isBound = itemInfo['isBound']
+    if not ignoreSoulBound and isBound then
+        table.insert(data, {itemName, itemInfo["iconFileID"], finalurl, url, itemInfo["hyperlink"]})
+    elseif ignoreSoulBound and isBound then
+    else
+        table.insert(data, {itemName, itemInfo["iconFileID"], finalurl, url, itemInfo["hyperlink"]})
+    end
+end
+
+
+function mWarlock:listBagItems(ignoreSoulBound)
+    BAGDUMPV1 = {}
+    for bag = BACKPACK_CONTAINER, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
-          local itemLink = C_Container.GetContainerItemLink(bag, slot)
-          if itemLink then
-            local itemName = GetItemInfo(itemLink)
-            local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
-                if itemName ~= nil then
-                    local url = "https://www.wowhead.com/item="..itemInfo["itemID"] .."/" .. itemName .. "#comments"
-                    -- format the URL as a clickable chat link
-                    local urlLink = "|Hurl:"..url.."|h"..itemName.."|h"
-                    -- print the text and the clickable URL
-                    print("added: ".. itemName) --urlLink)
-                    table.insert(t, url)
+            local itemLink = C_Container.GetContainerItemLink(bag, slot)
+            if itemLink then
+                local itemName = GetItemInfo(itemLink)
+                local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
+                if itemName ~= nil and itemInfo ~= nil then
+                    addItemInfoToTable(itemName, itemInfo, BAGDUMPV1, ignoreSoulBound)
                 end
             end
         end
-      end
-      print("Bag dump complete!")
-      return t
+    end
+    SendSystemMessage("Swapped to player inventory!")
+    return BAGDUMPV1
+end
+
+function mWarlock:listBankItems(ignoreSoulBound)
+    BANKDUMPV1 = {}
+    -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
+    for bag = 6, 14 do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
+            local itemLink = C_Container.GetContainerItemLink(bag, slot)
+            if itemLink then
+                local itemName = GetItemInfo(itemLink)
+                local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
+                if itemName ~= nil and itemInfo ~= nil then
+                    addItemInfoToTable(itemName, itemInfo, BANKDUMPV1, ignoreSoulBound)
+                end
+            end
+        end
+    end
+    SendSystemMessage("Swapped to open bank bags!")
+    return BANKDUMPV1
+end
+
+function mWarlock:listBankReagentItems(ignoreSoulBound)
+    BANKRDUMPV1 = {}
+    -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
+    for slot = 1, C_Container.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
+        local itemLink = C_Container.GetContainerItemLink(REAGENTBANK_CONTAINER, slot)
+        if itemLink then
+            local itemName = GetItemInfo(itemLink)
+            local itemInfo = C_Container.GetContainerItemInfo(REAGENTBANK_CONTAINER, slot)
+            if itemName ~= nil and itemInfo ~= nil then
+                addItemInfoToTable(itemName, itemInfo, BANKRDUMPV1, ignoreSoulBound)
+            end
+        end
+    end
+    SendSystemMessage("Swapped to Bank reagent bag!")
+    return BANKRDUMPV1
+end
+
+function mWarlock:TestCast()
+    SpellCast()
 end

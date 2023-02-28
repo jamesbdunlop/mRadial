@@ -17,6 +17,10 @@ function MW_slashCommands(msg, editbox)
     if command == "options" then
         mWarlock:OptionsPane()
     end
+
+    if command == "bags" then
+        mWarlock:BagPane()
+    end
 end
 SlashCmdList["MW"] = MW_slashCommands
 ---------------------------------------------------------------------------------------------------

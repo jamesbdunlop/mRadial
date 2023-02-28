@@ -45,7 +45,6 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
         frame.mask:Show()
     end
 
-
     -------------------------------------------------
     -- special frame to show when move mode is active
     frame.movetex = frame:CreateTexture(nil, "OVERLAY")
