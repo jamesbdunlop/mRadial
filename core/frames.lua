@@ -142,17 +142,19 @@ function mWarlock:SetMountScripts(frame)
     local last = 0
     frame:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .5 then
+        if last <= .01 then
             return
         end
         -- Hide all the UI when mounted.
         local children = { frame:GetChildren() }
         if IsMounted() then
-            for i, child in ipairs(children) do
+            
+            for _, child in ipairs(children) do
                 child:Hide()
             end
         else
-            for i, child in ipairs(children) do
+            frame:Show()
+            for _, child in ipairs(children) do
                 child:Show()
             end
         end
@@ -320,10 +322,11 @@ PetFrames = {}
 local last = 0
 function mWarlock:createPetFrames()
     -- Clear out existing
-    for frameName, frame in pairs(PetFrames) do
+    for _, frame in pairs(PetFrames) do
         frame:Hide()
         frame:SetParent(nil)
     end
+
     PetFrames = {}
     local petSpellData = {}
     if mWarlock:IsFelguardSummoned() then 
@@ -417,9 +420,9 @@ function mWarlock:HidePetFrames()
     local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
     for _, frame in pairs(PetFrames) do
         if hidePetFrame then
-            frame:Hide()
+            frame.parentName:Hide()
         else
-            frame:Show()
+            frame.parentName:Show()
         end
     end
 end
