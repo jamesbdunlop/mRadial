@@ -417,7 +417,13 @@ function mWarlock:HidePetFrames()
         end
     end
 end
-
+function mWarlock:RemovePetFrames()
+    for idx, frame in pairs(PetFrames) do
+        PetFrames[idx] = nil
+        frame:Hide()
+        frame:SetParent(nil)
+    end
+end
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
 
