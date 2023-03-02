@@ -1,3 +1,4 @@
+
 ## Interface: 100005
 ## Title: MWarlock
 ## Author: Macka - JBD
@@ -24,9 +25,13 @@ core\shardtracker.lua
 core\spelltracker.lua
 core\slashcmds.lua
 
-events\combatlogUnfiltered.lua
+# events\combatlogUnfiltered.lua
+
+# show hide pet frames when pet is out.
 events\unitPet.lua
 events\specChanged.lua
-events\unitpowerupdate.lua
-events\companionUpdate.lua
-events\onmountevent.lua
+
+# Shard tracker
+events\unitpowerupdate.lua 
+# events\companionUpdate.lua
+# events\onmountevent.lua

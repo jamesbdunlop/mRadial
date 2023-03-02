@@ -19,7 +19,7 @@ function mWarlock:DoSpellFrameCooldown(spellName, watcher)
     end
 
     local enabled, remaining, minutes, seconds = mWarlock:GetSpellRemaining(spellName)
-    if enabled and remaining > GCD then
+    if enabled and remaining > GCD and not IsMounted() then
         watcher.cooldownText:Show()
         if watcher.readyText ~= nil then
             watcher.readyText:Hide()
@@ -36,7 +36,7 @@ function mWarlock:DoSpellFrameCooldown(spellName, watcher)
         watcher.cooldownText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
-        if not IsMounted() and watcher.readyText ~= nil then
+        if watcher.readyText ~= nil and not IsMounted() then
             watcher.readyText:Show()
         end
     end
@@ -57,7 +57,7 @@ function mWarlock:DoDebuffTimer(spellName, watcher)
             break
         end
     end
-    if remaining > GCD then
+    if remaining > GCD and not IsMounted() then
         watcher.debuffTimerText:Show()
         watcher.debuffTimerText:SetText(string.format("%ds", remaining))
         watcher.iconFrame:SetAlpha(0.5)
@@ -66,7 +66,9 @@ function mWarlock:DoDebuffTimer(spellName, watcher)
         watcher.debuffTimerText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
-        watcher.readyText:Show()
+        if not IsMounted() then
+            watcher.readyText:Show()
+        end
     end
 end
 
@@ -103,14 +105,14 @@ function mWarlock:DoBuffTimer(spellName, watcher, iconPath)
         _, _, _, _, _, _ = UnitBuff("player", idx)
         
         if name == spellName then
-            if count ~= 0 and count >= 1 and expirationTime ~= nil then
+            if count ~= 0 and count >= 1 and expirationTime ~= nil and not IsMounted() then
                 watcher.countText:Show()
                 watcher.countText:SetText(tostring(count))
             end
         end
 
         -- TIMERS
-        if name ~= nil and name == spellName and expirationTime ~= nil then
+        if name ~= nil and name == spellName and expirationTime ~= nil and not IsMounted() then
             -- Buff is active -- 
             found = true
             watcher.buffTimerText:Show()

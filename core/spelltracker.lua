@@ -4,7 +4,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mWarlock:addWatcher(spellID)
+function mWarlock:addWatcherFrame(spellID)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -22,8 +22,8 @@ function mWarlock:addWatcher(spellID)
     -- local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
     -- local disabled = C_SpellBook.IsSpellDisabled(spellID)
 
-    ------------------------------------------
-    -- Assign the spell to cast if we're a button
+    ----------------------------------------------
+    -- Assign the spell to cast if we're a button!
     local asButtons = MWarlockSavedVariables["asbuttons"] or false
     if asButtons then
         watcher:SetAttribute("spell", spellName)
@@ -44,11 +44,12 @@ function mWarlock:addWatcher(spellID)
         if last <= .25 then
             return
         end
+
         if MAINFRAME_ISMOVING then
             return
         end
         
-        if not MAINFRAME_ISMOVING or not IsMounted() then 
+        if not MAINFRAME_ISMOVING then 
             if isUnitPowerDependant then
                 -- Do we have enough shards to allow this to show timers / cast from?
                 local unitpower = 0
@@ -61,9 +62,11 @@ function mWarlock:addWatcher(spellID)
                 if unitpower == 0 or unitpower < UnitPowerCount then
                     watcher.readyText:SetText(NOSSSTR)
                     watcher.readyText:SetTextColor(1, 0, 0)
-                    watcher.movetex:Show()
                     watcher.movetex:SetColorTexture(1, 0, 0, .5)
                     last = 0
+                    if not IsMounted() then
+                        watcher.movetex:Show()
+                    end
                     return
                 else
                     watcher.readyText:SetText(READYSTR)
@@ -89,7 +92,7 @@ function mWarlock:addWatcher(spellID)
                 _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
                 mWarlock:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
                 
-                if mWarlock:HasActiveBuff(linkedSpellName) then
+                if mWarlock:HasActiveBuff(linkedSpellName) and not IsMounted() then
                     watcher.aura:Show()
                     -- watcher.aura:SetColorTexture(0, 1, 0, 1)
                 else
@@ -114,7 +117,7 @@ function mWarlock:addWatcher(spellID)
             end
 
             watcher.countText:SetText("")
-            if count ~= 0 then
+            if count ~= 0 and not IsMounted() then
                 watcher.countText:Show()
                 watcher.countText:SetText(tostring(count))
                 -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
@@ -129,6 +132,7 @@ function mWarlock:addWatcher(spellID)
             end
 
         end
+        
         last = 0
     end)
 

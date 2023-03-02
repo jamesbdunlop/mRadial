@@ -242,6 +242,13 @@ function mWarlock:syncTalentTree(treeTable)
     end
 end
 
+function mWarlock:GetTableLen(table)
+    local count = 0
+    for idx, _ in ipairs(table) do
+        count = count +1
+    end
+    return count
+end
 
 
 --- FUN STUFF

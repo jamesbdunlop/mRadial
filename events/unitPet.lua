@@ -7,9 +7,13 @@ function mWarlock:UNIT_PET(eventName, arg1, arg2, arg3)
     if arg1 ~= "player" then
         return
     end
-    mWarlock:RemovePetFrames()
-    mWarlock:createPetFrames()
+
     MWPetGUID = UnitGUID("pet")
+    if MWPetGUID == nil then
+        mWarlock:RemoveAllPetFrames()
+    else
+        mWarlock:createPetFrames()
+    end
 end
 
 mWarlock:RegisterEvent("UNIT_PET")

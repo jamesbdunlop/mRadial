@@ -1,15 +1,8 @@
--- Add options for
-    -- player specific configs, for shadow etc!!
-    -- add on update throttling
-    -- if we don't have power siphon do we still proc demonic core?
-
-----GLOBAL SAVED VARS
-
-local udOffset = 20
-MW_WatcherFrames = {}
 if MWarlockSavedVariables == nil then
     MWarlockSavedVariables = {}
 end
+
+UdOffset = 0
 
 MW_ALLFRAMES = {}
 MW_PARENTFRAMES = {}
@@ -36,43 +29,19 @@ function mWarlock:CreatePlayerSavedVars()
     return PerPlayerPerSpecSavedVars[playerName][playerSpec]
 end
 
-function mWarlock:createWatchers()
-    MW_WatcherFrames = {}
-    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
-    if activeTalentTreeSpells == nil then
-        return
-    end
-    for _, spellInfo in ipairs(activeTalentTreeSpells) do
-        local spellId = spellInfo[2]
-        local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
-        local isActive  = false
-        if spellName ~= nil then 
-            isActive = MWarlockSavedVariables["isActive"..spellName] or false
-            
-            local isKnown  = IsPlayerSpell(spellId)
-            local isPassive = IsPassiveSpell(spellID)
-            if isActive and isKnown and not isPassive then
-                mWarlock:addWatcher(spellID)
-                udOffset = udOffset + 32
-            end
-        end
-    end
-end
-
 function mWarlock:INITUI()
     -- print("INITUI CALLED....")
-    mWarlock:RemoveAllParentFrames()
-    MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
-    -- print("Saved vars made successfully!")
     -- Clear out existing frames for a full refresh.
+    mWarlock:RemoveAllParentFrames()
+    MW_ALLFRAMES = {}
+
+    MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
+    print("Saved vars made successfully!")
+    
     if shardCounterFrame ~= nil then
         shardCounterFrame:SetParent(nil)
         shardCounterFrame:Hide()
     end
-    if MW_WatcherFrames ~= nil then
-        mWarlock:RemoveAllWatcherFrames()
-    end
-
     ---------------------------------------------------
     -- setup the UI
     mWarlock:CreateMainFrame()
@@ -80,7 +49,8 @@ function mWarlock:INITUI()
         mWarlock:createShardCountFrame()
     end
     
-    mWarlock:createWatchers()
+    mWarlock:createWatcherFrames()
+    print("Finished creating all spell watcher frames!")
     mWarlock:radialButtonLayout()
     
     mWarlock:createPetFrames()
@@ -99,7 +69,6 @@ function mWarlock:OnInitialize()
         if event == "PLAYER_ENTERING_WORLD" then
             mWarlock:INITUI()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-            
         end
     end)
 end
@@ -137,6 +106,5 @@ function mWarlock:OnDisable()
     -- Called when the addon is disabled
     -- print("mWarlock OnDisable called!")
 end
-
 
 --/run mWarlock:listBagItems(BAGDUMPV1)

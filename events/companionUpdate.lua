@@ -1,5 +1,5 @@
 -- function mWarlock:COMPANION_UPDATE(eventName, arg1, arg2, arg3)
-    -- this fires when anyone around you mounts, and there is no arg to check "player "
+    -- this fires when anyone around you mounts, and there is no arg to check "player" NOT GREAT!
     -- print("eventName: %s", eventName)
     -- print("arg1: %s", arg1)
     -- print("arg2: %s", arg2)
