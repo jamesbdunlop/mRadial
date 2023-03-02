@@ -490,7 +490,7 @@ function mWarlock:radialButtonLayout()
         local h = sinAng*radius*heightDeform
         local watcher = MW_ALLFRAMES[x]
         if watcher.isWatcher then
-            print("Found watcher frame!")
+            -- print("Found watcher frame!")
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
             -- expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
