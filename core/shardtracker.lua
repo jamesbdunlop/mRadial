@@ -14,7 +14,6 @@ function mWarlock:createShardCountFrame()
 
     shardCounterFrame:SetAlpha(.5)
     mWarlock:setShardTrackerFramesSize()
-    mWarlock:SetMountScripts(shardCounterFrame)
 end
 
 function mWarlock:setShardTrackerFramesSize()

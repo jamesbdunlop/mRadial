@@ -74,6 +74,7 @@ function mWarlock:DoPetFrameAuraTimer(spellName, frame)
     if MAINFRAME_ISMOVING then
         return
     end
+    
     for idx = 1, 30 do
         local name, _, _, _, _, expirationTime, _, _, _,
         _, _, _, _, _, _ = UnitBuff("pet", idx)

@@ -11,6 +11,8 @@ if MWarlockSavedVariables == nil then
     MWarlockSavedVariables = {}
 end
 
+MW_ALLFRAMES = {}
+MW_PARENTFRAMES = {}
 
 function mWarlock:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -59,7 +61,7 @@ end
 
 function mWarlock:INITUI()
     -- print("INITUI CALLED....")
-    mWarlock:RemoveAllWatcherFrames()
+    mWarlock:RemoveAllParentFrames()
     MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
     -- print("Saved vars made successfully!")
     -- Clear out existing frames for a full refresh.
@@ -68,10 +70,7 @@ function mWarlock:INITUI()
         shardCounterFrame:Hide()
     end
     if MW_WatcherFrames ~= nil then
-        for _, frame in pairs(MW_WatcherFrames) do
-            frame:SetParent(nil)
-            frame:Hide()
-        end
+        mWarlock:RemoveAllWatcherFrames()
     end
 
     ---------------------------------------------------

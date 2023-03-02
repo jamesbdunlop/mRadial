@@ -1,4 +1,3 @@
-MW_ALLFRAMES = {}
 
 function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
     if template == nil then template = "BackdropTemplate" end
@@ -26,9 +25,6 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
     frame:Show()
     frame.isWatcher = false
     
-    -- Add to the main frames table.
-    MW_ALLFRAMES[frameName] = frame
-
     -- TEXTURE
     frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
     frame.iconFrame:SetPoint("CENTER", 0, 0)
@@ -70,8 +66,9 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
         end
     end
 
-
-    mWarlock:SetMountScripts(parentFrame)
+    -- Add to the main frames table.
+    MW_PARENTFRAMES[parentName] = parentFrame
+    MW_ALLFRAMES[frameName] = frame
     return frame
 end
 
@@ -112,56 +109,6 @@ function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, tex
     return frame
 end
 
-function mWarlock:SetMoveFrameScripts(frame)
-    frame:SetScript("OnMouseDown", function(self, button)
-        if not frame:IsMovable() then
-            return
-        end
-
-        if IsShiftKeyDown() and button == "LeftButton" then
-            frame:StartMoving()
-        end
-    end)
-
-    frame:SetScript("OnMouseUp", function(self, button)
-        frame:StopMovingOrSizing()
-        local frameName = frame:GetName()
-        local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
-        MWarlockSavedVariables.framePositions[frameName] = {}
-        MWarlockSavedVariables.framePositions[frameName]["point"] = point
-        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
-        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
-        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
-        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-        MWarlockSavedVariables.framePositions[frameName]["sx"] = frame:GetWidth()
-        MWarlockSavedVariables.framePositions[frameName]["sy"] = frame:GetHeight()
-    end)
-end
-
-function mWarlock:SetMountScripts(frame)
-    local last = 0
-    frame:SetScript("OnUpdate", function(self, elapsed)
-        last = last + elapsed
-        if last <= .01 then
-            return
-        end
-        -- Hide all the UI when mounted.
-        local children = { frame:GetChildren() }
-        if IsMounted() then
-            
-            for _, child in ipairs(children) do
-                child:Hide()
-            end
-        else
-            frame:Show()
-            for _, child in ipairs(children) do
-                child:Show()
-            end
-        end
-        last = 0
-    end)
-end
-
 function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
     
@@ -200,8 +147,33 @@ function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     watcher.isWatcher = true
     watcher:Show()
     MW_WatcherFrames[#MW_WatcherFrames+1] = watcher
-    MW_ALLFRAMES[frameName] = watcher
     return watcher
+end
+
+function mWarlock:SetMoveFrameScripts(frame)
+    frame:SetScript("OnMouseDown", function(self, button)
+        if not frame:IsMovable() then
+            return
+        end
+
+        if IsShiftKeyDown() and button == "LeftButton" then
+            frame:StartMoving()
+        end
+    end)
+
+    frame:SetScript("OnMouseUp", function(self, button)
+        frame:StopMovingOrSizing()
+        local frameName = frame:GetName()
+        local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
+        MWarlockSavedVariables.framePositions[frameName] = {}
+        MWarlockSavedVariables.framePositions[frameName]["point"] = point
+        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
+        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
+        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
+        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
+        MWarlockSavedVariables.framePositions[frameName]["sx"] = frame:GetWidth()
+        MWarlockSavedVariables.framePositions[frameName]["sy"] = frame:GetHeight()
+    end)
 end
 
 function mWarlock:SetUIMovable(isMovable)
@@ -291,6 +263,22 @@ function mWarlock:RemoveAllWatcherFrames()
         frame:SetParent(nil)
     end
 end
+
+function mWarlock:RemoveAllParentFrames()
+    for x = 1, #MW_WatcherFrames do
+        local frame = MW_WatcherFrames[x]
+        -- print("Removing: %s", frame:GetName())
+        
+        local frameName = frame:GetName()
+        for index, frame in ipairs(MW_PARENTFRAMES) do
+            if frameName == frame:GetName() then
+                MW_PARENTFRAMES.remove(index)
+            end
+        end
+        frame:Hide()
+        frame:SetParent(nil)
+    end
+end
 ---------------------------------------------------------------------------------------------------
 function mWarlock:CreateMainFrame()
     local radius = MWarlockSavedVariables.radius or DEFAULT_RADIUS
@@ -308,6 +296,7 @@ function mWarlock:CreateMainFrame()
 
     -- Out of shards masks and textures are set on this base frame, so we scale this for the red out of shards indicator
     mWarlock:setOOSShardFramesSize()
+
     -- Create an invisible crosshair indicator for when we are moving the UI
     MWarlockMainFrame.crosshair = MWarlockMainFrame:CreateTexture("crossHair")
     MWarlockMainFrame.crosshair:SetPoint("CENTER", 0, 0)
@@ -315,6 +304,7 @@ function mWarlock:CreateMainFrame()
     MWarlockMainFrame.crosshair:SetTexture(crossHairPath)
     MWarlockMainFrame.crosshair:SetSize(25, 25)
     MWarlockMainFrame.crosshair:Hide()
+    MWarlockMainFrame:Show()
 end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
@@ -392,7 +382,7 @@ function mWarlock:createPetFrames()
             
             frame:SetScript("OnUpdate", function(self, elapsed)
                 last = last + elapsed
-                if last <= .5 then
+                if last <= .1 then
                     return
                 end
                 mWarlock:DoSpellFrameCooldown(spellName, frame)
@@ -420,9 +410,9 @@ function mWarlock:HidePetFrames()
     local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
     for _, frame in pairs(PetFrames) do
         if hidePetFrame then
-            frame.parentName:Hide()
+            frame:Hide()
         else
-            frame.parentName:Show()
+            frame:Show()
         end
     end
 end
