@@ -440,6 +440,16 @@ function mWarlock:RemoveAllPetFrames()
         end
     end
 end
+
+function mWarlock:setPetFramePosAndSize()
+    local frameSize = MWarlockSavedVariables["PetFramesSize"] or 45
+    for idx, frame in ipairs(MW_ALLFRAMES) do
+        if frame.isPetFrame then
+            mWarlock:RestoreFrame(frame:GetName(), frame)
+            frame:SetSize(frameSize, frameSize)
+        end
+    end
+end
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
 
@@ -480,7 +490,7 @@ function mWarlock:radialButtonLayout()
         local h = sinAng*radius*heightDeform
         local watcher = MW_ALLFRAMES[x]
         if watcher.isWatcher then
-            -- print("Found watcher frame!")
+            print("Found watcher frame!")
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
             -- expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
