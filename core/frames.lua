@@ -9,6 +9,7 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
     end
     local parentName = "%s_parent", frameName
     local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")  
+    
     local frame
     if asbutton then
         frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  

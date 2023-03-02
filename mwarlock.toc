@@ -9,6 +9,7 @@
 
 embeds.xml 
 addon.lua
+
 core\ArtTextureID.lua
 core\timers.lua
 core\constants.lua
@@ -28,3 +29,4 @@ events\unitPet.lua
 events\specChanged.lua
 events\unitpowerupdate.lua
 events\companionUpdate.lua
+events\onmountevent.lua
