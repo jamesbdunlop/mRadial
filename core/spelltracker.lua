@@ -63,6 +63,7 @@ function mWarlock:addWatcherFrame(spellID)
                     watcher.readyText:SetText(NOSSSTR)
                     watcher.readyText:SetTextColor(1, 0, 0)
                     watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                    watcher.buffTimerTextBG:Hide()
                     last = 0
                     if not IsMounted() then
                         watcher.movetex:Show()

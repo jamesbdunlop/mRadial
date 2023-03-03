@@ -392,7 +392,7 @@ function mWarlock:createPetFrames()
                                                 true)
           
             frame.cooldownText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
-            
+            frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 last = last + elapsed
                 if last <= .1 then
@@ -402,7 +402,7 @@ function mWarlock:createPetFrames()
                 mWarlock:DoPetFrameAuraTimer(spellName, frame)
                 last = 0
             end)
-            frame.isPetFrame = true
+            
         end
     end
 end
