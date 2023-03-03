@@ -3,13 +3,12 @@ function mWarlock:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     local iuzenName = "Iuzenashamme"
     if subevent == "UNIT_DIED" or subevent == "UNIT_DESTROYED" or subevent == "UNIT_DISSIPATES" then
         if destName == iuzenName then
-            SendChatMessage(destFlags .. "DIED AGAIN!", "PARTY")
+            SendChatMessage(iuzenName .. " DIED AGAIN!", "PARTY")
         end
 
         local petGUID = UnitGUID("pet")
         if destGUID == petGUID then
-            mWarlock:RemoveAllPetFrames()
-            
+            mWarlock:INITUI()
             -- Loop through all party members and check if the player is in the party
             if UnitInParty(iuzenName) then
                     local message = "My pet died again " .. iuzenName .. "! WTF BRO!"

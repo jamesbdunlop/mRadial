@@ -30,31 +30,19 @@ function mWarlock:CreatePlayerSavedVars()
 end
 
 function mWarlock:INITUI()
-    -- print("INITUI CALLED....")
+    print("INITUI CALLED....")
     -- Clear out existing frames for a full refresh.
     mWarlock:RemoveAllParentFrames()
     MW_ALLFRAMES = {}
-
     MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
-    print("Saved vars made successfully!")
-    
-    if shardCounterFrame ~= nil then
-        shardCounterFrame:SetParent(nil)
-        shardCounterFrame:Hide()
-    end
-    ---------------------------------------------------
-    -- setup the UI
     mWarlock:CreateMainFrame()
     if mWarlock:IsWarlock() then
         mWarlock:createShardCountFrame()
     end
     
     mWarlock:createWatcherFrames()
-    print("Finished creating all spell watcher frames!")
     mWarlock:radialButtonLayout()
-    
     mWarlock:createPetFrames()
-    
     mWarlock:SetUIMovable(false)
     mWarlock:shardtrack()
 end

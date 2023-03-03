@@ -2,7 +2,7 @@ function mWarlock:createShardCountFrame()
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED
     local size = 200
-    shardCounterFrame = mWarlock:CreateMovableFrame(SHARD_FRAMENAME,
+    ShardCounterFrame = mWarlock:CreateMovableFrame(SHARD_FRAMENAME,
                                         {size, size},
                                         UIParent,
                                         "",
@@ -12,16 +12,16 @@ function mWarlock:createShardCountFrame()
                                         true, 
                                         {size, size}, {size, size})
 
-    shardCounterFrame:SetAlpha(.5)
+    ShardCounterFrame:SetAlpha(.5)
     mWarlock:setShardTrackerFramesSize()
-    mWarlock:SetMountedFrameScripts(shardCounterFrame)
+    mWarlock:SetMountedFrameScripts(ShardCounterFrame)
 end
 
 function mWarlock:setShardTrackerFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MWarlockSavedVariables["shardTrackerFrameSize"] or 200
-    if shardCounterFrame ~= nil then
-        shardCounterFrame:SetSize(frameSize, frameSize)
+    if ShardCounterFrame ~= nil then
+        ShardCounterFrame:SetSize(frameSize, frameSize)
     end
 end
 
@@ -41,7 +41,7 @@ function mWarlock:shardtrack()
     local soulShards = mWarlock:getShardCount()
     -- Change the texture of the frame
     local iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
-    shardCounterFrame.iconFrame:SetTexture(iconPath)
+    ShardCounterFrame.iconFrame:SetTexture(iconPath)
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     if soulShards == 0 and not MAINFRAME_ISMOVING then
