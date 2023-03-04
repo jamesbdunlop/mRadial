@@ -1,6 +1,6 @@
-function mWarlock:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
+function mRadial:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
     -- print("-----------PLAYER SPEC CHANGED!")
-    mWarlock:INITUI()
+    mRadial:InitUI()
 end
-mWarlock:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+mRadial:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
     

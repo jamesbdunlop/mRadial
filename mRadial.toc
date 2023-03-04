@@ -1,11 +1,11 @@
 
 ## Interface: 100005
-## Title: MWarlock
+## Title: mRadial
 ## Author: Macka - JBD
 ## Version: 0.0.1
 ## License: All Rights Reserved
 ## Notes: Macka's warlock ui for shits and giggles
-## SavedVariables: MWarlockSavedVariables, PerPlayerPerSpecSavedVars
+## SavedVariables: MRadialSavedVariables, PerPlayerPerSpecSavedVars, mRadialDB 
 ## OptionalDeps: LibDBIcon-1.0
 
 embeds.xml 
@@ -18,7 +18,7 @@ core\utils.lua
 
 core\frames.lua
 
-mWarlock.lua
+mRadial.lua
 
 core\options.lua
 core\shardtracker.lua

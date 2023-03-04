@@ -1,13 +1,13 @@
-if MWarlockSavedVariables == nil then
-    MWarlockSavedVariables = {}
+if MRadialSavedVariables == nil then
+    MRadialSavedVariables = {}
 end
 
 UdOffset = 0
 
-MW_ALLFRAMES = {}
-MW_PARENTFRAMES = {}
+MR_ALLFRAMES = {}
+MR_PARENTFRAMES = {}
 
-function mWarlock:CreatePlayerSavedVars()
+function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
     if not PerPlayerPerSpecSavedVars then
         -- print("Creating PerPlayerPerSpecSavedVars table")
@@ -29,25 +29,26 @@ function mWarlock:CreatePlayerSavedVars()
     return PerPlayerPerSpecSavedVars[playerName][playerSpec]
 end
 
-function mWarlock:INITUI()
-    print("INITUI CALLED....")
+function mRadial:InitUI()
+    -- print("InitUI CALLED....")
     -- Clear out existing frames for a full refresh.
-    mWarlock:RemoveAllParentFrames()
-    MW_ALLFRAMES = {}
-    MWarlockSavedVariables = mWarlock:CreatePlayerSavedVars()
-    mWarlock:CreateMainFrame()
-    if mWarlock:IsWarlock() then
-        mWarlock:createShardCountFrame()
+    mRadial:RemoveAllParentFrames()
+    MR_ALLFRAMES = {}
+    MR_PARENTFRAMES = {}
+    MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
+    mRadial:CreateMainFrame()
+    if mRadial:IsWarlock() then
+        mRadial:createShardCountFrame()
     end
     
-    mWarlock:createWatcherFrames()
-    mWarlock:radialButtonLayout()
-    mWarlock:createPetFrames()
-    mWarlock:SetUIMovable(false)
-    mWarlock:shardtrack()
+    mRadial:createWatcherFrames()
+    mRadial:radialButtonLayout()
+    mRadial:createPetFrames()
+    mRadial:SetUIMovable(MAINFRAME_ISMOVING)
+    mRadial:shardtrack()
 end
 
-function mWarlock:OnInitialize()
+function mRadial:OnInitialize()
     local f = CreateFrame("Frame")
     -- Register the event for when the player logs in
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -55,33 +56,35 @@ function mWarlock:OnInitialize()
         -- ud stands for UpDown
         -- lr stands for leftRight
         if event == "PLAYER_ENTERING_WORLD" then
-            mWarlock:INITUI()
+            mRadial:InitUI()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
+    
+
 end
 
-function mWarlock:OnEnable()
+function mRadial:OnEnable()
     local playerName = UnitName("player")
     local LDB = LibStub("LibDataBroker-1.1")
     local LDBIcon = LibStub("LibDBIcon-1.0")
     print("~~~~~~~~~~~~~~~~~~~~")
-    print("Welcome " .. playerName .. " -- MWarlock")
+    print("Welcome " .. playerName .. " -- mRadial")
     print("/mw slash commands are: move, lock, options")
     print("~~~~~~~~~~~~~~~~~~~~")
     
-    local addonName = "mWarlock"
+    local addonName = "mRadial"
     local addonIcon = MEDIAPATH.."\\miniMapIcon"
     
     local dataBroker = LDB:NewDataObject(addonName, {
-        type = "data source",
+        type = "data source",   
         icon = addonIcon,
         OnClick = function(self, button)
-            mWarlock:OptionsPane()
+            mRadial:OptionsPane()
         end,
         OnTooltipShow = function(tooltip)
             -- Add tooltip text
-            tooltip:AddLine("MWarlock - Click to show Options!")
+            tooltip:AddLine("mRadial - Click to show Options!")
         end,
     })
     
@@ -90,9 +93,7 @@ function mWarlock:OnEnable()
     })
 end
 
-function mWarlock:OnDisable()
+function mRadial:OnDisable()
     -- Called when the addon is disabled
-    -- print("mWarlock OnDisable called!")
+    -- print("mRadial OnDisable called!")
 end
-
---/run mWarlock:listBagItems(BAGDUMPV1)

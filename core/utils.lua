@@ -1,4 +1,4 @@
-function mWarlock:GetAuraTimeLeft(expirationTime)
+function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
         return nil
     end
@@ -8,7 +8,7 @@ function mWarlock:GetAuraTimeLeft(expirationTime)
     return minutes, seconds
 end
 
-function mWarlock:HasActiveBuff(buffName)
+function mRadial:HasActiveBuff(buffName)
     for i = 1, 40 do
         local name, _, scount, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
         if name and name == buffName then
@@ -18,7 +18,7 @@ function mWarlock:HasActiveBuff(buffName)
     return false, 0
 end
 
-function mWarlock:IsSpellUnitPowerDependant(spellID)
+function mRadial:IsSpellUnitPowerDependant(spellID)
     local costInfo = GetSpellPowerCost(spellID)
     if costInfo[1] ~= nil then
         if costInfo[1]["name"] ~= "MANA" then
@@ -30,7 +30,7 @@ function mWarlock:IsSpellUnitPowerDependant(spellID)
     return false, 0
 end
 
-function mWarlock:checkHasSpell(spellName)
+function mRadial:checkHasSpell(spellName)
     local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
     if name then
         return true
@@ -39,33 +39,33 @@ function mWarlock:checkHasSpell(spellName)
     end
 end
 
-function mWarlock:IsWarlock()
+function mRadial:IsWarlock()
     return UnitClass("player") == "Warlock"
 end
 
-function mWarlock:IsPriest()
+function mRadial:IsPriest()
     return UnitClass("player") == "Priest"
 end
 
-function mWarlock:IsShaman()
+function mRadial:IsShaman()
     return UnitClass("player") == "Shaman"
 end
 
-function mWarlock:GetSpec()
+function mRadial:GetSpec()
     -- Check if player has selected demonology as their spec
     return GetSpecialization()
 end
 
-function mWarlock:GetSpecName()
+function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
     return currentSpecName
 end
 
-function mWarlock:BuffHasSpellParent()
+function mRadial:BuffHasSpellParent()
 end
 
-function mWarlock:TableContains(myTable, value)
+function mRadial:TableContains(myTable, value)
     for _, v in ipairs(myTable) do
         if v[1] == value[1] then
             return true
@@ -75,7 +75,7 @@ function mWarlock:TableContains(myTable, value)
     return false
 end
 
-function mWarlock:getAllSpells(activeTable)
+function mRadial:getAllSpells(activeTable)
     local spellData = {}
     --- Trawl the entire spell book for spells.
     --- Sick of trying to figure out the most important! Going to leave this up to the user.
@@ -83,7 +83,7 @@ function mWarlock:getAllSpells(activeTable)
     for i=2,numTabs do
         local name, _, offset, numSpells = GetSpellTabInfo(i)
         -- print("name: %s", name)
-        if name == mWarlock:GetSpecName() or name == UnitClass("player") then
+        if name == mRadial:GetSpecName() or name == UnitClass("player") then
             for x=offset+1, offset + numSpells do
                 local spellName, rank, icon, castingTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(x, "spell")
                 -- SOME WEIRD BUG WITH SHADOWFURY the names don't match??! Yet you print it and it's the same fkin name!
@@ -91,7 +91,7 @@ function mWarlock:getAllSpells(activeTable)
                     spellName = SHADOWFURY_SPELLNAME
                 end
                 if spellName and spellID then
-                    if not mWarlock:TableContains(activeTable, {spellName, spellID}) then
+                    if not mRadial:TableContains(activeTable, {spellName, spellID}) then
                         table.insert(activeTable, {spellName, spellID})
                     end
                 end
@@ -99,7 +99,7 @@ function mWarlock:getAllSpells(activeTable)
     return spellData
 end
  
-function mWarlock:GetTalentTreeSpellIDList()
+function mRadial:GetTalentTreeSpellIDList()
     local list = {}
 
     local configID = C_ClassTalents.GetActiveConfigID()
@@ -126,8 +126,8 @@ function mWarlock:GetTalentTreeSpellIDList()
     return list
 end
 
-function mWarlock:GetAllPassiveTalentTreeSpells()
-    local activeSpellData = mWarlock:GetTalentTreeSpellIDList()
+function mRadial:GetAllPassiveTalentTreeSpells()
+    local activeSpellData = mRadial:GetTalentTreeSpellIDList()
     local active = {}
     for _, spellID in ipairs(activeSpellData) do
         -- local spellName, skipBuff, buffName, isUnitPowerDependant, UnitPowerCount, isDebuff = unpack(spellInfo)
@@ -147,10 +147,10 @@ function mWarlock:GetAllPassiveTalentTreeSpells()
     return active
 end
 
-function mWarlock:GetAllActiveTalentTreeSpells()
+function mRadial:GetAllActiveTalentTreeSpells()
     -- Parse the active talent tree for active spells, note all passive spells get cull here, if you want passtive use 
-    -- mWarlock:GetAllPassiveTalentTreeSpells()
-    local activeSpellData = mWarlock:GetTalentTreeSpellIDList()
+    -- mRadial:GetAllPassiveTalentTreeSpells()
+    local activeSpellData = mRadial:GetTalentTreeSpellIDList()
     -- lower level classes might not have an active talent tree.
     if activeSpellData == nil then
         return
@@ -171,15 +171,15 @@ function mWarlock:GetAllActiveTalentTreeSpells()
             table.insert(active, {spellName, spellID})
         end
     end
-    mWarlock:getAllSpells(active)
+    mRadial:getAllSpells(active)
     return active
 end
 
-function mWarlock:getShardCount()
+function mRadial:getShardCount()
     return  UnitPower("player", 7)
 end
 
-function mWarlock:hasPetSummoned()
+function mRadial:hasPetSummoned()
     local summonedPet = UnitCreatureFamily("pet")
     if summonedPet then
       return true, summonedPet
@@ -188,8 +188,8 @@ function mWarlock:hasPetSummoned()
     return false, nil
 end
 
-function mWarlock:IsFelguardSummoned()
-    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+function mRadial:IsFelguardSummoned()
+    local isSummoned, summonedPet = mRadial:hasPetSummoned()
     if isSummoned and summonedPet == "Felguard" then
       return true
     end
@@ -197,8 +197,8 @@ function mWarlock:IsFelguardSummoned()
     return false
 end
 
-function mWarlock:IsSuccubusSummoned()
-    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+function mRadial:IsSuccubusSummoned()
+    local isSummoned, summonedPet = mRadial:hasPetSummoned()
     if isSummoned and summonedPet == "Succubus" or summonedPet == "Incubus" then
       return true
     end
@@ -206,8 +206,8 @@ function mWarlock:IsSuccubusSummoned()
     return false
 end
 
-function mWarlock:IsFelhunterSummoned()
-    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+function mRadial:IsFelhunterSummoned()
+    local isSummoned, summonedPet = mRadial:hasPetSummoned()
     if isSummoned and summonedPet == "Felhunter" then
       return true
     end
@@ -215,8 +215,8 @@ function mWarlock:IsFelhunterSummoned()
     return false
 end
 
-function mWarlock:IsVoidWalkerSummoned()
-    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+function mRadial:IsVoidWalkerSummoned()
+    local isSummoned, summonedPet = mRadial:hasPetSummoned()
     if isSummoned and summonedPet == "Voidwalker" then
       return true
     end
@@ -224,8 +224,8 @@ function mWarlock:IsVoidWalkerSummoned()
     return false
 end
 
-function mWarlock:IsFelImpSummoned()
-    local isSummoned, summonedPet = mWarlock:hasPetSummoned()
+function mRadial:IsFelImpSummoned()
+    local isSummoned, summonedPet = mRadial:hasPetSummoned()
     if isSummoned and summonedPet == "Fel Imp" then
       return true
     end
@@ -233,7 +233,7 @@ function mWarlock:IsFelImpSummoned()
     return false
 end
 
-function mWarlock:syncTalentTree(treeTable)
+function mRadial:syncTalentTree(treeTable)
     for spellName, _ in pairs(treeTable) do
         local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
         if name then
@@ -242,7 +242,7 @@ function mWarlock:syncTalentTree(treeTable)
     end
 end
 
-function mWarlock:GetTableLen(table)
+function mRadial:GetTableLen(table)
     local count = 0
     for idx, _ in ipairs(table) do
         count = count +1
@@ -266,7 +266,7 @@ function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
 end
 
 
-function mWarlock:listBagItems(ignoreSoulBound)
+function mRadial:listBagItems(ignoreSoulBound)
     BAGDUMPV1 = {}
     for bag = BACKPACK_CONTAINER, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
@@ -284,7 +284,7 @@ function mWarlock:listBagItems(ignoreSoulBound)
     return BAGDUMPV1
 end
 
-function mWarlock:listBankItems(ignoreSoulBound)
+function mRadial:listBankItems(ignoreSoulBound)
     BANKDUMPV1 = {}
     -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
     for bag = 6, 14 do
@@ -303,7 +303,7 @@ function mWarlock:listBankItems(ignoreSoulBound)
     return BANKDUMPV1
 end
 
-function mWarlock:listBankReagentItems(ignoreSoulBound)
+function mRadial:listBankReagentItems(ignoreSoulBound)
     BANKRDUMPV1 = {}
     -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
     for slot = 1, C_Container.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
@@ -320,6 +320,6 @@ function mWarlock:listBankReagentItems(ignoreSoulBound)
     return BANKRDUMPV1
 end
 
-function mWarlock:TestCast()
+function mRadial:TestCast()
     SpellCast()
 end

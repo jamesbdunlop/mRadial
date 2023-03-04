@@ -1,6 +1,6 @@
-mWarlock = mWarlock
+mRadial = mRadial
 
-function mWarlock:GetSpellRemaining(spellName)
+function mRadial:GetSpellRemaining(spellName)
     local start, duration, enabled, _ = GetSpellCooldown(spellName)
     start = start or GetTime()
     duration = duration or 0
@@ -12,13 +12,13 @@ function mWarlock:GetSpellRemaining(spellName)
     return enabled, remaining, minutes, seconds
 end
 
-function mWarlock:DoSpellFrameCooldown(spellName, watcher)
+function mRadial:DoSpellFrameCooldown(spellName, watcher)
     -- COOLDOWNS FOR PARENT SPELLS
     if MAINFRAME_ISMOVING then
         return
     end
 
-    local enabled, remaining, minutes, seconds = mWarlock:GetSpellRemaining(spellName)
+    local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     if enabled and remaining > GCD and not IsMounted() then
         watcher.cooldownText:Show()
         if watcher.readyText ~= nil then
@@ -42,7 +42,7 @@ function mWarlock:DoSpellFrameCooldown(spellName, watcher)
     end
 end
 
-function mWarlock:DoDebuffTimer(spellName, watcher)
+function mRadial:DoDebuffTimer(spellName, watcher)
     -- DEBUFF TIMERS
     if MAINFRAME_ISMOVING then
         return
@@ -58,11 +58,13 @@ function mWarlock:DoDebuffTimer(spellName, watcher)
         end
     end
     if remaining > GCD and not IsMounted() then
+        watcher.debuffTimerTextBG:Show()
         watcher.debuffTimerText:Show()
         watcher.debuffTimerText:SetText(string.format("%ds", remaining))
         watcher.iconFrame:SetAlpha(0.5)
         watcher.movetex:SetColorTexture(1, 0, 0, 1)
     else
+        watcher.debuffTimerTextBG:Hide()
         watcher.debuffTimerText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
@@ -72,7 +74,7 @@ function mWarlock:DoDebuffTimer(spellName, watcher)
     end
 end
 
-function mWarlock:DoPetFrameAuraTimer(spellName, frame)
+function mRadial:DoPetFrameAuraTimer(spellName, frame)
     if MAINFRAME_ISMOVING then
         return
     end
@@ -82,7 +84,7 @@ function mWarlock:DoPetFrameAuraTimer(spellName, frame)
         _, _, _, _, _, _ = UnitBuff("pet", idx)
         if name == spellName then
             -- Buff is active               
-            local minutes, seconds = mWarlock:GetAuraTimeLeft(expirationTime)
+            local minutes, seconds = mRadial:GetAuraTimeLeft(expirationTime)
             if minutes > 0 then
                 frame.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
             else
@@ -93,7 +95,7 @@ function mWarlock:DoPetFrameAuraTimer(spellName, frame)
     end
 end
 
-function mWarlock:DoBuffTimer(spellName, watcher, iconPath)
+function mRadial:DoBuffTimer(spellName, watcher, iconPath)
     local found = false
     if MAINFRAME_ISMOVING then
         return
@@ -120,7 +122,7 @@ function mWarlock:DoBuffTimer(spellName, watcher, iconPath)
             watcher.buffTimerText:SetTextColor(.1, 1, .1)
             watcher.buffTimerTextBG:SetTexture(iconPath)
             
-            local minutes, seconds =  mWarlock:GetAuraTimeLeft(expirationTime)
+            local minutes, seconds =  mRadial:GetAuraTimeLeft(expirationTime)
             if minutes~= nil and minutes > 0 then
                 watcher.buffTimerText:SetText(string.format("%d:%d", minutes, seconds))
             elseif seconds > 0 then

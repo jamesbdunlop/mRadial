@@ -4,7 +4,7 @@ local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mWarlock:addWatcherFrame(spellID)
+function mRadial:addWatcherFrame(spellID)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -13,18 +13,18 @@ function mWarlock:addWatcherFrame(spellID)
     local spellName, _, iconPath, _, _, _, spellID, _ = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
 
-    local watcher = mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
+    local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     watcher.spellName = spellName
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
-    local isUnitPowerDependant, UnitPowerCount = mWarlock:IsSpellUnitPowerDependant(spellID)
+    local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
     -- local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
     -- local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
     -- local disabled = C_SpellBook.IsSpellDisabled(spellID)
 
     ----------------------------------------------
     -- Assign the spell to cast if we're a button!
-    local asButtons = MWarlockSavedVariables["asbuttons"] or false
+    local asButtons = MRadialSavedVariables["asbuttons"] or false
     if asButtons then
         watcher:SetAttribute("spell", spellName)
         -- set the button tooltip
@@ -53,7 +53,7 @@ function mWarlock:addWatcherFrame(spellID)
             if isUnitPowerDependant then
                 -- Do we have enough shards to allow this to show timers / cast from?
                 local unitpower = 0
-                if mWarlock:IsWarlock() then
+                if mRadial:IsWarlock() then
                     unitpower = UnitPower("player", 7) -- soul shards
                 else
                     unitpower = UnitPower("player") -- hopefully the rest list insanity etc
@@ -75,8 +75,8 @@ function mWarlock:addWatcherFrame(spellID)
                     watcher.movetex:Hide()
                 end
             end
-            mWarlock:DoDebuffTimer(spellName, watcher)
-            mWarlock:DoSpellFrameCooldown(spellName, watcher)
+            mRadial:DoDebuffTimer(spellName, watcher)
+            mRadial:DoSpellFrameCooldown(spellName, watcher)
             -- LINKED SPELLS!!!!
             -- I need a way to link a spell to another, perhaps a manually written table for now
             -- as I can't find anythign in the API
@@ -91,16 +91,16 @@ function mWarlock:addWatcherFrame(spellID)
                 local linkedSpellID = getLinked[2]
                 local linkedIconPath
                 _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
-                mWarlock:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
+                mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
                 
-                if mWarlock:HasActiveBuff(linkedSpellName) and not IsMounted() then
+                if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
                     watcher.aura:Show()
                     -- watcher.aura:SetColorTexture(0, 1, 0, 1)
                 else
                     watcher.aura:Hide()
                 end
             else
-                mWarlock:DoBuffTimer(spellName, watcher, iconPath)
+                mRadial:DoBuffTimer(spellName, watcher, iconPath)
                 watcher.aura:Hide()
             end
 
@@ -109,7 +109,7 @@ function mWarlock:addWatcherFrame(spellID)
             if getLinked ~= nil then
                 local linkedSpellName = getLinked[1] 
                 local linkedSpellID = getLinked[2]
-                local hasActiveBuff, scount = mWarlock:HasActiveBuff(linkedSpellName)
+                local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
                 if  hasActiveBuff then
                     count = scount
                 end

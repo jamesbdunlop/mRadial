@@ -2,7 +2,7 @@
 ----GENERAL CRAP
 ---------------------------------------------------------------------------------------------------
 ROOTICONPATH ="Interface/ICONS"
-MEDIAPATH = "Interface\\AddOns\\mWarlock\\media"
+MEDIAPATH = "Interface\\AddOns\\mRadial\\media"
 MAINFRAME_ISMOVING = false
 READYSTR = "RDY"
 NOSSSTR = "N/A"
@@ -11,10 +11,7 @@ GCD = 1 --w as 1.5
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
 
-MAINBG_FRAMENAME = "MWarlockBGFrame"
-HANDOFGUL_FRAMENAME = "HandOfGulFrame"
-
-FELLSTORM_SPELLNAME = "Felstorm"
+MAINBG_FRAMENAME = "mRadialBGFrame"
 SHARD_FRAMENAME = "MWShardFrame"
 ---------------------------------------------------------------------------------------------------
 ----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECTIONS YET
@@ -60,8 +57,8 @@ MINDFLAYINSANITY_SPELLNAME = "Mind Flay: Insanity"
 MINDFLAY_SPELLNAME = "Mind Flay"
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
-CAPACITOR_SPELLNAME = "Capacitor Totem"
-EARTHBIND_SPELLNAME = "Earthbind Totem"
+CAPACITORTOTEM_SPELLNAME = "Capacitor Totem"
+EARTHBINDTOTEM_SPELLNAME = "Earthbind Totem"
 HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
 HEALINGTIDETOTEM_SPELLNAME = "Healing Tide Totem"
 SPIRITLINKTOTEM_SPELLNAME = "Spirit Link Totem"

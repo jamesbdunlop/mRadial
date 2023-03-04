@@ -1,4 +1,4 @@
-function mWarlock:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
+function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
     local iuzenName = "Iuzenashamme"
     if subevent == "UNIT_DIED" or subevent == "UNIT_DESTROYED" or subevent == "UNIT_DISSIPATES" then
@@ -8,7 +8,7 @@ function mWarlock:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
 
         local petGUID = UnitGUID("pet")
         if destGUID == petGUID then
-            mWarlock:INITUI()
+            mRadial:InitUI()
             -- Loop through all party members and check if the player is in the party
             if UnitInParty(iuzenName) then
                     local message = "My pet died again " .. iuzenName .. "! WTF BRO!"
@@ -18,4 +18,4 @@ function mWarlock:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     end
 end
 
-mWarlock:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+mRadial:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
