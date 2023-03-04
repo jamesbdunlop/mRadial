@@ -22,7 +22,6 @@ mRadial.lua
 
 core\options.lua
 core\shardtracker.lua
-core\spelltracker.lua
 core\slashcmds.lua
 
 events\combatlogUnfiltered.lua
