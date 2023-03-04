@@ -55,7 +55,7 @@ function mRadial:OnInitialize()
         -- ud stands for UpDown
         -- lr stands for leftRight
         if event == "PLAYER_ENTERING_WORLD" then
-            print("OnInitialize called! InitUI Fired!")
+            -- print("OnInitialize called! InitUI Fired!")
             mRadial:InitUI()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
