@@ -226,7 +226,7 @@ end
 
 function mRadial:IsFelImpSummoned()
     local isSummoned, summonedPet = mRadial:hasPetSummoned()
-    if isSummoned and summonedPet == "Fel Imp" then
+    if isSummoned and summonedPet == "Fel Imp" or summonedPet == "Imp"  then
       return true
     end
     
