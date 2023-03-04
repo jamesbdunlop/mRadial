@@ -1,11 +1,10 @@
-local mlast = 0
-function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
+function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
     if template == nil then template = "BackdropTemplate" end
     local sizeX = frameSize[1] or DEFAULT_FRAMESIZE
     local sizeY = frameSize[2] or DEFAULT_FRAMESIZE
     -- If we don't explicity set as buttons use the global saved variable.
     if asbutton == nil then
-        asbutton = MWarlockSavedVariables["asbuttons"]
+        asbutton = MRadialSavedVariables["asbuttons"]
     end
     local parentName = frameName .."_parent"
     local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")  
@@ -70,12 +69,12 @@ function mWarlock:CreateIconFrame(frameName, frameSize, parent, template, textur
     frame.isPetFrame = false
     frame.isWatcher = false
     -- Add to the main frames table.
-    MW_PARENTFRAMES[#MW_PARENTFRAMES+1] = parentFrame
-    MW_ALLFRAMES[#MW_ALLFRAMES+1] = frame
+    MR_PARENTFRAMES[#MR_PARENTFRAMES+1] = parentFrame
+    MR_ALLFRAMES[#MR_ALLFRAMES+1] = frame
     return frame
 end
 
-function mWarlock:CreateFrameTimerElements(frame)
+function mRadial:CreateFrameTimerElements(frame)
     -- TEXTS
     frame.countText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.countText:SetTextColor(0, 1, 1)
@@ -100,27 +99,27 @@ function mWarlock:CreateFrameTimerElements(frame)
 
 end
 
-function mWarlock:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
-    -- Creates a moveable icon frame to be used by mWarlock:SetMoveFrameScripts
-    local frame = mWarlock:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
+function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
+    -- Creates a moveable icon frame to be used by mRadial:SetMoveFrameScripts
+    local frame = mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
     if asTimer then
-        mWarlock:CreateFrameTimerElements(frame)
+        mRadial:CreateFrameTimerElements(frame)
     end
     -- Now put it all back to where it was previously set by the user if these exist.
-    mWarlock:RestoreFrame(frameName, frame)
-    mWarlock:SetMoveFrameScripts(frame)
+    mRadial:RestoreFrame(frameName, frame)
+    mRadial:SetMoveFrameScripts(frame)
     return frame
 end
 
-function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
+function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
     
-    local asButtons = MWarlockSavedVariables["asbuttons"] or false
+    local asButtons = MRadialSavedVariables["asbuttons"] or false
     local size = 200
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
-    local watcher = mWarlock:CreateIconFrame(frameName, 
+    local watcher = mRadial:CreateIconFrame(frameName, 
                                             {size, size}, 
-                                            MWarlockMainFrame, 
+                                            mRadialMainFrame, 
                                             "BackdropTemplate", 
                                             iconPath, 
                                             "ARTWORK", 
@@ -130,7 +129,7 @@ function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
                                             {size, size}, 
                                             asButtons)
     
-    mWarlock:CreateFrameTimerElements(watcher)
+    mRadial:CreateFrameTimerElements(watcher)
     
     -- -- Assign a nice littler border..
     watcher.borderFrame = watcher:CreateTexture(nil, "ARTWORK")
@@ -149,12 +148,12 @@ function mWarlock:CreateRadialWatcherFrame(frameName, spellName, iconPath)
 
     -- special tag for helping determine this is a raidal button.
     watcher.isWatcher = true
-    mWarlock:SetMountedFrameScripts(watcher)
+    mRadial:SetMountedFrameScripts(watcher)
 
     return watcher
 end
 
-function mWarlock:SetMoveFrameScripts(frame)
+function mRadial:SetMoveFrameScripts(frame)
     frame:SetScript("OnMouseDown", function(self, button)
         if not frame:IsMovable() then
             return
@@ -169,22 +168,22 @@ function mWarlock:SetMoveFrameScripts(frame)
         frame:StopMovingOrSizing()
         local frameName = frame:GetName()
         local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
-        MWarlockSavedVariables.framePositions[frameName] = {}
-        MWarlockSavedVariables.framePositions[frameName]["point"] = point
-        MWarlockSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
-        MWarlockSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
-        MWarlockSavedVariables.framePositions[frameName]["x"] = offsetX
-        MWarlockSavedVariables.framePositions[frameName]["y"] = offsetY
-        MWarlockSavedVariables.framePositions[frameName]["sx"] = frame:GetWidth()
-        MWarlockSavedVariables.framePositions[frameName]["sy"] = frame:GetHeight()
+        MRadialSavedVariables.framePositions[frameName] = {}
+        MRadialSavedVariables.framePositions[frameName]["point"] = point
+        MRadialSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
+        MRadialSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
+        MRadialSavedVariables.framePositions[frameName]["x"] = offsetX
+        MRadialSavedVariables.framePositions[frameName]["y"] = offsetY
+        MRadialSavedVariables.framePositions[frameName]["sx"] = frame:GetWidth()
+        MRadialSavedVariables.framePositions[frameName]["sy"] = frame:GetHeight()
     end)
 end
 
 local mlast = 0
-function mWarlock:SetMountedFrameScripts(frame)
+function mRadial:SetMountedFrameScripts(frame)
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
         mlast = mlast + elapsed
-        if mlast <= .05 then
+        if mlast <= .02 then
             return
         end
         if IsMounted() or IsFlying() then
@@ -203,28 +202,28 @@ function mWarlock:SetMountedFrameScripts(frame)
     end)
 end
 
-function mWarlock:SetUIMovable(isMovable)
+function mRadial:SetUIMovable(isMovable)
     --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
-        isMovable=MWarlockSavedVariables["moveable"] or false
+        isMovable=MRadialSavedVariables["moveable"] or false
     end
 
     MAINFRAME_ISMOVING = isMovable
-    for _, frame in pairs(MW_ALLFRAMES) do
+    for _, frame in pairs(MR_ALLFRAMES) do
         if isMovable and not frame.isWatcher then
             frame:EnableMouse(isMovable)
             frame:SetMovable(isMovable)
             frame.movetex:Show()
             frame.movetex:SetColorTexture(0, 0, 1, .5)
-            MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
-            MWarlockMainFrame.crosshair:Show()
+            mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+            mRadialMainFrame.crosshair:Show()
         elseif not isMovable and not frame.isWatcher then
             frame:EnableMouse(isMovable)
             frame:SetMovable(isMovable)
             frame.movetex:SetColorTexture(0, 0, 0, 0)
             frame.movetex:Hide()
-            MWarlockMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
-            MWarlockMainFrame.crosshair:Hide()
+            mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
+            mRadialMainFrame.crosshair:Hide()
         elseif frame.isWatcher then
             if isMovable then
                 frame.readyText:Show()
@@ -244,8 +243,8 @@ function mWarlock:SetUIMovable(isMovable)
 
 end
 
-function mWarlock:RestoreFrame(frameName, frame)
-    local framePosData = MWarlockSavedVariables.framePositions[frameName]
+function mRadial:RestoreFrame(frameName, frame)
+    local framePosData = MRadialSavedVariables.framePositions[frameName]
     if framePosData == nil then
         framePosData = {}
         framePosData["x"] = 0
@@ -275,8 +274,8 @@ function mWarlock:RestoreFrame(frameName, frame)
     -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
 end
 
-function mWarlock:createWatcherFrames()
-    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+function mRadial:createWatcherFrames()
+    local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
     if activeTalentTreeSpells == nil then
         return
     end
@@ -285,13 +284,13 @@ function mWarlock:createWatcherFrames()
         local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
         local isActive  = false
         if spellName ~= nil then 
-            isActive = MWarlockSavedVariables["isActive"..spellName] or false
+            isActive = MRadialSavedVariables["isActive"..spellName] or false
             
             local isKnown  = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
             if isActive and isKnown and not isPassive then
                 -- print("Adding watcherFrame for  %s", spellName)
-                mWarlock:addWatcherFrame(spellID)
+                mRadial:addWatcherFrame(spellID)
                 UdOffset = UdOffset + 32
             end
         end
@@ -299,12 +298,12 @@ function mWarlock:createWatcherFrames()
 end
 
 ---------------------------------------------------------------------------------------------------
-function mWarlock:CreateMainFrame()
-    local radius = MWarlockSavedVariables.radius or DEFAULT_RADIUS
-    local ooShardsMult = MWarlockSavedVariables.shardOutOfFrameSize or 150
+function mRadial:CreateMainFrame()
+    local radius = MRadialSavedVariables.radius or DEFAULT_RADIUS
+    local ooShardsMult = MRadialSavedVariables.shardOutOfFrameSize or 150
     local size = radius*ooShardsMult
     -- Main Frame
-    MWarlockMainFrame = mWarlock:CreateMovableFrame(MAINBG_FRAMENAME,
+    mRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
                                                     {size, size},
                                                     UIParent,
                                                     "BackdropTemplate",
@@ -314,25 +313,25 @@ function mWarlock:CreateMainFrame()
                                                     false, {size, size}, {size, size})
 
     -- Out of shards masks and textures are set on this base frame, so we scale this for the red out of shards indicator
-    mWarlock:setOOSShardFramesSize()
+    mRadial:setOOSShardFramesSize()
 
     -- Create an invisible crosshair indicator for when we are moving the UI
-    MWarlockMainFrame.crosshair = MWarlockMainFrame:CreateTexture("crossHair")
-    MWarlockMainFrame.crosshair:SetPoint("CENTER", 0, 0)
+    mRadialMainFrame.crosshair = mRadialMainFrame:CreateTexture("crossHair")
+    mRadialMainFrame.crosshair:SetPoint("CENTER", 0, 0)
     local crossHairPath = MEDIAPATH .."\\crosshair.blp"
-    MWarlockMainFrame.crosshair:SetTexture(crossHairPath)
-    MWarlockMainFrame.crosshair:SetSize(25, 25)
-    MWarlockMainFrame.crosshair:Hide()
-    MWarlockMainFrame:Show()
+    mRadialMainFrame.crosshair:SetTexture(crossHairPath)
+    mRadialMainFrame.crosshair:SetSize(25, 25)
+    mRadialMainFrame.crosshair:Hide()
+    mRadialMainFrame:Show()
 end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
-local last = 0
-function mWarlock:createPetFrames()
-    mWarlock:RemoveAllPetFrames()
+local plast = 0
+function mRadial:createPetFrames()
+    mRadial:RemoveAllPetFrames()
     -- Clear out existing
     local petSpellData = {}
-    if mWarlock:IsFelguardSummoned() then 
+    if mRadial:IsFelguardSummoned() then 
         petSpellData = {
             ["DemonicStrength"] = {["spellName"] = "Demonic Strength",
                                 ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)},
@@ -343,14 +342,14 @@ function mWarlock:createPetFrames()
             ["SoulStrike"] = {["spellName"] = "Soul Strike",
                             ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", ROOTICONPATH)}
         }
-    elseif mWarlock:IsSuccubusSummoned() then 
+    elseif mRadial:IsSuccubusSummoned() then 
         petSpellData = {
             ["Seduction"] = {["spellName"] = "Seduction",
                              ["spellIcon"] = string.format("%s/Spell_shadow_seduction.blp", ROOTICONPATH)},
                              ["Whiplash"] = {["spellName"] = "Whiplash",
                              ["spellIcon"] = string.format("%s/Ability_warlock_whiplash.blp", ROOTICONPATH)},        
                             }
-    elseif mWarlock:IsFelhunterSummoned() then 
+    elseif mRadial:IsFelhunterSummoned() then 
         petSpellData = {
             ["SpelLock"] = {["spellName"] = "Spell Lock",
                             ["spellIcon"] = string.format("%s/Spell_shadow_mindrot.blp", ROOTICONPATH)},
@@ -358,14 +357,14 @@ function mWarlock:createPetFrames()
                                ["spellIcon"] = string.format("%s/Spell_nature_purge.blp", ROOTICONPATH)},
                             }
 
-    elseif mWarlock:IsVoidWalkerSummoned() then 
+    elseif mRadial:IsVoidWalkerSummoned() then 
         petSpellData = {
             ["ShadowBulwark"] = {["spellName"] = "Shadow Bulwark",
                             ["spellIcon"] = string.format("%s/Spell_shadow_antishadow.blp", ROOTICONPATH)},
             ["Suffering"] = {["spellName"] = "Suffering",
                                 ["spellIcon"] = string.format("%s/Spell_shadow_blackplague.blp", ROOTICONPATH)},
                             }
-    elseif mWarlock:IsFelImpSummoned() then 
+    elseif mRadial:IsFelImpSummoned() then 
         petSpellData = {
             ["SingeMagic"] = {["spellName"] = "Singe Magic",
                             ["spellIcon"] = string.format("%s/Spell_fire_elementaldevastation.blp", ROOTICONPATH)},
@@ -377,10 +376,10 @@ function mWarlock:createPetFrames()
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if MW_ALLFRAMES[frameName] == nil then
+        if MR_ALLFRAMES[frameName] == nil then
             -- print("Creating new pet  frame: %s", frameName)
             local size = 100
-            local frame = mWarlock:CreateMovableFrame(frameName,
+            local frame = mRadial:CreateMovableFrame(frameName,
                                                 {100, 100},
                                                 UIParent,
                                                 "",
@@ -394,38 +393,38 @@ function mWarlock:createPetFrames()
             frame.cooldownText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
-                last = last + elapsed
-                if last <= .1 then
+                plast = plast + elapsed
+                if plast <= .05 then
                     return
                 end
-                mWarlock:DoSpellFrameCooldown(spellName, frame)
-                mWarlock:DoPetFrameAuraTimer(spellName, frame)
-                last = 0
+                mRadial:DoSpellFrameCooldown(spellName, frame)
+                mRadial:DoPetFrameAuraTimer(spellName, frame)
+                plast = 0
             end)
             
         end
     end
 end
 
-function mWarlock:ShowPetFrames()
-    for _, frame in pairs(MW_ALLFRAMES) do
+function mRadial:ShowPetFrames()
+    for _, frame in pairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
             frame:Show()
         end
     end
 end
 
-function mWarlock:HidePetFrames()
-    local hidePetFrame = MWarlockSavedVariables["hidePetFrame"] or false
-    for _, frame in pairs(MW_ALLFRAMES) do
+function mRadial:HidePetFrames()
+    local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
+    for _, frame in pairs(MR_ALLFRAMES) do
         if frame.isPetFrame and hidePetFrame then
             frame:Hide()
         end
     end
 end
 
-function mWarlock:RemoveAllPetFrames()
-    for idx, frame in pairs(MW_ALLFRAMES) do
+function mRadial:RemoveAllPetFrames()
+    for idx, frame in pairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
             local children = frame:GetChildren()
             if children ~= nil then
@@ -434,18 +433,18 @@ function mWarlock:RemoveAllPetFrames()
                     childFrame:SetParent(nil)
                 end
             end
-            MW_ALLFRAMES[idx] = nil
+            MR_ALLFRAMES[idx] = nil
             frame:Hide()
             frame:SetParent(nil)
         end
     end
 end
 
-function mWarlock:setPetFramePosAndSize()
-    local frameSize = MWarlockSavedVariables["PetFramesSize"] or 45
-    for idx, frame in ipairs(MW_ALLFRAMES) do
+function mRadial:setPetFramePosAndSize()
+    local frameSize = MRadialSavedVariables["PetFramesSize"] or 45
+    for idx, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
-            mWarlock:RestoreFrame(frame:GetName(), frame)
+            mRadial:RestoreFrame(frame:GetName(), frame)
             frame:SetSize(frameSize, frameSize)
         end
     end
@@ -453,42 +452,42 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
 
-function mWarlock:radialButtonLayout()
+function mRadial:radialButtonLayout()
     print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local cfontName = "Accidental Presidency.ttf"
-    local customFontPath = "Interface\\Addons\\mWarlock\\fonts\\" .. cfontName
+    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
     
-    local radius = MWarlockSavedVariables.radius or 100
-    local offset = MWarlockSavedVariables.offset or 0
-    local spread = MWarlockSavedVariables.watcherFrameSpread or 0
-    local widthDeform = MWarlockSavedVariables.widthDeform or 1
-    local heightDeform = MWarlockSavedVariables.heightDeform or 1
+    local radius = MRadialSavedVariables.radius or 100
+    local offset = MRadialSavedVariables.offset or 0
+    local spread = MRadialSavedVariables.watcherFrameSpread or 0
+    local widthDeform = MRadialSavedVariables.widthDeform or 1
+    local heightDeform = MRadialSavedVariables.heightDeform or 1
 
-    local countFontSize = MWarlockSavedVariables.countFontSize or 22
-    local readyFontSize = MWarlockSavedVariables.readyFontSize or 22
-    local coolDownFontSize = MWarlockSavedVariables.coolDownFontSize or 22
-    local timerFontSize = MWarlockSavedVariables.timerFontSize or 22
+    local countFontSize = MRadialSavedVariables.countFontSize or 22
+    local readyFontSize = MRadialSavedVariables.readyFontSize or 22
+    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or 22
+    local timerFontSize = MRadialSavedVariables.timerFontSize or 22
 
-    local radialUdOffset = MWarlockSavedVariables.radialUdOffset or 0
-    local radialLROffset = MWarlockSavedVariables.radialLROffset or -10
+    local radialUdOffset = MRadialSavedVariables.radialUdOffset or 0
+    local radialLROffset = MRadialSavedVariables.radialLROffset or -10
 
-    local cdUdOffset = MWarlockSavedVariables.cdUdOffset or 0
-    local cdLROffset = MWarlockSavedVariables.cdLROffset or -10
+    local cdUdOffset = MRadialSavedVariables.cdUdOffset or 0
+    local cdLROffset = MRadialSavedVariables.cdLROffset or -10
 
-    local countUdOffset = MWarlockSavedVariables.countUdOffset or 0
-    local countLROffset = MWarlockSavedVariables.countLROffset or -10
+    local countUdOffset = MRadialSavedVariables.countUdOffset or 0
+    local countLROffset = MRadialSavedVariables.countLROffset or -10
 
-    local watcherFrameSize = MWarlockSavedVariables.watcherFrameSize or 45
+    local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
-    local angleStep = math.pi / #MW_ALLFRAMES + spread
-    for x = 1, #MW_ALLFRAMES do
+    local angleStep = math.pi / #MR_ALLFRAMES + spread
+    for x = 1, #MR_ALLFRAMES do
         local angle = (x-1)*angleStep + offset*math.pi
         local sinAng = math.sin(angle)
         local cosAng = math.cos(angle)
         local w = cosAng*radius*widthDeform
         local h = sinAng*radius*heightDeform
-        local watcher = MW_ALLFRAMES[x]
+        local watcher = MR_ALLFRAMES[x]
         if watcher.isWatcher then
             -- print("Found watcher frame!")
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
@@ -516,7 +515,7 @@ function mWarlock:radialButtonLayout()
             watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            watcher:SetPoint("CENTER", MWarlockMainFrame, "CENTER", w, h)
+            watcher:SetPoint("CENTER", mRadialMainFrame, "CENTER", w, h)
             
             -- We don't do ANY SHOW HIDE HERE!!
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
@@ -536,14 +535,14 @@ function mWarlock:radialButtonLayout()
     end
 end
 ---------------------------------------------------------------------------------------------------
-function mWarlock:RemoveAllParentFrames()
-    -- Used by the INITUI to clear all existing frames for a full refresh on spec changes etc
-    if MW_PARENTFRAMES == nil then
+function mRadial:RemoveAllParentFrames()
+    -- Used by the InitUI to clear all existing frames for a full refresh on spec changes etc
+    if MR_PARENTFRAMES == nil then
         return
     end
 
-    for x = 1, #MW_PARENTFRAMES do
-        local frame = MW_PARENTFRAMES[x]
+    for x = 1, #MR_PARENTFRAMES do
+        local frame = MR_PARENTFRAMES[x]
         local children = frame:GetChildren()
         if children ~= nil then
             for idx, childFrame in ipairs(children) do

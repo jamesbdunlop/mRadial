@@ -1,5 +1,5 @@
-local mw_config = LibStub("AceConfig-3.0")
-local mw_dialog = LibStub("AceConfigDialog-3.0")
+local MR_config = LibStub("AceConfig-3.0")
+local MR_dialog = LibStub("AceConfigDialog-3.0")
 
 
 local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
@@ -9,14 +9,14 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     opt_slider:SetLabel(name)
     
     local function setValue(table, cbName, value)
-        MWarlockSavedVariables[variableName] = value
+        MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
             toexec()
         end
     end
 
     local function getValue(info)
-        local value = MWarlockSavedVariables[variableName] or defaultValue
+        local value = MRadialSavedVariables[variableName] or defaultValue
         return value
     end
     
@@ -38,14 +38,14 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     
     
     local function setValue(table, cbName, value)
-        MWarlockSavedVariables[variableName] = value
+        MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
             toexec(value)
         end
     end
 
     local function getValue(info)
-        local value = MWarlockSavedVariables[variableName]
+        local value = MRadialSavedVariables[variableName]
         return value
     end
     
@@ -69,13 +69,13 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 end
 
 -- BUILD PANE
-function mWarlock:OptionsPane()
+function mRadial:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
     OptionsPane = AceGUI:Create("Window")
     OptionsPane:SetWidth(800)
     OptionsPane:SetHeight(400)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    OptionsPane:SetTitle("MWarlock - Options : " .. mWarlock:GetSpecName()) 
+    OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName()) 
     OptionsPane:SetLayout("Fill")
     OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 
@@ -97,59 +97,59 @@ function mWarlock:OptionsPane()
     generalGroup:SetFullWidth(true)
     generalGroup:SetLayout("Flow")
     local descrip = "Allow the ui to move around using shift+lmb."
-    createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mWarlock.SetUIMovable)
+    createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
     createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, nil)
-    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mWarlock.HidePetFrames)
-    createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mWarlock.setShardTrackerFramesSize)
-    createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mWarlock.setOOSShardFramesSize)
-    createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mWarlock.setPetFramePosAndSize)
+    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.HidePetFrames)
+    createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
+    createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
+    createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.setPetFramePosAndSize)
     
     -- Radial shit
     local radialGroup = AceGUI:Create("InlineGroup")
     radialGroup:SetTitle("Radial Frame / Icons: ")
     radialGroup:SetFullWidth(true)
     radialGroup:SetLayout("Flow")
-    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mWarlock.INITUI)
-    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", 0, mWarlock.INITUI)
-    createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mWarlock.INITUI)
-    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mWarlock.INITUI)
-    createSlider(radialGroup, "Width Oval: ", .1, 10, .01, "widthDeform", 0, mWarlock.INITUI)
-    createSlider(radialGroup, "Height Oval: ", .1, 10, .01, "heightDeform", 0, mWarlock.INITUI)
+    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.InitUI)
+    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", 0, mRadial.InitUI)
+    createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mRadial.InitUI)
+    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mRadial.InitUI)
+    createSlider(radialGroup, "Width Oval: ", .1, 10, .01, "widthDeform", 0, mRadial.InitUI)
+    createSlider(radialGroup, "Height Oval: ", .1, 10, .01, "heightDeform", 0, mRadial.InitUI)
     
     local timerGroup = AceGUI:Create("InlineGroup")
     timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
     timerGroup:SetFullWidth(true)
     timerGroup:SetLayout("Flow")
-    createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mWarlock.INITUI)
-    createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mWarlock.INITUI)
-    createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mWarlock.INITUI)
-    createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mWarlock.INITUI)
-    createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mWarlock.INITUI)
-    createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mWarlock.INITUI)
+    createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.InitUI)
+    createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.InitUI)
+    createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.InitUI)
+    createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.InitUI)
+    createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.InitUI)
+    createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.InitUI)
     
     -- Font shit
     local fontGroup = AceGUI:Create("InlineGroup")
     fontGroup:SetTitle("Font Sizes: ")
     fontGroup:SetFullWidth(true)
     fontGroup:SetLayout("Flow")
-    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mWarlock.INITUI)
-    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mWarlock.INITUI)
-    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mWarlock.INITUI)
-    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mWarlock.INITUI)
+    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mRadial.InitUI)
+    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mRadial.InitUI)
+    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mRadial.InitUI)
+    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mRadial.InitUI)
     
     local spellsGroup = AceGUI:Create("InlineGroup")
     spellsGroup:SetTitle("Radial Spells: ")
     spellsGroup:SetFullWidth(true)
     spellsGroup:SetLayout("Flow")
 
-    local activeTalentTreeSpells = mWarlock:GetAllActiveTalentTreeSpells()
+    local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
     -- lower level classes might not have an active talent tree.
     if activeTalentTreeSpells ~= nil then
-        for i, spellData in ipairs(mWarlock:GetAllActiveTalentTreeSpells()) do
+        for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
             -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
             local spellName = spellData[1]
             desc = GetSpellDescription(spellData[2])
-            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, true, mWarlock.INITUI, true)
+            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, true, mRadial.InitUI, true)
         end
     end
 
@@ -161,17 +161,17 @@ function mWarlock:OptionsPane()
     scrollFrame:AddChild(spellsGroup)
 end
 
-function mWarlock:BagPane()
+function mRadial:BagPane()
     local AceGUI = LibStub("AceGUI-3.0")
     local function updateData(groupIndex, ignoreValue)
         local toShow
         if groupIndex == 1 then
-            toShow = mWarlock:listBagItems(ignoreValue)
+            toShow = mRadial:listBagItems(ignoreValue)
         elseif groupIndex == 2 then
-            toShow = mWarlock:listBankItems(ignoreValue)
+            toShow = mRadial:listBankItems(ignoreValue)
             
         else
-            toShow = mWarlock:listBankReagentItems(ignoreValue)
+            toShow = mRadial:listBankReagentItems(ignoreValue)
 
         end
         return toShow

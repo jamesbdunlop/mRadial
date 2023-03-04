@@ -1,5 +1,5 @@
 
-function mWarlock:UNIT_PET(eventName, arg1, arg2, arg3)
+function mRadial:UNIT_PET(eventName, arg1, arg2, arg3)
     -- print("eventName: %s", eventName)
     -- print("arg1: %s", arg1)
     -- print("arg2: %s", arg2)
@@ -10,10 +10,10 @@ function mWarlock:UNIT_PET(eventName, arg1, arg2, arg3)
 
     MWPetGUID = UnitGUID("pet")
     if MWPetGUID == nil then
-        mWarlock:RemoveAllPetFrames()
+        mRadial:RemoveAllPetFrames()
     else
-        mWarlock:createPetFrames()
+        mRadial:createPetFrames()
     end
 end
 
-mWarlock:RegisterEvent("UNIT_PET")
+mRadial:RegisterEvent("UNIT_PET")

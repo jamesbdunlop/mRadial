@@ -1,1 +1,1 @@
-mWarlock = LibStub("AceAddon-3.0"):NewAddon("mWarlock", "AceEvent-3.0", "AceTimer-3.0")
+mRadial = LibStub("AceAddon-3.0"):NewAddon("mRadial", "AceEvent-3.0", "AceTimer-3.0")

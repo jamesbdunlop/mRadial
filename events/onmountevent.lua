@@ -1,5 +1,5 @@
 -- -- Note that firing a gun or a spell, or getting aggro, does NOT trigger this event.
--- function mWarlock:PLAYER_MOUNT_DISPLAY_CHANGED(eventName, ...) 
+-- function mRadial:PLAYER_MOUNT_DISPLAY_CHANGED(eventName, ...) 
 -- end
 
--- mWarlock:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
+-- mRadial:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
