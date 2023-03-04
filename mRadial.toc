@@ -2,9 +2,9 @@
 ## Interface: 100005
 ## Title: mRadial
 ## Author: Macka - JBD
-## Version: 0.0.1
+## Version: 0.1.0
 ## License: All Rights Reserved
-## Notes: Macka's warlock ui for shits and giggles
+## Notes: Little Radial Menu for team Decrepit
 ## SavedVariables: MRadialSavedVariables, PerPlayerPerSpecSavedVars, mRadialDB 
 ## OptionalDeps: LibDBIcon-1.0
 
@@ -32,5 +32,3 @@ events\specChanged.lua
 
 # Shard tracker
 events\unitpowerupdate.lua 
-# events\companionUpdate.lua
-# events\onmountevent.lua
