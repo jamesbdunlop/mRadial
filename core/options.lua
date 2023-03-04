@@ -7,22 +7,33 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     local opt_slider = AceGUI:Create("Slider")
     opt_slider:SetSliderValues(minVal, maxVal, step)
     opt_slider:SetLabel(name)
+    -- print("Creating slider: %s", name)
     
     local function setValue(table, cbName, value)
+        -- print("Setting option %s to value %d", variableName, value)
         MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
-            toexec()
+            toexec(value)
         end
     end
 
     local function getValue(info)
-        local value = MRadialSavedVariables[variableName] or defaultValue
-        return value
+        return opt_slider:GetValue()
     end
     
-    opt_slider:SetValue(getValue())
-    opt_slider:SetCallback("OnValueChanged", setValue)
+    local currentValue = MRadialSavedVariables[variableName]
+    -- print("currentValue: %d", currentValue)
+    if currentValue == nil then
+        if defaultValue == nil then
+            currentValue = 0
+        else
+            currentValue = defaultValue
+        end
+    end
+    -- print("currentValue: %d", currentValue)
     opt_slider.get = getValue
+    opt_slider:SetValue(currentValue)
+    opt_slider:SetCallback("OnValueChanged", setValue)
     
     parent:AddChild(opt_slider)
     return opt_slider
@@ -105,7 +116,7 @@ function mRadial:OptionsPane()
     generalGroup:SetLayout("Flow")
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
-    createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.InitUI)
+    createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
     createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
@@ -116,33 +127,34 @@ function mRadial:OptionsPane()
     radialGroup:SetTitle("Radial Frame / Icons: ")
     radialGroup:SetFullWidth(true)
     radialGroup:SetLayout("Flow")
-    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.InitUI)
-    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", 0, mRadial.InitUI)
-    createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mRadial.InitUI)
-    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mRadial.InitUI)
-    createSlider(radialGroup, "Width Oval: ", .1, 10, .01, "widthDeform", 0, mRadial.InitUI)
-    createSlider(radialGroup, "Height Oval: ", .1, 10, .01, "heightDeform", 0, mRadial.InitUI)
+    --parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
+    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
+    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
+    createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mRadial.UpdateUI)
+    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+    createSlider(radialGroup, "Width Oval: ", .1, 10, .01, "widthDeform", 0, mRadial.UpdateUI)
+    createSlider(radialGroup, "Height Oval: ", .1, 10, .01, "heightDeform", 0, mRadial.UpdateUI)
     
     local timerGroup = AceGUI:Create("InlineGroup")
     timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
     timerGroup:SetFullWidth(true)
     timerGroup:SetLayout("Flow")
-    createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.InitUI)
-    createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.InitUI)
-    createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.InitUI)
-    createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.InitUI)
-    createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.InitUI)
-    createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.InitUI)
+    createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
+    createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
+    createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
+    createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
+    createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
+    createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
     
     -- Font shit
     local fontGroup = AceGUI:Create("InlineGroup")
     fontGroup:SetTitle("Font Sizes: ")
     fontGroup:SetFullWidth(true)
     fontGroup:SetLayout("Flow")
-    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mRadial.InitUI)
-    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mRadial.InitUI)
-    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mRadial.InitUI)
-    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mRadial.InitUI)
+    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
+    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
+    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
+    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
     
     local spellsGroup = AceGUI:Create("InlineGroup")
     spellsGroup:SetTitle("Radial Spells: ")
@@ -156,7 +168,7 @@ function mRadial:OptionsPane()
             -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
             local spellName = spellData[1]
             desc = GetSpellDescription(spellData[2])
-            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.InitUI, true)
+            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true)
         end
     end
 

@@ -30,22 +30,21 @@ function mRadial:CreatePlayerSavedVars()
 end
 
 function mRadial:InitUI()
-    -- print("InitUI CALLED....")
-    -- Clear out existing frames for a full refresh.
-    mRadial:RemoveAllParentFrames()
-    MR_ALLFRAMES = {}
-    MR_PARENTFRAMES = {}
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     mRadial:CreateMainFrame()
+    mRadial:createWatcherFrames()
     if mRadial:IsWarlock() then
         mRadial:createShardCountFrame()
+        mRadial:shardtrack()
     end
-    
-    mRadial:createWatcherFrames()
-    mRadial:radialButtonLayout()
     mRadial:createPetFrames()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
-    mRadial:shardtrack()
+    mRadial:UpdateUI()
+end
+
+function mRadial:UpdateUI()
+    mRadial:createWatcherFrames()
+    mRadial:radialButtonLayout()
 end
 
 function mRadial:OnInitialize()
@@ -92,6 +91,7 @@ function mRadial:OnEnable()
     LDBIcon:Register(addonName, dataBroker, {
         hide = false,
     })
+    
 end
 
 function mRadial:OnDisable()

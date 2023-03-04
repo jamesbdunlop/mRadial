@@ -292,6 +292,26 @@ function mRadial:RestoreFrame(frameName, frame)
     -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
 end
 
+function mRadial:WatcherExists(frameName)
+    for x = 1, #MR_ALLFRAMES do
+        local watcher = MR_ALLFRAMES[x]
+        if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
+            return true
+        end
+    end
+    return false
+end
+
+function mRadial:GetWatcher(frameName)
+    for x = 1, #MR_ALLFRAMES do
+        local watcher = MR_ALLFRAMES[x]
+        if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
+            return watcher, x
+        end
+    end
+    return nil, -1
+end
+
 function mRadial:createWatcherFrames()
     local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
     if activeTalentTreeSpells == nil then
@@ -306,10 +326,20 @@ function mRadial:createWatcherFrames()
             
             local isKnown  = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
-            if isActive and isKnown and not isPassive then
+            local frameName = string.format("Frame_%s", spellName)
+            if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                 -- print("Adding watcherFrame for  %s", spellName)
                 mRadial:addWatcherFrame(spellID)
                 UdOffset = UdOffset + 32
+            elseif not isActive and mRadial:WatcherExists(frameName) then
+                local frame, idx = mRadial:GetWatcher(frameName)
+                if frame ~= nil then
+                    frame:GetParent():SetParent(nil)
+                    frame:GetParent():Hide()
+                    frame:SetParent(nil)
+                    frame:Hide()
+                    MR_ALLFRAMES[idx] = nil
+                end
             end
         end
     end
@@ -347,7 +377,7 @@ end
 -- PET FRAMES
 local plast = 0
 function mRadial:createPetFrames()
-    mRadial:RemoveAllPetFrames()
+    -- mRadial:RemoveAllPetFrames()
     -- Clear out existing
     local petSpellData = {}
     if mRadial:IsFelguardSummoned() then 
@@ -436,22 +466,22 @@ function mRadial:TogglePetFrameVisibility()
     end
 end
 
-function mRadial:RemoveAllPetFrames()
-    for idx, frame in pairs(MR_ALLFRAMES) do
-        if frame.isPetFrame then
-            local children = frame:GetChildren()
-            if children ~= nil then
-                for childFrame in children do
-                    childFrame:Hide()
-                    childFrame:SetParent(nil)
-                end
-            end
-            MR_ALLFRAMES[idx] = nil
-            frame:Hide()
-            frame:SetParent(nil)
-        end
-    end
-end
+-- function mRadial:RemoveAllPetFrames()
+--     for idx, frame in pairs(MR_ALLFRAMES) do
+--         if frame.isPetFrame then
+--             local children = frame:GetChildren()
+--             if children ~= nil then
+--                 for childFrame in children do
+--                     childFrame:Hide()
+--                     childFrame:SetParent(nil)
+--                 end
+--             end
+--             MR_ALLFRAMES[idx] = nil
+--             frame:Hide()
+--             frame:SetParent(nil)
+--         end
+--     end
+-- end
 
 function mRadial:setPetFramePosAndSize()
     local frameSize = MRadialSavedVariables["PetFramesSize"] or 45
@@ -472,7 +502,7 @@ function mRadial:radialButtonLayout()
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
     
     local radius = MRadialSavedVariables.radius or 100
-    local offset = MRadialSavedVariables.offset or 0
+    local offset = MRadialSavedVariables.offset or .5
     local spread = MRadialSavedVariables.watcherFrameSpread or 0
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
@@ -493,16 +523,22 @@ function mRadial:radialButtonLayout()
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
-    local angleStep = math.pi / #MR_ALLFRAMES + spread
-    for x = 1, #MR_ALLFRAMES do
+    local count = 1
+    for frameName, frame in ipairs(MR_ALLFRAMES) do
+        if frame ~= nil then
+            count = count + 1
+        end
+    end
+    local angleStep = math.pi / count + spread
+    for x = 1, count do
         local angle = (x-1)*angleStep + offset*math.pi
         local sinAng = math.sin(angle)
         local cosAng = math.cos(angle)
         local w = cosAng*radius*widthDeform
         local h = sinAng*radius*heightDeform
         local watcher = MR_ALLFRAMES[x]
-        if watcher.isWatcher then
-            -- print("Found watcher frame!")
+        if watcher ~= nil and watcher.isWatcher then
+            -- print("Found watcher frame! %s", watcher:GetName())
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
             -- expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
@@ -551,19 +587,19 @@ function mRadial:radialButtonLayout()
     end
 end
 ---------------------------------------------------------------------------------------------------
-function mRadial:RemoveAllParentFrames()
-    -- Used by the InitUI to clear all existing frames for a full refresh on spec changes etc
-    if MR_PARENTFRAMES == nil then
-        print("MR_PARENTFRAMES was nil!?????")
-        return
-    end
+-- function mRadial:RemoveAllParentFrames()
+--     -- Used by the InitUI to clear all existing frames for a full refresh on spec changes etc
+--     if MR_PARENTFRAMES == nil then
+--         print("MR_PARENTFRAMES was nil!?????")
+--         return
+--     end
 
-    for x = 1, #MR_PARENTFRAMES do
-        local frame = MR_PARENTFRAMES[x]
-        frame.baseFrame:Hide()
-        frame.baseFrame:SetParent(nil)
-        frame:Hide()
-        frame:SetParent(nil)
-    end
-    print("REMOVED ALL FRAMES AND THEY SHOULD BE DESTROYED!")
-end
+--     for x = 1, #MR_PARENTFRAMES do
+--         local frame = MR_PARENTFRAMES[x]
+--         frame.baseFrame:Hide()
+--         frame.baseFrame:SetParent(nil)
+--         frame:Hide()
+--         frame:SetParent(nil)
+--     end
+--     print("REMOVED ALL FRAMES AND THEY SHOULD BE DESTROYED!")
+-- end

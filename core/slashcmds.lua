@@ -21,6 +21,9 @@ function MR_slashCommands(msg, editbox)
     if command == "bags" then
         mRadial:BagPane()
     end
+    if command == "rad" then
+        mRadial:radialButtonLayout()
+    end
 end
 SlashCmdList["MW"] = MR_slashCommands
 ---------------------------------------------------------------------------------------------------
