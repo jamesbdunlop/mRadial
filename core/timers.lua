@@ -58,11 +58,13 @@ function mRadial:DoDebuffTimer(spellName, watcher)
         end
     end
     if remaining > GCD and not IsMounted() then
+        watcher.debuffTimerTextBG:Show()
         watcher.debuffTimerText:Show()
         watcher.debuffTimerText:SetText(string.format("%ds", remaining))
         watcher.iconFrame:SetAlpha(0.5)
         watcher.movetex:SetColorTexture(1, 0, 0, 1)
     else
+        watcher.debuffTimerTextBG:Hide()
         watcher.debuffTimerText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)

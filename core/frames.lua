@@ -86,6 +86,9 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.buffTimerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.buffTimerText:SetTextColor(.1, 1, .1)
 
+    frame.debuffTimerTextBG = frame:CreateTexture(nil, "BACKGROUND")
+    frame.debuffTimerTextBG:SetColorTexture(.25, 0, 0, 1)
+
     frame.debuffTimerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.debuffTimerText:SetTextColor(1, 0, 0)
 
@@ -501,6 +504,7 @@ function mRadial:radialButtonLayout()
             
             watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
             watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
+            watcher.debuffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
             
             -- TEXT
             watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
@@ -522,6 +526,7 @@ function mRadial:radialButtonLayout()
             -- We don't do ANY SHOW HIDE HERE!!
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
+            
             if cosAng <= 0 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
@@ -533,6 +538,7 @@ function mRadial:radialButtonLayout()
             watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUdOffset)
             watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUdOffset)
             end
+            watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end
     end
 end

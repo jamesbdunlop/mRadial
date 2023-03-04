@@ -35,7 +35,6 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     opt_cbox:SetType("radio")
     
     local function setValue(table, cbName, value)
-        print("Set ".. variableName .. " to: %d", value)
         MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
             -- for some reason this value is not being passed along to the func!!!???
@@ -55,7 +54,6 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
         dvalue = defaultValue
         end
     end
-    print(dvalue)
     opt_cbox.get = getValue
     
     -- set the state to the stored value or default
@@ -86,7 +84,7 @@ function mRadial:OptionsPane()
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
-    OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+    OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) end)
 
     local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
     scrollcontainer:SetLayout("Fill")
