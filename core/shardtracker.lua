@@ -2,16 +2,21 @@ function mRadial:createShardCountFrame()
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED
     local size = 200
-    ShardCounterFrame = mRadial:CreateMovableFrame(SHARD_FRAMENAME,
-                                        {size, size},
-                                        UIParent,
-                                        "",
-                                        "",
-                                        "BACKGROUND",
-                                        nil,
-                                        true, 
-                                        {size, size}, {size, size})
-
+    local exists, frame = mRadial:GetFrameByName(SHARD_FRAMENAME)
+    if not exists then 
+        ShardCounterFrame = mRadial:CreateMovableFrame(SHARD_FRAMENAME,
+                                            {size, size},
+                                            UIParent,
+                                            "",
+                                            "",
+                                            "BACKGROUND",
+                                            nil,
+                                            true, 
+                                            {size, size}, {size, size})
+    else
+        ShardCounterFrame = frame    
+    end
+    
     ShardCounterFrame:SetAlpha(.5)
     mRadial:setShardTrackerFramesSize()
     mRadial:SetMountedFrameScripts(ShardCounterFrame)

@@ -310,6 +310,15 @@ function mRadial:GetWatcher(frameName)
     return nil, -1
 end
 
+function mRadial:GetFrameByName(frameName)
+    for x = 1, #MR_ALLFRAMES do
+        local frame = MR_ALLFRAMES[x]
+        if frame ~= nil and frame:GetName() == frameName then
+            return frame, x
+        end
+    end
+    return nil, -1
+end
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
