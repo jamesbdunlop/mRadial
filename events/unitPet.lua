@@ -10,9 +10,17 @@ function mRadial:UNIT_PET(eventName, arg1, arg2, arg3)
 
     MWPetGUID = UnitGUID("pet")
     if MWPetGUID == nil then
-        mRadial:RemoveAllPetFrames()
+        for idx, frame in pairs(MR_ALLFRAMES) do
+            if frame.isPetFrame then
+                frame:Hide()
+            end
+        end
     else
-        mRadial:createPetFrames()
+        for idx, frame in pairs(MR_ALLFRAMES) do
+            if frame.isPetFrame then
+                frame:Show()
+            end
+        end
     end
 end
 
