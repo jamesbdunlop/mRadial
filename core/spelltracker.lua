@@ -29,10 +29,9 @@ function mRadial:addWatcherFrame(spellID)
         watcher:SetAttribute("spell", spellName)
         -- set the button tooltip
         watcher:SetScript("OnEnter", function(self)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetOwner(self, "ANCHOR_LEFT")
             GameTooltip:SetText("Cast ".. spellName)
-            GameTooltip:SetSize(80, 50)
-            GameTooltip:Show()
+            GameTooltip:SetSize(200, 40)
         end)
         watcher:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
@@ -95,7 +94,6 @@ function mRadial:addWatcherFrame(spellID)
                 
                 if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
                     watcher.aura:Show()
-                    -- watcher.aura:SetColorTexture(0, 1, 0, 1)
                 else
                     watcher.aura:Hide()
                 end

@@ -28,9 +28,9 @@ end
 function mRadial:setOOSShardFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MRadialSavedVariables["shardOutOfFrameSize"] or 200
-    mRadialMainFrame:SetSize(frameSize, frameSize)
-    mRadialMainFrame.iconFrame:SetSize(frameSize, frameSize)
-    mRadialMainFrame.mask:SetSize(frameSize, frameSize)
+    MRadialMainFrame:SetSize(frameSize, frameSize)
+    MRadialMainFrame.iconFrame:SetSize(frameSize, frameSize)
+    MRadialMainFrame.mask:SetSize(frameSize, frameSize)
 end
 
 function mRadial:shardtrack()
@@ -45,8 +45,8 @@ function mRadial:shardtrack()
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     if soulShards == 0 and not MAINFRAME_ISMOVING then
-        mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
+        MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
     elseif not MAINFRAME_ISMOVING then
-        mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
+        MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
     end
 end

@@ -7,7 +7,8 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
         asbutton = MRadialSavedVariables["asbuttons"]
     end
     local parentName = frameName .."_parent"
-    local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")  
+    local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")
+    parentFrame.isParentFrame = true
     -- parentFrame:SetParentKey(parentName)
 
     local frame
@@ -26,6 +27,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame:SetPoint("CENTER", parent, "CENTER", 0, 0)
     frame:RegisterForDrag("LeftButton")
     frame:SetSize(sizeX, sizeY)
+    parentFrame.baseFrame = frame
     
     -- TEXTURE
     frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
@@ -122,7 +124,7 @@ function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
     local watcher = mRadial:CreateIconFrame(frameName, 
                                             {size, size}, 
-                                            mRadialMainFrame, 
+                                            MRadialMainFrame, 
                                             "BackdropTemplate", 
                                             iconPath, 
                                             "ARTWORK", 
@@ -147,7 +149,6 @@ function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     watcher.aura:SetPoint("CENTER", 0, 0)
     watcher.aura:SetTexture("Interface/COMMON/portrait-ring-withbg-highlight", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     watcher.aura:Hide()
-    -- watcher.aura:AddMaskTexture(watcher.mask)
 
     -- special tag for helping determine this is a raidal button.
     watcher.isWatcher = true
@@ -210,40 +211,54 @@ function mRadial:SetUIMovable(isMovable)
     if isMovable == nil then
         isMovable=MRadialSavedVariables["moveable"] or false
     end
-
     MAINFRAME_ISMOVING = isMovable
-    for _, frame in pairs(MR_ALLFRAMES) do
-        if isMovable and not frame.isWatcher then
-            frame:EnableMouse(isMovable)
-            frame:SetMovable(isMovable)
-            frame.movetex:Show()
-            frame.movetex:SetColorTexture(0, 0, 1, .5)
-            mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
-            mRadialMainFrame.crosshair:Show()
-        elseif not isMovable and not frame.isWatcher then
-            frame:EnableMouse(isMovable)
-            frame:SetMovable(isMovable)
-            frame.movetex:SetColorTexture(0, 0, 0, 0)
-            frame.movetex:Hide()
-            mRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
-            mRadialMainFrame.crosshair:Hide()
-        elseif frame.isWatcher then
-            if isMovable then
-                frame.readyText:Show()
-                frame.iconFrame:Show()
-                frame.countText:Show()
-                frame.cooldownText:Show()
-                frame.buffTimerText:Show()
-                frame.buffTimerTextBG:Show()
-                frame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
-                frame.buffTimerText:SetText("00")
-                frame.countText:SetText("00")
-                frame.cooldownText:SetText("00")
-                frame.movetex:SetColorTexture(1, 0, 0, 1)
+    
+    if isMovable then
+        MRadialMainFrame.crosshair:Show()
+        MRadialMainFrame.movetex:Show()
+        MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+    else
+        MRadialMainFrame.crosshair:Hide()
+        MRadialMainFrame.movetex:Hide()
+        MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
+    end
+
+    for _, pframe in pairs(MR_PARENTFRAMES) do
+        if isMovable then
+            if not pframe.baseFrame.isWatcher then
+                pframe.baseFrame.movetex:Show()
+                pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .5)
+                pframe.baseFrame:EnableMouse(isMovable)
+                pframe.baseFrame:SetMovable(isMovable)
+            else
+                pframe.baseFrame.readyText:Show()
+                pframe.baseFrame.countText:Show()
+                pframe.baseFrame.cooldownText:Show()
+                pframe.baseFrame.buffTimerText:Show()
+                pframe.baseFrame.buffTimerTextBG:Show()
+                pframe.baseFrame.debuffTimerTextBG:Show()
+
+                pframe.baseFrame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
+                pframe.baseFrame.buffTimerText:SetText("00")
+                pframe.baseFrame.countText:SetText("00")
+                pframe.baseFrame.cooldownText:SetText("00")
+            end
+        else
+            if not pframe.baseFrame.isWatcher then
+                pframe.baseFrame.movetex:Hide()
+                pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
+                pframe.baseFrame:EnableMouse(isMovable)
+                pframe.baseFrame:SetMovable(isMovable)
+            else
+                pframe.baseFrame.readyText:Hide()
+                pframe.baseFrame.countText:Hide()
+                pframe.baseFrame.cooldownText:Hide()
+                pframe.baseFrame.buffTimerText:Hide()
+                pframe.baseFrame.buffTimerTextBG:Hide()
+                pframe.baseFrame.debuffTimerTextBG:Hide()
             end
         end
     end
-
 end
 
 function mRadial:RestoreFrame(frameName, frame)
@@ -306,7 +321,7 @@ function mRadial:CreateMainFrame()
     local ooShardsMult = MRadialSavedVariables.shardOutOfFrameSize or 150
     local size = radius*ooShardsMult
     -- Main Frame
-    mRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
+    MRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
                                                     {size, size},
                                                     UIParent,
                                                     "BackdropTemplate",
@@ -319,13 +334,14 @@ function mRadial:CreateMainFrame()
     mRadial:setOOSShardFramesSize()
 
     -- Create an invisible crosshair indicator for when we are moving the UI
-    mRadialMainFrame.crosshair = mRadialMainFrame:CreateTexture("crossHair")
-    mRadialMainFrame.crosshair:SetPoint("CENTER", 0, 0)
+    MRadialMainFrame.crosshair = MRadialMainFrame:CreateTexture("crossHair")
+    MRadialMainFrame.crosshair:SetPoint("CENTER", 0, 0)
+    
     local crossHairPath = MEDIAPATH .."\\crosshair.blp"
-    mRadialMainFrame.crosshair:SetTexture(crossHairPath)
-    mRadialMainFrame.crosshair:SetSize(25, 25)
-    mRadialMainFrame.crosshair:Hide()
-    mRadialMainFrame:Show()
+    MRadialMainFrame.crosshair:SetTexture(crossHairPath)
+    MRadialMainFrame.crosshair:SetSize(25, 25)
+    MRadialMainFrame.crosshair:Hide()
+    MRadialMainFrame:Show()
 end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
@@ -405,14 +421,6 @@ function mRadial:createPetFrames()
                 plast = 0
             end)
             
-        end
-    end
-end
-
-function mRadial:ShowPetFrames()
-    for _, frame in pairs(MR_ALLFRAMES) do
-        if frame.isPetFrame then
-            frame:Show()
         end
     end
 end
@@ -521,7 +529,7 @@ function mRadial:radialButtonLayout()
             watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            watcher:SetPoint("CENTER", mRadialMainFrame, "CENTER", w, h)
+            watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
             
             -- We don't do ANY SHOW HIDE HERE!!
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
@@ -546,19 +554,16 @@ end
 function mRadial:RemoveAllParentFrames()
     -- Used by the InitUI to clear all existing frames for a full refresh on spec changes etc
     if MR_PARENTFRAMES == nil then
+        print("MR_PARENTFRAMES was nil!?????")
         return
     end
 
     for x = 1, #MR_PARENTFRAMES do
         local frame = MR_PARENTFRAMES[x]
-        local children = frame:GetChildren()
-        if children ~= nil then
-            for idx, childFrame in ipairs(children) do
-                childFrame:Hide()
-                childFrame:SetParent(nil)
-            end
-        end
+        frame.baseFrame:Hide()
+        frame.baseFrame:SetParent(nil)
         frame:Hide()
         frame:SetParent(nil)
     end
+    print("REMOVED ALL FRAMES AND THEY SHOULD BE DESTROYED!")
 end
