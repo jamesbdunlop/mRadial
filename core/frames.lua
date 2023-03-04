@@ -399,7 +399,7 @@ function mRadial:createWatcherFrame(spellID)
                     watcher.movetex:Hide()
                 end
             end
-            mRadial:DoDebuffTimer(spellName, watcher)
+            mRadial:DoDebuffTimer(spellName, watcher, iconPath)
             mRadial:DoSpellFrameCooldown(spellName, watcher)
             -- LINKED SPELLS!!!!
             -- I need a way to link a spell to another, perhaps a manually written table for now
@@ -712,8 +712,8 @@ function mRadial:RadialButtonLayout()
             watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
             
             watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
-            watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
-            watcher.debuffTimerTextBG:SetSize(watcherFrameSize/1.5, watcherFrameSize/1.5)
+            watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
+            watcher.debuffTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
             
             -- TEXT
             watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
@@ -723,11 +723,11 @@ function mRadial:RadialButtonLayout()
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
             
             -- SET FONT
-            watcher.buffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.debuffTimerText:SetFont(customFontPath, timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.countText:SetFont(customFontPath, countFontSize, "THICKOUTLINE")
-            watcher.cooldownText:SetFont(customFontPath, coolDownFontSize, "THICKOUTLINE")
-            watcher.readyText:SetFont(customFontPath, readyFontSize, "THICKOUTLINE")
+            watcher.buffTimerText:SetFont(customFontPath,  watcherFrameSize*.5+timerFontSize, "OUTLINE, MONOCHROME")
+            watcher.debuffTimerText:SetFont(customFontPath,  watcherFrameSize*.5+timerFontSize, "OUTLINE, MONOCHROME")
+            watcher.countText:SetFont(customFontPath,  watcherFrameSize*.5+countFontSize, "THICKOUTLINE")
+            watcher.cooldownText:SetFont(customFontPath,  watcherFrameSize*.5+coolDownFontSize, "THICKOUTLINE")
+            watcher.readyText:SetFont(customFontPath, watcherFrameSize*.5+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
             watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)

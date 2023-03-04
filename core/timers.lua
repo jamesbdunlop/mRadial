@@ -42,7 +42,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     end
 end
 
-function mRadial:DoDebuffTimer(spellName, watcher)
+function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
     -- DEBUFF TIMERS
     if MAINFRAME_ISMOVING then
         return
@@ -59,8 +59,12 @@ function mRadial:DoDebuffTimer(spellName, watcher)
     end
     if remaining > GCD and not IsMounted() then
         watcher.debuffTimerTextBG:Show()
+        watcher.debuffTimerTextBG:SetTexture(iconPath)
+        watcher.debuffTimerTextBG:SetAlpha(.5)
+
         watcher.debuffTimerText:Show()
         watcher.debuffTimerText:SetText(string.format("%ds", remaining))
+
         watcher.iconFrame:SetAlpha(0.5)
         watcher.movetex:SetColorTexture(1, 0, 0, 1)
     else
@@ -121,6 +125,7 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
             watcher.buffTimerTextBG:Show()
             watcher.buffTimerText:SetTextColor(.1, 1, .1)
             watcher.buffTimerTextBG:SetTexture(iconPath)
+            watcher.buffTimerTextBG:SetAlpha(.5)
             
             local minutes, seconds =  mRadial:GetAuraTimeLeft(expirationTime)
             if minutes~= nil and minutes > 0 then
