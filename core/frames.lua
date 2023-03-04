@@ -203,6 +203,7 @@ function mRadial:SetMountedFrameScripts(frame)
 end
 
 function mRadial:SetUIMovable(isMovable)
+    print("isMovable: %d", isMovable)
     --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
         isMovable=MRadialSavedVariables["moveable"] or false
@@ -414,11 +415,13 @@ function mRadial:ShowPetFrames()
     end
 end
 
-function mRadial:HidePetFrames()
-    local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
+function mRadial:TogglePetFrameVisibility()
+    local isVisible = MRadialSavedVariables["hidePetFrame"] or false
     for _, frame in pairs(MR_ALLFRAMES) do
-        if frame.isPetFrame and hidePetFrame then
+        if frame.isPetFrame and isVisible then
             frame:Hide()
+        elseif frame.isPetFrame and not isVisible then
+            frame:Show()
         end
     end
 end

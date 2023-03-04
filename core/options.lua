@@ -30,28 +30,30 @@ end
 
 local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT)
     local AceGUI = LibStub("AceGUI-3.0")
-    local playerName = UnitName("player")
-    local playerSpec = GetSpecialization()
-
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
-    
+    opt_cbox:SetType("radio")
     
     local function setValue(table, cbName, value)
         MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
+            -- for some reason this value is not being passed along to the func!!!???
             toexec(value)
         end
     end
 
     local function getValue(info)
-        local value = MRadialSavedVariables[variableName]
-        return value
+        return opt_cbox:GetValue()
     end
     
     opt_cbox:SetValue(getValue())
     opt_cbox:SetCallback("OnValueChanged", setValue)
-    opt_cbox.get = getValue
+
+    local dvalue = MRadialSavedVariables[variableName]
+    if dvalue == nil then
+        dvalue = defaultValue
+    end
+    opt_cbox.get = dvalue
     
     if descAsTT then
         opt_cbox:SetCallback("OnEnter", function(widget, event)
@@ -98,8 +100,8 @@ function mRadial:OptionsPane()
     generalGroup:SetLayout("Flow")
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
-    createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, nil)
-    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.HidePetFrames)
+    createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.InitUI)
+    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
     createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.setPetFramePosAndSize)
