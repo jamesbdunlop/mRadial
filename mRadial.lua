@@ -44,7 +44,7 @@ function mRadial:InitUI()
     mRadial:createWatcherFrames()
     mRadial:radialButtonLayout()
     mRadial:createPetFrames()
-    mRadial:SetUIMovable(false)
+    mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     mRadial:shardtrack()
 end
 

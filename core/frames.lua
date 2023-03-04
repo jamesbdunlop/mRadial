@@ -455,7 +455,7 @@ end
 -- Watcher radial layout.
 
 function mRadial:radialButtonLayout()
-    print("Performing radial layout now.")
+    -- print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local cfontName = "Accidental Presidency.ttf"
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName

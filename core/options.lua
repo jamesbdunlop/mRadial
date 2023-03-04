@@ -84,7 +84,7 @@ function mRadial:OptionsPane()
     OptionsPane:SetWidth(800)
     OptionsPane:SetHeight(400)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName()) 
+    OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
     OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 
