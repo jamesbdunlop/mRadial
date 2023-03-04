@@ -314,10 +314,10 @@ function mRadial:GetFrameByName(frameName)
     for x = 1, #MR_ALLFRAMES do
         local frame = MR_ALLFRAMES[x]
         if frame ~= nil and frame:GetName() == frameName then
-            return frame, x
+            return true, frame
         end
     end
-    return nil, -1
+    return false, nil
 end
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
@@ -461,6 +461,14 @@ function mRadial:createWatcherFrames()
     if activeTalentTreeSpells == nil then
         return
     end
+    -- hide all for spec changes.
+    for x, frame in ipairs(MR_WATCHERFRAMES) do
+        frame:Hide()
+        local pframe = frame:GetParent()
+        if pframe ~= nil then
+            pframe:Hide()
+        end
+    end
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
         local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
@@ -476,7 +484,7 @@ function mRadial:createWatcherFrames()
                 local frame = mRadial:createWatcherFrame(spellID)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
-            elseif not isActive and mRadial:WatcherExists(frameName) then
+            elseif not isActive and isKnown and mRadial:WatcherExists(frameName) then
                 local frame, idx = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
                     local pframe = frame:GetParent()
