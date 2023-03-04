@@ -48,6 +48,11 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame.movetex:SetPoint("CENTER", 0, 0)
     frame.movetex:SetAllPoints(frame)
     frame.movetex:SetColorTexture(0, 0, 0, 0)
+    frame.movetext = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    frame.movetext:SetTextColor(1, 1, 1)
+    frame.movetext:SetPoint("CENTER", frame.iconFrame, "TOP", 0, 0)
+    frame.movetext:SetText(frame:GetName())
+    frame.movetext:Hide()
 
     if allPoints ~= nil then
         frame.iconFrame:SetAllPoints(frame)
@@ -226,6 +231,7 @@ function mRadial:SetUIMovable(isMovable)
             if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:Show()
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .5)
+                pframe.baseFrame.movetext:Show()
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
             else
@@ -245,6 +251,7 @@ function mRadial:SetUIMovable(isMovable)
             if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:Hide()
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
+                pframe.baseFrame.movetext:Hide()
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
             else
@@ -503,16 +510,20 @@ function mRadial:CreateMainFrame()
     local radius = MRadialSavedVariables.radius or DEFAULT_RADIUS
     local ooShardsMult = MRadialSavedVariables.shardOutOfFrameSize or 150
     local size = radius*ooShardsMult
+    local exists, frame = mRadial:GetFrameByName(MAINBG_FRAMENAME)
     -- Main Frame
-    MRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
-                                                    {size, size},
-                                                    UIParent,
-                                                    "BackdropTemplate",
-                                                    "Interface/Tooltips/UI-Tooltip-Background",
-                                                    "ARTWORK",
-                                                    "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
-                                                    false, {size, size}, {size, size})
-
+    if not exists then
+        MRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
+                                                        {size, size},
+                                                        UIParent,
+                                                        "BackdropTemplate",
+                                                        "Interface/Tooltips/UI-Tooltip-Background",
+                                                        "ARTWORK",
+                                                        "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+                                                        false, {size, size}, {size, size})
+    else
+        MRadialMainFrame = frame
+    end
     -- Out of shards masks and textures are set on this base frame, so we scale this for the red out of shards indicator
     mRadial:setOOSShardFramesSize()
 

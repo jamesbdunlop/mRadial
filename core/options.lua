@@ -160,7 +160,7 @@ function mRadial:OptionsPane()
     createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
     
     local spellsGroup = AceGUI:Create("InlineGroup")
-    spellsGroup:SetTitle("Radial Spells: ")
+    spellsGroup:SetTitle("Assign Spells To Radial: ")
     spellsGroup:SetFullWidth(true)
     spellsGroup:SetLayout("Flow")
 
