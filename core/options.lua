@@ -35,6 +35,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     opt_cbox:SetType("radio")
     
     local function setValue(table, cbName, value)
+        print("Set ".. variableName .. " to: %d", value)
         MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
             -- for some reason this value is not being passed along to the func!!!???
@@ -45,15 +46,21 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     local function getValue(info)
         return opt_cbox:GetValue()
     end
-    
-    opt_cbox:SetValue(getValue())
-    opt_cbox:SetCallback("OnValueChanged", setValue)
 
     local dvalue = MRadialSavedVariables[variableName]
     if dvalue == nil then
+        if defaultValue == nil then
+            dvalue = false
+        else
         dvalue = defaultValue
+        end
     end
-    opt_cbox.get = dvalue
+    print(dvalue)
+    opt_cbox.get = getValue
+    
+    -- set the state to the stored value or default
+    opt_cbox:SetValue(dvalue)
+    opt_cbox:SetCallback("OnValueChanged", setValue)
     
     if descAsTT then
         opt_cbox:SetCallback("OnEnter", function(widget, event)
@@ -151,7 +158,7 @@ function mRadial:OptionsPane()
             -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
             local spellName = spellData[1]
             desc = GetSpellDescription(spellData[2])
-            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, true, mRadial.InitUI, true)
+            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.InitUI, true)
         end
     end
 

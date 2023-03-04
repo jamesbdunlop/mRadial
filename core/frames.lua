@@ -203,7 +203,6 @@ function mRadial:SetMountedFrameScripts(frame)
 end
 
 function mRadial:SetUIMovable(isMovable)
-    print("isMovable: %d", isMovable)
     --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
         isMovable=MRadialSavedVariables["moveable"] or false
