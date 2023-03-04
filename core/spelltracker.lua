@@ -135,4 +135,5 @@ function mRadial:addWatcherFrame(spellID)
         last = 0
     end)
 
+    return watcher
 end

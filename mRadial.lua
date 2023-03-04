@@ -6,6 +6,8 @@ UdOffset = 0
 
 MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
+MR_WATCHERFRAMES = {}
+MR_PETFAMES = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -44,7 +46,7 @@ end
 
 function mRadial:UpdateUI()
     mRadial:createWatcherFrames()
-    mRadial:radialButtonLayout()
+    mRadial:RadialButtonLayout()
 end
 
 function mRadial:OnInitialize()

@@ -9,7 +9,6 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     local parentName = frameName .."_parent"
     local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")
     parentFrame.isParentFrame = true
-    -- parentFrame:SetParentKey(parentName)
 
     local frame
     if asbutton then
@@ -118,7 +117,6 @@ end
 
 function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
-    
     local asButtons = MRadialSavedVariables["asbuttons"] or false
     local size = 200
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
@@ -293,8 +291,8 @@ function mRadial:RestoreFrame(frameName, frame)
 end
 
 function mRadial:WatcherExists(frameName)
-    for x = 1, #MR_ALLFRAMES do
-        local watcher = MR_ALLFRAMES[x]
+    for x = 1, #MR_WATCHERFRAMES do
+        local watcher = MR_WATCHERFRAMES[x]
         if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
             return true
         end
@@ -303,13 +301,150 @@ function mRadial:WatcherExists(frameName)
 end
 
 function mRadial:GetWatcher(frameName)
-    for x = 1, #MR_ALLFRAMES do
-        local watcher = MR_ALLFRAMES[x]
+    for x = 1, #MR_WATCHERFRAMES do
+        local watcher = MR_WATCHERFRAMES[x]
         if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
             return watcher, x
         end
     end
     return nil, -1
+end
+
+---------------------------------------------------------------------------------------------------
+-- Spell watchers for timers/cooldowns.
+local last = 0
+function mRadial:createWatcherFrame(spellID)
+    -- Create the watcher frame
+    -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
+    -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
+
+    -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
+    local spellName, _, iconPath, _, _, _, spellID, _ = GetSpellInfo(spellID)
+    local frameName = string.format("Frame_%s", spellName)
+
+    local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
+    watcher.spellName = spellName
+    ------------------------------------------
+    -- SPELL INFORMATION TO USE FOR TIMERS ETC
+    local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
+    -- local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
+    -- local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
+    -- local disabled = C_SpellBook.IsSpellDisabled(spellID)
+
+    ----------------------------------------------
+    -- Assign the spell to cast if we're a button!
+    local asButtons = MRadialSavedVariables["asbuttons"] or false
+    if asButtons then
+        watcher:SetAttribute("spell", spellName)
+        -- set the button tooltip
+        watcher:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+            GameTooltip:SetText("Cast ".. spellName)
+            GameTooltip:SetSize(200, 40)
+        end)
+        watcher:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
+    
+    watcher:SetScript("OnUpdate", function(self, elapsed)
+        last = last + elapsed
+        if last <= .25 then
+            return
+        end
+
+        if MAINFRAME_ISMOVING then
+            return
+        end
+        
+        if not MAINFRAME_ISMOVING then 
+            if isUnitPowerDependant then
+                -- Do we have enough shards to allow this to show timers / cast from?
+                local unitpower = 0
+                if mRadial:IsWarlock() then
+                    unitpower = UnitPower("player", 7) -- soul shards
+                else
+                    unitpower = UnitPower("player") -- hopefully the rest list insanity etc
+                end
+    
+                if unitpower == 0 or unitpower < UnitPowerCount then
+                    watcher.readyText:SetText(NOSSSTR)
+                    watcher.readyText:SetTextColor(1, 0, 0)
+                    watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                    watcher.buffTimerTextBG:Hide()
+                    last = 0
+                    if not IsMounted() then
+                        watcher.movetex:Show()
+                    end
+                    return
+                else
+                    watcher.readyText:SetText(READYSTR)
+                    watcher.readyText:SetTextColor(0, 1, 0)
+                    watcher.movetex:Hide()
+                end
+            end
+            mRadial:DoDebuffTimer(spellName, watcher)
+            mRadial:DoSpellFrameCooldown(spellName, watcher)
+            -- LINKED SPELLS!!!!
+            -- I need a way to link a spell to another, perhaps a manually written table for now
+            -- as I can't find anythign in the API
+            -- in the cast of a linked spell I need to know that eg
+                -- when VoidTorrent is cast, we have a buff VoidForm running we want to track, and cooldowns for VoidBolts during that time.
+                -- and when we run out of VoidForm we then end up showing the cooldown for VoidTorrent.
+                -- relationships = {spellName, buffName, swapSpellNameTo}
+            local getLinked = linkedSpells[spellName] or nil
+            
+            if getLinked ~= nil then 
+                local linkedSpellName = getLinked[1] 
+                local linkedSpellID = getLinked[2]
+                local linkedIconPath
+                _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
+                mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
+                
+                if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
+                    watcher.aura:Show()
+                else
+                    watcher.aura:Hide()
+                end
+            else
+                mRadial:DoBuffTimer(spellName, watcher, iconPath)
+                watcher.aura:Hide()
+            end
+
+            -- Now set the count on the frame regardless.
+            local count = 0
+            if getLinked ~= nil then
+                local linkedSpellName = getLinked[1] 
+                local linkedSpellID = getLinked[2]
+                local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
+                if  hasActiveBuff then
+                    count = scount
+                end
+            else
+                count = GetSpellCount(spellID)
+            end
+
+            watcher.countText:SetText("")
+            if count ~= 0 and not IsMounted() then
+                watcher.countText:Show()
+                watcher.countText:SetText(tostring(count))
+                -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
+                -- else we hide the ready for that spell.
+                if spellName == SUMMONSOULKEEPER_SPELLNAME then
+                    watcher.readyText:Show()
+                end
+            else
+                if spellName == SUMMONSOULKEEPER_SPELLNAME then
+                    watcher.readyText:Hide()
+                end
+            end
+
+        end
+        
+        last = 0
+    end)
+
+    return watcher
 end
 
 function mRadial:createWatcherFrames()
@@ -324,21 +459,22 @@ function mRadial:createWatcherFrames()
         if spellName ~= nil then 
             isActive = MRadialSavedVariables["isActive"..spellName] or false
             
-            local isKnown  = IsPlayerSpell(spellId)
+            local isKnown = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
             if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                 -- print("Adding watcherFrame for  %s", spellName)
-                mRadial:addWatcherFrame(spellID)
+                local frame = mRadial:createWatcherFrame(spellID)
+                MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
             elseif not isActive and mRadial:WatcherExists(frameName) then
                 local frame, idx = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
-                    frame:GetParent():SetParent(nil)
-                    frame:GetParent():Hide()
-                    frame:SetParent(nil)
+                    local pframe = frame:GetParent()
+                    if pframe ~= nil then
+                        pframe:Hide()
+                    end
                     frame:Hide()
-                    MR_ALLFRAMES[idx] = nil
                 end
             end
         end
@@ -377,7 +513,7 @@ end
 -- PET FRAMES
 local plast = 0
 function mRadial:createPetFrames()
-    -- mRadial:RemoveAllPetFrames()
+    mRadial:RemoveAllPetFrames()
     -- Clear out existing
     local petSpellData = {}
     if mRadial:IsFelguardSummoned() then 
@@ -450,7 +586,7 @@ function mRadial:createPetFrames()
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
             end)
-            
+            MR_PETFAMES[#MR_PETFAMES+1] = frame
         end
     end
 end
@@ -466,24 +602,19 @@ function mRadial:TogglePetFrameVisibility()
     end
 end
 
--- function mRadial:RemoveAllPetFrames()
---     for idx, frame in pairs(MR_ALLFRAMES) do
---         if frame.isPetFrame then
---             local children = frame:GetChildren()
---             if children ~= nil then
---                 for childFrame in children do
---                     childFrame:Hide()
---                     childFrame:SetParent(nil)
---                 end
---             end
---             MR_ALLFRAMES[idx] = nil
---             frame:Hide()
---             frame:SetParent(nil)
---         end
---     end
--- end
+function mRadial:RemoveAllPetFrames()
+    for idx, frame in pairs(MR_PETFAMES) do
+        if frame.isPetFrame then
+            local pframe = frame:GetParent()
+            if pframe ~= nil then
+                pframe:Hide()
+            end
+            frame:Hide()
+        end
+    end
+end
 
-function mRadial:setPetFramePosAndSize()
+function mRadial:SetPetFramePosAndSize()
     local frameSize = MRadialSavedVariables["PetFramesSize"] or 45
     for idx, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
@@ -495,7 +626,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
 
-function mRadial:radialButtonLayout()
+function mRadial:RadialButtonLayout()
     -- print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local cfontName = "Accidental Presidency.ttf"
@@ -523,20 +654,26 @@ function mRadial:radialButtonLayout()
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
-    local count = 1
-    for frameName, frame in ipairs(MR_ALLFRAMES) do
-        if frame ~= nil then
-            count = count + 1
+    ACTIVEWATCHERS = {}
+    for x=1, #MR_WATCHERFRAMES do
+        local watcher = MR_WATCHERFRAMES[x]
+        watcher:Hide()
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        if isActive then
+            ACTIVEWATCHERS[#ACTIVEWATCHERS+1] = watcher
         end
     end
-    local angleStep = math.pi / count + spread
-    for x = 1, count do
+
+    local angleStep = math.pi / #ACTIVEWATCHERS + spread
+    for x = 1, #ACTIVEWATCHERS do
+        local watcher = ACTIVEWATCHERS[x]
+        watcher:Show()
+        watcher:GetParent():Show()
         local angle = (x-1)*angleStep + offset*math.pi
         local sinAng = math.sin(angle)
         local cosAng = math.cos(angle)
         local w = cosAng*radius*widthDeform
         local h = sinAng*radius*heightDeform
-        local watcher = MR_ALLFRAMES[x]
         if watcher ~= nil and watcher.isWatcher then
             -- print("Found watcher frame! %s", watcher:GetName())
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
@@ -586,20 +723,3 @@ function mRadial:radialButtonLayout()
         end
     end
 end
----------------------------------------------------------------------------------------------------
--- function mRadial:RemoveAllParentFrames()
---     -- Used by the InitUI to clear all existing frames for a full refresh on spec changes etc
---     if MR_PARENTFRAMES == nil then
---         print("MR_PARENTFRAMES was nil!?????")
---         return
---     end
-
---     for x = 1, #MR_PARENTFRAMES do
---         local frame = MR_PARENTFRAMES[x]
---         frame.baseFrame:Hide()
---         frame.baseFrame:SetParent(nil)
---         frame:Hide()
---         frame:SetParent(nil)
---     end
---     print("REMOVED ALL FRAMES AND THEY SHOULD BE DESTROYED!")
--- end

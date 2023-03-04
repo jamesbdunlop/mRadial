@@ -5,7 +5,7 @@
     -- print("arg2: %s", arg2)
     -- print("arg3: %s", arg3)
     -- if arg1 == "MOUNT" then
-    --     mRadial:radialButtonLayout()
+    --     mRadial:RadialButtonLayout()
     -- end
 -- end
 

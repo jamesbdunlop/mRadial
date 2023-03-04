@@ -79,6 +79,9 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
             GameTooltip:SetWidth(80)
             GameTooltip:Show()
         end)
+        opt_cbox:SetCallback("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
     else
         opt_cbox:SetDescription(descrip)
     end

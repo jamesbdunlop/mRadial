@@ -22,7 +22,7 @@ function MR_slashCommands(msg, editbox)
         mRadial:BagPane()
     end
     if command == "rad" then
-        mRadial:radialButtonLayout()
+        mRadial:RadialButtonLayout()
     end
 end
 SlashCmdList["MW"] = MR_slashCommands
