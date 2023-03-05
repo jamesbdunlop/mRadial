@@ -180,7 +180,7 @@ function mRadial:OptionsPane()
     OptionsPane = AceGUI:Create("Window")
     local optionHeight = 200
     local dropDownHeight = 200
-    OptionsPane:SetWidth(800)
+    OptionsPane:SetWidth(650)
     OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
