@@ -17,6 +17,8 @@ MR_FONTS[2] = "HARRYP__.ttf"
 MR_FONTS[3] = "Nueva Std Cond.ttf"
 MR_FONTS[4] = "Oswald-Regular.ttf"
 MR_FONTS[5] = "Mochalatte-JRorB.ttf"
+MR_FONTS[6] = "HoodBrothers-Yo9y.ttf"
+
 
 MAINBG_FRAMENAME = "mRadialBGFrame"
 SHARD_FRAMENAME = "MWShardFrame"

@@ -135,6 +135,7 @@ function mRadial:OptionsPane()
                 local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
                 testFontFrame:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
                 mRadial:UpdateUI()
+                mRadial:SetPetFramePosAndSize()
             end)
             local currentFont = MRadialSavedVariables["Font"] or MR_DEFAULT_FONT
             for x, fontName in ipairs(MR_FONTS) do
@@ -204,9 +205,9 @@ function mRadial:OptionsPane()
     end
 
     OptionsPane = AceGUI:Create("Window")
-    local optionHeight = 200
+    local optionHeight = 640
     local dropDownHeight = 300
-    OptionsPane:SetWidth(650)
+    OptionsPane:SetWidth(850)
     OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
@@ -238,11 +239,17 @@ function mRadial:OptionsPane()
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
     createCheckBox(generalGroup, "AsButtons: (requires reloadui) ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
-    createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
-    createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
-    createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
-    createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
     base:AddChild(generalGroup)
+    
+    local wlckGroup = AceGUI:Create("InlineGroup")
+    wlckGroup:SetTitle("Warlock Specific - Other classes can ignore.")
+    wlckGroup:SetFullWidth(true)
+    wlckGroup:SetLayout("Flow")
+    createCheckBox(wlckGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
+    createSlider(wlckGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
+    createSlider(wlckGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
+    createSlider(wlckGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
+    base:AddChild(wlckGroup)
 
     local optDpDwn = AceGUI:Create("DropdownGroup")
     optDpDwn:SetTitle("Options:")
