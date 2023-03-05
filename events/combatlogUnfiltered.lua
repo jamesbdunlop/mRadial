@@ -1,7 +1,12 @@
 function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
     local iuzenName = "Iuzenashamme"
+    local playerName = UnitName("player")
+    local myName = "Macka"
     if subevent == "UNIT_DIED" or subevent == "UNIT_DESTROYED" or subevent == "UNIT_DISSIPATES" then
+        if playerName ~= myName then
+            return
+        end
         if destName == iuzenName then
             SendChatMessage(iuzenName .. " DIED AGAIN!", "PARTY")
         end
