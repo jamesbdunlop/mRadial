@@ -211,7 +211,7 @@ function mRadial:OptionsPane()
     generalGroup:SetLayout("Flow")
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
-    createCheckBox(generalGroup, "AsButtons: ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
+    createCheckBox(generalGroup, "AsButtons: (requires reloadui) ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
     createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
