@@ -10,6 +10,12 @@ READYTEXT = "RDY"
 GCD = 1 --w as 1.5
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
+MR_DEFAULT_FONT = "Accidental Presidency.ttf"
+MR_FONTS = {}
+MR_FONTS[1] = "Accidental Presidency.ttf"
+MR_FONTS[2] = "HARRYP__.ttf"
+MR_FONTS[3] = "Nueva Std Cond.ttf"
+MR_FONTS[4] = "Oswald-Regular.ttf"
 
 MAINBG_FRAMENAME = "mRadialBGFrame"
 SHARD_FRAMENAME = "MWShardFrame"
@@ -74,3 +80,4 @@ linkedSpells[VOIDERUPTION_SPELLNAME] ={VOIDFORM_SPELLNAME, 1386550}
 linkedSpells[MINDSEAR_SPELLNAME] = {MINDDEVOURER_SPELLNAME, 135740}
 linkedSpells[MINDFLAY_SPELLNAME] = {MINDFLAYINSANITY_SPELLNAME, 391401}
 linkedSpells[CONFLAG_SPELLNAME] = {BACKDRAFT_SPELLNAME, 117828}
+-- lava surge  islinked to lava burst

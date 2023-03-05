@@ -120,6 +120,31 @@ function mRadial:OptionsPane()
             createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
             scrollFrame:AddChild(radialGroup)
         elseif idx == 2 then
+            local testFontFrame = AceGUI:Create("Label")
+            testFontFrame:SetText("AaBbCcDdEeFfGgHh--~~!!,=*12345")
+            local fontList = MR_FONTS
+            local fontDpDwn = AceGUI:Create("DropdownGroup")
+            fontDpDwn:SetTitle("Font:")
+            fontDpDwn:SetGroupList(fontList)
+            fontDpDwn:SetLayout("Flow")
+            fontDpDwn:SetFullWidth(true)
+            fontDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
+                local selectedFont = fontList[groupIndex]
+                MRadialSavedVariables['Font'] = selectedFont
+                local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+                local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+                testFontFrame:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
+                mRadial:UpdateUI()
+            end)
+            local currentFont = MRadialSavedVariables["Font"] or MR_DEFAULT_FONT
+            for x, fontName in ipairs(MR_FONTS) do
+                if fontName == currentFont then
+                    fontDpDwn:SetGroup(x)
+                end
+            end
+            fontDpDwn:AddChild(testFontFrame)
+            scrollFrame:AddChild(fontDpDwn)
+            
             local timerGroup = AceGUI:Create("InlineGroup")
             timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
             timerGroup:SetFullWidth(true)

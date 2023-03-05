@@ -602,8 +602,9 @@ function mRadial:createPetFrames()
                                                 true, 
                                                 {size, size}, {size, size},
                                                 true)
-          
-            frame.cooldownText:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE, MONOCHROME")
+            local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+            local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+            frame.cooldownText:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
@@ -657,7 +658,7 @@ end
 function mRadial:RadialButtonLayout()
     -- print("Performing radial layout now.")
     --- Handles adding the frames around a unit circle cause I like it better this way....
-    local cfontName = "Accidental Presidency.ttf"
+    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
     
     local radius = MRadialSavedVariables.radius or 100

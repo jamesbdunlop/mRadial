@@ -71,10 +71,10 @@ function mRadial:OnEnable()
     local playerName = UnitName("player")
     local LDB = LibStub("LibDataBroker-1.1")
     local LDBIcon = LibStub("LibDBIcon-1.0")
-    print("~~~~~~~~~~~~~~~~~~~~")
+    print("----------------------")
     print("Welcome " .. playerName .. " -- mRadial")
     print("/mw slash commands are: move, lock, options")
-    print("~~~~~~~~~~~~~~~~~~~~")
+    print("----------------------")
     
     local addonName = "mRadial"
     local addonIcon = MEDIAPATH.."\\miniMapIcon"
