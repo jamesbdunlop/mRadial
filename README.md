@@ -5,7 +5,7 @@ This addon creates a little radial frame for you to assign spells to to track co
 
 ![Alt text](/media/ss_lock01.png?raw=true "Warlock Example")
 
-![Alt text](/media/ss_shadPriest01.png?raw=true "ShadowPriest Example")
+![Alt text](/media/ss_shadpriest01.png?raw=true "ShadowPriest Example")
 
 Per spec setups avail:
 ![Alt text](/media/specChange.gif?raw=true "Spec Change Example")
