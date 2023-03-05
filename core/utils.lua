@@ -153,7 +153,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
     local activeSpellData = mRadial:GetTalentTreeSpellIDList()
     -- lower level classes might not have an active talent tree.
     if activeSpellData == nil then
-        return
+        activeSpellData= {}
     end
 
     local active = {}

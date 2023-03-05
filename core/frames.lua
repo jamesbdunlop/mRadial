@@ -666,10 +666,10 @@ function mRadial:RadialButtonLayout()
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
 
-    local countFontSize = MRadialSavedVariables.countFontSize or 22
-    local readyFontSize = MRadialSavedVariables.readyFontSize or 22
-    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or 22
-    local timerFontSize = MRadialSavedVariables.timerFontSize or 22
+    local countFontSize = MRadialSavedVariables.countFontSize or 2
+    local readyFontSize = MRadialSavedVariables.readyFontSize or 2
+    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or 2
+    local timerFontSize = MRadialSavedVariables.timerFontSize or 2
 
     local radialUdOffset = MRadialSavedVariables.radialUdOffset or 0
     local radialLROffset = MRadialSavedVariables.radialLROffset or -10
