@@ -92,24 +92,91 @@ end
 -- BUILD PANE
 function mRadial:OptionsPane()
     local AceGUI = LibStub("AceGUI-3.0")
+
+    local function refreshWidget(scrollFrame, idx)
+        scrollFrame:ReleaseChildren()
+        if idx == 1 then
+            -- Radial shit
+            local radialGroup = AceGUI:Create("InlineGroup")
+            radialGroup:SetTitle("Radial Frame / Icons: ")
+            radialGroup:SetFullWidth(true)
+            radialGroup:SetLayout("Flow")
+            --parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
+            createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
+            createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
+            createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mRadial.UpdateUI)
+            createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+            createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 0, mRadial.UpdateUI)
+            createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 0, mRadial.UpdateUI)
+            scrollFrame:AddChild(radialGroup)
+        elseif idx == 2 then
+            local timerGroup = AceGUI:Create("InlineGroup")
+            timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
+            timerGroup:SetFullWidth(true)
+            timerGroup:SetLayout("Flow")
+            createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
+            createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
+            createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
+            createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
+            createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
+            createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
+            
+            -- Font shit
+            local fontGroup = AceGUI:Create("InlineGroup")
+            fontGroup:SetTitle("Adjust Font Size: ")
+            fontGroup:SetFullWidth(true)
+            fontGroup:SetLayout("Flow")
+            createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
+            createSlider(fontGroup, "\"Ready\":", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
+            createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
+            createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
+            scrollFrame:AddChild(timerGroup)
+            scrollFrame:AddChild(fontGroup)
+        elseif idx == 3 then
+            local spellsGroup = AceGUI:Create("InlineGroup")
+            spellsGroup:SetTitle("Assign Spells To Radial: ")
+            spellsGroup:SetFullWidth(true)
+            spellsGroup:SetLayout("Flow")
+        
+            local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
+            -- lower level classes might not have an active talent tree.
+            if activeTalentTreeSpells ~= nil then
+                for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
+                    -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+                    local spellName = spellData[1]
+                    desc = GetSpellDescription(spellData[2])
+                    createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true)
+                end
+            end
+            scrollFrame:AddChild(spellsGroup)
+        end
+    end
+
     OptionsPane = AceGUI:Create("Window")
+    local optionHeight = 200
+    local dropDownHeight = 200
     OptionsPane:SetWidth(800)
-    OptionsPane:SetHeight(400)
+    OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
     OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) end)
 
+    local base = AceGUI:Create("SimpleGroup")
+    OptionsPane:AddChild(base)
+
     local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
-    scrollcontainer:SetLayout("Fill")
-    OptionsPane:AddChild(scrollcontainer)
+    scrollcontainer:SetLayout("Flow")
+    -- OptionsPane:AddChild(scrollcontainer)
     scrollcontainer:SetFullWidth(true)
-    scrollcontainer:SetFullHeight(true)
+    scrollcontainer:SetHeight(dropDownHeight)
+    -- scrollcontainer:SetFullHeight(true)
     
     local scrollFrame  = AceGUI:Create("ScrollFrame")
-    scrollFrame:SetLayout("List")
+    scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
-    scrollFrame:SetFullHeight(true)
+    -- scrollFrame:SetFullHeight(true)
+    scrollFrame:SetHeight(dropDownHeight)
     scrollcontainer:AddChild(scrollFrame)
         
     -- General shit
@@ -124,63 +191,21 @@ function mRadial:OptionsPane()
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
     createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.setPetFramePosAndSize)
-    
-    -- Radial shit
-    local radialGroup = AceGUI:Create("InlineGroup")
-    radialGroup:SetTitle("Radial Frame / Icons: ")
-    radialGroup:SetFullWidth(true)
-    radialGroup:SetLayout("Flow")
-    --parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
-    createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
-    createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
-    createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 12, mRadial.UpdateUI)
-    createSlider(radialGroup, "Icon Spread: ", 0, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
-    createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 0, mRadial.UpdateUI)
-    createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 0, mRadial.UpdateUI)
-    
-    local timerGroup = AceGUI:Create("InlineGroup")
-    timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
-    timerGroup:SetFullWidth(true)
-    timerGroup:SetLayout("Flow")
-    createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
-    createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
-    createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
-    createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
-    createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
-    createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
-    
-    -- Font shit
-    local fontGroup = AceGUI:Create("InlineGroup")
-    fontGroup:SetTitle("Font Sizes: ")
-    fontGroup:SetFullWidth(true)
-    fontGroup:SetLayout("Flow")
-    createSlider(fontGroup, "\"Count\" Font Size: ", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
-    createSlider(fontGroup, "\"Ready\" Font Size: ", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
-    createSlider(fontGroup, "\"CoolDown\" Font Size: ", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
-    createSlider(fontGroup, "\"Timer\" Font Size: ", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
-    
-    local spellsGroup = AceGUI:Create("InlineGroup")
-    spellsGroup:SetTitle("Assign Spells To Radial: ")
-    spellsGroup:SetFullWidth(true)
-    spellsGroup:SetLayout("Flow")
+    base:AddChild(generalGroup)
 
-    local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
-    -- lower level classes might not have an active talent tree.
-    if activeTalentTreeSpells ~= nil then
-        for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
-            -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
-            local spellName = spellData[1]
-            desc = GetSpellDescription(spellData[2])
-            createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true)
-        end
-    end
+    local optDpDwn = AceGUI:Create("DropdownGroup")
+    optDpDwn:SetTitle("Options:")
+    optDpDwn:SetGroupList({"Radial", "Radial:Fonts", "Radial:Spells"})
+    optDpDwn:SetLayout("Flow")
+    optDpDwn:SetFullWidth(true)
+    optDpDwn:SetHeight(dropDownHeight)
+    optDpDwn:AddChild(scrollcontainer)
+    optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
+        refreshWidget(scrollFrame, groupIndex)
+    end)
+    optDpDwn:SetGroup(3)
+    base:AddChild(optDpDwn)
 
-    --- FINAL LAYOUT
-    scrollFrame:AddChild(generalGroup)
-    scrollFrame:AddChild(radialGroup)
-    scrollFrame:AddChild(timerGroup)
-    scrollFrame:AddChild(fontGroup)
-    scrollFrame:AddChild(spellsGroup)
 end
 
 function mRadial:BagPane()
@@ -272,7 +297,6 @@ function mRadial:BagPane()
     
     local items = {BAGDUMPV1, BANKDUMPV1, BANKRDUMPV1}
     testTrp:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
-        
         currGroupIndex = groupIndex
         local bagData = updateData(groupIndex, ignoreValue)
         refreshWidget(bagData, scrollFrame, urlInput)
@@ -284,39 +308,4 @@ function mRadial:BagPane()
     base:AddChild(urlInput)
     base:AddChild(ignoreCBx)
     base:AddChild(testTrp)
-
-
-    -- scrollcontainer:AddChild(testTrp)
-    
-    -- nteractiveLabel
-    -- A basic label which reacts to mouse interaction, optionally with an icon in front.
-
-    -- APIs
-    -- SetText(text) - Set the text.
-    -- SetColor(r, g, b) - Set the color of the text.
-    -- SetFont(font, height, flags) - Set the font of the text.
-    -- SetFontObject(font) - Set the font using a pre-defined font-object.
-    -- SetImage(image, ...) - Set the image to be shown. Additionally to the path, any extra arguments will be directly forwarded to :SetTexCoord.
-    -- SetImageSize(width, height) - Set the size of the image.
-    -- SetHighlight(...) - Set the highlight texture (either path to a texture, or RGBA values for a solid color)
-    -- SetHighlightTexCoord(...) - Set the tex coords for the highlight texture.
-    -- Callbacks
-    -- OnClick(button) - Fires when the label is clicked.
-    -- OnEnter() - Fires when the cursor enters the widget.
-    -- OnLeave() - Fires when the cursor leaves the widget.
-
-
-    -- GetText() - Get the text in the edit box.
-    -- SetLabel(text) - Set the text for the label.
-    -- SetNumLines(num) - Set the number of lines to be displayed in the editbox.
-    -- SetDisabled(flag) - Disable the widget.
-    -- SetMaxLetters(num) - Set the maximum number of letters that can be entered (0 for unlimited).
-    -- DisableButton(flag) - Disable the "Okay" Button
-    -- SetFocus() - Set the focus to the editbox.
-    -- HighlightText(start, end) - Highlight the text in the editbox (see Blizzard EditBox Widget documentation for details)
-    -- Callbacks
-    -- OnTextChanged(text) - Fires on every text change.
-    -- OnEnterPressed(text) - Fires when the new text was confirmed and should be saved.
-    -- OnEnter() - Fires when the cursor enters the widget.
-    -- OnLeave() - Fires when the cursor leaves the widget.
 end
