@@ -674,11 +674,11 @@ function mRadial:RadialButtonLayout()
     local radialUdOffset = MRadialSavedVariables.radialUdOffset or 0
     local radialLROffset = MRadialSavedVariables.radialLROffset or -10
 
-    local cdUdOffset = MRadialSavedVariables.cdUdOffset or 0
-    local cdLROffset = MRadialSavedVariables.cdLROffset or -10
+    local cdUdOffset = MRadialSavedVariables.cdUdOffset or -170
+    local cdLROffset = MRadialSavedVariables.cdLROffset or 0
 
-    local countUdOffset = MRadialSavedVariables.countUdOffset or 0
-    local countLROffset = MRadialSavedVariables.countLROffset or -10
+    local countUdOffset = MRadialSavedVariables.countUdOffset or 23
+    local countLROffset = MRadialSavedVariables.countLROffset or 0
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
