@@ -8,6 +8,7 @@ MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
 MR_PETFAMES = {}
+ACTIVEWATCHERS = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
