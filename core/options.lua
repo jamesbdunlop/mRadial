@@ -39,7 +39,7 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     return opt_slider
 end
 
-local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT)
+local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT, spellID)
     local AceGUI = LibStub("AceGUI-3.0")
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
@@ -70,7 +70,17 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     -- set the state to the stored value or default
     opt_cbox:SetValue(dvalue)
     opt_cbox:SetCallback("OnValueChanged", setValue)
-    
+
+    if spellID ~= nil then
+        if IsPassiveSpell(spellID) then
+            -- opt_cbox:SetDisabled(true)
+            opt_cbox:SetDescription("PASSIVE ABILITY")
+        end
+        
+        local _, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
+        opt_cbox:SetImage(MWArtTexturePaths[iconPath])
+    end
+
     if descAsTT then
         opt_cbox:SetCallback("OnEnter", function(widget, event)
             GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
@@ -116,14 +126,25 @@ function mRadial:OptionsPane()
             timerGroup:SetLayout("Flow")
             createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
             createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
-            createSlider(timerGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
-            createSlider(timerGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
-            createSlider(timerGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
-            createSlider(timerGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
+
+            local cdGroup = AceGUI:Create("InlineGroup")
+            cdGroup:SetTitle("")
+            cdGroup:SetFullWidth(true)
+            cdGroup:SetLayout("Flow")
+
+            createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
+            createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
+            
+            local countGroup = AceGUI:Create("InlineGroup")
+            countGroup:SetTitle("")
+            countGroup:SetFullWidth(true)
+            countGroup:SetLayout("Flow")
+            createSlider(countGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
+            createSlider(countGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
             
             -- Font shit
             local fontGroup = AceGUI:Create("InlineGroup")
-            fontGroup:SetTitle("Adjust Font Size: ")
+            fontGroup:SetTitle("Adjust Font Size:  (note Fonts are 50% of the iconFrame size by default.")
             fontGroup:SetFullWidth(true)
             fontGroup:SetLayout("Flow")
             createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
@@ -131,6 +152,8 @@ function mRadial:OptionsPane()
             createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
             createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
             scrollFrame:AddChild(timerGroup)
+            timerGroup:AddChild(cdGroup)
+            timerGroup:AddChild(countGroup)
             scrollFrame:AddChild(fontGroup)
         elseif idx == 3 then
             local spellsGroup = AceGUI:Create("InlineGroup")
@@ -144,8 +167,10 @@ function mRadial:OptionsPane()
                 for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
                     -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
                     local spellName = spellData[1]
-                    desc = GetSpellDescription(spellData[2])
-                    createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true)
+                    local spellID = spellData[2]
+                    local desc = GetSpellDescription(spellID)
+                    
+                    createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID)
                 end
             end
             scrollFrame:AddChild(spellsGroup)
@@ -195,7 +220,7 @@ function mRadial:OptionsPane()
 
     local optDpDwn = AceGUI:Create("DropdownGroup")
     optDpDwn:SetTitle("Options:")
-    optDpDwn:SetGroupList({"Radial", "Radial:Fonts", "Radial:Spells"})
+    optDpDwn:SetGroupList({"Radial:Box", "Radial:Fonts", "Radial:Spells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
     optDpDwn:SetHeight(dropDownHeight)
