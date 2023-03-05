@@ -660,7 +660,7 @@ function mRadial:RadialButtonLayout()
     --- Handles adding the frames around a unit circle cause I like it better this way....
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
-    
+    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
     local radius = MRadialSavedVariables.radius or 100
     local offset = MRadialSavedVariables.offset or .5
     local spread = MRadialSavedVariables.watcherFrameSpread or 0
@@ -724,11 +724,11 @@ function mRadial:RadialButtonLayout()
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
             
             -- SET FONT
-            watcher.buffTimerText:SetFont(customFontPath,  watcherFrameSize*.5+timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.debuffTimerText:SetFont(customFontPath,  watcherFrameSize*.5+timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.countText:SetFont(customFontPath,  watcherFrameSize*.5+countFontSize, "THICKOUTLINE")
-            watcher.cooldownText:SetFont(customFontPath,  watcherFrameSize*.5+coolDownFontSize, "THICKOUTLINE")
-            watcher.readyText:SetFont(customFontPath, watcherFrameSize*.5+readyFontSize, "THICKOUTLINE")
+            watcher.buffTimerText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+timerFontSize, "OUTLINE, MONOCHROME")
+            watcher.debuffTimerText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+timerFontSize, "OUTLINE, MONOCHROME")
+            watcher.countText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+countFontSize, "THICKOUTLINE")
+            watcher.cooldownText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+coolDownFontSize, "THICKOUTLINE")
+            watcher.readyText:SetFont(customFontPath, watcherFrameSize*fontPercentage+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
             watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)

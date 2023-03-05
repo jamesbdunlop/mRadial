@@ -16,6 +16,7 @@ MR_FONTS[1] = "Accidental Presidency.ttf"
 MR_FONTS[2] = "HARRYP__.ttf"
 MR_FONTS[3] = "Nueva Std Cond.ttf"
 MR_FONTS[4] = "Oswald-Regular.ttf"
+MR_FONTS[5] = "Mochalatte-JRorB.ttf"
 
 MAINBG_FRAMENAME = "mRadialBGFrame"
 SHARD_FRAMENAME = "MWShardFrame"

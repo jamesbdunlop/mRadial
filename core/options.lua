@@ -126,7 +126,7 @@ function mRadial:OptionsPane()
             local fontDpDwn = AceGUI:Create("DropdownGroup")
             fontDpDwn:SetTitle("Font:")
             fontDpDwn:SetGroupList(fontList)
-            fontDpDwn:SetLayout("Flow")
+            fontDpDwn:SetLayout("List")
             fontDpDwn:SetFullWidth(true)
             fontDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
                 local selectedFont = fontList[groupIndex]
@@ -143,6 +143,7 @@ function mRadial:OptionsPane()
                 end
             end
             fontDpDwn:AddChild(testFontFrame)
+            createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.UpdateUI)
             scrollFrame:AddChild(fontDpDwn)
             
             local timerGroup = AceGUI:Create("InlineGroup")
@@ -204,7 +205,7 @@ function mRadial:OptionsPane()
 
     OptionsPane = AceGUI:Create("Window")
     local optionHeight = 200
-    local dropDownHeight = 200
+    local dropDownHeight = 300
     OptionsPane:SetWidth(650)
     OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
