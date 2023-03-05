@@ -591,20 +591,22 @@ function mRadial:createPetFrames()
         local spellIcon = spellData["spellIcon"]
         if MR_ALLFRAMES[frameName] == nil then
             -- print("Creating new pet  frame: %s", frameName)
-            local size = 100
+            local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
+            local fontPercentage = MRadialSavedVariables.FontPercentage or .5
             local frame = mRadial:CreateMovableFrame(frameName,
-                                                {100, 100},
+                                                {petFrameSize, petFrameSize},
                                                 UIParent,
                                                 "",
                                                 spellIcon,
                                                 "ARTWORK",
                                                 nil,
                                                 true, 
-                                                {size, size}, {size, size},
+                                                {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
             local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
             local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
-            frame.cooldownText:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
@@ -644,11 +646,17 @@ function mRadial:RemoveAllPetFrames()
 end
 
 function mRadial:SetPetFramePosAndSize()
-    local frameSize = MRadialSavedVariables["PetFramesSize"] or 45
+    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
+    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
+    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+
     for idx, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
             mRadial:RestoreFrame(frame:GetName(), frame)
-            frame:SetSize(frameSize, frameSize)
+            frame:SetSize(petFrameSize, petFrameSize)
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
         end
     end
 end

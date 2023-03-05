@@ -143,7 +143,7 @@ function mRadial:OptionsPane()
                 end
             end
             fontDpDwn:AddChild(testFontFrame)
-            createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.UpdateUI)
+            createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.GlobalFontPercentageChanged)
             scrollFrame:AddChild(fontDpDwn)
             
             local timerGroup = AceGUI:Create("InlineGroup")
@@ -208,7 +208,7 @@ function mRadial:OptionsPane()
     local dropDownHeight = 300
     OptionsPane:SetWidth(650)
     OptionsPane:SetHeight(optionHeight)
-    OptionsPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
     OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) end)
@@ -241,7 +241,7 @@ function mRadial:OptionsPane()
     createCheckBox(generalGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
     createSlider(generalGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(generalGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
-    createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.setPetFramePosAndSize)
+    createSlider(generalGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
     base:AddChild(generalGroup)
 
     local optDpDwn = AceGUI:Create("DropdownGroup")

@@ -250,6 +250,11 @@ function mRadial:GetTableLen(table)
     return count
 end
 
+function mRadial:GlobalFontPercentageChanged()
+    -- print("Global font percentage changed!")
+    mRadial:UpdateUI()
+    mRadial:SetPetFramePosAndSize()
+end
 
 --- FUN STUFF
 
