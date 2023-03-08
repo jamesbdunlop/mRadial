@@ -186,26 +186,21 @@ function mRadial:SetMoveFrameScripts(frame)
     end)
 end
 
-local mlast = 0
 function mRadial:SetMountedFrameScripts(frame)
-    frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
-        mlast = mlast + elapsed
-        if mlast <= .02 then
-            return
+    frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
+    frame:GetParent():SetScript("OnEvent", function(self, event, ...)
+        -- Show the frame when entering combat
+        if event == "PLAYER_REGEN_DISABLED" then
+            frame:Show()
         end
+    end)
+
+    frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
         if IsMounted() or IsFlying() then
             frame:Hide()
         else
             frame:Show()
         end
-        mlast = 0
-        frame:RegisterEvent("PLAYER_REGEN_DISABLED")
-        frame:SetScript("OnEvent", function(self, event, ...)
-            -- Show the frame when entering combat
-            if event == "PLAYER_REGEN_DISABLED" then
-                frame:Show()
-            end
-        end)
     end)
 end
 
