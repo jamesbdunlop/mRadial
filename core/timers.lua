@@ -1,4 +1,4 @@
-mRadial = mRadial
+local mRadial = mRadial
 
 function mRadial:GetSpellRemaining(spellName)
     local start, duration, enabled, _ = GetSpellCooldown(spellName)

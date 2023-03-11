@@ -360,7 +360,7 @@ function mRadial:createWatcherFrame(spellID)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .25 then
+        if last <= .1 then
             return
         end
 

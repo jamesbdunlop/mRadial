@@ -1,3 +1,5 @@
+local mRadial = mRadial
+
 function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
         return nil
@@ -158,7 +160,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
 
     local active = {}
     for _, spellID in ipairs(activeSpellData) do
-        local spellName, _, iconPath, _, minRange, maxRange, _, parentSpellIcon = GetSpellInfo(spellID)
+        local spellName, _, _, _, _, _, _, _ = GetSpellInfo(spellID)
         local isKnown
         if spellID == nil then
             isKnown = false
@@ -167,7 +169,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
         end
         local isPassive = IsPassiveSpell(spellID)
         
-        if isKnown and not isPassive then
+        if isKnown and not isPassive and active[spellName] == nil then
             table.insert(active, {spellName, spellID})
         end
     end

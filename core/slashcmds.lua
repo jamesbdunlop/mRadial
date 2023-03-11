@@ -1,5 +1,5 @@
 -- slash commands
-SLASH_MW1 = "/mw"
+SLASH_MR1 = "/mr"
 
 ---------------------------------------------------------------------------------------------------
 function MR_slashCommands(msg, editbox)
@@ -25,5 +25,5 @@ function MR_slashCommands(msg, editbox)
         mRadial:RadialButtonLayout()
     end
 end
-SlashCmdList["MW"] = MR_slashCommands
+SlashCmdList["MR"] = MR_slashCommands
 ---------------------------------------------------------------------------------------------------
