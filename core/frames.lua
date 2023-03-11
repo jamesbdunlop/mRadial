@@ -425,6 +425,14 @@ function mRadial:createWatcherFrame(spellID)
             watcher.aura:Hide()
         end
 
+        for slot = 1, 4 do
+            local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
+            if haveTotem and totemName == spellName then
+                local iconPath = MWArtTexturePaths[icon]
+                mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
+            end
+        end
+
         -- Now set the count on the frame regardless.
         local count = 0
         if getLinked ~= nil then
@@ -437,15 +445,6 @@ function mRadial:createWatcherFrame(spellID)
                 local charges = GetSpellCharges(spellID)
                 if count == 0 and charges then
                     count = charges
-                end
-                if linkedSpellName == HEALINGSTREAM then
-                    for slot = 1, 4 do
-                        local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
-                        if haveTotem and totemName == spellName then
-                            local iconPath = MWArtTexturePaths[icon]
-                            mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
-                        end
-                    end
                 end
             end
         else
