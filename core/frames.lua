@@ -425,6 +425,7 @@ function mRadial:createWatcherFrame(spellID)
             watcher.aura:Hide()
         end
 
+        -- TOTEM WATCHING FOR ZEN
         for slot = 1, 4 do
             local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
             if haveTotem and totemName == spellName then
@@ -437,7 +438,7 @@ function mRadial:createWatcherFrame(spellID)
         local count = 0
         if getLinked ~= nil then
             local linkedSpellName = getLinked[1] 
-            local linkedSpellID = getLinked[2]
+            -- local linkedSpellID = getLinked[2]
             local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
             if hasActiveBuff then
                 count = scount
@@ -504,7 +505,7 @@ function mRadial:createWatcherFrames()
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
             elseif not isActive and isKnown and mRadial:WatcherExists(frameName) then
-                local frame, idx = mRadial:GetWatcher(frameName)
+                local frame, _ = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
                     local pframe = frame:GetParent()
                     if pframe ~= nil then
@@ -757,16 +758,16 @@ function mRadial:RadialButtonLayout()
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             
-            if cosAng <= 0 then
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
-            elseif cosAng == 0 then
+            if cosAng <= -0.1 then
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+            elseif cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset)
-            else
-            watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUdOffset)
-            watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*-1, radialUdOffset)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+            elseif  cosAng >= 0.1 then
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
             end
             watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end
