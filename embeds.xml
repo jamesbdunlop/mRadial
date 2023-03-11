@@ -6,4 +6,6 @@
   <Include file="Libs\Ace3\AceEvent-3.0\AceEvent-3.0.xml"/>
   <Include file="Libs\Ace3\AceGUI-3.0\AceGUI-3.0.xml"/>
   <Include file="Libs\Ace3\AceTimer-3.0\AceTimer-3.0.xml"/>
+  <Include file="Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
+  <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
 </Ui>

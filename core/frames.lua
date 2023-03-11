@@ -701,6 +701,9 @@ function mRadial:RadialButtonLayout()
 
     local countUdOffset = MRadialSavedVariables.countUdOffset or 23
     local countLROffset = MRadialSavedVariables.countLROffset or 0
+    
+    local readyUDOffset = MRadialSavedVariables.readyUDOffset or -17
+    local readyLROffset = MRadialSavedVariables.readyLROffset or 0
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
@@ -741,8 +744,8 @@ function mRadial:RadialButtonLayout()
             watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
             watcher.debuffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
             watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUdOffset)
-            watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUdOffset)
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
+            watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset, readyUDOffset)
             
             -- SET FONT
             watcher.buffTimerText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+timerFontSize, "OUTLINE, MONOCHROME")
@@ -758,22 +761,23 @@ function mRadial:RadialButtonLayout()
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             
-            if cosAng <= -0.1 then
+            if cosAng >= - 0.1 and cosAng <= 0.1 then
+                -- Bottom of the circle, we want to keep the text UNDER the icon here
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)
+            elseif cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
-            elseif cosAng >= - 0.1 and cosAng <= 0.1 then
-                -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             elseif  cosAng >= 0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             end
             watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end

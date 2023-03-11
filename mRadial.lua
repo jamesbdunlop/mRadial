@@ -1,6 +1,26 @@
+local LDB = LibStub("LibDataBroker-1.1")
+local LDBIcon = LibStub("LibDBIcon-1.0")
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
 end
+
+local mr_dataBroker;
+mr_dataBroker = LDB:NewDataObject ("mRadialICO", {
+    type = "data source", 
+    text= "0",  
+    icon = MEDIAPATH.."\\miniMapIcon",
+    iconR = .5,
+    iconG = .9,
+    iconB = .5,
+    OnClick = function(self)
+        mRadial:OptionsPane()
+    end,
+    OnTooltipShow = function(tooltip)
+        tooltip:AddLine("mRadial - options")
+    end,
+})
+LDBIcon:Register("mRadialICO", mr_dataBroker, {hide=false, minimapPos=199})
+LDBIcon:Show("mRadialICO")
 
 UdOffset = 0
 
@@ -63,37 +83,14 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
-    
-
 end
 
 function mRadial:OnEnable()
     local playerName = UnitName("player")
-    local LDB = LibStub("LibDataBroker-1.1")
-    local LDBIcon = LibStub("LibDBIcon-1.0")
     print("----------------------")
     print("Welcome " .. playerName .. " -- mRadial")
     print("/mw slash commands are: move, lock, options")
     print("----------------------")
-    
-    local addonName = "mRadial"
-    local addonIcon = MEDIAPATH.."\\miniMapIcon"
-    
-    local dataBroker = LDB:NewDataObject(addonName, {
-        type = "data source",   
-        icon = addonIcon,
-        OnClick = function(self, button)
-            mRadial:OptionsPane()
-        end,
-        OnTooltipShow = function(tooltip)
-            -- Add tooltip text
-            tooltip:AddLine("mRadial - Click to show Options!")
-        end,
-    })
-    
-    LDBIcon:Register(addonName, dataBroker, {
-        hide = false,
-    })
     
 end
 

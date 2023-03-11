@@ -161,7 +161,10 @@ function mRadial:OptionsPane()
 
             createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
             createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
-            
+
+            createSlider(cdGroup, "Ready Up/Down: ", -50, 50, 1, "readyUDOffset", -10, mRadial.UpdateUI)
+            createSlider(cdGroup, "Ready Left/Right: ", -50, 50, 1, "readyLROffset", 0, mRadial.UpdateUI)
+
             local countGroup = AceGUI:Create("InlineGroup")
             countGroup:SetTitle("")
             countGroup:SetFullWidth(true)
