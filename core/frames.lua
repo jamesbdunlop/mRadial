@@ -440,10 +440,10 @@ function mRadial:createWatcherFrame(spellID)
                 end
                 if linkedSpellName == HEALINGSTREAM then
                     for slot = 1, 4 do
-                        local haveTotem, totemName, startTime, duration = GetTotemInfo(slot)
+                        local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
                         if haveTotem and totemName == spellName then
-                            local iconPath = MWArtTexturePaths[linkedSpellID]
-                            mRadial:DoTotemTimer(HEALINGSTREAM, watcher, startTime, duration, iconPath)
+                            local iconPath = MWArtTexturePaths[icon]
+                            mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
                         end
                     end
                 end

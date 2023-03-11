@@ -144,7 +144,7 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
     end
 end
 
-function mRadial:DoTotemTimer(spellName, watcher, startTime, duration, iconPath)
+function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
     if MAINFRAME_ISMOVING then
         return
     end
