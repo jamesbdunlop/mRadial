@@ -143,3 +143,37 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
         watcher.buffTimerTextBG:Hide()
     end
 end
+
+function mRadial:DoTotemTimer(spellName, watcher, startTime, duration, iconPath)
+    if MAINFRAME_ISMOVING then
+        return
+    end
+    -- TIMERS
+    if duration ~= nil and startTime ~= nil and not IsMounted() then
+        startTime = startTime or GetTime()
+        duration = duration or 0
+        local remaining = startTime + duration+1 - GetTime()
+    
+        local minutes = math.floor(remaining / 60)
+        local seconds = math.floor(remaining - minutes * 60)
+
+        -- Totem is active -- 
+        watcher.buffTimerText:Show()
+        watcher.buffTimerTextBG:Show()
+        watcher.buffTimerTextBG:SetTexture(iconPath)
+        watcher.buffTimerText:SetTextColor(.1, 1, .1)
+        watcher.buffTimerTextBG:SetAlpha(.5)
+        
+        if minutes~= nil and minutes > 0 then
+            watcher.buffTimerText:SetText(string.format("%d:%d", minutes, seconds))
+        elseif seconds > 0 then
+            watcher.buffTimerText:SetText(string.format("%ds", seconds))
+        else
+            watcher.buffTimerText:Hide()
+            watcher.buffTimerTextBG:Hide()
+        end
+    else
+        watcher.buffTimerText:Hide()
+        watcher.buffTimerTextBG:Hide()
+    end
+end

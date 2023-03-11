@@ -360,7 +360,7 @@ function mRadial:createWatcherFrame(spellID)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .1 then
+        if last <= .05 then
             return
         end
 
@@ -368,90 +368,108 @@ function mRadial:createWatcherFrame(spellID)
             return
         end
         
-        if not MAINFRAME_ISMOVING then 
-            if isUnitPowerDependant then
-                -- Do we have enough shards to allow this to show timers / cast from?
-                local unitpower = 0
-                if mRadial:IsWarlock() then
-                    unitpower = UnitPower("player", 7) -- soul shards
-                else
-                    unitpower = UnitPower("player") -- hopefully the rest list insanity etc
-                end
-    
-                if unitpower == 0 or unitpower < UnitPowerCount then
-                    watcher.readyText:SetText(NOSSSTR)
-                    watcher.readyText:SetTextColor(1, 0, 0)
-                    watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                    watcher.buffTimerTextBG:Hide()
-                    last = 0
-                    if not IsMounted() then
-                        watcher.movetex:Show()
-                    end
-                    return
-                else
-                    watcher.readyText:SetText(READYSTR)
-                    watcher.readyText:SetTextColor(0, 1, 0)
-                    watcher.movetex:Hide()
-                end
-            end
-            mRadial:DoDebuffTimer(spellName, watcher, iconPath)
-            mRadial:DoSpellFrameCooldown(spellName, watcher)
-            -- LINKED SPELLS!!!!
-            -- I need a way to link a spell to another, perhaps a manually written table for now
-            -- as I can't find anythign in the API
-            -- in the cast of a linked spell I need to know that eg
-                -- when VoidTorrent is cast, we have a buff VoidForm running we want to track, and cooldowns for VoidBolts during that time.
-                -- and when we run out of VoidForm we then end up showing the cooldown for VoidTorrent.
-                -- relationships = {spellName, buffName, swapSpellNameTo}
-            local getLinked = linkedSpells[spellName] or nil
-            
-            if getLinked ~= nil then 
-                local linkedSpellName = getLinked[1] 
-                local linkedSpellID = getLinked[2]
-                local linkedIconPath
-                _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
-                mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
-                
-                if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
-                    watcher.aura:Show()
-                else
-                    watcher.aura:Hide()
-                end
+        if isUnitPowerDependant then
+            -- Do we have enough shards to allow this to show timers / cast from?
+            local unitpower = 0
+            if mRadial:IsWarlock() then
+                unitpower = UnitPower("player", 7) -- soul shards
             else
-                mRadial:DoBuffTimer(spellName, watcher, iconPath)
+                unitpower = UnitPower("player") -- hopefully the rest list insanity etc
+            end
+
+            if unitpower == 0 or unitpower < UnitPowerCount then
+                watcher.readyText:SetText(NOSSSTR)
+                watcher.readyText:SetTextColor(1, 0, 0)
+                watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                watcher.buffTimerTextBG:Hide()
+                last = 0
+                if not IsMounted() then
+                    watcher.movetex:Show()
+                end
+                return
+            else
+                watcher.readyText:SetText(READYSTR)
+                watcher.readyText:SetTextColor(0, 1, 0)
+                watcher.movetex:Hide()
+            end
+        end
+
+        mRadial:DoDebuffTimer(spellName, watcher, iconPath)
+        mRadial:DoSpellFrameCooldown(spellName, watcher)
+        -- LINKED SPELLS!!!!
+        -- I need a way to link a spell to another, perhaps a manually written table for now
+        -- as I can't find anything in the API
+        -- in the cast of a linked spell I need to know that eg
+            -- when VoidTorrent is cast, we have a buff VoidForm running we want to track, and cooldowns for VoidBolts during that time.
+            -- and when we run out of VoidForm we then end up showing the cooldown for VoidTorrent.
+            -- relationships = {spellName, buffName, swapSpellNameTo}
+        local getLinked = linkedSpells[spellName] or nil
+        
+        local linkedSpellID
+        local linkedSpellName
+        local linkedIconPath
+
+        if getLinked ~= nil then 
+            linkedSpellName = getLinked[1] 
+            linkedSpellID = getLinked[2]
+            _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
+            mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
+            
+            if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
+                watcher.aura:Show()
+            else
                 watcher.aura:Hide()
             end
-
-            -- Now set the count on the frame regardless.
-            local count = 0
-            if getLinked ~= nil then
-                local linkedSpellName = getLinked[1] 
-                local linkedSpellID = getLinked[2]
-                local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
-                if  hasActiveBuff then
-                    count = scount
-                end
-            else
-                count = GetSpellCount(spellID)
-            end
-
-            watcher.countText:SetText("")
-            if count ~= 0 and not IsMounted() then
-                watcher.countText:Show()
-                watcher.countText:SetText(tostring(count))
-                -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
-                -- else we hide the ready for that spell.
-                if spellName == SUMMONSOULKEEPER_SPELLNAME then
-                    watcher.readyText:Show()
-                end
-            else
-                if spellName == SUMMONSOULKEEPER_SPELLNAME then
-                    watcher.readyText:Hide()
-                end
-            end
-
+        else
+            mRadial:DoBuffTimer(spellName, watcher, iconPath)
+            watcher.aura:Hide()
         end
-        
+
+        -- Now set the count on the frame regardless.
+        local count = 0
+        if getLinked ~= nil then
+            local linkedSpellName = getLinked[1] 
+            local linkedSpellID = getLinked[2]
+            local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
+            if hasActiveBuff then
+                count = scount
+            else
+                local charges = GetSpellCharges(spellID)
+                if count == 0 and charges then
+                    count = charges
+                end
+                if linkedSpellName == HEALINGSTREAM then
+                    for slot = 1, 4 do
+                        local haveTotem, totemName, startTime, duration = GetTotemInfo(slot)
+                        if haveTotem and totemName == spellName then
+                            local iconPath = MWArtTexturePaths[linkedSpellID]
+                            mRadial:DoTotemTimer(HEALINGSTREAM, watcher, startTime, duration, iconPath)
+                        end
+                    end
+                end
+            end
+        else
+            count = GetSpellCount(spellID) 
+            local charges = GetSpellCharges(spellID)
+            if count == 0 and charges then
+                count = charges
+            end
+        end
+
+        watcher.countText:SetText("")
+        if count ~= 0 and not IsMounted() then
+            watcher.countText:Show()
+            watcher.countText:SetText(tostring(count))
+            -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
+            -- else we hide the ready for that spell.
+            if spellName == SUMMONSOULKEEPER_SPELLNAME then
+                watcher.readyText:Show()
+            end
+        else
+            if spellName == SUMMONSOULKEEPER_SPELLNAME then
+                watcher.readyText:Hide()
+            end
+        end
         last = 0
     end)
 

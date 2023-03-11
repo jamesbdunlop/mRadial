@@ -142,7 +142,7 @@ function mRadial:GetAllPassiveTalentTreeSpells()
         end
         -- print("Creating watcher for %s", spellName)
         local isPassive = IsPassiveSpell(spellID)
-        if isKnown and isPassive then
+        if isKnown and isPassive and not mRadial:TableContains(active, {buffName, spellID}) then
             table.insert(active, {buffName, spellID})
         end
     end
@@ -169,7 +169,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
         end
         local isPassive = IsPassiveSpell(spellID)
         
-        if isKnown and not isPassive and active[spellName] == nil then
+        if isKnown and not isPassive and not mRadial:TableContains(active, {spellName, spellID}) then
             table.insert(active, {spellName, spellID})
         end
     end
