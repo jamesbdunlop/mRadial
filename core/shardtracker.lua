@@ -1,3 +1,5 @@
+local mRadial = mRadial
+
 function mRadial:createShardCountFrame()
     -- Sets up the frame used for counting warlock shards on the UI
     -- Actual shard frame changes happen in the events.COMBAT_LOG_EVENT_UNFILTERED

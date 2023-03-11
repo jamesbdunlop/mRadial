@@ -73,6 +73,8 @@ EARTHBINDTOTEM_SPELLNAME = "Earthbind Totem"
 HEALINGSTREAM_SPELLNAME = "Healing Stream Totem"
 HEALINGTIDETOTEM_SPELLNAME = "Healing Tide Totem"
 SPIRITLINKTOTEM_SPELLNAME = "Spirit Link Totem"
+SWIRLINGCURRENTS_SPELLNAME = "Swirling Currents"
+HEALINGSURGE_SPELLNAME = "Healing Surge"
 ---------------------------------------------------------------------------------------------------
 linkedSpells = {}
 linkedSpells[HANDOFGULDAN_SPELLNAME] = {DEMONICCORE_SPELLNAME, 571321}
@@ -83,4 +85,5 @@ linkedSpells[VOIDERUPTION_SPELLNAME] ={VOIDFORM_SPELLNAME, 1386550}
 linkedSpells[MINDSEAR_SPELLNAME] = {MINDDEVOURER_SPELLNAME, 135740}
 linkedSpells[MINDFLAY_SPELLNAME] = {MINDFLAYINSANITY_SPELLNAME, 391401}
 linkedSpells[CONFLAG_SPELLNAME] = {BACKDRAFT_SPELLNAME, 117828}
+linkedSpells[HEALINGSURGE_SPELLNAME] = {SWIRLINGCURRENTS_SPELLNAME, 378102}
 -- lava surge  islinked to lava burst

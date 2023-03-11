@@ -7,8 +7,8 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
         if playerName ~= myName then
             return
         end
-        if destName == iuzenName then
-            SendChatMessage(iuzenName .. " DIED AGAIN!", "PARTY")
+        if destName == iuzenName and UnitInParty(iuzenName) then
+            SendChatMessage(iuzenName .. " is dead on the ground again!!!!", "PARTY")
         end
 
         local petGUID = UnitGUID("pet")
