@@ -29,7 +29,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     parentFrame.baseFrame = frame
     
     -- TEXTURE
-    frame.iconFrame = frame:CreateTexture("texture_" .. frameName)
+    frame.iconFrame = frame:CreateTexture("texture_" .. frameName, "ARTWORK")
     frame.iconFrame:SetPoint("CENTER", 0, 0)
     if texturePath ~= nil then
         frame.iconFrame:SetTexture(texturePath)
@@ -761,6 +761,9 @@ function mRadial:RadialButtonLayout()
             if cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
             elseif cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
@@ -768,6 +771,9 @@ function mRadial:RadialButtonLayout()
             elseif  cosAng >= 0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
+                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
             end
             watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end
