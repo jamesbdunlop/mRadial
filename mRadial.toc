@@ -1,7 +1,7 @@
 ## Interface: 100005
 ## Title: mRadial
 ## Author: Macka - JBD
-## Version: 0.1.1
+## Version: 0.1.2
 ## License: All Rights Reserved
 ## Notes: Little Radial Menu for team Decrepit
 ## SavedVariables: MRadialSavedVariables, PerPlayerPerSpecSavedVars, mRadialDB 
