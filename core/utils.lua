@@ -326,7 +326,3 @@ function mRadial:listBankReagentItems(ignoreSoulBound)
     SendSystemMessage("Swapped to Bank reagent bag!")
     return BANKRDUMPV1
 end
-
-function mRadial:TestCast()
-    SpellCast()
-end
