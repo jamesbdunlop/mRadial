@@ -330,9 +330,8 @@ function mRadial:createWatcherFrame(spellID)
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
 
     -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
-    local spellName, _, iconPath, _, _, _, spellID, _ = GetSpellInfo(spellID)
+    local spellName, _, iconPath, _, minRange, maxRange, spellID, _ = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
-
     local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     watcher.spellName = spellName
     ------------------------------------------
@@ -469,6 +468,17 @@ function mRadial:createWatcherFrame(spellID)
             if spellName == SUMMONSOULKEEPER_SPELLNAME then
                 watcher.readyText:Hide()
             end
+        end
+
+        local inRange = IsSpellInRange(spellName)
+        if inRange ~= nil and inRange == 0 then
+            watcher.movetex:SetColorTexture(.1, .1, 0, .65)
+            watcher.iconFrame:SetAlpha(.2)
+            watcher.readyText:SetText("OOR")
+        else
+            watcher.movetex:SetColorTexture(0, 0, 0, 0)
+            watcher.iconFrame:SetAlpha(1)
+            watcher.readyText:SetText(READYSTR)
         end
         last = 0
     end)
@@ -664,7 +674,7 @@ function mRadial:SetPetFramePosAndSize()
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
 
-    for idx, frame in ipairs(MR_ALLFRAMES) do
+    for _, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
             mRadial:RestoreFrame(frame:GetName(), frame)
             frame:SetSize(petFrameSize, petFrameSize)
