@@ -727,16 +727,16 @@ function mRadial:RadialButtonLayout()
         end
     end
 
-    local angleStep = math.pi / #ACTIVEWATCHERS + spread
+    local angleStep = (math.pi / #ACTIVEWATCHERS) + spread*.1
     for x = 1, #ACTIVEWATCHERS do
         local watcher = ACTIVEWATCHERS[x]
         watcher:Show()
         watcher:GetParent():Show()
-        local angle = (x-1)*angleStep + offset*math.pi
+        local angle = ((x-1)*angleStep) + (offset*math.pi) 
         local sinAng = math.sin(angle)
         local cosAng = math.cos(angle)
-        local w = cosAng*radius*widthDeform
-        local h = sinAng*radius*heightDeform
+        local w = (cosAng*radius)*widthDeform
+        local h = (sinAng*radius)*heightDeform
         if watcher ~= nil and watcher.isWatcher then
             -- print("Found watcher frame! %s", watcher:GetName())
             watcher:SetSize(watcherFrameSize, watcherFrameSize)

@@ -269,6 +269,7 @@ function mRadial:OptionsPane()
 
 end
 
+
 function mRadial:BagPane()
     local AceGUI = LibStub("AceGUI-3.0")
     local function updateData(groupIndex, ignoreValue)

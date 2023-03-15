@@ -46,7 +46,7 @@ HANDOFGULDAN_SPELLNAME = "Hand of Gul'dan"
 BACKDRAFT_SPELLNAME = "Backdraft"
 CONFLAG_SPELLNAME = "Conflagrate"
 ---------------------------------------------------------------------------------------------------
---- SHADOW PRIEST
+--- PRIEST
 DARKASCENSION_SPELLNAME = "Dark Ascension"
 DISPERSION_SPELLNAME = "Dispersion"
 MINDGAMES_SPELLNAME = "Mindgames"
@@ -66,6 +66,9 @@ VOIDFORM_SPELLNAME = "Voidform"
 MINDSEAR_SPELLNAME = "Mind Sear"
 MINDFLAYINSANITY_SPELLNAME = "Mind Flay: Insanity"
 MINDFLAY_SPELLNAME = "Mind Flay"
+HARSHD_SPELLNAME = "Harsh Discipline"
+RAPTURE_SPELLNAME = "Rapture"
+PENANCE_SPELLNAME = "Penance"
 ---------------------------------------------------------------------------------------------------
 -- SHAMAN
 CAPACITORTOTEM_SPELLNAME = "Capacitor Totem"
@@ -88,5 +91,6 @@ linkedSpells[MINDFLAY_SPELLNAME] = {MINDFLAYINSANITY_SPELLNAME, 391401}
 linkedSpells[CONFLAG_SPELLNAME] = {BACKDRAFT_SPELLNAME, 117828}
 linkedSpells[HEALINGSURGE_SPELLNAME] = {SWIRLINGCURRENTS_SPELLNAME, 378102}
 linkedSpells[HEALINGSTREAMTOTEM_SPELLNAME] = {HEALINGSTREAM, 5672}
+linkedSpells[PENANCE_SPELLNAME] = {HARSHD_SPELLNAME, 373181}
 
 -- lava surge  islinked to lava burst

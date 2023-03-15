@@ -89,7 +89,7 @@ function mRadial:OnEnable()
     local playerName = UnitName("player")
     print("----------------------")
     print("Welcome " .. playerName .. " -- mRadial")
-    print("/mw slash commands are: move, lock, options")
+    print("/mr slash commands are: move, lock, options")
     print("----------------------")
     
 end
