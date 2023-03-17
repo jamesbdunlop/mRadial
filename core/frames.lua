@@ -196,7 +196,8 @@ function mRadial:SetMountedFrameScripts(frame)
     end)
 
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
-        if IsMounted() or IsFlying() then
+        local hideOOC = MRadialSavedVariables["hideooc"]
+        if IsMounted() or IsFlying() or hideOOC then
             frame:Hide()
         else
             frame:Show()
@@ -382,7 +383,8 @@ function mRadial:createWatcherFrame(spellID)
                 watcher.movetex:SetColorTexture(1, 0, 0, .5)
                 watcher.buffTimerTextBG:Hide()
                 last = 0
-                if not IsMounted() then
+                local hideOOC = MRadialSavedVariables["hideooc"]
+                if not IsMounted() and not hideOOC then
                     watcher.movetex:Show()
                 end
                 return
@@ -414,7 +416,8 @@ function mRadial:createWatcherFrame(spellID)
             _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
             mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
             
-            if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() then
+            local hideOOC = MRadialSavedVariables["hideooc"]
+            if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() and not hideOOC then
                 watcher.aura:Show()
             else
                 watcher.aura:Hide()
@@ -456,7 +459,8 @@ function mRadial:createWatcherFrame(spellID)
         end
 
         watcher.countText:SetText("")
-        if count ~= 0 and not IsMounted() then
+        local hideOOC = MRadialSavedVariables["hideooc"]
+        if count ~= 0 and not IsMounted() and not hideOOC then
             watcher.countText:Show()
             watcher.countText:SetText(tostring(count))
             -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 

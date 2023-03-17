@@ -227,7 +227,7 @@ function mRadial:OptionsPane()
     scrollcontainer:SetHeight(dropDownHeight)
     -- scrollcontainer:SetFullHeight(true)
     
-    local scrollFrame  = AceGUI:Create("ScrollFrame")
+    local scrollFrame = AceGUI:Create("ScrollFrame")
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
     -- scrollFrame:SetFullHeight(true)
@@ -242,6 +242,7 @@ function mRadial:OptionsPane()
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
     createCheckBox(generalGroup, "AsButtons: (requires reloadui) ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
+    createCheckBox(generalGroup, "HideOOC:", "Hide while out of combat.", "hideooc", false, mRadial.UpdateUI)
     base:AddChild(generalGroup)
     
     local wlckGroup = AceGUI:Create("InlineGroup")

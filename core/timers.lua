@@ -19,7 +19,8 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
-    if enabled and remaining > GCD and not IsMounted() then
+    local hideOOC = MRadialSavedVariables["hideooc"]
+    if enabled and remaining > GCD and not IsMounted() and not hideOOC then
         watcher.cooldownText:Show()
         if watcher.readyText ~= nil then
             watcher.readyText:Hide()
@@ -36,7 +37,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
         watcher.cooldownText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
-        if watcher.readyText ~= nil and not IsMounted() then
+        if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
             watcher.readyText:Show()
         end
     end
@@ -57,7 +58,8 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
             break
         end
     end
-    if remaining > GCD and not IsMounted() then
+    local hideOOC = MRadialSavedVariables["hideooc"]
+    if remaining > GCD and not IsMounted() and not hideOOC then
         watcher.debuffTimerTextBG:Show()
         watcher.debuffTimerTextBG:SetTexture(iconPath)
         watcher.debuffTimerTextBG:SetAlpha(.5)
@@ -72,7 +74,7 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
         watcher.debuffTimerText:Hide()
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
-        if not IsMounted() then
+        if not IsMounted() and not hideOOC then
             watcher.readyText:Show()
         end
     end
@@ -104,6 +106,7 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
     if MAINFRAME_ISMOVING then
         return
     end
+    local hideOOC = MRadialSavedVariables["hideooc"]
     for idx = 1, 40 do
         -- local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
         -- spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
@@ -111,14 +114,14 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
         _, _, _, _, _, _ = UnitBuff("player", idx)
         
         if name == spellName then
-            if count ~= 0 and count >= 1 and expirationTime ~= nil and not IsMounted() then
+            if count ~= 0 and count >= 1 and expirationTime ~= nil and not IsMounted() and not hideOOC then
                 watcher.countText:Show()
                 watcher.countText:SetText(tostring(count))
             end
         end
 
         -- TIMERS
-        if name ~= nil and name == spellName and expirationTime ~= nil and not IsMounted() then
+        if name ~= nil and name == spellName and expirationTime ~= nil and not IsMounted() and not hideOOC then
             -- Buff is active -- 
             found = true
             watcher.buffTimerText:Show()
@@ -148,8 +151,10 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
     if MAINFRAME_ISMOVING then
         return
     end
+
+    local hideOOC = MRadialSavedVariables["hideooc"]
     -- TIMERS
-    if duration ~= nil and startTime ~= nil and not IsMounted() then
+    if duration ~= nil and startTime ~= nil and not IsMounted() and not hideOOC then
         startTime = startTime or GetTime()
         duration = duration or 0
         local remaining = startTime + duration+1 - GetTime()
