@@ -242,7 +242,7 @@ function mRadial:OptionsPane()
     local descrip = "Allow the ui to move around using shift+lmb."
     createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
     createCheckBox(generalGroup, "AsButtons: (requires reloadui) ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
-    createCheckBox(generalGroup, "HideOOC:", "Hide while out of combat.", "hideooc", false, mRadial.UpdateUI)
+    
     base:AddChild(generalGroup)
     
     local wlckGroup = AceGUI:Create("InlineGroup")
@@ -250,6 +250,7 @@ function mRadial:OptionsPane()
     wlckGroup:SetFullWidth(true)
     wlckGroup:SetLayout("Flow")
     createCheckBox(wlckGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
+    createCheckBox(wlckGroup, "HideOOC:", "Hide while out of combat.", "hideooc", false, mRadial.UpdateUI)
     createSlider(wlckGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
     createSlider(wlckGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
     createSlider(wlckGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
@@ -269,7 +270,6 @@ function mRadial:OptionsPane()
     base:AddChild(optDpDwn)
 
 end
-
 
 function mRadial:BagPane()
     local AceGUI = LibStub("AceGUI-3.0")
@@ -384,4 +384,8 @@ function mRadial:BagPane()
     base:AddChild(urlInput)
     base:AddChild(ignoreCBx)
     base:AddChild(testTrp)
+end
+
+function mRadial:orderPane()
+
 end
