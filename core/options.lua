@@ -1,9 +1,8 @@
 local MR_config = LibStub("AceConfig-3.0")
 local MR_dialog = LibStub("AceConfigDialog-3.0")
-
+local AceGUI = LibStub("AceGUI-3.0")
 
 local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
-    local AceGUI = LibStub("AceGUI-3.0")
     local opt_slider = AceGUI:Create("Slider")
     opt_slider:SetSliderValues(minVal, maxVal, step)
     opt_slider:SetLabel(name)
@@ -40,7 +39,6 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
 end
 
 local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT, spellID)
-    local AceGUI = LibStub("AceGUI-3.0")
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
     opt_cbox:SetType("radio")
@@ -100,116 +98,116 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 end
 
 -- BUILD PANE
-function mRadial:OptionsPane()
-    local AceGUI = LibStub("AceGUI-3.0")
-
-    local function refreshWidget(scrollFrame, idx)
-        scrollFrame:ReleaseChildren()
-        if idx == 1 then
-            -- Radial shit
-            local radialGroup = AceGUI:Create("InlineGroup")
-            radialGroup:SetTitle("Radial Frame / Icons: ")
-            radialGroup:SetFullWidth(true)
-            radialGroup:SetLayout("Flow")
-            --parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
-            createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
-            createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
-            createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 40, mRadial.UpdateUI)
-            createSlider(radialGroup, "Icon Spread: ", -2, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
-            createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
-            createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
-            scrollFrame:AddChild(radialGroup)
-        elseif idx == 2 then
-            local testFontFrame = AceGUI:Create("Label")
-            testFontFrame:SetText("AaBbCcDdEeFfGgHh--~~!!,=*12345")
-            local fontList = MR_FONTS
-            local fontDpDwn = AceGUI:Create("DropdownGroup")
-            fontDpDwn:SetTitle("Font:")
-            fontDpDwn:SetGroupList(fontList)
-            fontDpDwn:SetLayout("List")
-            fontDpDwn:SetFullWidth(true)
-            fontDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
-                local selectedFont = fontList[groupIndex]
-                MRadialSavedVariables['Font'] = selectedFont
-                local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-                local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
-                testFontFrame:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
-                mRadial:UpdateUI()
-                mRadial:SetPetFramePosAndSize()
-            end)
-            local currentFont = MRadialSavedVariables["Font"] or MR_DEFAULT_FONT
-            for x, fontName in ipairs(MR_FONTS) do
-                if fontName == currentFont then
-                    fontDpDwn:SetGroup(x)
-                end
+local function refreshWidget(scrollFrame, idx)
+    scrollFrame:ReleaseChildren()
+    if idx == 1 then
+        -- Radial shit
+        local radialGroup = AceGUI:Create("InlineGroup")
+        radialGroup:SetTitle("Radial Frame / Icons: ")
+        radialGroup:SetFullWidth(true)
+        radialGroup:SetLayout("Flow")
+        --parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
+        createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
+        createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
+        createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 40, mRadial.UpdateUI)
+        createSlider(radialGroup, "Icon Spread: ", -2, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+        createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
+        createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
+        scrollFrame:AddChild(radialGroup)
+    elseif idx == 2 then
+        local testFontFrame = AceGUI:Create("Label")
+        testFontFrame:SetText("AaBbCcDdEeFfGgHh--~~!!,=*12345")
+        local fontList = MR_FONTS
+        local fontDpDwn = AceGUI:Create("DropdownGroup")
+        fontDpDwn:SetTitle("Font:")
+        fontDpDwn:SetGroupList(fontList)
+        fontDpDwn:SetLayout("List")
+        fontDpDwn:SetFullWidth(true)
+        fontDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
+            local selectedFont = fontList[groupIndex]
+            MRadialSavedVariables['Font'] = selectedFont
+            local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+            local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+            testFontFrame:SetFont(customFontPath, 25, "OUTLINE, MONOCHROME")
+            mRadial:UpdateUI()
+            mRadial:SetPetFramePosAndSize()
+        end)
+        local currentFont = MRadialSavedVariables["Font"] or MR_DEFAULT_FONT
+        for x, fontName in ipairs(MR_FONTS) do
+            if fontName == currentFont then
+                fontDpDwn:SetGroup(x)
             end
-            fontDpDwn:AddChild(testFontFrame)
-            createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.GlobalFontPercentageChanged)
-            scrollFrame:AddChild(fontDpDwn)
-            
-            local timerGroup = AceGUI:Create("InlineGroup")
-            timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
-            timerGroup:SetFullWidth(true)
-            timerGroup:SetLayout("Flow")
-            createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
-            createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
-
-            local cdGroup = AceGUI:Create("InlineGroup")
-            cdGroup:SetTitle("")
-            cdGroup:SetFullWidth(true)
-            cdGroup:SetLayout("Flow")
-
-            createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
-            createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
-
-            createSlider(cdGroup, "Ready Up/Down: ", -50, 50, 1, "readyUDOffset", -10, mRadial.UpdateUI)
-            createSlider(cdGroup, "Ready Left/Right: ", -50, 50, 1, "readyLROffset", 0, mRadial.UpdateUI)
-
-            local countGroup = AceGUI:Create("InlineGroup")
-            countGroup:SetTitle("")
-            countGroup:SetFullWidth(true)
-            countGroup:SetLayout("Flow")
-            createSlider(countGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
-            createSlider(countGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
-            
-            -- Font shit
-            local fontGroup = AceGUI:Create("InlineGroup")
-            fontGroup:SetTitle("Adjust Font Size:  (note Fonts are 50% of the iconFrame size by default.")
-            fontGroup:SetFullWidth(true)
-            fontGroup:SetLayout("Flow")
-            createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
-            createSlider(fontGroup, "\"Ready\":", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
-            createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
-            createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
-            scrollFrame:AddChild(timerGroup)
-            timerGroup:AddChild(cdGroup)
-            timerGroup:AddChild(countGroup)
-            scrollFrame:AddChild(fontGroup)
-        elseif idx == 3 then
-            local spellsGroup = AceGUI:Create("InlineGroup")
-            spellsGroup:SetTitle("Assign Spells To Radial: ")
-            spellsGroup:SetFullWidth(true)
-            spellsGroup:SetLayout("Flow")
-        
-            local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
-            -- lower level classes might not have an active talent tree.
-            if activeTalentTreeSpells ~= nil then
-                for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
-                    -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
-                    local spellName = spellData[1]
-                    local spellID = spellData[2]
-                    local desc = GetSpellDescription(spellID)
-                    
-                    createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID)
-                end
-            end
-            scrollFrame:AddChild(spellsGroup)
         end
-    end
+        fontDpDwn:AddChild(testFontFrame)
+        createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.GlobalFontPercentageChanged)
+        scrollFrame:AddChild(fontDpDwn)
+        
+        local timerGroup = AceGUI:Create("InlineGroup")
+        timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
+        timerGroup:SetFullWidth(true)
+        timerGroup:SetLayout("Flow")
+        createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
+        createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
 
+        local cdGroup = AceGUI:Create("InlineGroup")
+        cdGroup:SetTitle("")
+        cdGroup:SetFullWidth(true)
+        cdGroup:SetLayout("Flow")
+
+        createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
+        createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
+
+        createSlider(cdGroup, "Ready Up/Down: ", -50, 50, 1, "readyUDOffset", -10, mRadial.UpdateUI)
+        createSlider(cdGroup, "Ready Left/Right: ", -50, 50, 1, "readyLROffset", 0, mRadial.UpdateUI)
+
+        local countGroup = AceGUI:Create("InlineGroup")
+        countGroup:SetTitle("")
+        countGroup:SetFullWidth(true)
+        countGroup:SetLayout("Flow")
+        createSlider(countGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
+        createSlider(countGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
+        
+        -- Font shit
+        local fontGroup = AceGUI:Create("InlineGroup")
+        fontGroup:SetTitle("Adjust Font Size:  (note Fonts are 50% of the iconFrame size by default.")
+        fontGroup:SetFullWidth(true)
+        fontGroup:SetLayout("Flow")
+        createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"Ready\":", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
+        scrollFrame:AddChild(timerGroup)
+        timerGroup:AddChild(cdGroup)
+        timerGroup:AddChild(countGroup)
+        scrollFrame:AddChild(fontGroup)
+    elseif idx == 3 then
+        local spellsGroup = AceGUI:Create("InlineGroup")
+        spellsGroup:SetTitle("Assign Spells To Radial: ")
+        spellsGroup:SetFullWidth(true)
+        spellsGroup:SetLayout("Flow")
+    
+        local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
+        -- lower level classes might not have an active talent tree.
+        if activeTalentTreeSpells ~= nil then
+            for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
+                -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+                local spellName = spellData[1]
+                local spellID = spellData[2]
+                local desc = GetSpellDescription(spellID)
+                
+                createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID)
+            end
+        end
+        scrollFrame:AddChild(spellsGroup)
+    elseif idx == 4 then
+        mRadial:linkedSpellPane(scrollFrame)
+    end
+end
+
+function mRadial:OptionsPane()
     OptionsPane = AceGUI:Create("Window")
-    local optionHeight = 640
-    local dropDownHeight = 300
+    local optionHeight = 750
+    local dropDownHeight = 400
     OptionsPane:SetWidth(850)
     OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
@@ -258,7 +256,7 @@ function mRadial:OptionsPane()
 
     local optDpDwn = AceGUI:Create("DropdownGroup")
     optDpDwn:SetTitle("Options:")
-    optDpDwn:SetGroupList({"Radial:Box", "Radial:Fonts", "Radial:Spells"})
+    optDpDwn:SetGroupList({"Radial:Box", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
     optDpDwn:SetHeight(dropDownHeight)
@@ -268,11 +266,9 @@ function mRadial:OptionsPane()
     end)
     optDpDwn:SetGroup(3)
     base:AddChild(optDpDwn)
-
 end
 
 function mRadial:BagPane()
-    local AceGUI = LibStub("AceGUI-3.0")
     local function updateData(groupIndex, ignoreValue)
         local toShow
         if groupIndex == 1 then
@@ -386,6 +382,153 @@ function mRadial:BagPane()
     base:AddChild(testTrp)
 end
 
-function mRadial:orderPane()
+-- Action button for dnd for linked spells..
+local newlyLinked = {}
+local currentLinked
 
+local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, srcLink, destName, destSpellID, scrollFrame)
+    local function acceptDrop(this)
+        local self = this.obj
+		local _, data1, data2 = GetCursorInfo()
+        local link, spellID = GetSpellLink(data1, data2)
+        local spellName, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
+        self:SetUserData("hyperlink", link)
+        self:SetUserData("srcSpellID", srcSpellID)
+        self:SetUserData("baseSpellName", spellName)
+
+        local iconPath= MWArtTexturePaths[icon]
+        self.icon:SetTexture(iconPath)
+        self.icon:Show()
+    end
+
+    local function removeItem(baseSpellIcon, linkedSpellInput, widget)
+        local baseSpellName = baseSpellIcon:GetUserData("baseSpellName")
+        if newlyLinked[baseSpellName] ~= nil then
+            newlyLinked[baseSpellName] = nil
+        end
+        if currentLinked[baseSpellName] ~= nil then
+            currentLinked[baseSpellName] = nil
+        end
+        -- REMOVE FRAMES
+        refreshWidget(scrollFrame, 4)
+    end
+
+    --- START LAYOUT
+    local grp = AceGUI:Create("SimpleGroup")
+    grp:SetFullWidth(true)
+    grp:SetFullHeight(true)
+    grp:SetLayout("Flow")
+
+    local baseSpellIcon = AceGUI:Create("ActionSlot")
+          baseSpellIcon.button:SetScript('OnReceiveDrag', acceptDrop)
+          baseSpellIcon.icon:SetTexture(srcIcon)
+          baseSpellIcon.icon:Show()
+          if srcLink ~= nil then
+            baseSpellIcon:SetUserData("hyperlink", srcLink)
+          end
+          
+          if srcSpellID ~= nil then
+            baseSpellIcon:SetUserData("srcSpellID", srcSpellID)
+          end
+          if srcName ~= nil then
+            baseSpellIcon:SetUserData("baseSpellName", srcName)
+          end
+
+          baseSpellIcon:SetCallback("OnEnter", function(widget)
+            local hLink = widget:GetUserData("hyperlink")
+            if hLink ~= nil then
+                GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
+                GameTooltip:SetHyperlink(hLink) 
+                GameTooltip:SetSize(80, 50) 
+                GameTooltip:SetWidth(80) GameTooltip:Show() 
+            end
+          end)
+          baseSpellIcon:SetCallback("OnLeave", function() 
+            GameTooltip:SetOwner(UIParent, "ANCHOR_BOTTOMRIGHT")
+            GameTooltip:SetText("")
+            GameTooltip:SetSize(80, 50) 
+            GameTooltip:SetWidth(80) 
+            GameTooltip:Show()
+          end)
+
+    local linkedSpellInput = AceGUI:Create("EditBox")
+          linkedSpellInput:SetText(destName)
+          linkedSpellInput:SetWidth(225)
+          linkedSpellInput:SetHeight(25)
+
+    local removeButton = AceGUI:Create("Button")
+          removeButton:SetText("-")
+          removeButton:SetWidth(15)
+          removeButton:SetCallback("OnClick", function(widget) removeItem(baseSpellIcon, linkedSpellInput, widget) end)
+
+    grp:AddChild(baseSpellIcon)
+    grp:AddChild(linkedSpellInput)
+    grp:AddChild(removeButton)
+    parent:AddChild(grp)
+    
+    -- If we have a valid entry, we go ahead and add it to the table now.
+    if asNew then
+        table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput})
+    end
+end
+
+function mRadial:linkedSpellPane(parent)
+    local function updateLinked(scrollFrame)
+        if newlyLinked ~= nil then
+            for _, linkedWidgets in pairs(newlyLinked) do
+                local baseSpellname = linkedWidgets[1]:GetUserData("baseSpellName")
+                local destSpellName = linkedWidgets[2]:GetText()
+                local destSpellID = 0
+                currentLinked[baseSpellname] = {destSpellName, destSpellID}
+            end
+        end
+        MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
+        newlyLinked = {}
+        refreshWidget(scrollFrame, 4)
+    end
+
+    local linkedGroup = AceGUI:Create("InlineGroup")
+    linkedGroup:SetTitle("Linked Spell (Buffs): ")
+    linkedGroup:SetFullWidth(true)
+    linkedGroup:SetLayout("List")
+
+    local updateButton = AceGUI:Create("Button")
+          updateButton:SetText("Update SavedVars")
+          updateButton:SetWidth(145)
+          updateButton:SetCallback("OnClick", function() 
+            updateLinked(parent) 
+        end)
+
+    local addButton = AceGUI:Create("Button")
+          addButton:SetText("Add")
+          addButton:SetWidth(145)
+          addButton:SetCallback("OnClick", function() 
+                createLinkedInput(true, linkedGroup, nil, nil, nil, nil, nil, nil, parent) 
+            end)
+    linkedGroup:AddChild(addButton)
+    linkedGroup:AddChild(updateButton)
+
+    -- All from saved vars!
+    local firstTime = false
+    if MRadialSavedVariables["LINKEDSPELLS"] == nil then
+        -- LINKEDSPELLS[ATTACHTO_SPELLNAME] = {PROC_SPELLNAME, 571321}
+        firstTime = true
+    end
+    currentLinked = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+
+    for spellName, linkedSpell in pairs(currentLinked) do
+        local link, spellID = GetSpellLink(spellName)
+        if link ~= nil then
+            _, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
+            local srcIcon= MWArtTexturePaths[icon]
+            local destSpellName = linkedSpell[1]
+            local destSpellID = linkedSpell[2]
+            if spellName then
+                createLinkedInput(firstTime, linkedGroup, spellName, srcIcon, srcSpellID, link, destSpellName, destSpellID, parent)
+            end
+        end
+    end
+    if linkedGroup ~= nil then
+        parent:AddChild(linkedGroup)
+    end
 end

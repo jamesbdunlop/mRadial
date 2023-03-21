@@ -7,8 +7,9 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
         if playerName ~= myName then
             return
         end
+
         if destName == iuzenName and UnitInParty(iuzenName) then
-            SendChatMessage(iuzenName .. " is dead on the ground again!!!!", "PARTY")
+            SendChatMessage("Healer down! healer down! " .. iuzenName .. " went splat to: " .. sourceName, "PARTY")
         end
 
         local petGUID = UnitGUID("pet")
@@ -16,8 +17,8 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
             mRadial:InitUI()
             -- Loop through all party members and check if the player is in the party
             if UnitInParty(iuzenName) then
-                    local message = "My pet died again " .. iuzenName .. "! WTF BRO!"
-                    SendChatMessage(message, "PARTY")
+                    local message = iuzenName .. "Please lament the loss of yet another demon who was working hard to help kill stuff...."
+                    SendChatMessage(message, "WHISPER", nil, iuzenName)
             end
         end
     end

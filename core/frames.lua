@@ -404,7 +404,8 @@ function mRadial:createWatcherFrame(spellID)
             -- when VoidTorrent is cast, we have a buff VoidForm running we want to track, and cooldowns for VoidBolts during that time.
             -- and when we run out of VoidForm we then end up showing the cooldown for VoidTorrent.
             -- relationships = {spellName, buffName, swapSpellNameTo}
-        local getLinked = linkedSpells[spellName] or nil
+        local allLinkedSpells = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+        local getLinked = allLinkedSpells[spellName] or nil
         
         local linkedSpellID
         local linkedSpellName
