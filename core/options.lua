@@ -401,7 +401,7 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
         self.icon:Show()
     end
 
-    local function removeItem(baseSpellIcon, linkedSpellInput, widget)
+    local function removeItem(baseSpellIcon)
         local baseSpellName = baseSpellIcon:GetUserData("baseSpellName")
         if newlyLinked[baseSpellName] ~= nil then
             newlyLinked[baseSpellName] = nil
@@ -451,24 +451,59 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
             GameTooltip:Show()
           end)
 
+    local linkedSpellID = AceGUI:Create("EditBox")
+          linkedSpellID:SetText(tostring(destSpellID))
+          linkedSpellID:SetWidth(100)
+          linkedSpellID:SetHeight(25)
+          linkedSpellID:SetDisabled(true)
+
     local linkedSpellInput = AceGUI:Create("EditBox")
           linkedSpellInput:SetText(destName)
           linkedSpellInput:SetWidth(225)
           linkedSpellInput:SetHeight(25)
+          linkedSpellInput:SetCallback("OnTextChanged", function(widget, event, text)
+            _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
+            local spellNumber = spellID
+            
+            if spellNumber == nil then
+                local found = false
+                local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
+                -- lower level classes might not have an active talent tree.
+                if activeTalentTreeSpells ~= nil then
+                    for _, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
+                        -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+                        local spellName = spellData[1]
+                        local spellID = spellData[2]
+                        if text == spellName then
+                            spellNumber = spellID
+                            found = true
+                        end
+                    end
+                end
+                if not found then
+                    spellNumber = ""
+                end
+            end
+            linkedSpellID:SetText(tostring(spellNumber))
+            table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput, linkedSpellID})
+        end)
+
+
 
     local removeButton = AceGUI:Create("Button")
           removeButton:SetText("-")
           removeButton:SetWidth(15)
-          removeButton:SetCallback("OnClick", function(widget) removeItem(baseSpellIcon, linkedSpellInput, widget) end)
+          removeButton:SetCallback("OnClick", function() removeItem(baseSpellIcon) end)
 
     grp:AddChild(baseSpellIcon)
     grp:AddChild(linkedSpellInput)
+    grp:AddChild(linkedSpellID)
     grp:AddChild(removeButton)
     parent:AddChild(grp)
     
     -- If we have a valid entry, we go ahead and add it to the table now.
     if asNew then
-        table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput})
+        table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput, linkedSpellID})
     end
 end
 
@@ -478,7 +513,13 @@ function mRadial:linkedSpellPane(parent)
             for _, linkedWidgets in pairs(newlyLinked) do
                 local baseSpellname = linkedWidgets[1]:GetUserData("baseSpellName")
                 local destSpellName = linkedWidgets[2]:GetText()
-                local destSpellID = 0
+                local destSpellID = tonumber(linkedWidgets[3]:GetText())
+                if destSpellID == 0 then
+                    _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
+                    if spellID ~= nil then
+                        destSpellID = spellID
+                    end
+                end
                 currentLinked[baseSpellname] = {destSpellName, destSpellID}
             end
         end

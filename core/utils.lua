@@ -169,7 +169,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
         end
         local isPassive = IsPassiveSpell(spellID)
         
-        if isKnown and not isPassive and not mRadial:TableContains(active, {spellName, spellID}) then
+        if isKnown and not mRadial:TableContains(active, {spellName, spellID}) then
             table.insert(active, {spellName, spellID})
         end
     end
