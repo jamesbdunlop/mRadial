@@ -187,6 +187,8 @@ local function refreshWidget(scrollFrame, idx)
         spellsGroup:SetLayout("Flow")
     
         local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
+        local activeSpells = {}
+        local passiveSpells = {}
         -- lower level classes might not have an active talent tree.
         if activeTalentTreeSpells ~= nil then
             for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
@@ -194,10 +196,22 @@ local function refreshWidget(scrollFrame, idx)
                 local spellName = spellData[1]
                 local spellID = spellData[2]
                 local desc = GetSpellDescription(spellID)
-                
-                createCheckBox(spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID)
+                if IsPassiveSpell(spellID) then
+                   table.insert(passiveSpells, {spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID})
+                else
+                    table.insert(activeSpells, {spellsGroup, spellName, desc, "isActive"..spellName, false, mRadial.UpdateUI, true, spellID})
+                end
             end
         end
+        for _, activeSpellData in ipairs(activeSpells) do
+            local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(activeSpellData)
+            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID)
+        end
+        for _, passiveSpellData in ipairs(passiveSpells) do
+            local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(passiveSpellData)
+            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID)
+        end
+
         scrollFrame:AddChild(spellsGroup)
     elseif idx == 4 then
         mRadial:linkedSpellPane(scrollFrame)
