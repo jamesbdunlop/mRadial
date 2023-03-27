@@ -617,7 +617,7 @@ function mRadial:createPetFrames()
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if MR_ALLFRAMES[frameName] == nil then
+        if MR_ALLFRAMES[frameName] == nil and mRadial:checkHasSpell(spellName) then
             -- print("Creating new pet  frame: %s", frameName)
             local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
             local fontPercentage = MRadialSavedVariables.FontPercentage or .5

@@ -83,6 +83,8 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
+    
+
 end
 
 function mRadial:OnEnable()
@@ -91,7 +93,6 @@ function mRadial:OnEnable()
     print("Welcome " .. playerName .. " -- mRadial")
     print("/mr slash commands are: move, lock, options")
     print("----------------------")
-    
 end
 
 function mRadial:OnDisable()
