@@ -178,7 +178,7 @@ local function refreshWidget(scrollFrame, idx)
         scrollFrame:AddChild(fontDpDwn)
         
         local timerGroup = AceGUI:Create("InlineGroup")
-        timerGroup:SetTitle("Timer Text Positions: (set movable on to see)")
+        timerGroup:SetTitle("Timer Text Positions: (!!SET MOVEABLE ON WHILE ADJUSTING!!)")
         timerGroup:SetFullWidth(true)
         timerGroup:SetLayout("Flow")
         createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
