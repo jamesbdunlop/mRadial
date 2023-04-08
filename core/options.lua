@@ -415,6 +415,7 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
         local iconPath= MWArtTexturePaths[icon]
         self.icon:SetTexture(iconPath)
         self.icon:Show()
+        ClearCursor()
     end
 
     local function removeItem(baseSpellIcon)
