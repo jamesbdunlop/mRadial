@@ -1,5 +1,11 @@
+PetDiedMsg ={}
+PetDiedMsg[1] = "Please lament the loss of yet another demon who was working hard to help kill stuff...."
+PetDiedMsg[2] = "Whoops, Pet down! Do you not like my pets helping out?!"
+PetDiedMsg[3] = "Demon down! Demon down! Macka is now freaking out.."
+PetDiedMsg[4] = "Several warlock pets died in the making of this dungeon run..."
+
 function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
-    local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
+    local _, subevent, _, _, sourceName, _, _, destGUID, destName, _, _ = CombatLogGetCurrentEventInfo()
     local iuzenName = "Iuzenashamme"
     local playerName = UnitName("player")
     local myName = "Macka"
@@ -17,8 +23,7 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
             mRadial:InitUI()
             -- Loop through all party members and check if the player is in the party
             if UnitInParty(iuzenName) then
-                    local message = iuzenName .. "Please lament the loss of yet another demon who was working hard to help kill stuff...."
-                    SendChatMessage(message, "WHISPER", nil, iuzenName)
+                SendChatMessage(PetDiedMsg[math.random(1, #PetDiedMsg)], "WHISPER", nil, iuzenName)
             end
         end
     end

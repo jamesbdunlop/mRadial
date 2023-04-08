@@ -56,7 +56,9 @@ function mRadial:InitUI()
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     mRadial:CreateMainFrame()
     mRadial:createWatcherFrames()
-    if mRadial:IsWarlock() then
+
+    local hideShardFrame = MRadialSavedVariables["hideShardFrame"] or false
+    if mRadial:IsWarlock() and not hideShardFrame then
         mRadial:createShardCountFrame()
         mRadial:shardtrack()
     end

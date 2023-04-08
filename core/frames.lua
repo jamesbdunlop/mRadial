@@ -569,7 +569,7 @@ end
 -- PET FRAMES
 local plast = 0
 function mRadial:createPetFrames()
-    mRadial:RemoveAllPetFrames()
+    mRadial:HideAllPetFrames()
     -- Clear out existing
     local petSpellData = {}
     if mRadial:IsFelguardSummoned() then 
@@ -646,6 +646,8 @@ function mRadial:createPetFrames()
                 plast = 0
             end)
             MR_PETFAMES[#MR_PETFAMES+1] = frame
+        elseif MR_ALLFRAMES[frameName] and mRadial:checkHasSpell(spellName) then
+            MR_ALLFRAMES[frameName]:Show()
         end
     end
 end
@@ -661,13 +663,9 @@ function mRadial:TogglePetFrameVisibility()
     end
 end
 
-function mRadial:RemoveAllPetFrames()
-    for idx, frame in pairs(MR_PETFAMES) do
+function mRadial:HideAllPetFrames()
+    for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
-            local pframe = frame:GetParent()
-            if pframe ~= nil then
-                pframe:Hide()
-            end
             frame:Hide()
         end
     end
