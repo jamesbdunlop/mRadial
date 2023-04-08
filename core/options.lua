@@ -2,6 +2,26 @@ local MR_config = LibStub("AceConfig-3.0")
 local MR_dialog = LibStub("AceConfigDialog-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 
+local function wrapText(str)
+    local result = ""
+    local line = ""
+    for word in str:gmatch("%S+") do
+        if #line + #word >= 40 then
+            result = result .. line .. "\n"
+            line = ""
+        end
+        if line == "" then
+            line = word
+        else
+            line = line .. " " .. word
+        end
+    end
+    if line ~= "" then
+        result = result .. line
+    end
+    return result
+end
+
 local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
     local opt_slider = AceGUI:Create("Slider")
     opt_slider:SetSliderValues(minVal, maxVal, step)
@@ -60,7 +80,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
         if defaultValue == nil then
             dvalue = false
         else
-        dvalue = defaultValue
+            dvalue = defaultValue
         end
     end
     opt_cbox.get = getValue
@@ -81,8 +101,8 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
 
     if descAsTT then
         opt_cbox:SetCallback("OnEnter", function(widget, event)
-            GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
-            GameTooltip:SetText(descrip)
+            GameTooltip:SetOwner(widget.frame, "ANCHOR_CURSOR")
+            GameTooltip:SetText(wrapText(descrip))
             GameTooltip:SetSize(80, 50)
             GameTooltip:SetWidth(80)
             GameTooltip:Show()
