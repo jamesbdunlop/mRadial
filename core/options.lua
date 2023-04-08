@@ -22,7 +22,7 @@ local function wrapText(str)
     return result
 end
 
-local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec)
+local function createSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec, tootip)
     local opt_slider = AceGUI:Create("Slider")
     opt_slider:SetSliderValues(minVal, maxVal, step)
     opt_slider:SetLabel(name)
@@ -54,6 +54,19 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     opt_slider:SetValue(currentValue)
     opt_slider:SetCallback("OnValueChanged", setValue)
     
+    if tootip ~= nil then
+        opt_slider:SetCallback("OnEnter", function(widget, event)
+            GameTooltip:SetOwner(widget.frame, "ANCHOR_CURSOR")
+            GameTooltip:SetText(wrapText(tootip))
+            GameTooltip:SetSize(80, 50)
+            GameTooltip:SetWidth(80)
+            GameTooltip:Show()
+        end)
+        opt_slider:SetCallback("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
+
     parent:AddChild(opt_slider)
     return opt_slider
 end
@@ -62,6 +75,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
     opt_cbox:SetType("radio")
+    opt_cbox:SetWidth(140)
     
     local function setValue(table, cbName, value)
         MRadialSavedVariables[variableName] = value
@@ -111,7 +125,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
             GameTooltip:Hide()
         end)
     else
-        opt_cbox:SetDescription(descrip)
+        opt_cbox:SetDescription(wrapText(descrip))
     end
     parent:AddChild(opt_cbox)
     return opt_cbox
@@ -159,7 +173,8 @@ local function refreshWidget(scrollFrame, idx)
             end
         end
         fontDpDwn:AddChild(testFontFrame)
-        createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.GlobalFontPercentageChanged)
+        local glbFntTT = "This controls the overall font size for the UI. A setting of 50% will be 50% of the current icon size."
+        createSlider(fontDpDwn, "Global Font %", .1, 1, .01, "FontPercentage", .5, mRadial.GlobalFontPercentageChanged, glbFntTT)
         scrollFrame:AddChild(fontDpDwn)
         
         local timerGroup = AceGUI:Create("InlineGroup")
@@ -167,37 +182,38 @@ local function refreshWidget(scrollFrame, idx)
         timerGroup:SetFullWidth(true)
         timerGroup:SetLayout("Flow")
         createSlider(timerGroup, "Buff Up/Down:",  -50, 50, 1, "radialUdOffset", 0, mRadial.UpdateUI)
-        createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -10, mRadial.UpdateUI)
+        createSlider(timerGroup, "Buff Left/Right: ", -50, 50, 1, "radialLROffset", -2, mRadial.UpdateUI)
 
-        local cdGroup = AceGUI:Create("InlineGroup")
-        cdGroup:SetTitle("")
+        local cdGroup = AceGUI:Create("SimpleGroup")
         cdGroup:SetFullWidth(true)
         cdGroup:SetLayout("Flow")
 
-        createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", -10, mRadial.UpdateUI)
-        createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", -10, mRadial.UpdateUI)
+        createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", 0, mRadial.UpdateUI)
+        createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", 0, mRadial.UpdateUI)
+        local rdyGroup = AceGUI:Create("SimpleGroup")
+        rdyGroup:SetFullWidth(true)
+        rdyGroup:SetLayout("Flow")
+        createSlider(rdyGroup, "Ready Up/Down: ", -50, 50, 1, "readyUDOffset", -18, mRadial.UpdateUI)
+        createSlider(rdyGroup, "Ready Left/Right: ", -50, 50, 1, "readyLROffset", 0, mRadial.UpdateUI)
 
-        createSlider(cdGroup, "Ready Up/Down: ", -50, 50, 1, "readyUDOffset", -10, mRadial.UpdateUI)
-        createSlider(cdGroup, "Ready Left/Right: ", -50, 50, 1, "readyLROffset", 0, mRadial.UpdateUI)
-
-        local countGroup = AceGUI:Create("InlineGroup")
-        countGroup:SetTitle("")
+        local countGroup = AceGUI:Create("SimpleGroup")
         countGroup:SetFullWidth(true)
         countGroup:SetLayout("Flow")
-        createSlider(countGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", -10, mRadial.UpdateUI)
-        createSlider(countGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -10, mRadial.UpdateUI)
+        createSlider(countGroup, "Count Up/Down: ", -50, 50, 1, "countUdOffset", 16, mRadial.UpdateUI)
+        createSlider(countGroup, "Count Left/Right: ", -50, 50, 1, "countLROffset", -16, mRadial.UpdateUI)
         
         -- Font shit
         local fontGroup = AceGUI:Create("InlineGroup")
         fontGroup:SetTitle("Adjust Font Size:  (note Fonts are 50% of the iconFrame size by default.")
         fontGroup:SetFullWidth(true)
-        fontGroup:SetLayout("Flow")
-        createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 12, mRadial.UpdateUI)
-        createSlider(fontGroup, "\"Ready\":", 2, 55, 1, "readyFontSize", 12, mRadial.UpdateUI)
-        createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 12, mRadial.UpdateUI)
-        createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 12, mRadial.UpdateUI)
+        fontGroup:SetLayout("List")
+        createSlider(fontGroup, "\"Count\":", 2, 55, 1, "countFontSize", 2, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"Ready\":", 2, 55, 1, "readyFontSize", 2, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"CoolDown\":", 2, 55, 1, "coolDownFontSize", 2, mRadial.UpdateUI)
+        createSlider(fontGroup, "\"Timer\":", 2, 55, 1, "timerFontSize", 2, mRadial.UpdateUI)
         scrollFrame:AddChild(timerGroup)
         timerGroup:AddChild(cdGroup)
+        timerGroup:AddChild(rdyGroup)
         timerGroup:AddChild(countGroup)
         scrollFrame:AddChild(fontGroup)
     elseif idx == 3 then
@@ -271,28 +287,31 @@ function mRadial:OptionsPane()
     generalGroup:SetTitle("General: ")
     generalGroup:SetFullWidth(true)
     generalGroup:SetLayout("Flow")
-    local descrip = "Allow the ui to move around using shift+lmb."
-    createCheckBox(generalGroup, "Movable: ", descrip, "moveable", false, mRadial.SetUIMovable)
-    createCheckBox(generalGroup, "AsButtons: (requires reloadui) ", "Allow click to cast from radial buttons.", "asbuttons", false, mRadial.UpdateUI)
+    local descrip = "Allow UI frames to be shift+click draggable."
+    createCheckBox(generalGroup, "Movable", descrip, "moveable", false, mRadial.SetUIMovable, true, nil)
+    createCheckBox(generalGroup, "AsButtons", "Allow click to cast from radial buttons. \n Toggling this will require a /reloadUI", "asbuttons", false, mRadial.UpdateUI, true, nil)
+    createCheckBox(generalGroup, "Hide Out Of Combat", "Hide UI while out of combat.", "hideooc", false, mRadial.UpdateUI, true, nil)
+    createCheckBox(generalGroup, "Hide Pet Frames", "Hide all pet frames from the UI.", "hidePetFrame", false, mRadial.TogglePetFrameVisibility, true, nil)
     
     base:AddChild(generalGroup)
     
-    local wlckGroup = AceGUI:Create("InlineGroup")
-    wlckGroup:SetTitle("Warlock Specific - Other classes can ignore.")
+    local wlckGroup = AceGUI:Create("SimpleGroup")
     wlckGroup:SetFullWidth(true)
     wlckGroup:SetLayout("Flow")
-    createCheckBox(wlckGroup, "Hide Pet Frames", "", "hidePetFrame", false, mRadial.TogglePetFrameVisibility)
-    createCheckBox(wlckGroup, "HideOOC:", "Hide while out of combat.", "hideooc", false, mRadial.UpdateUI)
-    createCheckBox(wlckGroup, "Hide Shard Frames:", "", "hideShardFrame", false, mRadial.UpdateUI)
-    createSlider(wlckGroup, "Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
-    createSlider(wlckGroup, "Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
-    createCheckBox(wlckGroup, "Hide Out Of Shards Frame:", "", "hideOOShardFrame", false, mRadial.UpdateUI)
-    createSlider(wlckGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
-    base:AddChild(wlckGroup)
+    createCheckBox(wlckGroup, "Hide Wrlk Shard Frames", "This will hide the custom warlock shardCounter frames.", "hideShardFrame", false, mRadial.UpdateUI, true, nil)
+    createCheckBox(wlckGroup, "Hide Wrlk Out Of Shards Frame:", "Hides the red out of shards frame for warlocks.", "hideOOShardFrame", false, mRadial.UpdateUI, true, nil)
+    local wlckSliderGroup = AceGUI:Create("SimpleGroup")
+    wlckSliderGroup:SetFullWidth(true)
+    wlckSliderGroup:SetLayout("Flow")
+    createSlider(wlckSliderGroup, "Wrlk Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
+    createSlider(wlckSliderGroup, "Wrlk Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
+    createSlider(wlckSliderGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
+    generalGroup:AddChild(wlckGroup)
+    generalGroup:AddChild(wlckSliderGroup)
 
     local optDpDwn = AceGUI:Create("DropdownGroup")
     optDpDwn:SetTitle("Options:")
-    optDpDwn:SetGroupList({"Radial:Box", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
+    optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
     optDpDwn:SetHeight(dropDownHeight)
