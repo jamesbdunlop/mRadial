@@ -316,7 +316,6 @@ function mRadial:OptionsPane()
     optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
-    -- optDpDwn:SetHeight(dropDownHeight)
     optDpDwn:AddChild(scrollcontainer)
     optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
         refreshWidget(scrollFrame, groupIndex)
@@ -345,7 +344,7 @@ function mRadial:BagPane()
         for x, itemInfo in ipairs(toShow) do
             local itemName = itemInfo[1]
             local icon = itemInfo[2]
-            local clickableUrl = itemInfo[3]
+            -- local clickableUrl = itemInfo[3]
             local url = itemInfo[4]
             local hyperlink = itemInfo[5]
             local interActiveIcon = AceGUI:Create("Icon")
