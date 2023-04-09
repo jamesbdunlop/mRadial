@@ -268,22 +268,24 @@ function mRadial:OptionsPane()
     local base = AceGUI:Create("SimpleGroup")
     OptionsPane:AddChild(base)
 
-    local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
+    local scrollcontainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
     scrollcontainer:SetLayout("Flow")
-    -- OptionsPane:AddChild(scrollcontainer)
     scrollcontainer:SetFullWidth(true)
-    scrollcontainer:SetHeight(dropDownHeight)
-    -- scrollcontainer:SetFullHeight(true)
-    
+    local generalGroup = AceGUI:Create("InlineGroup")
+
     local scrollFrame = AceGUI:Create("ScrollFrame")
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
-    -- scrollFrame:SetFullHeight(true)
-    scrollFrame:SetHeight(dropDownHeight)
+    scrollFrame:SetHeight(50)
+    scrollFrame.content:SetScript("OnUpdate", function() 
+        local height = OptionsPane.frame:GetHeight()
+        local newHeight = height-generalGroup.frame:GetHeight()-150
+        scrollFrame:SetHeight(newHeight)
+        scrollFrame.content:SetHeight(newHeight)
+    end)
     scrollcontainer:AddChild(scrollFrame)
         
     -- General shit
-    local generalGroup = AceGUI:Create("InlineGroup")
     generalGroup:SetTitle("General: ")
     generalGroup:SetFullWidth(true)
     generalGroup:SetLayout("Flow")
@@ -314,7 +316,7 @@ function mRadial:OptionsPane()
     optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
-    optDpDwn:SetHeight(dropDownHeight)
+    -- optDpDwn:SetHeight(dropDownHeight)
     optDpDwn:AddChild(scrollcontainer)
     optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
         refreshWidget(scrollFrame, groupIndex)
