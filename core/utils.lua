@@ -77,6 +77,16 @@ function mRadial:TableContains(myTable, value)
     return false
 end
 
+function mRadial:OrderTableContains(myTable, watcher)
+    for _, v in ipairs(myTable) do
+        if v.spellName == watcher.spellName then
+            return true
+        end
+    end
+
+    return false
+end
+
 function mRadial:getAllSpells(activeTable)
     local spellData = {}
     --- Trawl the entire spell book for spells.

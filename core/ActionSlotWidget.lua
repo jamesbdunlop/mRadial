@@ -53,14 +53,15 @@ do
 			return PickupEquipmentSetByName(actionData)
 		elseif actionType == "spell" then
 			local pattern = "spell:"..actionData.."|"
-			for i, book in pairs(spellbooks) do
-				local index, link = 1, GetSpellLink(1, book)
-				while link do
-					if link:match(pattern) then
-						return PickupSpell(index, book)
-					else
-						index = index + 1
-						link = GetSpellLink(index, book)
+			local numTabs = GetNumSpellTabs()
+			for i=2, numTabs do
+				local name, _, offset, numSpells = GetSpellTabInfo(i)
+				if name == mRadial:GetSpecName() or name == UnitClass("player") then
+					for x=offset+1, offset + numSpells do
+						local spellName, rank, icon, castingTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(x, "spell")
+						if spellName == actionData then
+							return PickupSpell(spellID)
+						end
 					end
 				end
 			end
@@ -73,7 +74,7 @@ do
 				end
 			end
 		end
-		ClearCursor()
+		-- ClearCursor()
 	end
 	
 	local function ParseActionInfo(actionType, data1, data2)
@@ -120,9 +121,12 @@ do
 
 	local function SetNewAction(self, newType, newData)
 		local oldType, oldData = self.actionType, self.actionData
+		if newType == nil and newData == nil then
+			Pickup(oldType, oldData)
+			return
+		end
 		if newType ~= oldType or newData ~= oldData then
 			local value = newType and newData and self:BuildValue(newType, newData)
-			print("Value: %s", value)
 			self:Fire("OnEnterPressed", value)
 			if self.actionType ~= oldType or self.actionData ~= oldData then
 				Pickup(oldType, oldData)
@@ -237,7 +241,7 @@ do
 		self.label = label
 
 		local button = CreateFrame("Button", nil, frame)
-		button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+		-- button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 		button:RegisterForDrag("LeftButton")
 		button:SetPoint("BOTTOMLEFT",4,4)
 		button:SetWidth(29)
