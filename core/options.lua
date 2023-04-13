@@ -3,6 +3,10 @@ local MR_dialog = LibStub("AceConfigDialog-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 
 local function wrapText(str)
+    if str == nil then
+        return ""
+    end
+
     local result = ""
     local line = ""
     for word in str:gmatch("%S+") do
@@ -107,6 +111,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
         if toggleExec ~= nil and toggleVar1 ~= nil then
             toggleExec(toggleExec, toggleVar1)
         end
+        mRadial:UpdateUI(true)
         end)
 
     if spellID ~= nil then
@@ -148,8 +153,13 @@ local function updateTableOrder(orderTable, srcWatcher, destWatcher, srcIDX, des
 end
 
 function mRadial:BuildOrderLayout(parent)
-    print("BuildOrderLayout called")
+    -- First update for active spells for any checkboxes that may have been ticked
+    mRadial:UpdateActiveSpells()
+
+    -- now release all the current buttons from the UI
     parent:ReleaseChildren()
+
+    -- Now go through and proces the order.
     local recorded_actionData = nil
     local destIDX = -1
     local srcIDX = -1
@@ -196,6 +206,7 @@ function mRadial:BuildOrderLayout(parent)
             -- cleanup current dragged
             ClearCursor()
             mRadial:BuildOrderLayout(parent)
+            mRadial:UpdateUI(true)
         end
 
         if button == "RightButton" then
@@ -212,12 +223,8 @@ function mRadial:BuildOrderLayout(parent)
 
     -- first we check to see if the activewatchers has a new entry compared to the primarywatcherorder
     local currentOrder = MRadialSavedVariables["primaryWatcherOrder"]
-    for _, watcher in ipairs(currentOrder) do
-        print(watcher.spellName)
-    end
     -- First time load init
     if currentOrder == nil then
-        print("Init primary spell order.")
         MRadialSavedVariables["primaryWatcherOrder"] = {}
         currentOrder = {}
     end
@@ -267,15 +274,16 @@ function mRadial:BuildOrderLayout(parent)
 
             orderButton:SetUserData("index", idx)
             orderButton:SetUserData("watcher", watcher)
+            orderButton.button:EnableMouse(true)
             parent:AddChild(orderButton)
         end
     end
 end
--- BUILD PANE
 
+-- BUILD PANE STUFF
 local function refreshWidget(scrollFrame, idx)   
     scrollFrame:ReleaseChildren()
-    if idx == 1 then
+    if idx == 1 then -- Radial options
         -- Radial shit
         local radialGroup = AceGUI:Create("InlineGroup")
         radialGroup:SetTitle("Radial Frame / Icons: ")
@@ -289,7 +297,7 @@ local function refreshWidget(scrollFrame, idx)
         createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
         createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
         scrollFrame:AddChild(radialGroup)
-    elseif idx == 2 then
+    elseif idx == 2 then -- Fonts
         local testFontFrame = AceGUI:Create("Label")
         testFontFrame:SetText("AaBbCcDdEeFfGgHh--~~!!,=*12345")
         local fontList = MR_FONTS
@@ -357,7 +365,7 @@ local function refreshWidget(scrollFrame, idx)
         timerGroup:AddChild(rdyGroup)
         timerGroup:AddChild(countGroup)
         scrollFrame:AddChild(fontGroup)
-    elseif idx == 3 then
+    elseif idx == 3 then -- Primary spell order and picker
         -- MRadialSavedVariables["primaryWatcherOrder"] = {}
         local spellsOrder = AceGUI:Create("InlineGroup")
         spellsOrder:SetTitle("Order:")
@@ -399,9 +407,9 @@ local function refreshWidget(scrollFrame, idx)
         scrollFrame:AddChild(spellsGroup)
         
         -- Now populate the primary order
-        mRadial:BuildOrderLayout(spellsOrder, watchersTable)
+        mRadial:BuildOrderLayout(spellsOrder)
 
-    elseif idx == 4 then
+    elseif idx == 4 then -- Linked spells
         mRadial:linkedSpellPane(scrollFrame)
     end
 end

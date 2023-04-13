@@ -10,7 +10,6 @@
 embeds.xml 
 addon.lua
 
-core\ActionSlotWidget.lua
 core\ArtTextureID.lua
 core\timers.lua
 core\constants.lua

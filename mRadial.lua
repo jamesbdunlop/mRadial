@@ -65,12 +65,24 @@ function mRadial:InitUI()
     end
     mRadial:createPetFrames()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
-    mRadial:UpdateUI()
+    mRadial:UpdateUI(false)
 end
 
-function mRadial:UpdateUI()
-    mRadial:createWatcherFrames()
-    mRadial:RadialButtonLayout()
+function mRadial:UpdateUI(create)
+    if create then
+        mRadial:createWatcherFrames()
+    end
+    local prevOrder = MRadialSavedVariables["primaryWatcherOrder"]
+    local currentOrder = {}
+    local activeSpells = mRadial:UpdateActiveSpells()
+    if prevOrder ~= nil and #prevOrder > 0 then
+        for idx, watcherData in ipairs(prevOrder) do
+            currentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSpells)
+        end
+    else
+        currentOrder = activeSpells
+    end
+    mRadial:RadialButtonLayout(currentOrder)
 end
 
 function mRadial:OnInitialize()
@@ -86,8 +98,6 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
-    
-
 end
 
 function mRadial:OnEnable()

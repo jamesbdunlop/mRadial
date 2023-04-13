@@ -336,3 +336,11 @@ function mRadial:listBankReagentItems(ignoreSoulBound)
     SendSystemMessage("Swapped to Bank reagent bag!")
     return BANKRDUMPV1
 end
+
+function mRadial:GetFromTable(spellName, activespells)
+    for idx, watcher in ipairs(activespells) do
+        if watcher.spellName == spellName then
+            return watcher
+        end
+    end
+end
