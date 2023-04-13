@@ -1,4 +1,4 @@
-function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
+function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton, spellName)
     if template == nil then template = "BackdropTemplate" end
     local sizeX = frameSize[1] or DEFAULT_FRAMESIZE
     local sizeY = frameSize[2] or DEFAULT_FRAMESIZE
@@ -15,12 +15,13 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
         frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  
         frame:SetEnabled(true)
         frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
-        frame:SetAttribute("type", "spell")
         frame:SetParent(parentFrame)
     else
         frame = CreateFrame("Frame", frameName, parentFrame, template)        
         frame:SetParent(parentFrame)
     end
+    frame:SetAttribute("type", "spell")
+    frame:SetAttribute("name", spellName)
 
     -- local frame = CreateFrame("Frame", frameName, parent, template)
     frame:SetPoint("CENTER", parent, "CENTER", 0, 0)
@@ -33,6 +34,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame.iconFrame:SetPoint("CENTER", 0, 0)
     if texturePath ~= nil then
         frame.iconFrame:SetTexture(texturePath)
+        frame.iconPath = texturePath
     end
     -- MASK
     frame.mask = frame:CreateMaskTexture("mask_" .. frameName)
@@ -135,7 +137,8 @@ function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
                                             nil, 
                                             {size, size}, 
                                             {size, size}, 
-                                            asButtons)
+                                            asButtons,
+                                            spellName)
     
     mRadial:CreateFrameTimerElements(watcher)
     
@@ -497,19 +500,29 @@ function mRadial:createWatcherFrames()
         return
     end
     -- hide all for spec changes.
-    for x, frame in ipairs(MR_WATCHERFRAMES) do
+    for _, frame in ipairs(MR_WATCHERFRAMES) do
         frame:Hide()
         local pframe = frame:GetParent()
         if pframe ~= nil then
             pframe:Hide()
         end
     end
+    for _, frame in ipairs(MR_SECONDWATCHERFRAMES) do
+        frame:Hide()
+        local pframe = frame:GetParent()
+        if pframe ~= nil then
+            pframe:Hide()
+        end
+    end
+
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
         local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
         local isActive  = false
+        local isPrimary  = true
         if spellName ~= nil then 
             isActive = MRadialSavedVariables["isActive"..spellName] or false
+            isPrimary = MRadialSavedVariables["isPrimary"..spellName] or true
             
             local isKnown = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
@@ -517,7 +530,11 @@ function mRadial:createWatcherFrames()
             if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                 -- print("Adding watcherFrame for  %s", spellName)
                 local frame = mRadial:createWatcherFrame(spellID)
-                MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
+                if isPrimary then
+                    MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
+                else
+                    MR_SECONDWATCHERFRAMES[#MR_SECONDWATCHERFRAMES+1] = frame
+                end
                 UdOffset = UdOffset + 32
             elseif not isActive and isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
@@ -688,10 +705,24 @@ function mRadial:SetPetFramePosAndSize()
 end
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
+function mRadial:UpdateActiveSpells()
+    -- Flush existing
+    ACTIVEWATCHERS = {}
+    for x=1, #MR_WATCHERFRAMES do
+        -- First we hide any and all watchers that may have been active.
+        local watcher = MR_WATCHERFRAMES[x]
+        watcher:Hide()
 
-function mRadial:RadialButtonLayout()
-    -- print("Performing radial layout now.")
-    --- Handles adding the frames around a unit circle cause I like it better this way....
+        -- Now we check for isActive (options toggles)
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        if isActive then ACTIVEWATCHERS[#ACTIVEWATCHERS+1] = watcher end
+    end
+    return ACTIVEWATCHERS
+end
+
+function mRadial:RadialButtonLayout(orderedWatchers)
+    --- This function handles adding the frames around a unit circle cause I like it better this way....
+    -- orderedWatchers (table): ordered set of watchers.
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
@@ -720,28 +751,21 @@ function mRadial:RadialButtonLayout()
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
-    ACTIVEWATCHERS = {}
-    for x=1, #MR_WATCHERFRAMES do
-        local watcher = MR_WATCHERFRAMES[x]
-        watcher:Hide()
-        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
-        if isActive then
-            ACTIVEWATCHERS[#ACTIVEWATCHERS+1] = watcher
-        end
+    local angleStep = (math.pi / #orderedWatchers) + spread*.1
+    
+    if orderedWatchers == nil then
+        orderedWatchers = mRadial:UpdateActiveSpells()
     end
 
-    local angleStep = (math.pi / #ACTIVEWATCHERS) + spread*.1
-    for x = 1, #ACTIVEWATCHERS do
-        local watcher = ACTIVEWATCHERS[x]
-        watcher:Show()
-        watcher:GetParent():Show()
-        local angle = ((x-1)*angleStep) + (offset*math.pi) 
-        local sinAng = math.sin(angle)
-        local cosAng = math.cos(angle)
-        local w = (cosAng*radius)*widthDeform
-        local h = (sinAng*radius)*heightDeform
+    for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then
-            -- print("Found watcher frame! %s", watcher:GetName())
+            watcher:Show()
+            watcher:GetParent():Show()
+            local angle = ((x-1)*angleStep) + (offset*math.pi) 
+            local sinAng = math.sin(angle)
+            local cosAng = math.cos(angle)
+            local w = (cosAng*radius)*widthDeform
+            local h = (sinAng*radius)*heightDeform
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
             -- expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)

@@ -122,7 +122,6 @@ do
 		local oldType, oldData = self.actionType, self.actionData
 		if newType ~= oldType or newData ~= oldData then
 			local value = newType and newData and self:BuildValue(newType, newData)
-			print("Value: %s", value)
 			self:Fire("OnEnterPressed", value)
 			if self.actionType ~= oldType or self.actionData ~= oldData then
 				Pickup(oldType, oldData)

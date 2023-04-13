@@ -3,6 +3,10 @@ local MR_dialog = LibStub("AceConfigDialog-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 
 local function wrapText(str)
+    if str == nil then
+        return ""
+    end
+
     local result = ""
     local line = ""
     for word in str:gmatch("%S+") do
@@ -71,7 +75,7 @@ local function createSlider(parent, name, minVal, maxVal, step, variableName, de
     return opt_slider
 end
 
-local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT, spellID)
+local function createCheckBox(parent, name, descrip, variableName, defaultValue, toexec, descAsTT, spellID, toggleExec, toggleVar1)
     local opt_cbox = AceGUI:Create("CheckBox")
     opt_cbox:SetLabel(name)
     opt_cbox:SetType("radio")
@@ -81,7 +85,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
         MRadialSavedVariables[variableName] = value
         if toexec ~= nil then
             -- for some reason this value is not being passed along to the func!!!???
-            toexec(value)
+            toexec(toexec, value)
         end
     end
 
@@ -101,7 +105,14 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     
     -- set the state to the stored value or default
     opt_cbox:SetValue(dvalue)
-    opt_cbox:SetCallback("OnValueChanged", setValue)
+    -- opt_cbox:SetCallback("OnValueChanged", setValue)
+    opt_cbox:SetCallback("OnValueChanged", function(table, event, value)
+        setValue(table, event, value)
+        if toggleExec ~= nil and toggleVar1 ~= nil then
+            toggleExec(toggleExec, toggleVar1)
+        end
+        mRadial:UpdateUI(true)
+        end)
 
     if spellID ~= nil then
         if IsPassiveSpell(spellID) then
@@ -116,7 +127,7 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     if descAsTT then
         opt_cbox:SetCallback("OnEnter", function(widget, event)
             GameTooltip:SetOwner(widget.frame, "ANCHOR_CURSOR")
-            GameTooltip:SetText(wrapText(descrip))
+            GameTooltip:SetText(name ..":\n" .. wrapText(descrip))
             GameTooltip:SetSize(80, 50)
             GameTooltip:SetWidth(80)
             GameTooltip:Show()
@@ -131,10 +142,148 @@ local function createCheckBox(parent, name, descrip, variableName, defaultValue,
     return opt_cbox
 end
 
--- BUILD PANE
-local function refreshWidget(scrollFrame, idx)
+local function updateTableOrder(orderTable, srcWatcher, destWatcher, srcIDX, destIDX)
+    for idx, _ in ipairs(orderTable) do
+        if idx == destIDX then
+            orderTable[idx] = srcWatcher
+        elseif idx == srcIDX then
+            orderTable[idx] = destWatcher
+        end
+    end
+end
+
+function mRadial:BuildOrderLayout(parent)
+    -- First update for active spells for any checkboxes that may have been ticked
+    mRadial:UpdateActiveSpells()
+
+    -- now release all the current buttons from the UI
+    parent:ReleaseChildren()
+
+    -- Now go through and proces the order.
+    local recorded_actionData = nil
+    local destIDX = -1
+    local srcIDX = -1
+    local function recordCurrent(this)
+        local self = this.obj
+        recorded_actionData = self.actionData
+    end
+
+    local function changeOrder(this, button, down)
+        local self = this.obj
+        if button  == "LeftButton" then
+            -- stash existing data.
+            recordCurrent(this)
+            destIDX = self:GetUserData("index")
+            
+            -- Grab info from cursor and set new icon for button
+            local _, data1, data2 = GetCursorInfo()
+            if data1 == nil then
+                -- we didn't drag anything.. so move on..
+                return
+            end
+
+            local _, spellID = GetSpellLink(data1, data2)
+            local spellName, _, icon, _, _, _, _, _ = GetSpellInfo(spellID)
+            -- update the button data we're "dropping" on
+            self.actionType = "spell"
+            self.actionData = spellName
+            
+            local iconPath = MWArtTexturePaths[icon]
+            self.icon:SetTexture(iconPath)
+            self.icon:Show()
+            
+            -- reorder src dest now
+            local srcWatcher = nil
+            local destWatcher = nil
+            for idx, watcher in ipairs(MRadialSavedVariables["primaryWatcherOrder"]) do
+                if idx == srcIDX then
+                    srcWatcher = watcher
+                elseif idx == destIDX then
+                    destWatcher = watcher
+                end
+            end
+            updateTableOrder(MRadialSavedVariables["primaryWatcherOrder"], srcWatcher, destWatcher, srcIDX, destIDX)
+            -- cleanup current dragged
+            ClearCursor()
+            mRadial:BuildOrderLayout(parent)
+            mRadial:UpdateUI(true)
+        end
+
+        if button == "RightButton" then
+            srcIDX = self:GetUserData("index")
+            if recorded_actionData == nil then
+                return
+            end
+            if not down then
+                local _, _, _, _, _, _, spellID, _ = GetSpellInfo(recorded_actionData)
+                PickupSpell(spellID)
+            end
+        end
+    end
+
+    -- first we check to see if the activewatchers has a new entry compared to the primarywatcherorder
+    local currentOrder = MRadialSavedVariables["primaryWatcherOrder"]
+    -- First time load init
+    if currentOrder == nil then
+        MRadialSavedVariables["primaryWatcherOrder"] = {}
+        currentOrder = {}
+    end
+
+    -- Add NEW spells clicked active
+    for _, watcher in ipairs(ACTIVEWATCHERS) do
+        local found = mRadial:OrderTableContains(currentOrder, watcher)
+        if not found then
+            currentOrder[#currentOrder+1] = watcher
+        end
+    end
+
+    -- Remove spells no longer in activewatchers
+    for idx, watcher in ipairs(currentOrder) do
+        local found = mRadial:OrderTableContains(ACTIVEWATCHERS, watcher)
+        if not found then
+            table.remove(currentOrder, idx)
+        end
+    end
+
+    for idx, watcher in ipairs(currentOrder) do
+        if watcher.isWatcher then
+            local orderButton = AceGUI:Create("ActionSlot")
+            orderButton:SetWidth(45)
+            orderButton.icon:SetTexture(watcher.iconPath)
+            orderButton.icon:Show()
+            orderButton.actionType = "spell"
+            orderButton.actionData = watcher.spellName
+            
+            orderButton.button:SetScript('OnClick', changeOrder)
+            orderButton.button:SetScript("OnEnter", function(widget, event)
+                recordCurrent(widget)
+                GameTooltip:SetOwner(orderButton.button, "ANCHOR_CURSOR")
+                GameTooltip:SetText(wrapText(orderButton.actionData))
+                GameTooltip:SetSize(80, 50)
+                GameTooltip:SetWidth(80)
+                GameTooltip:Show()
+            end)
+
+            orderButton.button:SetScript("OnLeave", function() 
+                GameTooltip:SetOwner(UIParent, "ANCHOR_BOTTOMRIGHT")
+                GameTooltip:SetText("")
+                GameTooltip:SetSize(80, 50) 
+                GameTooltip:SetWidth(80) 
+                GameTooltip:Show()
+            end)
+
+            orderButton:SetUserData("index", idx)
+            orderButton:SetUserData("watcher", watcher)
+            orderButton.button:EnableMouse(true)
+            parent:AddChild(orderButton)
+        end
+    end
+end
+
+-- BUILD PANE STUFF
+local function refreshWidget(scrollFrame, idx)   
     scrollFrame:ReleaseChildren()
-    if idx == 1 then
+    if idx == 1 then -- Radial options
         -- Radial shit
         local radialGroup = AceGUI:Create("InlineGroup")
         radialGroup:SetTitle("Radial Frame / Icons: ")
@@ -144,11 +293,11 @@ local function refreshWidget(scrollFrame, idx)
         createSlider(radialGroup, "Radius: ", 50, 500, 1, "radius", 100,  mRadial.UpdateUI)
         createSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
         createSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 40, mRadial.UpdateUI)
-        createSlider(radialGroup, "Icon Spread: ", -2, 2, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+        createSlider(radialGroup, "Icon Spread: ", -4, 4, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
         createSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
         createSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
         scrollFrame:AddChild(radialGroup)
-    elseif idx == 2 then
+    elseif idx == 2 then -- Fonts
         local testFontFrame = AceGUI:Create("Label")
         testFontFrame:SetText("AaBbCcDdEeFfGgHh--~~!!,=*12345")
         local fontList = MR_FONTS
@@ -216,7 +365,13 @@ local function refreshWidget(scrollFrame, idx)
         timerGroup:AddChild(rdyGroup)
         timerGroup:AddChild(countGroup)
         scrollFrame:AddChild(fontGroup)
-    elseif idx == 3 then
+    elseif idx == 3 then -- Primary spell order and picker
+        -- MRadialSavedVariables["primaryWatcherOrder"] = {}
+        local spellsOrder = AceGUI:Create("InlineGroup")
+        spellsOrder:SetTitle("Order:")
+        spellsOrder:SetFullWidth(true)
+        spellsOrder:SetLayout("Flow")
+
         local spellsGroup = AceGUI:Create("InlineGroup")
         spellsGroup:SetTitle("Assign Spells To Radial: ")
         spellsGroup:SetFullWidth(true)
@@ -241,23 +396,34 @@ local function refreshWidget(scrollFrame, idx)
         end
         for _, activeSpellData in ipairs(activeSpells) do
             local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(activeSpellData)
-            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID)
+            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
         end
         for _, passiveSpellData in ipairs(passiveSpells) do
             local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(passiveSpellData)
-            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID)
+            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
         end
 
+        scrollFrame:AddChild(spellsOrder)
         scrollFrame:AddChild(spellsGroup)
-    elseif idx == 4 then
+        
+        -- Now populate the primary order
+        mRadial:BuildOrderLayout(spellsOrder)
+
+    elseif idx == 4 then -- Linked spells
         mRadial:linkedSpellPane(scrollFrame)
     end
+end
+
+local function fixScrollBoxHeight(scrollFrame, generalGroup)
+    local height = OptionsPane.frame:GetHeight()
+    local newHeight = height-generalGroup.frame:GetHeight()-150
+    scrollFrame:SetHeight(newHeight)
+    scrollFrame.content:SetHeight(newHeight)
 end
 
 function mRadial:OptionsPane()
     OptionsPane = AceGUI:Create("Window")
     local optionHeight = 750
-    local dropDownHeight = 400
     OptionsPane:SetWidth(850)
     OptionsPane:SetHeight(optionHeight)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
@@ -277,11 +443,8 @@ function mRadial:OptionsPane()
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
     scrollFrame:SetHeight(50)
-    scrollFrame.content:SetScript("OnUpdate", function() 
-        local height = OptionsPane.frame:GetHeight()
-        local newHeight = height-generalGroup.frame:GetHeight()-150
-        scrollFrame:SetHeight(newHeight)
-        scrollFrame.content:SetHeight(newHeight)
+    scrollFrame.content:SetScript("OnSizeChanged", function() 
+        fixScrollBoxHeight(scrollFrame, generalGroup)
     end)
     scrollcontainer:AddChild(scrollFrame)
         
@@ -313,7 +476,7 @@ function mRadial:OptionsPane()
 
     local optDpDwn = AceGUI:Create("DropdownGroup")
     optDpDwn:SetTitle("Options:")
-    optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:Spells", "LinkedSpells"})
+    optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:PrimarySpells", "LinkedSpells"})
     optDpDwn:SetLayout("Flow")
     optDpDwn:SetFullWidth(true)
     optDpDwn:AddChild(scrollcontainer)
@@ -544,8 +707,6 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
             linkedSpellID:SetText(tostring(spellNumber))
             table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput, linkedSpellID})
         end)
-
-
 
     local removeButton = AceGUI:Create("Button")
           removeButton:SetText("-")

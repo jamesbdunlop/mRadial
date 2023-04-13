@@ -21,8 +21,19 @@ function MR_slashCommands(msg, editbox)
     if command == "bags" then
         mRadial:BagPane()
     end
+
     if command == "rad" then
         mRadial:RadialButtonLayout()
+    end
+
+    if command == "disableooc" then
+        MRadialSavedVariables["hideooc"] = false
+        mRadial:InitUI()
+    end
+
+    if command == "enableooc" then
+        MRadialSavedVariables["hideooc"] = true
+        mRadial:InitUI()
     end
 end
 SlashCmdList["MR"] = MR_slashCommands

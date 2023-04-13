@@ -77,6 +77,16 @@ function mRadial:TableContains(myTable, value)
     return false
 end
 
+function mRadial:OrderTableContains(myTable, watcher)
+    for _, v in ipairs(myTable) do
+        if v.spellName == watcher.spellName then
+            return true
+        end
+    end
+
+    return false
+end
+
 function mRadial:getAllSpells(activeTable)
     local spellData = {}
     --- Trawl the entire spell book for spells.
@@ -325,4 +335,12 @@ function mRadial:listBankReagentItems(ignoreSoulBound)
     end
     SendSystemMessage("Swapped to Bank reagent bag!")
     return BANKRDUMPV1
+end
+
+function mRadial:GetFromTable(spellName, activespells)
+    for idx, watcher in ipairs(activespells) do
+        if watcher.spellName == spellName then
+            return watcher
+        end
+    end
 end
