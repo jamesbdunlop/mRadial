@@ -281,7 +281,7 @@ function mRadial:BuildOrderLayout(parent)
 end
 
 -- BUILD PANE STUFF
-local function refreshWidget(scrollFrame, idx)   
+local function PopulateDropdown(scrollFrame, idx)   
     scrollFrame:ReleaseChildren()
     if idx == 1 then -- Radial options
         -- Radial shit
@@ -339,6 +339,7 @@ local function refreshWidget(scrollFrame, idx)
 
         createSlider(cdGroup, "Cooldown Up/Down: ", -50, 50, 1, "cdUdOffset", 0, mRadial.UpdateUI)
         createSlider(cdGroup, "Cooldown Left/Right: ", -50, 50, 1, "cdLROffset", 0, mRadial.UpdateUI)
+
         local rdyGroup = AceGUI:Create("SimpleGroup")
         rdyGroup:SetFullWidth(true)
         rdyGroup:SetLayout("Flow")
@@ -366,23 +367,23 @@ local function refreshWidget(scrollFrame, idx)
         timerGroup:AddChild(countGroup)
         scrollFrame:AddChild(fontGroup)
     elseif idx == 3 then -- Primary spell order and picker
-        -- MRadialSavedVariables["primaryWatcherOrder"] = {}
+        local checkBoxes = {}
         local spellsOrder = AceGUI:Create("InlineGroup")
-        spellsOrder:SetTitle("Order:")
-        spellsOrder:SetFullWidth(true)
-        spellsOrder:SetLayout("Flow")
+            spellsOrder:SetTitle("Order: (rightClick to pickup, leftClick to swap src->dest.")
+            spellsOrder:SetFullWidth(true)
+            spellsOrder:SetLayout("Flow")
 
         local spellsGroup = AceGUI:Create("InlineGroup")
-        spellsGroup:SetTitle("Assign Spells To Radial: ")
-        spellsGroup:SetFullWidth(true)
-        spellsGroup:SetLayout("Flow")
+            spellsGroup:SetTitle("Assign Spells To Radial: ")
+            spellsGroup:SetFullWidth(true)
+            spellsGroup:SetLayout("Flow")
     
         local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
         local activeSpells = {}
         local passiveSpells = {}
         -- lower level classes might not have an active talent tree.
         if activeTalentTreeSpells ~= nil then
-            for i, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
+            for _, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
                 -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
                 local spellName = spellData[1]
                 local spellID = spellData[2]
@@ -396,14 +397,31 @@ local function refreshWidget(scrollFrame, idx)
         end
         for _, activeSpellData in ipairs(activeSpells) do
             local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(activeSpellData)
-            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
+            local cbx = createCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
+            table.insert(checkBoxes, cbx)
         end
         for _, passiveSpellData in ipairs(passiveSpells) do
             local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(passiveSpellData)
-            createCheckBox(parentWdg, spellName, desc, isactive, defaultValue,toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
+            local cbx = createCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, mRadial.BuildOrderLayout, spellsOrder)
+            table.insert(checkBoxes, cbx)
         end
 
+        local resetButton = AceGUI:Create("Button")
+              resetButton:SetText("RESET")
+
+        local function resetCheckBoxes() 
+            for _, cbox in ipairs(checkBoxes) do 
+                if cbox:GetValue() then
+                    cbox:ToggleChecked()
+                    cbox:Fire("OnValueChanged", cbox.checked)
+                end
+            end
+        end
+        resetButton:SetCallback("OnClick", resetCheckBoxes)
+        
         scrollFrame:AddChild(spellsOrder)
+
+        scrollFrame:AddChild(resetButton)
         scrollFrame:AddChild(spellsGroup)
         
         -- Now populate the primary order
@@ -481,7 +499,7 @@ function mRadial:OptionsPane()
     optDpDwn:SetFullWidth(true)
     optDpDwn:AddChild(scrollcontainer)
     optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
-        refreshWidget(scrollFrame, groupIndex)
+        PopulateDropdown(scrollFrame, groupIndex)
     end)
     optDpDwn:SetGroup(3)
     base:AddChild(optDpDwn)
@@ -502,7 +520,7 @@ function mRadial:BagPane()
         return toShow
     end
 
-    local function refreshWidget(toShow, scrollFrame, editBox)
+    local function PopulateDropdown(toShow, scrollFrame, editBox)
         scrollFrame:ReleaseChildren()
         for x, itemInfo in ipairs(toShow) do
             local itemName = itemInfo[1]
@@ -584,13 +602,13 @@ function mRadial:BagPane()
     ignoreCBx:SetCallback("OnValueChanged", function(widget, eventName, value) 
                         ignoreValue= value
                         local bagData = updateData(currGroupIndex, value)
-                        refreshWidget(bagData, scrollFrame, urlInput) end)
+                        PopulateDropdown(bagData, scrollFrame, urlInput) end)
     
     local items = {BAGDUMPV1, BANKDUMPV1, BANKRDUMPV1}
     testTrp:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
         currGroupIndex = groupIndex
         local bagData = updateData(groupIndex, ignoreValue)
-        refreshWidget(bagData, scrollFrame, urlInput)
+        PopulateDropdown(bagData, scrollFrame, urlInput)
     end)
     if items[1] ~= nil then
         testTrp:SetGroup(1)
@@ -630,7 +648,7 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
             currentLinked[baseSpellName] = nil
         end
         -- REMOVE FRAMES
-        refreshWidget(scrollFrame, 4)
+        PopulateDropdown(scrollFrame, 4)
     end
 
     --- START LAYOUT
@@ -743,7 +761,7 @@ function mRadial:linkedSpellPane(parent)
         end
         MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
         newlyLinked = {}
-        refreshWidget(scrollFrame, 4)
+        PopulateDropdown(scrollFrame, 4)
     end
 
     local linkedGroup = AceGUI:Create("InlineGroup")

@@ -721,7 +721,7 @@ function mRadial:UpdateActiveSpells()
 end
 
 function mRadial:RadialButtonLayout(orderedWatchers)
-    --- This function handles adding the frames around a unit circle cause I like it better this way....
+    -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
