@@ -344,16 +344,21 @@ function mRadial:GetFromTable(spellName, activespells)
     end
 end
 
-
 --- USEFUL
-function mRadial:PopUpDialog(labelText)
+function mRadial:PopUpDialog(title, labelText, w, h)
     local AceGUI = LibStub("AceGUI-3.0")
     local frame = AceGUI:Create("Window")
-    frame:SetWidth(300)
-    frame:SetHeight(200)
+    frame:SetTitle(title)
+    frame:SetWidth(w)
+    frame:SetHeight(h)
 
+    local layout = AceGUI:Create("SimpleGroup")
+    layout:SetLayout("Flow")
+    layout:SetFullWidth(true)
+    
     local label = AceGUI:Create("Label")
     label:SetText(labelText)
+    label:SetFullWidth(true)
 
     local acceptButton = AceGUI:Create("Button")
     acceptButton:SetText("Accept")
@@ -364,10 +369,12 @@ function mRadial:PopUpDialog(labelText)
     cancelButton:SetCallback("OnClick", function() return false end)
 
     frame:AddChild(label)
-    frame:AddChild(acceptButton)
-    frame:AddChild(cancelButton)
+    layout:AddChild(acceptButton)
+    layout:AddChild(cancelButton)
     frame:Hide()
     frame.acceptButton = acceptButton
     frame.cancelButton = cancelButton
+
+    frame:AddChild(layout)
     return frame
 end

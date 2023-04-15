@@ -409,7 +409,7 @@ local function PopulateDropdown(scrollFrame, idx)
         local resetButton = AceGUI:Create("Button")
             resetButton:SetText("RESET")
         local function resetCheckBoxes() 
-            local warning = mRadial:PopUpDialog("This will reset all selected spells! Continue?")
+            local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
             warning:Show()
             warning.acceptButton:SetCallback("OnClick", function()  
                 for _, cbox in ipairs(checkBoxes) do 
