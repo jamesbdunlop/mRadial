@@ -282,7 +282,6 @@ function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
     end
 end
 
-
 function mRadial:listBagItems(ignoreSoulBound)
     BAGDUMPV1 = {}
     for bag = BACKPACK_CONTAINER, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
@@ -343,4 +342,32 @@ function mRadial:GetFromTable(spellName, activespells)
             return watcher
         end
     end
+end
+
+
+--- USEFUL
+function mRadial:PopUpDialog(labelText)
+    local AceGUI = LibStub("AceGUI-3.0")
+    local frame = AceGUI:Create("Window")
+    frame:SetWidth(300)
+    frame:SetHeight(200)
+
+    local label = AceGUI:Create("Label")
+    label:SetText(labelText)
+
+    local acceptButton = AceGUI:Create("Button")
+    acceptButton:SetText("Accept")
+    acceptButton:SetCallback("OnClick", function() return true end)
+
+    local cancelButton = AceGUI:Create("Button")
+    cancelButton:SetText("Cancel")
+    cancelButton:SetCallback("OnClick", function() return false end)
+
+    frame:AddChild(label)
+    frame:AddChild(acceptButton)
+    frame:AddChild(cancelButton)
+    frame:Hide()
+    frame.acceptButton = acceptButton
+    frame.cancelButton = cancelButton
+    return frame
 end
