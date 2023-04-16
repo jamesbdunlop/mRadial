@@ -243,10 +243,6 @@ local function PopulateDropdown(scrollFrame, idx)
     elseif idx == 4 then -- Secondary spell order and picker
         local spellOrderFrame = mRadial:BuildRadialOptionsPane("Secondary:", "isSecondaryActive", mRadial.BuildSecondaryOrderLayout, scrollFrame)
         mRadial:BuildSecondaryOrderLayout(spellOrderFrame)
-        local height = OptionsPane.frame:GetHeight()
-        local newHeight = height
-        scrollFrame:SetHeight(newHeight/1.1)
-        scrollFrame.content:SetHeight(newHeight)
     elseif idx == 5 then -- Linked spells
         mRadial:linkedSpellPane(scrollFrame)
     end
@@ -314,7 +310,6 @@ function mRadial:OptionsPane()
     optDpDwn:AddChild(scrollcontainer)
     optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
         PopulateDropdown(scrollFrame, groupIndex)
-        fixScrollBoxHeight(scrollFrame, generalGroup)
     end)
     optDpDwn:SetGroup(3)
     base:AddChild(optDpDwn)

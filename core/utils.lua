@@ -270,7 +270,7 @@ end
 
 --- BAG FUN STUFF
 
-function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
+function mRadial:AddItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
     local url = "https://www.wowhead.com/item="..itemInfo["itemID"]
     local finalurl = "|Hurl:" ..url .. "|h[" .. itemName .. "]|h"
     local isBound = itemInfo['isBound']
@@ -291,7 +291,7 @@ function mRadial:listBagItems(ignoreSoulBound)
                 local itemName = GetItemInfo(itemLink)
                 local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
                 if itemName ~= nil and itemInfo ~= nil then
-                    addItemInfoToTable(itemName, itemInfo, BAGDUMPV1, ignoreSoulBound)
+                    mRadial:AddItemInfoToTable(itemName, itemInfo, BAGDUMPV1, ignoreSoulBound)
                 end
             end
         end
@@ -310,7 +310,7 @@ function mRadial:listBankItems(ignoreSoulBound)
                 local itemName = GetItemInfo(itemLink)
                 local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
                 if itemName ~= nil and itemInfo ~= nil then
-                    addItemInfoToTable(itemName, itemInfo, BANKDUMPV1, ignoreSoulBound)
+                    mRadial:AddItemInfoToTable(itemName, itemInfo, BANKDUMPV1, ignoreSoulBound)
                 end
             end
         end
@@ -328,7 +328,7 @@ function mRadial:listBankReagentItems(ignoreSoulBound)
             local itemName = GetItemInfo(itemLink)
             local itemInfo = C_Container.GetContainerItemInfo(REAGENTBANK_CONTAINER, slot)
             if itemName ~= nil and itemInfo ~= nil then
-                addItemInfoToTable(itemName, itemInfo, BANKRDUMPV1, ignoreSoulBound)
+                mRadial:AddItemInfoToTable(itemName, itemInfo, BANKRDUMPV1, ignoreSoulBound)
             end
         end
     end
@@ -573,13 +573,13 @@ function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, 
     
     -- Create checkboxes now.
     for _, activeSpellData in ipairs(activeSpells) do
-        local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(activeSpellData)
-        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, funcToExec, spellsOrderFrame)
+        local parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID = unpack(activeSpellData)
+        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID, funcToExec, spellsOrderFrame)
         table.insert(checkBoxes, cbx)
     end
     for _, passiveSpellData in ipairs(passiveSpells) do
-        local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(passiveSpellData)
-        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, funcToExec, spellsOrderFrame)
+        local parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID = unpack(passiveSpellData)
+        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID, funcToExec, spellsOrderFrame)
         table.insert(checkBoxes, cbx)
     end
 

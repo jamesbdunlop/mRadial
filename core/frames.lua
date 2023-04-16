@@ -499,6 +499,7 @@ function mRadial:createWatcherFrames()
     if activeTalentTreeSpells == nil then
         return
     end
+
     -- hide all for spec changes.
     for _, frame in ipairs(MR_WATCHERFRAMES) do
         frame:Hide()
@@ -519,7 +520,7 @@ function mRadial:createWatcherFrames()
             local isKnown = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
-            if isActive or isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
+            if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                 local frame = mRadial:createWatcherFrame(spellID)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
@@ -528,7 +529,16 @@ function mRadial:createWatcherFrames()
                     pframe:Hide()
                 end
                 frame:Hide()
-            elseif not isActive or isSecondaryActive and isKnown and mRadial:WatcherExists(frameName) then
+            elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
+                    local frame = mRadial:createWatcherFrame(spellID)
+                    MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
+                    UdOffset = UdOffset + 32
+                    local pframe = frame:GetParent()
+                    if pframe ~= nil then
+                        pframe:Hide()
+                    end
+                    frame:Hide()
+            elseif isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
                     local pframe = frame:GetParent()
@@ -708,7 +718,7 @@ function mRadial:UpdateActivePrimarySpells()
 
         -- -- Now we check for isActive (options toggles)
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
-        if isActive then 
+        if isActive and not MRadialSavedVariables["isSecondaryActive".. watcher.spellName] then 
             ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher 
             watcher:Show()
         end
@@ -726,7 +736,7 @@ function mRadial:UpdateActiveSecondarySpells()
 
         -- Now we check for isActive (options toggles)
         local isActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
-        if isActive then 
+        if isActive and not MRadialSavedVariables["isActive".. watcher.spellName] then 
             ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
             watcher:Show()
         end
