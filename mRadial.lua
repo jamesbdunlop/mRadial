@@ -29,7 +29,8 @@ MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
 MR_SECONDWATCHERFRAMES = {}
 MR_PETFAMES = {}
-ACTIVEWATCHERS = {}
+ACTIVEPRIMARYWATCHERS = {}
+ACTIVESECONDARYWATCHERS = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -72,9 +73,11 @@ function mRadial:UpdateUI(create)
     if create then
         mRadial:createWatcherFrames()
     end
+    ---------------------------------
+    -- PRIMARY SPELL RADIAL MENU
     local prevOrder = MRadialSavedVariables["primaryWatcherOrder"]
     local currentOrder = {}
-    local activeSpells = mRadial:UpdateActiveSpells()
+    local activeSpells = mRadial:UpdateActivePrimarySpells()
     if prevOrder ~= nil and #prevOrder > 0 then
         for idx, watcherData in ipairs(prevOrder) do
             currentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSpells)
@@ -82,7 +85,33 @@ function mRadial:UpdateUI(create)
     else
         currentOrder = activeSpells
     end
-    mRadial:RadialButtonLayout(currentOrder)
+
+    local radius = MRadialSavedVariables.radius or 100
+    local offset = MRadialSavedVariables.offset or .5
+    local spread = MRadialSavedVariables.watcherFrameSpread or 0
+    local widthDeform = MRadialSavedVariables.widthDeform or 1
+    local heightDeform = MRadialSavedVariables.heightDeform or 1
+    mRadial:RadialButtonLayout(currentOrder, radius, offset, spread, widthDeform, heightDeform)
+    ---------------------------------
+    -- SECONDARY SPELL RADIAL MENU
+    local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
+    local secondaryCurrentOrder = {}
+    local activeSecondarySpells = mRadial:UpdateActiveSecondarySpells()
+    if prevSecondaryOrder ~= nil and #prevSecondaryOrder > 0 then
+        for idx, watcherData in ipairs(prevSecondaryOrder) do
+            secondaryCurrentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
+        end
+    else
+        secondaryCurrentOrder = activeSecondarySpells
+    end
+
+    local radius2 = MRadialSavedVariables.radius2 or 100
+    local offset2 = MRadialSavedVariables.offset2 or .5
+    local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
+    local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
+    local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
+    mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2)
+    
 end
 
 function mRadial:OnInitialize()
