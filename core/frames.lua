@@ -507,36 +507,28 @@ function mRadial:createWatcherFrames()
             pframe:Hide()
         end
     end
-    for _, frame in ipairs(MR_SECONDWATCHERFRAMES) do
-        frame:Hide()
-        local pframe = frame:GetParent()
-        if pframe ~= nil then
-            pframe:Hide()
-        end
-    end
 
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
-        local spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = GetSpellInfo(spellId)
-        local isActive  = false
-        local isPrimary  = true
+        local spellName, _, _, _, _, _, spellID, _ = GetSpellInfo(spellId)
+        local isActive = false
+        local isSecondaryActive = false
         if spellName ~= nil then 
             isActive = MRadialSavedVariables["isActive"..spellName] or false
-            isPrimary = MRadialSavedVariables["isPrimary"..spellName] or true
-            
+            isSecondaryActive = MRadialSavedVariables["isSecondaryActive"..spellName] or false
             local isKnown = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
-            if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
-                -- print("Adding watcherFrame for  %s", spellName)
+            if isActive or isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                 local frame = mRadial:createWatcherFrame(spellID)
-                if isPrimary then
-                    MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
-                else
-                    MR_SECONDWATCHERFRAMES[#MR_SECONDWATCHERFRAMES+1] = frame
-                end
+                MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
-            elseif not isActive and isKnown and mRadial:WatcherExists(frameName) then
+                local pframe = frame:GetParent()
+                if pframe ~= nil then
+                    pframe:Hide()
+                end
+                frame:Hide()
+            elseif not isActive or isSecondaryActive and isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
                     local pframe = frame:GetParent()
@@ -703,34 +695,57 @@ function mRadial:SetPetFramePosAndSize()
         end
     end
 end
+
 ---------------------------------------------------------------------------------------------------
 -- Watcher radial layout.
-function mRadial:UpdateActiveSpells()
+function mRadial:UpdateActivePrimarySpells()
     -- Flush existing
-    ACTIVEWATCHERS = {}
+    ACTIVEPRIMARYWATCHERS = {}
+    for x=1, #MR_WATCHERFRAMES do
+        -- First we hide any and all watchers that may have been active.
+        local watcher = MR_WATCHERFRAMES[x]
+        watcher:Hide()
+
+        -- -- Now we check for isActive (options toggles)
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        if isActive then 
+            ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher 
+            watcher:Show()
+        end
+    end
+    return ACTIVEPRIMARYWATCHERS
+end
+
+function mRadial:UpdateActiveSecondarySpells()
+    -- Flush existing
+    ACTIVESECONDARYWATCHERS = {}
     for x=1, #MR_WATCHERFRAMES do
         -- First we hide any and all watchers that may have been active.
         local watcher = MR_WATCHERFRAMES[x]
         watcher:Hide()
 
         -- Now we check for isActive (options toggles)
-        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
-        if isActive then ACTIVEWATCHERS[#ACTIVEWATCHERS+1] = watcher end
+        local isActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
+        if isActive then 
+            ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
+            watcher:Show()
+        end
     end
-    return ACTIVEWATCHERS
+    return ACTIVESECONDARYWATCHERS
 end
 
-function mRadial:RadialButtonLayout(orderedWatchers)
+function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
-    local radius = MRadialSavedVariables.radius or 100
-    local offset = MRadialSavedVariables.offset or .5
-    local spread = MRadialSavedVariables.watcherFrameSpread or 0
-    local widthDeform = MRadialSavedVariables.widthDeform or 1
-    local heightDeform = MRadialSavedVariables.heightDeform or 1
+    local radiusMult = MRadialSavedVariables.radiusMult or 1
+    local radius = r * radiusMult
+    local offset = o
+    local spread = sprd
+    local widthDeform = wd
+    local heightDeform = hd
 
     local countFontSize = MRadialSavedVariables.countFontSize or 2
     local readyFontSize = MRadialSavedVariables.readyFontSize or 2
@@ -753,9 +768,9 @@ function mRadial:RadialButtonLayout(orderedWatchers)
 
     local angleStep = (math.pi / #orderedWatchers) + spread*.1
     
-    if orderedWatchers == nil then
-        orderedWatchers = mRadial:UpdateActiveSpells()
-    end
+    -- if orderedWatchers == nil then
+    --     orderedWatchers = mRadial:UpdateActiveSpells()
+    -- end
 
     for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then
