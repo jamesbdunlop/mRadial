@@ -131,6 +131,13 @@ function mRadial:BuildSecondaryOrderLayout(parent)
 end
 
 -- BUILD PANE STUFF
+local function fixScrollBoxHeight(scrollFrame, generalGroup)
+    local height = OptionsPane.frame:GetHeight()
+    local newHeight = height-generalGroup.frame:GetHeight()-150
+    scrollFrame:SetHeight(newHeight/1.1)
+    scrollFrame.content:SetHeight(newHeight)
+end
+
 local function PopulateDropdown(scrollFrame, idx)   
     scrollFrame:ReleaseChildren()
     if idx == 1 then -- Radial options
@@ -236,16 +243,13 @@ local function PopulateDropdown(scrollFrame, idx)
     elseif idx == 4 then -- Secondary spell order and picker
         local spellOrderFrame = mRadial:BuildRadialOptionsPane("Secondary:", "isSecondaryActive", mRadial.BuildSecondaryOrderLayout, scrollFrame)
         mRadial:BuildSecondaryOrderLayout(spellOrderFrame)
+        local height = OptionsPane.frame:GetHeight()
+        local newHeight = height
+        scrollFrame:SetHeight(newHeight/1.1)
+        scrollFrame.content:SetHeight(newHeight)
     elseif idx == 5 then -- Linked spells
         mRadial:linkedSpellPane(scrollFrame)
     end
-end
-
-local function fixScrollBoxHeight(scrollFrame, generalGroup)
-    local height = OptionsPane.frame:GetHeight()
-    local newHeight = height-generalGroup.frame:GetHeight()-150
-    scrollFrame:SetHeight(newHeight)
-    scrollFrame.content:SetHeight(newHeight)
 end
 
 function mRadial:OptionsPane()
