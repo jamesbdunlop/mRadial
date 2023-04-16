@@ -1,4 +1,5 @@
 local mRadial = mRadial
+local AceGUI = LibStub("AceGUI-3.0")
 
 function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
@@ -160,7 +161,7 @@ function mRadial:GetAllPassiveTalentTreeSpells()
 end
 
 function mRadial:GetAllActiveTalentTreeSpells()
-    -- Parse the active talent tree for active spells, note all passive spells get cull here, if you want passtive use 
+    -- Parse the active talent tree for active spells, note all passive spells get culled here, if you want passive use 
     -- mRadial:GetAllPassiveTalentTreeSpells()
     local activeSpellData = mRadial:GetTalentTreeSpellIDList()
     -- lower level classes might not have an active talent tree.
@@ -177,7 +178,6 @@ function mRadial:GetAllActiveTalentTreeSpells()
         else
             isKnown = IsPlayerSpell(spellID)
         end
-        local isPassive = IsPassiveSpell(spellID)
         
         if isKnown and not mRadial:TableContains(active, {spellName, spellID}) then
             table.insert(active, {spellName, spellID})
@@ -268,7 +268,7 @@ function mRadial:GlobalFontPercentageChanged()
     mRadial:SetPetFramePosAndSize()
 end
 
---- FUN STUFF
+--- BAG FUN STUFF
 
 function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
     local url = "https://www.wowhead.com/item="..itemInfo["itemID"]
@@ -281,7 +281,6 @@ function addItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
         table.insert(data, {itemName, itemInfo["iconFileID"], finalurl, url, itemInfo["hyperlink"]})
     end
 end
-
 
 function mRadial:listBagItems(ignoreSoulBound)
     BAGDUMPV1 = {}
@@ -343,4 +342,267 @@ function mRadial:GetFromTable(spellName, activespells)
             return watcher
         end
     end
+end
+
+--- USEFUL
+function mRadial:PopUpDialog(title, labelText, w, h)
+    local AceGUI = LibStub("AceGUI-3.0")
+    local frame = AceGUI:Create("Window")
+    frame:SetTitle(title)
+    frame:SetWidth(w)
+    frame:SetHeight(h)
+
+    local layout = AceGUI:Create("SimpleGroup")
+    layout:SetLayout("Flow")
+    layout:SetFullWidth(true)
+    
+    local label = AceGUI:Create("Label")
+    label:SetText(labelText)
+    label:SetFullWidth(true)
+
+    local acceptButton = AceGUI:Create("Button")
+    acceptButton:SetText("Accept")
+    acceptButton:SetCallback("OnClick", function() return true end)
+
+    local cancelButton = AceGUI:Create("Button")
+    cancelButton:SetText("Cancel")
+    cancelButton:SetCallback("OnClick", function() return false end)
+
+    frame:AddChild(label)
+    layout:AddChild(acceptButton)
+    layout:AddChild(cancelButton)
+    frame:Hide()
+    frame.acceptButton = acceptButton
+    frame.cancelButton = cancelButton
+
+    frame:AddChild(layout)
+    return frame
+end
+
+function mRadial:WrapText(str)
+    if str == nil then
+        return ""
+    end
+
+    local result = ""
+    local line = ""
+    for word in str:gmatch("%S+") do
+        if #line + #word >= 40 then
+            result = result .. line .. "\n"
+            line = ""
+        end
+        if line == "" then
+            line = word
+        else
+            line = line .. " " .. word
+        end
+    end
+    if line ~= "" then
+        result = result .. line
+    end
+    return result
+end
+
+local function updateTableOrder(orderTable, srcWatcher, destWatcher, srcIDX, destIDX)
+    for idx, _ in ipairs(orderTable) do
+        if idx == destIDX then
+            orderTable[idx] = srcWatcher
+        elseif idx == srcIDX then
+            orderTable[idx] = destWatcher
+        end
+    end
+end
+
+function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refreshFunc)
+    -- GENERIC Function to create a spellOrder list using the ActionSlot widgets 
+    
+    -- Release all the current buttons from the UI
+    parentFrame:ReleaseChildren()
+    -- Now go through and proces the order.
+    local recorded_actionData = nil
+    local destIDX = -1
+    local srcIDX = -1
+    local currentParent = nil
+    local function recordCurrent(this)
+        local self = this.obj
+        recorded_actionData = self.actionData
+        currentParent = parentFrame
+    end
+
+    local function changeOrder(this, button, down)
+        local self = this.obj
+        if button  == "LeftButton" then
+            -- stash existing data.
+            recordCurrent(this)
+            destIDX = self:GetUserData("index")
+            
+            -- Grab info from cursor and set new icon for button
+            local _, data1, data2 = GetCursorInfo()
+            if data1 == nil then
+                -- we didn't drag anything.. so move on..
+                return
+            end
+
+            local _, spellID = GetSpellLink(data1, data2)
+            local spellName, _, icon, _, _, _, _, _ = GetSpellInfo(spellID)
+            -- update the button data we're "dropping" on
+            self.actionType = "spell"
+            self.actionData = spellName
+            
+            local iconPath = MWArtTexturePaths[icon]
+            self.icon:SetTexture(iconPath)
+            self.icon:Show()
+            
+            -- reorder src dest now
+            local srcWatcher = nil
+            local destWatcher = nil
+            for idx, watcher in ipairs(savedVarTable) do
+                if idx == srcIDX then
+                    srcWatcher = watcher
+                elseif idx == destIDX then
+                    destWatcher = watcher
+                end
+            end
+            updateTableOrder(savedVarTable, srcWatcher, destWatcher, srcIDX, destIDX)
+            -- cleanup current dragged
+            ClearCursor()
+            refreshFunc(refreshFunc, currentParent)
+            mRadial:UpdateUI(true)
+        end
+
+        if button == "RightButton" then
+            srcIDX = self:GetUserData("index")
+            if recorded_actionData == nil then
+                return
+            end
+            if not down then
+                local _, _, _, _, _, _, spellID, _ = GetSpellInfo(recorded_actionData)
+                PickupSpell(spellID)
+            end
+        end
+    end
+
+    -- first we check to see if the table has a new entry compared to the orig
+    local currentOrder = savedVarTable
+    -- First time load init
+    if currentOrder == nil then
+        savedVarTable = {}
+        currentOrder = {}
+    end
+
+    -- Add NEW spells clicked active
+    for _, watcher in ipairs(watcherTable) do
+        local found = mRadial:OrderTableContains(currentOrder, watcher)
+        if not found then
+            currentOrder[#currentOrder+1] = watcher
+        end
+    end    
+
+      -- Remove spells no longer in watcherTable
+      for idx, watcher in ipairs(currentOrder) do
+        local found = mRadial:OrderTableContains(watcherTable, watcher)
+        if not found then
+            table.remove(currentOrder, idx)
+        end
+    end  
+
+    for idx, watcher in ipairs(currentOrder) do
+        if watcher.isWatcher then
+            local orderButton = AceGUI:Create("ActionSlot")
+            orderButton:SetWidth(45)
+            orderButton.icon:SetTexture(watcher.iconPath)
+            orderButton.icon:Show()
+            orderButton.actionType = "spell"
+            orderButton.actionData = watcher.spellName
+            orderButton.button:SetScript('OnClick', changeOrder)
+            orderButton.button:SetScript("OnEnter", function(widget, _)
+                recordCurrent(widget)
+                GameTooltip:SetOwner(orderButton.button, "ANCHOR_CURSOR")
+                GameTooltip:SetText(mRadial:WrapText(orderButton.actionData))
+                GameTooltip:SetSize(80, 50)
+                GameTooltip:SetWidth(80)
+                GameTooltip:Show()
+            end)
+
+            orderButton.button:SetScript("OnLeave", function() 
+                GameTooltip:SetOwner(UIParent, "ANCHOR_BOTTOMRIGHT")
+                GameTooltip:SetText("")
+                GameTooltip:SetSize(80, 50) 
+                GameTooltip:SetWidth(80) 
+                GameTooltip:Show()
+            end)
+
+            orderButton:SetUserData("index", idx)
+            orderButton:SetUserData("watcher", watcher)
+            orderButton.button:EnableMouse(true)
+            parentFrame:AddChild(orderButton)
+        end
+    end 
+end
+
+function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, parentFrame)
+    local checkBoxes = {}
+    local spellsOrderFrame = AceGUI:Create("InlineGroup")
+    spellsOrderFrame:SetTitle(title) --"Order: (rightClick to pickup, leftClick to swap src->dest.")
+    spellsOrderFrame:SetFullWidth(true)
+    spellsOrderFrame:SetLayout("Flow")
+
+    local spellsGroup = AceGUI:Create("InlineGroup")
+    spellsGroup:SetTitle("Assign Spells To Radial: ")
+    spellsGroup:SetFullWidth(true)
+    spellsGroup:SetLayout("Flow")
+
+    local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
+    local activeSpells = {}
+    local passiveSpells = {}
+    
+    if activeTalentTreeSpells ~= nil then
+        for _, spellData in ipairs(activeTalentTreeSpells) do
+            -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
+            local spellName = spellData[1]
+            local spellID = spellData[2]
+            local desc = GetSpellDescription(spellID)
+            local isActiveSavedVarStr = isActiveSavedVarStr .. spellName
+            if IsPassiveSpell(spellID) then
+                table.insert(passiveSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+            else
+                table.insert(activeSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+            end
+        end
+    end
+    
+    -- Create checkboxes now.
+    for _, activeSpellData in ipairs(activeSpells) do
+        local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(activeSpellData)
+        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, funcToExec, spellsOrderFrame)
+        table.insert(checkBoxes, cbx)
+    end
+    for _, passiveSpellData in ipairs(passiveSpells) do
+        local parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID = unpack(passiveSpellData)
+        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, toexec, descAsTT, spellID, funcToExec, spellsOrderFrame)
+        table.insert(checkBoxes, cbx)
+    end
+
+    local resetButton = AceGUI:Create("Button")
+    resetButton:SetText("RESET")
+    local function resetCheckBoxes() 
+        local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+        warning:Show()
+        warning.acceptButton:SetCallback("OnClick", function()  
+            for _, cbox in ipairs(checkBoxes) do 
+                if cbox:GetValue() then
+                    cbox:ToggleChecked()
+                    cbox:Fire("OnValueChanged", cbox.checked)
+                end
+            end
+            warning:Hide()
+        end)
+        warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+    end
+    resetButton:SetCallback("OnClick", resetCheckBoxes)
+    
+    parentFrame:AddChild(spellsOrderFrame)
+    parentFrame:AddChild(resetButton)
+    parentFrame:AddChild(spellsGroup)
+    return spellsOrderFrame
 end
