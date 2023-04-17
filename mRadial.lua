@@ -56,6 +56,12 @@ end
 
 function mRadial:InitUI()
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
+    if MRadialSavedVariables["primaryWatcherOrder"] == nil then
+        MRadialSavedVariables["primaryWatcherOrder"] = {}
+    end
+    if MRadialSavedVariables["secondaryWatcherOrder"] == nil then
+        MRadialSavedVariables["secondaryWatcherOrder"] = {}
+    end
     mRadial:CreateMainFrame()
     mRadial:createWatcherFrames()
 

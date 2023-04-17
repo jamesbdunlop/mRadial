@@ -422,11 +422,9 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
     local recorded_actionData = nil
     local destIDX = -1
     local srcIDX = -1
-    local currentParent = nil
     local function recordCurrent(this)
         local self = this.obj
         recorded_actionData = self.actionData
-        currentParent = parentFrame
     end
 
     local function changeOrder(this, button, down)
@@ -435,7 +433,6 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             -- stash existing data.
             recordCurrent(this)
             destIDX = self:GetUserData("index")
-            
             -- Grab info from cursor and set new icon for button
             local _, data1, data2 = GetCursorInfo()
             if data1 == nil then
@@ -466,7 +463,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             updateTableOrder(savedVarTable, srcWatcher, destWatcher, srcIDX, destIDX)
             -- cleanup current dragged
             ClearCursor()
-            refreshFunc(refreshFunc, currentParent)
+            refreshFunc(_, parentFrame)
             mRadial:UpdateUI(true)
         end
 
@@ -486,7 +483,6 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
     local currentOrder = savedVarTable
     -- First time load init
     if currentOrder == nil then
-        savedVarTable = {}
         currentOrder = {}
     end
 
@@ -505,7 +501,9 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             table.remove(currentOrder, idx)
         end
     end  
-
+    if savedVarTable == nil then
+        savedVarTable = currentOrder
+    end
     for idx, watcher in ipairs(currentOrder) do
         if watcher.isWatcher then
             local orderButton = AceGUI:Create("ActionSlot")
@@ -538,6 +536,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             parentFrame:AddChild(orderButton)
         end
     end 
+
 end
 
 function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, parentFrame)
