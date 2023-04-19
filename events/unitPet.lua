@@ -8,7 +8,7 @@ function mRadial:UNIT_PET(_, arg1)
     if MWPetGUID == nil then
         mRadial:HideAllPetFrames()
     else
-        mRadial:createPetFrames()
+        mRadial:CreatePetFrames()
     end
 end
 
