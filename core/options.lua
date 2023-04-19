@@ -251,7 +251,7 @@ end
 function mRadial:OptionsPane()
     OptionsPane = AceGUI:Create("Window")
     OptionsPane:SetWidth(850)
-    -- OptionsPane:SetHeight(750)
+    OptionsPane:SetHeight(750)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
