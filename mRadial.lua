@@ -1,3 +1,14 @@
+---------------------------------------------------------------------
+--- TO DO -----------------------------------------------------------
+-- Update pet frames for other classes?
+-- Update click buttons to support macros?
+-- Add a button to hide passive spell selections? 
+        --(How to track.. etc maybe make this a link as well and fire that as a script)
+-- General code cleanup now somestuff is working
+-- Remake the entire spellscroll frame myself as the ACE3 one sucks?
+-- ShardFrame transparency
+---------------------------------------------------------------------
+
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
 if MRadialSavedVariables == nil then
@@ -27,7 +38,6 @@ UdOffset = 0
 MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
-MR_SECONDWATCHERFRAMES = {}
 MR_PETFAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
@@ -63,21 +73,21 @@ function mRadial:InitUI()
         MRadialSavedVariables["secondaryWatcherOrder"] = {}
     end
     mRadial:CreateMainFrame()
-    mRadial:createWatcherFrames()
+    mRadial:CreateWatcherFrames()
 
     local hideShardFrame = MRadialSavedVariables["hideShardFrame"] or false
     if mRadial:IsWarlock() and not hideShardFrame then
         mRadial:createShardCountFrame()
         mRadial:shardtrack()
     end
-    mRadial:createPetFrames()
+    mRadial:CreatePetFrames()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     mRadial:UpdateUI(false)
 end
 
 function mRadial:UpdateUI(create)
     if create then
-        mRadial:createWatcherFrames()
+        mRadial:CreateWatcherFrames()
     end
     ---------------------------------
     -- PRIMARY SPELL RADIAL MENU

@@ -328,7 +328,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mRadial:createWatcherFrame(spellID)
+function mRadial:CreateWatcherFrame(spellID)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -494,7 +494,7 @@ function mRadial:createWatcherFrame(spellID)
     return watcher
 end
 
-function mRadial:createWatcherFrames()
+function mRadial:CreateWatcherFrames()
     local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
     if activeTalentTreeSpells == nil then
         return
@@ -521,7 +521,7 @@ function mRadial:createWatcherFrames()
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
             if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
-                local frame = mRadial:createWatcherFrame(spellID)
+                local frame = mRadial:CreateWatcherFrame(spellID)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 UdOffset = UdOffset + 32
                 local pframe = frame:GetParent()
@@ -530,7 +530,7 @@ function mRadial:createWatcherFrames()
                 end
                 frame:Hide()
             elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
-                    local frame = mRadial:createWatcherFrame(spellID)
+                    local frame = mRadial:CreateWatcherFrame(spellID)
                     MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                     UdOffset = UdOffset + 32
                     local pframe = frame:GetParent()
@@ -587,7 +587,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 local plast = 0
-function mRadial:createPetFrames()
+function mRadial:CreatePetFrames()
     mRadial:HideAllPetFrames()
     -- Clear out existing
     local petSpellData = {}
@@ -636,7 +636,7 @@ function mRadial:createPetFrames()
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
         local spellIcon = spellData["spellIcon"]
-        if MR_ALLFRAMES[frameName] == nil and mRadial:checkHasSpell(spellName) then
+        if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) then
             -- print("Creating new pet  frame: %s", frameName)
             local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
             local fontPercentage = MRadialSavedVariables.FontPercentage or .5
@@ -665,7 +665,7 @@ function mRadial:createPetFrames()
                 plast = 0
             end)
             MR_PETFAMES[#MR_PETFAMES+1] = frame
-        elseif MR_ALLFRAMES[frameName] and mRadial:checkHasSpell(spellName) then
+        elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             MR_ALLFRAMES[frameName]:Show()
         end
     end

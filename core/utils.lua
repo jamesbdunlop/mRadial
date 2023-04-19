@@ -33,7 +33,7 @@ function mRadial:IsSpellUnitPowerDependant(spellID)
     return false, 0
 end
 
-function mRadial:checkHasSpell(spellName)
+function mRadial:CheckHasSpell(spellName)
     local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
     if name then
         return true
@@ -46,26 +46,10 @@ function mRadial:IsWarlock()
     return UnitClass("player") == "Warlock"
 end
 
-function mRadial:IsPriest()
-    return UnitClass("player") == "Priest"
-end
-
-function mRadial:IsShaman()
-    return UnitClass("player") == "Shaman"
-end
-
-function mRadial:GetSpec()
-    -- Check if player has selected demonology as their spec
-    return GetSpecialization()
-end
-
 function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
     return currentSpecName
-end
-
-function mRadial:BuffHasSpellParent()
 end
 
 function mRadial:TableContains(myTable, value)
@@ -88,7 +72,7 @@ function mRadial:OrderTableContains(myTable, watcher)
     return false
 end
 
-function mRadial:getAllSpells(activeTable)
+function mRadial:GetAllSpells(activeTable)
     local spellData = {}
     --- Trawl the entire spell book for spells.
     --- Sick of trying to figure out the most important! Going to leave this up to the user.
@@ -183,15 +167,15 @@ function mRadial:GetAllActiveTalentTreeSpells()
             table.insert(active, {spellName, spellID})
         end
     end
-    mRadial:getAllSpells(active)
+    mRadial:GetAllSpells(active)
     return active
 end
 
-function mRadial:getShardCount()
+function mRadial:GetShardCount()
     return  UnitPower("player", 7)
 end
 
-function mRadial:hasPetSummoned()
+function mRadial:HasPetSummoned()
     local summonedPet = UnitCreatureFamily("pet")
     if summonedPet then
       return true, summonedPet
@@ -201,7 +185,7 @@ function mRadial:hasPetSummoned()
 end
 
 function mRadial:IsFelguardSummoned()
-    local isSummoned, summonedPet = mRadial:hasPetSummoned()
+    local isSummoned, summonedPet = mRadial:HasPetSummoned()
     if isSummoned and summonedPet == "Felguard" then
       return true
     end
@@ -210,7 +194,7 @@ function mRadial:IsFelguardSummoned()
 end
 
 function mRadial:IsSuccubusSummoned()
-    local isSummoned, summonedPet = mRadial:hasPetSummoned()
+    local isSummoned, summonedPet = mRadial:HasPetSummoned()
     if isSummoned and summonedPet == "Succubus" or summonedPet == "Incubus" then
       return true
     end
@@ -219,7 +203,7 @@ function mRadial:IsSuccubusSummoned()
 end
 
 function mRadial:IsFelhunterSummoned()
-    local isSummoned, summonedPet = mRadial:hasPetSummoned()
+    local isSummoned, summonedPet = mRadial:HasPetSummoned()
     if isSummoned and summonedPet == "Felhunter" then
       return true
     end
@@ -228,7 +212,7 @@ function mRadial:IsFelhunterSummoned()
 end
 
 function mRadial:IsVoidWalkerSummoned()
-    local isSummoned, summonedPet = mRadial:hasPetSummoned()
+    local isSummoned, summonedPet = mRadial:HasPetSummoned()
     if isSummoned and summonedPet == "Voidwalker" then
       return true
     end
@@ -237,7 +221,7 @@ function mRadial:IsVoidWalkerSummoned()
 end
 
 function mRadial:IsFelImpSummoned()
-    local isSummoned, summonedPet = mRadial:hasPetSummoned()
+    local isSummoned, summonedPet = mRadial:HasPetSummoned()
     if isSummoned and summonedPet == "Fel Imp" or summonedPet == "Imp"  then
       return true
     end
@@ -245,31 +229,14 @@ function mRadial:IsFelImpSummoned()
     return false
 end
 
-function mRadial:syncTalentTree(treeTable)
-    for spellName, _ in pairs(treeTable) do
-        local name, _, _, _, _, _, _, _ = GetSpellInfo(spellName)
-        if name then
-            treeTable[spellName]["active"] = true
-        end
-    end
-end
-
-function mRadial:GetTableLen(table)
-    local count = 0
-    for idx, _ in ipairs(table) do
-        count = count +1
-    end
-    return count
-end
-
 function mRadial:GlobalFontPercentageChanged()
     -- print("Global font percentage changed!")
-    mRadial:UpdateUI()
+    mRadial:UpdateUI(false)
     mRadial:SetPetFramePosAndSize()
 end
 
+------------------------------------------------------
 --- BAG FUN STUFF
-
 function mRadial:AddItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
     local url = "https://www.wowhead.com/item="..itemInfo["itemID"]
     local finalurl = "|Hurl:" ..url .. "|h[" .. itemName .. "]|h"
@@ -344,7 +311,8 @@ function mRadial:GetFromTable(spellName, activespells)
     end
 end
 
---- USEFUL
+------------------------------------------------------
+--- SPELL ORDER AND OPTIONS PANE STUFF
 function mRadial:PopUpDialog(title, labelText, w, h)
     local AceGUI = LibStub("AceGUI-3.0")
     local frame = AceGUI:Create("Window")
@@ -403,7 +371,7 @@ function mRadial:WrapText(str)
     return result
 end
 
-local function updateTableOrder(orderTable, srcWatcher, destWatcher, srcIDX, destIDX)
+local function UpdateTableOrder(orderTable, srcWatcher, destWatcher, srcIDX, destIDX)
     for idx, _ in ipairs(orderTable) do
         if idx == destIDX then
             orderTable[idx] = srcWatcher
@@ -460,7 +428,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
                     destWatcher = watcher
                 end
             end
-            updateTableOrder(savedVarTable, srcWatcher, destWatcher, srcIDX, destIDX)
+            UpdateTableOrder(savedVarTable, srcWatcher, destWatcher, srcIDX, destIDX)
             -- cleanup current dragged
             ClearCursor()
             refreshFunc(_, parentFrame)
