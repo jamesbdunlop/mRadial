@@ -133,9 +133,8 @@ end
 -- BUILD PANE STUFF
 local function fixScrollBoxHeight(scrollFrame, generalGroup)
     local height = OptionsPane.frame:GetHeight()
-    local newHeight = height-generalGroup.frame:GetHeight()
-    scrollFrame:SetHeight(newHeight/1.1)
-    scrollFrame.content:SetHeight(newHeight)
+    local newHeight = height-generalGroup.frame:GetHeight()-150
+    scrollFrame:SetHeight(newHeight)
 end
 
 local function PopulateDropdown(scrollFrame, idx)   
@@ -240,9 +239,13 @@ local function PopulateDropdown(scrollFrame, idx)
     elseif idx == 3 then -- Primary spell order and picker
         local spellOrderFrame = mRadial:BuildRadialOptionsPane("Primary:", "isActive", mRadial.BuildPrimaryOrderLayout, scrollFrame)
         mRadial:BuildPrimaryOrderLayout(spellOrderFrame)
+        scrollFrame:LayoutFinished()
+        scrollFrame:FixScroll()
     elseif idx == 4 then -- Secondary spell order and picker
         local spellOrderFrame = mRadial:BuildRadialOptionsPane("Secondary:", "isSecondaryActive", mRadial.BuildSecondaryOrderLayout, scrollFrame)
         mRadial:BuildSecondaryOrderLayout(spellOrderFrame)
+        scrollFrame:LayoutFinished()
+        scrollFrame:FixScroll()
     elseif idx == 5 then -- Linked spells
         mRadial:linkedSpellPane(scrollFrame)
     end
@@ -251,7 +254,7 @@ end
 function mRadial:OptionsPane()
     OptionsPane = AceGUI:Create("Window")
     OptionsPane:SetWidth(850)
-    OptionsPane:SetHeight(750)
+    OptionsPane:SetHeight(650)
     OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
     OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
     OptionsPane:SetLayout("Fill")
@@ -269,9 +272,10 @@ function mRadial:OptionsPane()
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
     scrollFrame:SetHeight(450)
-    -- scrollFrame.content:SetScript("OnSizeChanged", function() 
-    --     fixScrollBoxHeight(scrollFrame, generalGroup)
-    -- end)
+    scrollFrame.content:SetScript("OnSizeChanged", function() 
+        fixScrollBoxHeight(scrollFrame, generalGroup)
+        scrollFrame:FixScroll()
+    end)
     scrollcontainer:AddChild(scrollFrame)
         
     -- General shit
@@ -290,7 +294,7 @@ function mRadial:OptionsPane()
     local wlckGroup = AceGUI:Create("SimpleGroup")
     wlckGroup:SetFullWidth(true)
     wlckGroup:SetLayout("Flow")
-    mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Shard Frames", "This will hide the custom warlock shardCounter frames.", "hideShardFrame", false, mRadial.UpdateUI, true, nil)
+    mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Shard Frames", "This will hide the custom warlock shardCounter frames.\nRequires a /reload", "hideShardFrame", false, mRadial.UpdateUI, true, nil)
     mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Out Of Shards Frame:", "Hides the red out of shards frame for warlocks.", "hideOOShardFrame", false, mRadial.UpdateUI, true, nil)
     local wlckSliderGroup = AceGUI:Create("SimpleGroup")
     wlckSliderGroup:SetFullWidth(true)

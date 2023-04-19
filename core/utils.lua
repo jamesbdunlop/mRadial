@@ -507,7 +507,17 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
 
 end
 
-function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, parentFrame)
+local function SpellNameInActiveWatchers(spellName)
+    for _, watcher in ipairs(ACTIVEPRIMARYWATCHERS) do
+        if watcher.spellName == spellName then
+            return true
+        end
+    end
+    return false
+end
+
+function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, parentFrame, hidePassive)
+    if hidePassive == nil then hidePassive = false end
     local checkBoxes = {}
     local spellsOrderFrame = AceGUI:Create("InlineGroup")
     spellsOrderFrame:SetTitle(title) --"Order: (rightClick to pickup, leftClick to swap src->dest.")
@@ -522,18 +532,34 @@ function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, 
     local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
     local activeSpells = {}
     local passiveSpells = {}
-    
+    local isPrimary = false
+    if isActiveSavedVarStr == "isActive" then
+        isPrimary = true
+    end
+
     if activeTalentTreeSpells ~= nil then
         for _, spellData in ipairs(activeTalentTreeSpells) do
             -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
             local spellName = spellData[1]
-            local spellID = spellData[2]
-            local desc = GetSpellDescription(spellID)
-            local isActiveSavedVarStr = isActiveSavedVarStr .. spellName
-            if IsPassiveSpell(spellID) then
-                table.insert(passiveSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
-            else
-                table.insert(activeSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+            if not isPrimary and not SpellNameInActiveWatchers(spellName) then
+                local spellID = spellData[2]
+                local desc = GetSpellDescription(spellID)
+                local isActiveSavedVarStr = isActiveSavedVarStr .. spellName
+                if IsPassiveSpell(spellID) then
+                    table.insert(passiveSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+                else
+                    table.insert(activeSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+                end
+            elseif isPrimary then
+                local spellID = spellData[2]
+                local desc = GetSpellDescription(spellID)
+                local isActiveSavedVarStr = isActiveSavedVarStr .. spellName
+                if IsPassiveSpell(spellID) then
+                    table.insert(passiveSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+                else
+                    table.insert(activeSpells, {spellsGroup, spellName, desc, isActiveSavedVarStr, false, mRadial.UpdateUI, true, spellID})
+                end
+
             end
         end
     end
@@ -544,14 +570,17 @@ function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, 
         local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID, funcToExec, spellsOrderFrame)
         table.insert(checkBoxes, cbx)
     end
-    for _, passiveSpellData in ipairs(passiveSpells) do
-        local parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID = unpack(passiveSpellData)
-        local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID, funcToExec, spellsOrderFrame)
-        table.insert(checkBoxes, cbx)
+    if not hidePassive then
+        for _, passiveSpellData in ipairs(passiveSpells) do
+            local parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID = unpack(passiveSpellData)
+            local cbx = mRadial:CreateAbilityCheckBox(parentWdg, spellName, desc, isactive, defaultValue, updateUI, descAsTT, spellID, funcToExec, spellsOrderFrame)
+            table.insert(checkBoxes, cbx)
+        end
     end
 
     local resetButton = AceGUI:Create("Button")
     resetButton:SetText("RESET")
+    resetButton:SetWidth(140)
     local function resetCheckBoxes() 
         local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
         warning:Show()
@@ -568,8 +597,29 @@ function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, 
     end
     resetButton:SetCallback("OnClick", resetCheckBoxes)
     
+    local hidePassiveButton = AceGUI:Create("Button")
+    if not hidePassive then
+        hidePassiveButton:SetText("Hide Passive")
+    else
+        hidePassiveButton:SetText("Show Passive")
+    end
+    hidePassiveButton:SetWidth(140)
+    hidePassiveButton:SetCallback("OnClick", function()
+        parentFrame:ReleaseChildren()
+        mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, parentFrame, not hidePassive)
+        if isActiveSavedVarStr == "isActive" then
+            mRadial:BuildPrimaryOrderLayout(spellsOrderFrame)
+        else
+            mRadial:BuildSecondaryOrderLayout(spellsOrderFrame)
+        end
+        parentFrame:LayoutFinished()
+        parentFrame:FixScroll()
+        end)
+
     parentFrame:AddChild(spellsOrderFrame)
+    parentFrame:AddChild(hidePassiveButton)
     parentFrame:AddChild(resetButton)
     parentFrame:AddChild(spellsGroup)
+
     return spellsOrderFrame
 end
