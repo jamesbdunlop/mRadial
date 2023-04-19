@@ -133,7 +133,7 @@ end
 -- BUILD PANE STUFF
 local function fixScrollBoxHeight(scrollFrame, generalGroup)
     local height = OptionsPane.frame:GetHeight()
-    local newHeight = height-generalGroup.frame:GetHeight()-150
+    local newHeight = height-generalGroup.frame:GetHeight()
     scrollFrame:SetHeight(newHeight/1.1)
     scrollFrame.content:SetHeight(newHeight)
 end
@@ -268,10 +268,10 @@ function mRadial:OptionsPane()
     local scrollFrame = AceGUI:Create("ScrollFrame")
     scrollFrame:SetLayout("Flow")
     scrollFrame:SetFullWidth(true)
-    scrollFrame:SetHeight(50)
-    scrollFrame.content:SetScript("OnSizeChanged", function() 
-        fixScrollBoxHeight(scrollFrame, generalGroup)
-    end)
+    scrollFrame:SetHeight(450)
+    -- scrollFrame.content:SetScript("OnSizeChanged", function() 
+    --     fixScrollBoxHeight(scrollFrame, generalGroup)
+    -- end)
     scrollcontainer:AddChild(scrollFrame)
         
     -- General shit
