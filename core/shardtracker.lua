@@ -54,9 +54,9 @@ function mRadial:shardtrack()
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     local hideOOfShardFrame = MRadialSavedVariables["hideOOShardFrame"] or false
-    if soulShards == 0 and not MAINFRAME_ISMOVING and hideOOfShardFrame then
+    if soulShards == 0 and not MAINFRAME_ISMOVING and not hideOOfShardFrame then
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
-    elseif not MAINFRAME_ISMOVING and not hideOOfShardFrame then
+    elseif soulShards > 0 and not MAINFRAME_ISMOVING or hideOOfShardFrame then
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
     end
 end

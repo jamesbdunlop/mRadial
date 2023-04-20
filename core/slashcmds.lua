@@ -18,10 +18,6 @@ function MR_slashCommands(msg, editbox)
         mRadial:OptionsPane()
     end
 
-    if command == "bags" then
-        mRadial:BagPane()
-    end
-
     if command == "disableooc" then
         MRadialSavedVariables["hideooc"] = false
         mRadial:InitUI()

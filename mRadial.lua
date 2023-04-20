@@ -3,8 +3,7 @@
 -- General code cleanup now somestuff is working
 -- Update pet frames for other classes?
 -- Update click buttons to support macros?
--- Add a button to hide passive spell selections? 
-        --(How to track.. etc maybe make this a link as well and fire that as a script)
+-- Import from feature for the button layouts?
 ---------------------------------------------------------------------
 
 local LDB = LibStub("LibDataBroker-1.1")
