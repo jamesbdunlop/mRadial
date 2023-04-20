@@ -186,7 +186,7 @@ end
 
 function mRadial:IsFelguardSummoned()
     local isSummoned, summonedPet = mRadial:HasPetSummoned()
-    if isSummoned and summonedPet == "Felguard" then
+    if isSummoned and summonedPet == "Felguard" or summonedPet == "Wrathguard" then
       return true
     end
 
