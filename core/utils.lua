@@ -235,82 +235,13 @@ function mRadial:GlobalFontPercentageChanged()
     mRadial:SetPetFramePosAndSize()
 end
 
-------------------------------------------------------
---- BAG FUN STUFF
-function mRadial:AddItemInfoToTable(itemName, itemInfo, data, ignoreSoulBound)
-    local url = "https://www.wowhead.com/item="..itemInfo["itemID"]
-    local finalurl = "|Hurl:" ..url .. "|h[" .. itemName .. "]|h"
-    local isBound = itemInfo['isBound']
-    if not ignoreSoulBound and isBound then
-        table.insert(data, {itemName, itemInfo["iconFileID"], finalurl, url, itemInfo["hyperlink"]})
-    elseif ignoreSoulBound and isBound then
-    else
-        table.insert(data, {itemName, itemInfo["iconFileID"], finalurl, url, itemInfo["hyperlink"]})
-    end
-end
-
-function mRadial:listBagItems(ignoreSoulBound)
-    BAGDUMPV1 = {}
-    for bag = BACKPACK_CONTAINER, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-        for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local itemLink = C_Container.GetContainerItemLink(bag, slot)
-            if itemLink then
-                local itemName = GetItemInfo(itemLink)
-                local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
-                if itemName ~= nil and itemInfo ~= nil then
-                    mRadial:AddItemInfoToTable(itemName, itemInfo, BAGDUMPV1, ignoreSoulBound)
-                end
-            end
-        end
-    end
-    SendSystemMessage("Swapped to player inventory!")
-    return BAGDUMPV1
-end
-
-function mRadial:listBankItems(ignoreSoulBound)
-    BANKDUMPV1 = {}
-    -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
-    for bag = 6, 14 do
-        for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local itemLink = C_Container.GetContainerItemLink(bag, slot)
-            if itemLink then
-                local itemName = GetItemInfo(itemLink)
-                local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
-                if itemName ~= nil and itemInfo ~= nil then
-                    mRadial:AddItemInfoToTable(itemName, itemInfo, BANKDUMPV1, ignoreSoulBound)
-                end
-            end
-        end
-    end
-    SendSystemMessage("Swapped to open bank bags!")
-    return BANKDUMPV1
-end
-
-function mRadial:listBankReagentItems(ignoreSoulBound)
-    BANKRDUMPV1 = {}
-    -- (You need to be at the bank for bank inventory IDs to return valid results) WTF!
-    for slot = 1, C_Container.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
-        local itemLink = C_Container.GetContainerItemLink(REAGENTBANK_CONTAINER, slot)
-        if itemLink then
-            local itemName = GetItemInfo(itemLink)
-            local itemInfo = C_Container.GetContainerItemInfo(REAGENTBANK_CONTAINER, slot)
-            if itemName ~= nil and itemInfo ~= nil then
-                mRadial:AddItemInfoToTable(itemName, itemInfo, BANKRDUMPV1, ignoreSoulBound)
-            end
-        end
-    end
-    SendSystemMessage("Swapped to Bank reagent bag!")
-    return BANKRDUMPV1
-end
-
 function mRadial:GetFromTable(spellName, activespells)
-    for idx, watcher in ipairs(activespells) do
+    for _, watcher in ipairs(activespells) do
         if watcher.spellName == spellName then
             return watcher
         end
     end
 end
-
 ------------------------------------------------------
 --- SPELL ORDER AND OPTIONS PANE STUFF
 function mRadial:PopUpDialog(title, labelText, w, h)
@@ -409,12 +340,11 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             end
 
             local _, spellID = GetSpellLink(data1, data2)
-            local spellName, _, icon, _, _, _, _, _ = GetSpellInfo(spellID)
+            local spellName, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
             -- update the button data we're "dropping" on
             self.actionType = "spell"
             self.actionData = spellName
             
-            local iconPath = MWArtTexturePaths[icon]
             self.icon:SetTexture(iconPath)
             self.icon:Show()
             

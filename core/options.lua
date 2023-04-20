@@ -1,5 +1,5 @@
-local MR_config = LibStub("AceConfig-3.0")
-local MR_dialog = LibStub("AceConfigDialog-3.0")
+-- local MR_config = LibStub("AceConfig-3.0")
+-- local MR_dialog = LibStub("AceConfigDialog-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 
 local function CreateSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec, tootip)
@@ -97,7 +97,7 @@ function mRadial:CreateAbilityCheckBox(parent, name, descrip, variableName, defa
         end
         
         local _, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
-        opt_cbox:SetImage(MWArtTexturePaths[iconPath])
+        opt_cbox:SetImage(iconPath)
     end
 
     if descAsTT then
@@ -319,120 +319,6 @@ function mRadial:OptionsPane()
     base:AddChild(optDpDwn)
 end
 
-function mRadial:BagPane()
-    local function updateData(groupIndex, ignoreValue)
-        local toShow
-        if groupIndex == 1 then
-            toShow = mRadial:listBagItems(ignoreValue)
-        elseif groupIndex == 2 then
-            toShow = mRadial:listBankItems(ignoreValue)
-            
-        else
-            toShow = mRadial:listBankReagentItems(ignoreValue)
-
-        end
-        return toShow
-    end
-
-    local function PopulateDropdown(toShow, scrollFrame, editBox)
-        scrollFrame:ReleaseChildren()
-        for x, itemInfo in ipairs(toShow) do
-            local itemName = itemInfo[1]
-            local icon = itemInfo[2]
-            -- local clickableUrl = itemInfo[3]
-            local url = itemInfo[4]
-            local hyperlink = itemInfo[5]
-            local interActiveIcon = AceGUI:Create("Icon")
-            interActiveIcon:SetLabel(itemName)
-            -- Note this doesn't work for all icons interActiveIcon:SetImage(C_Item.GetItemIconByID(icon))
-            interActiveIcon:SetImage(MWArtTexturePaths[icon])
-            interActiveIcon:SetImageSize(24,24)
-            interActiveIcon:SetUserData("hyperlink", hyperlink)
-            interActiveIcon:SetUserData("url", url)
-            interActiveIcon:SetCallback("OnEnter", function(widget) 
-                GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
-                GameTooltip:SetHyperlink(widget:GetUserData("hyperlink")) 
-                GameTooltip:SetSize(80, 50) 
-                GameTooltip:SetWidth(80) GameTooltip:Show() 
-            end)
-            interActiveIcon:SetCallback("OnLeave", function() 
-                GameTooltip:SetOwner(UIParent, "ANCHOR_BOTTOMRIGHT")
-                 GameTooltip:SetText("")
-                 GameTooltip:SetSize(80, 50) 
-                 GameTooltip:SetWidth(80) 
-                 GameTooltip:Show() end)
-            interActiveIcon:SetCallback("OnClick", function(widget) 
-                editBox:SetText(widget:GetUserData("url"))
-            end)
-            
-            scrollFrame:AddChild(interActiveIcon)
-        end
-    end
-
-    MWBagPane = AceGUI:Create("Window")
-    MWBagPane:SetWidth(800)
-    MWBagPane:SetHeight(600)
-    MWBagPane:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    MWBagPane:SetTitle("Bags: WowHead Url Generator") 
-    MWBagPane:SetLayout("Fill")
-    MWBagPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
-    
-    local base = AceGUI:Create("SimpleGroup")
-    MWBagPane:AddChild(base)
-
-    local urlInput = AceGUI:Create("EditBox")
-    urlInput:SetFullWidth(true)
-    urlInput:SetText("")
-    urlInput:SetLabel("WowHeadUrl:")
-    -- urlInput:SetCallback("OnTextChanged", function() urlInput:HighlightText() end)
-    -- urlInput:SetCallback("OnEnter", function(widget, eventName, text) urlInput:HighlightText() end)
-    -- urlInput:SetCallback("OnEnterPressed", function() urlInput:HighlightText() end)
-
-    local testTrp = AceGUI:Create("DropdownGroup")
-    testTrp:SetTitle("Select:")
-    testTrp:SetGroupList({"Inventory", "Bank", "Bank Reagents"})
-    testTrp:SetLayout("Flow")
-    testTrp:SetFullWidth(true)
-    testTrp:SetHeight(400)
-
-    local scrollcontainer = AceGUI:Create("InlineGroup") -- "InlineGroup" is also good
-    scrollcontainer:SetLayout("Flow")
-    scrollcontainer:SetFullWidth(true)
-    scrollcontainer:SetHeight(400)
-    testTrp:AddChild(scrollcontainer)
-    
-    local scrollFrame  = AceGUI:Create("ScrollFrame")
-    scrollFrame:SetLayout("Flow")
-    scrollFrame:SetFullWidth(true)
-    scrollFrame:SetHeight(400)
-    scrollcontainer:AddChild(scrollFrame)
-
-    local ignoreCBx = AceGUI:Create("CheckBox")
-    local ignoreValue = true
-    local currGroupIndex = 1
-    ignoreCBx:SetFullWidth(true)
-    ignoreCBx:SetValue(ignoreValue)
-    ignoreCBx:SetLabel("Ignore SoulBound Items")
-    ignoreCBx:SetCallback("OnValueChanged", function(widget, eventName, value) 
-                        ignoreValue= value
-                        local bagData = updateData(currGroupIndex, value)
-                        PopulateDropdown(bagData, scrollFrame, urlInput) end)
-    
-    local items = {BAGDUMPV1, BANKDUMPV1, BANKRDUMPV1}
-    testTrp:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
-        currGroupIndex = groupIndex
-        local bagData = updateData(groupIndex, ignoreValue)
-        PopulateDropdown(bagData, scrollFrame, urlInput)
-    end)
-    if items[1] ~= nil then
-        testTrp:SetGroup(1)
-    end
-
-    base:AddChild(urlInput)
-    base:AddChild(ignoreCBx)
-    base:AddChild(testTrp)
-end
-
 -- Action button for dnd for linked spells..
 local newlyLinked = {}
 local currentLinked
@@ -447,8 +333,7 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
         self:SetUserData("srcSpellID", srcSpellID)
         self:SetUserData("baseSpellName", spellName)
 
-        local iconPath= MWArtTexturePaths[icon]
-        self.icon:SetTexture(iconPath)
+        self.icon:SetTexture(icon)
         self.icon:Show()
         ClearCursor()
     end
@@ -610,8 +495,7 @@ function mRadial:linkedSpellPane(parent)
     for spellName, linkedSpell in pairs(currentLinked) do
         local link, spellID = GetSpellLink(spellName)
         if link ~= nil then
-            _, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
-            local srcIcon= MWArtTexturePaths[icon]
+            _, _, srcIcon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
             local destSpellName = linkedSpell[1]
             local destSpellID = linkedSpell[2]
             if spellName then

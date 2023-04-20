@@ -435,8 +435,7 @@ function mRadial:CreateWatcherFrame(spellID)
         for slot = 1, 4 do
             local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
             if haveTotem and totemName == spellName then
-                local iconPath = MWArtTexturePaths[icon]
-                mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
+                mRadial:DoTotemTimer(watcher, startTime, duration, icon)
             end
         end
 
