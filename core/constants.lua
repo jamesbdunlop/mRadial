@@ -10,6 +10,7 @@ READYTEXT = "RDY"
 GCD = 1 --w as 1.5
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
+
 MR_DEFAULT_FONT = "Accidental Presidency.ttf"
 MR_FONTS = {}
 MR_FONTS[1] = "Accidental Presidency.ttf"
@@ -18,7 +19,9 @@ MR_FONTS[3] = "Nueva Std Cond.ttf"
 MR_FONTS[4] = "Oswald-Regular.ttf"
 MR_FONTS[5] = "Mochalatte-JRorB.ttf"
 MR_FONTS[6] = "HoodBrothers-Yo9y.ttf"
-
+MR_FONTS[7] = "DejaVuSansMono.ttf"
+MR_FONTS[8] = "AnonymousPro-Bold.ttf"
+MR_FONTS[9] = "MONOFONT.ttf"
 
 MAINBG_FRAMENAME = "mRadialBGFrame"
 SHARD_FRAMENAME = "MWShardFrame"
