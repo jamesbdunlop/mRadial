@@ -150,6 +150,8 @@ local function PopulateDropdown(scrollFrame, idx)
         CreateSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
         CreateSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 40, mRadial.UpdateUI)
         CreateSlider(radialGroup, "Icon Spread: ", -40, 40, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+        CreateSlider(radialGroup, "(de)BuffTimerScale: ", 0, 10, .01, "buffTimerScale", 0, mRadial.UpdateUI)
+
         CreateSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
         CreateSlider(radialGroup, "Height Oval (default 1): ", .1, 10, .01, "heightDeform", 1, mRadial.UpdateUI)
         scrollFrame:AddChild(radialGroup)

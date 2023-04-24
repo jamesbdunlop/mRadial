@@ -798,22 +798,23 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
             
             watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
-            watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
-            watcher.debuffTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
+            local buffTimerScale = MRadialSavedVariables["buffTimerScale"] or 0
+            watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.2+buffTimerScale, watcherFrameSize/1.5+buffTimerScale)
+            watcher.debuffTimerTextBG:SetSize(watcherFrameSize/1.2+buffTimerScale, watcherFrameSize/1.5+buffTimerScale)
             
             -- TEXT
-            watcher.buffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
-            watcher.debuffTimerText:SetSize(watcherFrameSize*1.25, watcherFrameSize)
+            watcher.buffTimerText:SetSize(watcherFrameSize*1.25+buffTimerScale, watcherFrameSize)
+            watcher.debuffTimerText:SetSize(watcherFrameSize*1.25+buffTimerScale, watcherFrameSize)
             watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUdOffset)
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
             watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset, readyUDOffset)
             
             -- SET FONT
-            watcher.buffTimerText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.debuffTimerText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+timerFontSize, "OUTLINE, MONOCHROME")
-            watcher.countText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+countFontSize, "THICKOUTLINE")
-            watcher.cooldownText:SetFont(customFontPath,  watcherFrameSize*fontPercentage+coolDownFontSize, "THICKOUTLINE")
-            watcher.readyText:SetFont(customFontPath, watcherFrameSize*fontPercentage+readyFontSize, "THICKOUTLINE")
+            watcher.buffTimerText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+timerFontSize+buffTimerScale, "OUTLINE, MONOCHROME")
+            watcher.debuffTimerText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+timerFontSize+buffTimerScale, "OUTLINE, MONOCHROME")
+            watcher.countText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+countFontSize, "THICKOUTLINE")
+            watcher.cooldownText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+coolDownFontSize, "THICKOUTLINE")
+            watcher.readyText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
             watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
@@ -824,8 +825,8 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             
             if cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, radialUdOffset - watcherFrameSize/2)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset-watcherFrameSize/2, radialUdOffset)-- - watcherFrameSize/2)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset-watcherFrameSize/2, radialUdOffset)-- - watcherFrameSize/2)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)
             elseif cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
