@@ -825,9 +825,9 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             
             if cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset-watcherFrameSize/2, radialUdOffset)-- - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset-watcherFrameSize/2, radialUdOffset)-- - watcherFrameSize/2)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)-- - watcherFrameSize/2)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)-- - watcherFrameSize/2)
+                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
             elseif cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
