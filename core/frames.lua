@@ -581,7 +581,10 @@ function mRadial:CreateMainFrame()
     MRadialMainFrame.crosshair:SetTexture(crossHairPath)
     MRadialMainFrame.crosshair:SetSize(25, 25)
     MRadialMainFrame.crosshair:Hide()
-    MRadialMainFrame:Show()
+    local inLockdown = InCombatLockdown()
+    if not inLockdown then
+        MRadialMainFrame:Show()
+    end
 end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
@@ -684,7 +687,10 @@ end
 function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
-            frame:Hide()
+            local inLockdown = InCombatLockdown()
+            if not inLockdown then
+                frame:Hide()
+            end
         end
     end
 end
