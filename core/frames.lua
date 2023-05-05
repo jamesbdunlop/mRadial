@@ -203,7 +203,10 @@ function mRadial:SetMountedFrameScripts(frame)
         if IsMounted() or IsFlying() or hideOOC then
             frame:Hide()
         else
-            frame:Show()
+            local inLockdown = InCombatLockdown()
+            if not inLockdown then
+                frame:Show()
+            end
         end
     end)
 end
