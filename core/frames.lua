@@ -659,12 +659,15 @@ function mRadial:CreatePetFrames()
                                                 true)
             local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
             local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+            -- Custom death indicator
+            
+            ---
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
-                if plast <= .05 then
+                if plast <= .02 then
                     return
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)

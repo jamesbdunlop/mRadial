@@ -349,7 +349,7 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
             currentLinked[baseSpellName] = nil
         end
         -- REMOVE FRAMES
-        PopulateDropdown(scrollFrame, 4)
+        PopulateDropdown(scrollFrame, 5)
     end
 
     --- START LAYOUT
@@ -462,7 +462,7 @@ function mRadial:linkedSpellPane(parent)
         end
         MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
         newlyLinked = {}
-        PopulateDropdown(scrollFrame, 4)
+        PopulateDropdown(scrollFrame, 5)
     end
 
     local linkedGroup = AceGUI:Create("InlineGroup")
