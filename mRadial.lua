@@ -6,29 +6,10 @@
 -- Import from feature for the button layouts?
 ---------------------------------------------------------------------
 
-local LDB = LibStub("LibDataBroker-1.1")
-local LDBIcon = LibStub("LibDBIcon-1.0")
+
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
 end
-
-local mr_dataBroker;
-mr_dataBroker = LDB:NewDataObject ("mRadialICO", {
-    type = "data source", 
-    text= "0",  
-    icon = MEDIAPATH.."\\miniMapIcon",
-    iconR = .5,
-    iconG = .9,
-    iconB = .5,
-    OnClick = function(self)
-        mRadial:OptionsPane()
-    end,
-    OnTooltipShow = function(tooltip)
-        tooltip:AddLine("mRadial - options")
-    end,
-})
-LDBIcon:Register("mRadialICO", mr_dataBroker, {hide=false, minimapPos=199})
-LDBIcon:Show("mRadialICO")
 
 UdOffset = 0
 
@@ -126,6 +107,18 @@ function mRadial:UpdateUI(create)
     
 end
 
+local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
+    type = "data source",
+    text = "mRadialIcon",
+    icon = MEDIAPATH.."\\miniMapIcon",
+    iconR = .5,
+    iconG = .9,
+    iconB = .5,
+    OnClick = function(self) mRadial:OptionsPane() end,
+    OnTooltipShow = function(tooltip) tooltip:AddLine("mRadial - options") end,
+    })
+local icon = LibStub("LibDBIcon-1.0")
+
 function mRadial:OnInitialize()
     local f = CreateFrame("Frame")
     -- Register the event for when the player logs in
@@ -139,6 +132,9 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
+    
+    self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = false, }, }, }) 
+    icon:Register("mRadialIcon", db, mRadialICO)
 end
 
 function mRadial:OnEnable()

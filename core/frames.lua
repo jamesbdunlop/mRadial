@@ -198,12 +198,12 @@ function mRadial:SetMountedFrameScripts(frame)
         end
     end)
 
+    local inLockdown = InCombatLockdown()
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
         local hideOOC = MRadialSavedVariables["hideooc"]
-        if IsMounted() or IsFlying() or hideOOC then
+        if IsMounted() or IsFlying() or hideOOC and not inLockdown then
             frame:Hide()
         else
-            local inLockdown = InCombatLockdown()
             if not inLockdown then
                 frame:Show()
             end
