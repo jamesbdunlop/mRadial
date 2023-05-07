@@ -15,6 +15,9 @@
 
 ## SavedVariables: MRadialSavedVariables, PerPlayerPerSpecSavedVars, mRadialDB, mRadialICO
 
+## AddonCompartmentFunc: mRadial_OnAddonCompartmentClick
+## IconTexture: Interface\AddOns\mRadial\media\miniMapIcon.blp
+
 embeds.xml 
 addon.lua
 

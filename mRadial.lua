@@ -1,9 +1,8 @@
 ---------------------------------------------------------------------
 --- TO DO -----------------------------------------------------------
--- General code cleanup now somestuff is working
 -- Update pet frames for other classes?
--- Update click buttons to support macros?
--- Import from feature for the button layouts?
+-- Update pet frames for death of pets!
+-- "Import from" feature for the button layouts?
 ---------------------------------------------------------------------
 
 
@@ -148,4 +147,8 @@ end
 function mRadial:OnDisable()
     -- Called when the addon is disabled
     -- print("mRadial OnDisable called!")
+end
+
+function mRadial_OnAddonCompartmentClick(addonName, buttonName)
+    mRadial:OptionsPane()
 end

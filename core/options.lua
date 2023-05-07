@@ -132,7 +132,7 @@ end
 
 -- BUILD PANE STUFF
 local function fixScrollBoxHeight(scrollFrame, generalGroup)
-    local height = OptionsPane.frame:GetHeight()
+    local height = MRADIALOptionsPane.frame:GetHeight()
     local newHeight = height-generalGroup.frame:GetHeight()-150
     scrollFrame:SetHeight(newHeight)
 end
@@ -253,17 +253,20 @@ local function PopulateDropdown(scrollFrame, idx)
     end
 end
 
+MRADIALOptionsPane = nil
 function mRadial:OptionsPane()
-    OptionsPane = AceGUI:Create("Window")
-    OptionsPane:SetWidth(850)
-    OptionsPane:SetHeight(650)
-    OptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
-    OptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
-    OptionsPane:SetLayout("Fill")
-    OptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) end)
+    if MRADIALOptionsPane == nil then
+        MRADIALOptionsPane = AceGUI:Create("Window")
+    end
+    MRADIALOptionsPane:SetWidth(850)
+    MRADIALOptionsPane:SetHeight(650)
+    MRADIALOptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
+    MRADIALOptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
+    MRADIALOptionsPane:SetLayout("Fill")
+    MRADIALOptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) MRADIALOptionsPane = nil end)
 
     local base = AceGUI:Create("SimpleGroup")
-    OptionsPane:AddChild(base)
+    MRADIALOptionsPane:AddChild(base)
 
     local scrollcontainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
     scrollcontainer:SetLayout("Flow")
