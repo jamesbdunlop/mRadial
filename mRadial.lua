@@ -126,14 +126,10 @@ function mRadial:OnInitialize()
         -- ud stands for UpDown
         -- lr stands for leftRight
         if event == "PLAYER_ENTERING_WORLD" then
-            -- print("OnInitialize called! InitUI Fired!")
             mRadial:InitUI()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
-    
-    self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = false, }, }, }) 
-    icon:Register("mRadialIcon", db, mRadialICO)
 end
 
 function mRadial:OnEnable()
@@ -142,6 +138,12 @@ function mRadial:OnEnable()
     print("Welcome " .. playerName .. " -- mRadial")
     print("/mr slash commands are: move, lock, options")
     print("----------------------")
+    
+    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"]
+    if not hideMiniMapIcon then
+        self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })
+        icon:Register("mRadialIcon", db, mRadialICO)
+    end
 end
 
 function mRadial:OnDisable()

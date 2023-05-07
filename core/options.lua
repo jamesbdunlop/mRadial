@@ -292,6 +292,7 @@ function mRadial:OptionsPane()
     mRadial:CreateAbilityCheckBox(generalGroup, "AsButtons", "Allow click to cast from radial buttons. \n Toggling this will require a /reloadUI", "asbuttons", false, mRadial.UpdateUI, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Out Of Combat", "Hide UI while out of combat.", "hideooc", false, mRadial.UpdateUI, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Pet Frames", "Hide all pet frames from the UI.", "hidePetFrame", false, mRadial.TogglePetFrameVisibility, true, nil)
+    mRadial:CreateAbilityCheckBox(generalGroup, "Hide MiniMapIcon", "Hide the minimap icon and use the new container instead. Clicking this will reload the UI!", "hideMiniMapIcon", true, ReloadUI, true, nil, nil, nil)
     CreateSlider(generalGroup, "Radius Multiplyer", .1, 10, .1, "radiusMult", 1, mRadial.UpdateUI)
     
     base:AddChild(generalGroup)

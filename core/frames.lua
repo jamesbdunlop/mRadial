@@ -193,7 +193,7 @@ function mRadial:SetMountedFrameScripts(frame)
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
         -- Show the frame when entering combat
-        if event == "PLAYER_REGEN_DISABLED" then
+        if event == "PLAYER_REGEN_DISABLED" and not InCombatLockdown() then
             frame:Show()
         end
     end)
@@ -389,6 +389,7 @@ function mRadial:CreateWatcherFrame(spellID)
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                watcher.buffTimerText:Hide()
                 watcher.buffTimerTextBG:Hide()
                 last = 0
                 local hideOOC = MRadialSavedVariables["hideooc"]
@@ -506,9 +507,9 @@ function mRadial:CreateWatcherFrames()
 
     -- hide all for spec changes.
     for _, frame in ipairs(MR_WATCHERFRAMES) do
-        frame:Hide()
+        if not InCombatLockdown() then frame:Hide() end
         local pframe = frame:GetParent()
-        if pframe ~= nil then
+        if pframe ~= nil and not InCombatLockdown() then
             pframe:Hide()
         end
     end
@@ -686,7 +687,7 @@ function mRadial:TogglePetFrameVisibility()
     for _, frame in pairs(MR_ALLFRAMES) do
         if frame.isPetFrame and isVisible then
             frame:Hide()
-        elseif frame.isPetFrame and not isVisible then
+        elseif frame.isPetFrame and not isVisible and not InCombatLockdown() then
             frame:Show()
         end
     end
