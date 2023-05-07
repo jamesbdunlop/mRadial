@@ -198,11 +198,13 @@ function mRadial:SetMountedFrameScripts(frame)
         end
     end)
 
-    local inLockdown = InCombatLockdown()
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
+        local inLockdown = InCombatLockdown()
         local hideOOC = MRadialSavedVariables["hideooc"]
-        if IsMounted() or IsFlying() or hideOOC and not inLockdown then
-            frame:Hide()
+        if IsMounted() or IsFlying() or hideOOC then
+            if not inLockdown then
+                frame:Hide()
+            end
         else
             if not inLockdown then
                 frame:Show()
@@ -632,7 +634,7 @@ function mRadial:CreatePetFrames()
     elseif mRadial:IsFelImpSummoned() then 
         petSpellData = {
             ["SingeMagic"] = {["spellName"] = "Singe Magic",
-                            ["spellIcon"] = string.format("%s/Spell_fire_elementaldevastation.blp", ROOTICONPATH)},
+                            ["spellIcon"] = string.format("%s/Spell_fire_elementaldevastation.blp", ROOTICONPATH) },
             ["Flee"] = {["spellName"] = "Flee",
                                 ["spellIcon"] = string.format("%s/Ability_heroicleap.blp", ROOTICONPATH)},
                             }
@@ -690,8 +692,7 @@ end
 function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
-            local inLockdown = InCombatLockdown()
-            if not inLockdown then
+            if not InCombatLockdown() then
                 frame:Hide()
             end
         end
