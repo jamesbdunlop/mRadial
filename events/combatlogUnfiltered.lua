@@ -10,6 +10,11 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
     local playerName = UnitName("player")
     local myName = "Macka"
     if subevent == "UNIT_DIED" or subevent == "UNIT_DESTROYED" or subevent == "UNIT_DISSIPATES" then
+        local petGUID = UnitGUID("pet")
+        if destGUID == petGUID then
+            mRadial:HideAllPetFrames()
+        end
+
         if playerName ~= myName then
             return
         end
@@ -18,9 +23,8 @@ function mRadial:COMBAT_LOG_EVENT_UNFILTERED(eventName, ...)
             SendChatMessage("Healer down! healer down! " .. iuzenName .. " went splat to: " .. sourceName, "PARTY")
         end
 
-        local petGUID = UnitGUID("pet")
+        
         if destGUID == petGUID then
-            mRadial:InitUI()
             -- Loop through all party members and check if the player is in the party
             if UnitInParty(iuzenName) then
                 SendChatMessage(PetDiedMsg[math.random(1, #PetDiedMsg)], "WHISPER", nil, iuzenName)

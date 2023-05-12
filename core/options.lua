@@ -121,11 +121,13 @@ end
 function mRadial:BuildPrimaryOrderLayout(parent)
     -- First update for active spells for any checkboxes that may have been ticked
     mRadial:UpdateActivePrimarySpells()
+    mRadial:UpdateActiveSecondarySpells()
     mRadial:BuildOrderLayout(parent, MRadialSavedVariables["primaryWatcherOrder"], ACTIVEPRIMARYWATCHERS, mRadial.BuildPrimaryOrderLayout)
 end
 
 function mRadial:BuildSecondaryOrderLayout(parent)
     -- First update for active spells for any checkboxes that may have been ticked
+    mRadial:UpdateActivePrimarySpells()
     mRadial:UpdateActiveSecondarySpells()
     mRadial:BuildOrderLayout(parent, MRadialSavedVariables["secondaryWatcherOrder"], ACTIVESECONDARYWATCHERS, mRadial.BuildSecondaryOrderLayout)
 end

@@ -21,24 +21,30 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     local hideOOC = MRadialSavedVariables["hideooc"]
     if enabled and remaining > GCD and not IsMounted() and not hideOOC then
-        watcher.cooldownText:Show()
+        watcher.cooldownText:SetAlpha(1)
+        
         if watcher.readyText ~= nil then
-            watcher.readyText:Hide()
+            watcher.readyText:SetAlpha(0)
         end
         if minutes and minutes > 0 then
             watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
-        else
+        elseif seconds then
             watcher.cooldownText:SetText(string.format("%ds", seconds))
+        else
+            watcher.cooldownText:SetText(string.format(""))
+            watcher.iconFrame:SetAlpha(1)
+            watcher.movetex:SetColorTexture(1, 0, 0, 0)
         end
         watcher.cooldownText:SetTextColor(1, .1, .1)
         watcher.iconFrame:SetAlpha(0.5)
         watcher.movetex:SetColorTexture(1, 0, 0, .5)
     else
-        watcher.cooldownText:Hide()
+        watcher.cooldownText:SetAlpha(0)
+        watcher.cooldownText:SetText(string.format(""))
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
         if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
-            watcher.readyText:Show()
+            mRadial:ShowFrame(watcher.readyText)
         end
     end
 end
@@ -60,22 +66,22 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
     end
     local hideOOC = MRadialSavedVariables["hideooc"]
     if remaining > GCD and not IsMounted() and not hideOOC then
-        watcher.debuffTimerTextBG:Show()
+        mRadial:ShowFrame(watcher.debuffTimerTextBG)
         watcher.debuffTimerTextBG:SetTexture(iconPath)
         watcher.debuffTimerTextBG:SetAlpha(.5)
 
-        watcher.debuffTimerText:Show()
+        mRadial:ShowFrame(watcher.debuffTimerText)
         watcher.debuffTimerText:SetText(string.format("%ds", remaining))
 
         watcher.iconFrame:SetAlpha(0.5)
         watcher.movetex:SetColorTexture(1, 0, 0, 1)
     else
-        watcher.debuffTimerTextBG:Hide()
-        watcher.debuffTimerText:Hide()
+        mRadial:HideFrame(watcher.debuffTimerTextBG)
+        mRadial:HideFrame(watcher.debuffTimerText)
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(1, 0, 0, 0)
         if not IsMounted() and not hideOOC then
-            watcher.readyText:Show()
+            mRadial:ShowFrame(watcher.readyText)
         end
     end
 end
@@ -115,7 +121,7 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
         
         if name == spellName then
             if count ~= 0 and count >= 1 and expirationTime ~= nil and not IsMounted() and not hideOOC then
-                watcher.countText:Show()
+                mRadial:ShowFrame(watcher.countText)
                 watcher.countText:SetText(tostring(count))
             end
         end
@@ -124,8 +130,8 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
         if name ~= nil and name == spellName and expirationTime ~= nil and not IsMounted() and not hideOOC then
             -- Buff is active -- 
             found = true
-            watcher.buffTimerText:Show()
-            watcher.buffTimerTextBG:Show()
+            mRadial:ShowFrame(watcher.buffTimerText)
+            mRadial:ShowFrame(watcher.buffTimerTextBG)
             watcher.buffTimerText:SetTextColor(.1, 1, .1)
             watcher.buffTimerTextBG:SetTexture(iconPath)
             watcher.buffTimerTextBG:SetAlpha(.5)
@@ -136,14 +142,14 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
             elseif seconds > 0 then
                 watcher.buffTimerText:SetText(string.format("%ds", seconds))
             else
-                watcher.buffTimerText:Hide()
-                watcher.buffTimerTextBG:Hide()
+                mRadial:HideFrame(watcher.buffTimerText)
+                mRadial:HideFrame(watcher.buffTimerTextBG)
             end
         end
     end
     if not found then
-        watcher.buffTimerText:Hide()
-        watcher.buffTimerTextBG:Hide()
+        mRadial:HideFrame(watcher.buffTimerText)
+        mRadial:HideFrame(watcher.buffTimerTextBG)
     end
 end
 
@@ -163,8 +169,8 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         local seconds = math.floor(remaining - minutes * 60)
 
         -- Totem is active -- 
-        watcher.buffTimerText:Show()
-        watcher.buffTimerTextBG:Show()
+        mRadial:ShowFrame(watcher.buffTimerText)
+        mRadial:ShowFrame(watcher.buffTimerTextBG)
         watcher.buffTimerTextBG:SetTexture(iconPath)
         watcher.buffTimerText:SetTextColor(.1, 1, .1)
         watcher.buffTimerTextBG:SetAlpha(.5)
@@ -174,11 +180,11 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         elseif seconds > 0 then
             watcher.buffTimerText:SetText(string.format("%ds", seconds))
         else
-            watcher.buffTimerText:Hide()
-            watcher.buffTimerTextBG:Hide()
+            mRadial:HideFrame(watcher.buffTimerText)
+            mRadial:HideFrame(watcher.buffTimerTextBG)
         end
     else
-        watcher.buffTimerText:Hide()
-        watcher.buffTimerTextBG:Hide()
+        mRadial:HideFrame(watcher.buffTimerText)
+        mRadial:HideFrame(watcher.buffTimerTextBG)
     end
 end
