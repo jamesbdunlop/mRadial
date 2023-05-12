@@ -54,7 +54,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame.movetext:SetTextColor(1, 1, 1)
     frame.movetext:SetPoint("CENTER", frame.iconFrame, "TOP", 0, 0)
     frame.movetext:SetText(frame:GetName())
-    frame.movetext:Hide()
+    mRadial:HideFrame(frame.movetext)
 
     if allPoints ~= nil then
         frame.iconFrame:SetAllPoints(frame)
@@ -154,8 +154,8 @@ function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
     watcher.aura = watcher:CreateTexture(nil, "OVERLAY")
     watcher.aura:SetPoint("CENTER", 0, 0)
     watcher.aura:SetTexture("Interface/COMMON/portrait-ring-withbg-highlight", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-    watcher.aura:Hide()
-
+    mRadial:HideFrame(watcher.aura)
+    
     -- special tag for helping determine this is a raidal button.
     watcher.isWatcher = true
     mRadial:SetMountedFrameScripts(watcher)
@@ -193,22 +193,17 @@ function mRadial:SetMountedFrameScripts(frame)
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
         -- Show the frame when entering combat
-        if event == "PLAYER_REGEN_DISABLED" and not InCombatLockdown() then
-            frame:Show()
+        if event == "PLAYER_REGEN_DISABLED" then
+            mRadial:ShowFrame(frame)
         end
     end)
 
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
-        local inLockdown = InCombatLockdown()
         local hideOOC = MRadialSavedVariables["hideooc"]
         if IsMounted() or IsFlying() or hideOOC then
-            if not inLockdown then
-                frame:Hide()
-            end
+            mRadial:HideFrame(frame)
         else
-            if not inLockdown then
-                frame:Show()
-            end
+            mRadial:ShowFrame(frame)
         end
     end)
 end
@@ -221,31 +216,31 @@ function mRadial:SetUIMovable(isMovable)
     MAINFRAME_ISMOVING = isMovable
     
     if isMovable then
-        MRadialMainFrame.crosshair:Show()
-        MRadialMainFrame.movetex:Show()
+        mRadial:ShowFrame(MRadialMainFrame.crosshair)
+        mRadial:ShowFrame(MRadialMainFrame.movetex)
+        mRadial:ShowFrame(MRadialMainFrame.movetext)
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
     else
-        MRadialMainFrame.crosshair:Hide()
-        MRadialMainFrame.movetex:Hide()
+        mRadial:HideFrame(MRadialMainFrame.crosshair)
+        mRadial:HideFrame(MRadialMainFrame.movetex)
+        mRadial:HideFrame(MRadialMainFrame.movetext)
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
     end
 
     for _, pframe in pairs(MR_PARENTFRAMES) do
         if isMovable then
             if not pframe.baseFrame.isWatcher then
-                pframe.baseFrame.movetex:Show()
-                pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .5)
-                pframe.baseFrame.movetext:Show()
+                pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .25)
+                mRadial:ShowFrame(pframe.baseFrame.movetext)
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
             else
-                pframe.baseFrame.readyText:Show()
-                pframe.baseFrame.countText:Show()
-                pframe.baseFrame.cooldownText:Show()
-                pframe.baseFrame.buffTimerText:Show()
-                pframe.baseFrame.buffTimerTextBG:Show()
-                pframe.baseFrame.debuffTimerTextBG:Show()
-
+                mRadial:ShowFrame(pframe.baseFrame.readyText)
+                mRadial:ShowFrame(pframe.baseFrame.countText)
+                mRadial:ShowFrame(pframe.baseFrame.cooldownText)
+                mRadial:ShowFrame(pframe.baseFrame.buffTimerText)
+                mRadial:ShowFrame(pframe.baseFrame.buffTimerTextBG)
+                mRadial:ShowFrame(pframe.baseFrame.debuffTimerTextBG)
                 pframe.baseFrame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
                 pframe.baseFrame.buffTimerText:SetText("00")
                 pframe.baseFrame.countText:SetText("00")
@@ -253,18 +248,17 @@ function mRadial:SetUIMovable(isMovable)
             end
         else
             if not pframe.baseFrame.isWatcher then
-                pframe.baseFrame.movetex:Hide()
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
-                pframe.baseFrame.movetext:Hide()
+                mRadial:HideFrame(pframe.baseFrame.movetext)
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
             else
-                pframe.baseFrame.readyText:Hide()
-                pframe.baseFrame.countText:Hide()
-                pframe.baseFrame.cooldownText:Hide()
-                pframe.baseFrame.buffTimerText:Hide()
-                pframe.baseFrame.buffTimerTextBG:Hide()
-                pframe.baseFrame.debuffTimerTextBG:Hide()
+                mRadial:HideFrame(pframe.baseFrame.readyText)
+                mRadial:HideFrame(pframe.baseFrame.countText)
+                mRadial:HideFrame(pframe.baseFrame.cooldownText)
+                mRadial:HideFrame(pframe.baseFrame.buffTimerText)
+                mRadial:HideFrame(pframe.baseFrame.buffTimerTextBG)
+                mRadial:HideFrame(pframe.baseFrame.debuffTimerTextBG)
             end
         end
     end
@@ -389,30 +383,24 @@ function mRadial:CreateWatcherFrame(spellID)
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                watcher.buffTimerText:Hide()
-                watcher.buffTimerTextBG:Hide()
+                mRadial:HideFrame(watcher.buffTimerText)
+                mRadial:HideFrame(watcher.buffTimerTextBG)
                 last = 0
                 local hideOOC = MRadialSavedVariables["hideooc"]
                 if not IsMounted() and not hideOOC then
-                    watcher.movetex:Show()
+                    mRadial:ShowFrame(watcher.movetex)
                 end
                 return
             else
                 watcher.readyText:SetText(READYSTR)
                 watcher.readyText:SetTextColor(0, 1, 0)
-                watcher.movetex:Hide()
+                mRadial:HideFrame(watcher.movetex)
             end
         end
 
         mRadial:DoDebuffTimer(spellName, watcher, iconPath)
         mRadial:DoSpellFrameCooldown(spellName, watcher)
-        -- LINKED SPELLS!!!!
-        -- I need a way to link a spell to another, perhaps a manually written table for now
-        -- as I can't find anything in the API
-        -- in the cast of a linked spell I need to know that eg
-            -- when VoidTorrent is cast, we have a buff VoidForm running we want to track, and cooldowns for VoidBolts during that time.
-            -- and when we run out of VoidForm we then end up showing the cooldown for VoidTorrent.
-            -- relationships = {spellName, buffName, swapSpellNameTo}
+
         local allLinkedSpells = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
         local getLinked = allLinkedSpells[spellName] or nil
         
@@ -428,13 +416,13 @@ function mRadial:CreateWatcherFrame(spellID)
             
             local hideOOC = MRadialSavedVariables["hideooc"]
             if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() and not hideOOC then
-                watcher.aura:Show()
+                mRadial:ShowFrame(watcher.aura)
             else
-                watcher.aura:Hide()
+                mRadial:HideFrame(watcher.aura)
             end
         else
             mRadial:DoBuffTimer(spellName, watcher, iconPath)
-            watcher.aura:Hide()
+            mRadial:HideFrame(watcher.aura)
         end
 
         -- TOTEM WATCHING FOR ZEN
@@ -470,16 +458,16 @@ function mRadial:CreateWatcherFrame(spellID)
         watcher.countText:SetText("")
         local hideOOC = MRadialSavedVariables["hideooc"]
         if count ~= 0 and not IsMounted() and not hideOOC then
-            watcher.countText:Show()
+            mRadial:ShowFrame(watcher.countText)
             watcher.countText:SetText(tostring(count))
             -- When we have a count for Summon Soulkeeper this spell can be marked as ready, 
             -- else we hide the ready for that spell.
             if spellName == SUMMONSOULKEEPER_SPELLNAME then
-                watcher.readyText:Show()
+                mRadial:ShowFrame(watcher.readyText)
             end
         else
             if spellName == SUMMONSOULKEEPER_SPELLNAME then
-                watcher.readyText:Hide()
+                mRadial:HideFrame(watcher.readyText)
             end
         end
 
@@ -507,10 +495,10 @@ function mRadial:CreateWatcherFrames()
 
     -- hide all for spec changes.
     for _, frame in ipairs(MR_WATCHERFRAMES) do
-        if not InCombatLockdown() then frame:Hide() end
+        mRadial:HideFrame(frame)
         local pframe = frame:GetParent()
-        if pframe ~= nil and not InCombatLockdown() then
-            pframe:Hide()
+        if pframe ~= nil then
+            mRadial:HideFrame(pframe)
         end
     end
 
@@ -531,26 +519,26 @@ function mRadial:CreateWatcherFrames()
                 UdOffset = UdOffset + 32
                 local pframe = frame:GetParent()
                 if pframe ~= nil then
-                    pframe:Hide()
+                    mRadial:HideFrame(pframe)
                 end
-                frame:Hide()
+                mRadial:HideFrame(frame)
             elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
                     local frame = mRadial:CreateWatcherFrame(spellID)
                     MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                     UdOffset = UdOffset + 32
                     local pframe = frame:GetParent()
                     if pframe ~= nil then
-                        pframe:Hide()
+                        mRadial:HideFrame(pframe)
                     end
-                    frame:Hide()
+                    mRadial:HideFrame(frame)
             elseif isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
                     local pframe = frame:GetParent()
                     if pframe ~= nil then
-                        pframe:Hide()
+                        mRadial:HideFrame(pframe)
                     end
-                    frame:Hide()
+                    mRadial:HideFrame(frame)
                 end
             end
         end
@@ -586,7 +574,7 @@ function mRadial:CreateMainFrame()
     local crossHairPath = MEDIAPATH .."\\crosshair.blp"
     MRadialMainFrame.crosshair:SetTexture(crossHairPath)
     MRadialMainFrame.crosshair:SetSize(25, 25)
-    MRadialMainFrame.crosshair:Hide()
+    mRadial:HideFrame(MRadialMainFrame.crosshair)
     local inLockdown = InCombatLockdown()
     if not inLockdown then
         MRadialMainFrame:Show()
@@ -668,16 +656,19 @@ function mRadial:CreatePetFrames()
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
-                if plast <= .02 then
+                if plast <= .05 then
                     return
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
+                if UnitGUID("pet") == nil then
+                    mRadial:HideAllPetFrames()
+                end
             end)
             MR_PETFAMES[#MR_PETFAMES+1] = frame
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
-            MR_ALLFRAMES[frameName]:Show()
+            mRadial:ShowFrame(MR_ALLFRAMES[frameName])
         end
     end
 end
@@ -686,9 +677,9 @@ function mRadial:TogglePetFrameVisibility()
     local isVisible = MRadialSavedVariables["hidePetFrame"] or false
     for _, frame in pairs(MR_ALLFRAMES) do
         if frame.isPetFrame and isVisible then
-            frame:Hide()
-        elseif frame.isPetFrame and not isVisible and not InCombatLockdown() then
-            frame:Show()
+            mRadial:HideFrame(frame)
+        elseif frame.isPetFrame and not isVisible then
+            mRadial:ShowFrame(frame)
         end
     end
 end
@@ -696,9 +687,7 @@ end
 function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
-            if not InCombatLockdown() then
-                frame:Hide()
-            end
+            mRadial:HideFrame(frame)
         end
     end
 end
@@ -745,7 +734,9 @@ function mRadial:UpdateActiveSecondarySpells()
     for x=1, #MR_WATCHERFRAMES do
         -- First we hide any and all watchers that may have been active.
         local watcher = MR_WATCHERFRAMES[x]
-        watcher:Hide()
+        if not MRadialSavedVariables["isActive".. watcher.spellName] then
+            watcher:Hide()
+        end
 
         -- Now we check for isActive (options toggles)
         local isActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
@@ -797,8 +788,8 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
 
     for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then
-            watcher:Show()
-            watcher:GetParent():Show()
+            mRadial:ShowFrame(watcher)
+            mRadial:ShowFrame(watcher:GetParent())
             local angle = ((x-1)*angleStep) + (offset*math.pi) 
             local sinAng = math.sin(angle)
             local cosAng = math.cos(angle)
@@ -839,8 +830,8 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             
             if cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)-- - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/2)-- - watcherFrameSize/2)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
             elseif cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
@@ -857,5 +848,60 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             end
             watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end
+    end
+end
+
+function mRadial:ShowFrame(frame) 
+    if frame.isParentFrame then
+        local childFrames = {}
+        childFrames[1] = frame.iconFrame
+        childFrames[2] = frame.borderFrame
+        childFrames[3] = frame.countText
+        childFrames[4] = frame.buffTimerTextBG
+        childFrames[5] = frame.buffTimerText
+        childFrames[6] = frame.debuffTimerTextBG
+        childFrames[7] = frame.debuffTimerTextBG
+        childFrames[8] = frame.cooldownText
+        childFrames[9] = frame.readyText
+        childFrames[10] = frame.mask
+        childFrames[11] = frame.aura
+        
+        for _, frame in ipairs(childFrames) do
+            if frame ~= nil then
+                frame:SetAlpha(1)
+            end
+        end
+        if frame.borderFrame ~= nil then
+            frame.borderFrame:SetAlpha(0)
+        end
+    else
+        frame:SetAlpha(1)   
+        if frame.borderFrame ~= nil then
+            frame.borderFrame:SetAlpha(0.5)
+        end
+    end
+end
+
+function mRadial:HideFrame(frame)
+    if frame.isParentFrame then
+        local childFrames = {}
+        childFrames[1] = frame.iconFrame
+        childFrames[2] = frame.borderFrame
+        childFrames[3] = frame.countText
+        childFrames[4] = frame.buffTimerTextBG
+        childFrames[5] = frame.buffTimerText
+        childFrames[6] = frame.debuffTimerTextBG
+        childFrames[7] = frame.debuffTimerTextBG
+        childFrames[8] = frame.cooldownText
+        childFrames[9] = frame.readyText
+        childFrames[10] = frame.mask
+        childFrames[11] = frame.aura
+        for _, frame in ipairs(childFrames) do
+            if frame ~= nil then
+                frame:SetAlpha(0)
+            end
+        end
+    else
+        frame:SetAlpha(0)   
     end
 end
