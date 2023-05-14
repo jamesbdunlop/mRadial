@@ -107,7 +107,14 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText:SetPoint("CENTER", frame, "CENTER", 0, 0)
     frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)
-
+    
+    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+    frame.buffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
+    frame.debuffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
+    frame.countText:SetFont(customFontPath,  24, "THICKOUTLINE")
+    frame.cooldownText:SetFont(customFontPath,  24, "THICKOUTLINE")
+    frame.readyText:SetFont(customFontPath, 24, "THICKOUTLINE")
 end
 
 function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
