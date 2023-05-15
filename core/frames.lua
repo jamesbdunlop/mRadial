@@ -199,22 +199,29 @@ end
 function mRadial:SetMountedFrameScripts(frame)
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
+        local asButtons = MRadialSavedVariables["asbuttons"] or false
         -- Show the frame when entering combat
         if event == "PLAYER_REGEN_DISABLED" then
             mRadial:ShowFrame(frame)
-            frame:EnableMouse(true)
+            if asButtons then
+                frame:EnableMouse(true)
+            end
         end
     end)
 
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
         local hideOOC = MRadialSavedVariables["hideooc"]
-        local asbutton = MRadialSavedVariables["asbuttons"] or false
+        local asButtons = MRadialSavedVariables["asbuttons"] or false
         if IsMounted() or IsFlying() or hideOOC then
             mRadial:HideFrame(frame)
-            frame:EnableMouse(false)
+            if asButtons then
+                frame:EnableMouse(false)
+            end
         else
             mRadial:ShowFrame(frame)
-            frame:EnableMouse(true)
+            if asButtons then
+                frame:EnableMouse(true)
+            end
         end
     end)
 end
