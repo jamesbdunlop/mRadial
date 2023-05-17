@@ -404,14 +404,10 @@ function mRadial:CreateWatcherFrame(spellID)
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                mRadial:HideFrame(watcher.buffTimerText)
-                mRadial:HideFrame(watcher.buffTimerTextBG)
-                last = 0
                 local hideOOC = MRadialSavedVariables["hideooc"]
                 if not IsMounted() and not hideOOC then
                     mRadial:ShowFrame(watcher.movetex)
                 end
-                return
             else
                 watcher.readyText:SetText(READYSTR)
                 watcher.readyText:SetTextColor(0, 1, 0)
