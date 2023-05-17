@@ -30,7 +30,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     parentFrame.baseFrame = frame
     
     -- TEXTURE
-    frame.iconFrame = frame:CreateTexture("texture_" .. frameName, "ARTWORK")
+    frame.iconFrame = frame:CreateTexture("texture_" .. frameName, strata)
     frame.iconFrame:SetPoint("CENTER", 0, 0)
     if texturePath ~= nil then
         frame.iconFrame:SetTexture(texturePath)
@@ -54,6 +54,9 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame.movetext:SetTextColor(1, 1, 1)
     frame.movetext:SetPoint("CENTER", frame.iconFrame, "TOP", 0, 0)
     frame.movetext:SetText(frame:GetName())
+    if maskPath ~= nil then
+        frame.movetex:AddMaskTexture(frame.mask)
+    end
     mRadial:HideFrame(frame.movetext)
 
     if allPoints ~= nil then
@@ -380,7 +383,7 @@ function mRadial:CreateWatcherFrame(spellID)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .05 then
+        if last <= .025 then
             return
         end
 
@@ -430,6 +433,9 @@ function mRadial:CreateWatcherFrame(spellID)
             linkedSpellName = getLinked[1] 
             linkedSpellID = getLinked[2]
             _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellID)
+            if linkedIconPath == nil then
+                _, _, linkedIconPath, _, _, _, _, _ = GetSpellInfo(linkedSpellName)
+            end
             mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
             
             local hideOOC = MRadialSavedVariables["hideooc"]
@@ -660,7 +666,7 @@ function mRadial:CreatePetFrames()
                                                 "",
                                                 spellIcon,
                                                 "ARTWORK",
-                                                nil,
+                                                "Interface/BUTTONS/UI-QuickslotRed",
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
@@ -674,7 +680,7 @@ function mRadial:CreatePetFrames()
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
-                if plast <= .05 then
+                if plast <= .025 then
                     return
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
