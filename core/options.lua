@@ -426,7 +426,11 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
                     end
                 end
                 if not found then
-                    spellNumber = ""
+                    if text == "Demonic Power" then
+                        spellNumber = "265273"    
+                    else
+                        spellNumber = ""
+                    end
                 end
             end
             linkedSpellID:SetText(tostring(spellNumber))

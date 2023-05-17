@@ -7,7 +7,7 @@ function mRadial:GetSpellRemaining(spellName)
     local remaining = start + duration - GetTime()
 
     local minutes = math.floor(remaining / 60)
-    local seconds = math.floor(remaining - minutes * 60)
+    local seconds = math.floor(remaining - minutes * 60) + 1
 
     return enabled, remaining, minutes, seconds
 end
@@ -22,7 +22,10 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     local hideOOC = MRadialSavedVariables["hideooc"]
     if enabled and remaining > GCD and not IsMounted() and not hideOOC then
         watcher.cooldownText:SetAlpha(1)
-        
+        watcher.cooldownText:SetTextColor(1, .1, .1)
+        watcher.iconFrame:SetAlpha(1)
+        watcher.movetex:SetColorTexture(1, 0, 0, .5)
+
         if watcher.readyText ~= nil then
             watcher.readyText:SetAlpha(0)
         end
@@ -35,9 +38,6 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
             watcher.iconFrame:SetAlpha(1)
             watcher.movetex:SetColorTexture(1, 0, 0, 0)
         end
-        watcher.cooldownText:SetTextColor(1, .1, .1)
-        watcher.iconFrame:SetAlpha(0.5)
-        watcher.movetex:SetColorTexture(1, 0, 0, .5)
     else
         watcher.cooldownText:SetAlpha(0)
         watcher.cooldownText:SetText(string.format(""))
