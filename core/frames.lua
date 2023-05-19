@@ -199,7 +199,7 @@ function mRadial:SetMoveFrameScripts(frame)
     end)
 end
 
-function mRadial:SetMountedFrameScripts(frame)
+function mRadial:SetMountedFrameScripts(frame, alpha)
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
         local asButtons = MRadialSavedVariables["asbuttons"] or false
@@ -221,7 +221,7 @@ function mRadial:SetMountedFrameScripts(frame)
                 frame:EnableMouse(false)
             end
         else
-            mRadial:ShowFrame(frame)
+            mRadial:ShowFrame(frame, alpha)
             if asButtons then
                 frame:EnableMouse(true)
             end
@@ -383,7 +383,7 @@ function mRadial:CreateWatcherFrame(spellID)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .025 then
+        if last <= .01 then
             return
         end
 
@@ -676,7 +676,7 @@ function mRadial:CreatePetFrames()
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
-                if plast <= .025 then
+                if plast <= .01 then
                     return
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
@@ -871,7 +871,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     end
 end
 
-function mRadial:ShowFrame(frame) 
+function mRadial:ShowFrame(frame, alpha) 
     if frame.isParentFrame then
         local childFrames = {}
         childFrames[1] = frame.iconFrame
@@ -888,14 +888,22 @@ function mRadial:ShowFrame(frame)
         
         for _, frame in ipairs(childFrames) do
             if frame ~= nil then
-                frame:SetAlpha(1)
+                if alpha == nil then
+                    frame:SetAlpha(1)
+                else
+                    frame:SetAlpha(alpha)
+                end
             end
         end
         if frame.borderFrame ~= nil then
             frame.borderFrame:SetAlpha(0)
         end
     else
-        frame:SetAlpha(1)   
+        if alpha == nil then
+            frame:SetAlpha(1)
+        else
+            frame:SetAlpha(alpha)
+        end
         if frame.borderFrame ~= nil then
             frame.borderFrame:SetAlpha(0.5)
         end

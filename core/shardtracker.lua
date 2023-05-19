@@ -21,7 +21,7 @@ function mRadial:createShardCountFrame()
     local alpha = MRadialSavedVariables["shardFrameTransparency"] or 1
     ShardCounterFrame:SetAlpha(alpha)
     mRadial:setShardTrackerFramesSize()
-    mRadial:SetMountedFrameScripts(ShardCounterFrame)
+    mRadial:SetMountedFrameScripts(ShardCounterFrame, alpha)
 end
 
 function mRadial:setShardTrackerFramesSize()
