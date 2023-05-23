@@ -206,7 +206,7 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
         -- Show the frame when entering combat
         if event == "PLAYER_REGEN_DISABLED" then
             mRadial:ShowFrame(frame)
-            if asButtons then
+            if asButtons and frame.isWatcher then
                 frame:EnableMouse(true)
             end
         end
@@ -222,7 +222,7 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
             end
         else
             mRadial:ShowFrame(frame, alpha)
-            if asButtons then
+            if asButtons and frame.isWatcher then
                 frame:EnableMouse(true)
             end
         end
@@ -255,6 +255,11 @@ function mRadial:SetUIMovable(isMovable)
                 mRadial:ShowFrame(pframe.baseFrame.movetext)
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
+                local srdFrm = pframe.ShardCounterFrame
+                if srdFrm ~= nil then
+                    pframe.ShardCounterFrame:EnableMouse(isMovable)
+                    pframe.ShardCounterFrame:SetMovable(isMovable)
+                end
             else
                 mRadial:ShowFrame(pframe.baseFrame.readyText)
                 mRadial:ShowFrame(pframe.baseFrame.countText)
@@ -777,7 +782,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     local radiusMult = MRadialSavedVariables.radiusMult or 1
     local radius = r * radiusMult
     local offset = o
-    local spread = sprd
+    local spread = sprd  -- -2.94  -- -5.0
     local widthDeform = wd
     local heightDeform = hd
 
@@ -801,6 +806,10 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
 
     local angleStep = (math.pi / #orderedWatchers) + spread*.1
+    local autoSpread =  MRadialSavedVariables['autoSpread'] or false
+    if autoSpread then
+        angleStep = (((watcherFrameSize+8)/(radius * (math.pi/180))) * (math.pi/180)) + spread *.1 
+    end
     
     -- if orderedWatchers == nil then
     --     orderedWatchers = mRadial:UpdateActiveSpells()

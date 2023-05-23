@@ -134,7 +134,7 @@ end
 
 -- BUILD PANE STUFF
 local function fixScrollBoxHeight(scrollFrame, generalGroup)
-    local height = MRADIALOptionsPane.frame:GetHeight()
+    local height = MRADIALOptionsPane.frame:GetHeight() or 100
     local newHeight = height-generalGroup.frame:GetHeight()-150
     scrollFrame:SetHeight(newHeight)
 end
@@ -290,11 +290,12 @@ function mRadial:OptionsPane()
     generalGroup:SetFullWidth(true)
     generalGroup:SetLayout("Flow")
     local descrip = "Allow UI frames to be shift+click draggable."
-    mRadial:CreateAbilityCheckBox(generalGroup, "Movable", descrip, "moveable", false, mRadial.SetUIMovable, true, nil)
+    mRadial:CreateAbilityCheckBox(generalGroup, "ConfigMode", descrip, "moveable", false, mRadial.SetUIMovable, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "AsButtons", "Allow click to cast from radial buttons. \n Toggling this will reload the UI!", "asbuttons", false, ReloadUI, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Out Of Combat", "Hide UI while out of combat.", "hideooc", false, mRadial.UpdateUI, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Pet Frames", "Hide all pet frames from the UI.", "hidePetFrame", false, mRadial.TogglePetFrameVisibility, true, nil)
     mRadial:CreateAbilityCheckBox(generalGroup, "Hide MiniMapIcon", "Hide the minimap icon and use the new container instead. Toggling this will reload the UI!", "hideMiniMapIcon", true, ReloadUI, true, nil, nil, nil)
+    mRadial:CreateAbilityCheckBox(generalGroup, "AutoSpread", "Try to automatically spread the icons resulting in an inital tighter layout to start from.", "autoSpread", true, mRadial.UpdateUI, true, nil, nil, nil)
     CreateSlider(generalGroup, "Radius Multiplyer", .1, 10, .1, "radiusMult", 1, mRadial.UpdateUI)
     
     base:AddChild(generalGroup)
