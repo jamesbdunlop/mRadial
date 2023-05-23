@@ -257,7 +257,9 @@ function mRadial:SetUIMovable(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
                 local srdFrm = pframe.ShardCounterFrame
                 if srdFrm ~= nil then
-                    pframe.ShardCounterFrame:EnableMouse(isMovable)
+                    if not InCombatLockdown() then 
+                        pframe.ShardCounterFrame:EnableMouse(isMovable)
+                    end
                     pframe.ShardCounterFrame:SetMovable(isMovable)
                 end
             else
@@ -276,7 +278,9 @@ function mRadial:SetUIMovable(isMovable)
             if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
                 mRadial:HideFrame(pframe.baseFrame.movetext)
-                pframe.baseFrame:EnableMouse(isMovable)
+                if not InCombatLockdown() then 
+                    pframe.baseFrame:EnableMouse(isMovable)
+                end
                 pframe.baseFrame:SetMovable(isMovable)
             else
                 mRadial:HideFrame(pframe.baseFrame.readyText)
