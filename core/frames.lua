@@ -217,12 +217,12 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
         local asButtons = MRadialSavedVariables["asbuttons"] or false
         if IsMounted() or IsFlying() or hideOOC then
             mRadial:HideFrame(frame)
-            if asButtons then
+            if asButtons and frame.isWatcher and not InCombatLockdown() then
                 frame:EnableMouse(false)
             end
         else
             mRadial:ShowFrame(frame, alpha)
-            if asButtons and frame.isWatcher then
+            if asButtons and frame.isWatcher and not InCombatLockdown() then
                 frame:EnableMouse(true)
             end
         end
