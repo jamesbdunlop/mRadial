@@ -134,6 +134,9 @@ end
 
 -- BUILD PANE STUFF
 local function fixScrollBoxHeight(scrollFrame, generalGroup)
+    if MRADIALOptionsPane == nil then
+        return
+    end
     local height = MRADIALOptionsPane.frame:GetHeight() or 100
     local newHeight = height-generalGroup.frame:GetHeight()-150
     scrollFrame:SetHeight(newHeight)

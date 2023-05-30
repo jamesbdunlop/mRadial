@@ -746,6 +746,7 @@ function mRadial:UpdateActivePrimarySpells()
         -- First we hide any and all watchers that may have been active.
         local watcher = MR_WATCHERFRAMES[x]
         watcher:Hide()
+        mRadial:HideFrame(watcher)
 
         -- -- Now we check for isActive (options toggles)
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false

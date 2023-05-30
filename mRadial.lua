@@ -42,6 +42,7 @@ function mRadial:CreatePlayerSavedVars()
 end
 
 function mRadial:InitUI()
+    
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     if MRadialSavedVariables["primaryWatcherOrder"] == nil then
         MRadialSavedVariables["primaryWatcherOrder"] = {}
@@ -103,7 +104,6 @@ function mRadial:UpdateUI(create)
     local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
     local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2)
-    
 end
 
 local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
@@ -139,7 +139,7 @@ function mRadial:OnEnable()
     print("/mr slash commands are: move, lock, options")
     print("----------------------")
     
-    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"]
+    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or false
     if not hideMiniMapIcon then
         self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })
         icon:Register("mRadialIcon", db, mRadialICO)

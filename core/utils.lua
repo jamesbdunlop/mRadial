@@ -317,7 +317,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
     
     -- Release all the current buttons from the UI
     parentFrame:ReleaseChildren()
-    -- Now go through and proces the order.
+    -- Now go through and process the order.
     local recorded_actionData = nil
     local destIDX = -1
     local srcIDX = -1
