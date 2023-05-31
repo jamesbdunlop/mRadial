@@ -42,7 +42,6 @@ function mRadial:CreatePlayerSavedVars()
 end
 
 function mRadial:InitUI()
-    
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     if MRadialSavedVariables["primaryWatcherOrder"] == nil then
         MRadialSavedVariables["primaryWatcherOrder"] = {}
