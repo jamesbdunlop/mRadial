@@ -751,7 +751,9 @@ function mRadial:UpdateActivePrimarySpells()
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
         if isActive and not MRadialSavedVariables["isSecondaryActive".. watcher.spellName] then 
             ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher 
-            watcher:Show()
+            if not InCombatLockdown then
+                watcher:Show()
+            end
         end
     end
     return ACTIVEPRIMARYWATCHERS
