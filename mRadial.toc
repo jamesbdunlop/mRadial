@@ -41,3 +41,5 @@ events\specChanged.lua
 
 # Shard tracker
 events\unitpowerupdate.lua 
+
+core\options2.lua

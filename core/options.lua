@@ -1,6 +1,9 @@
 -- local MR_config = LibStub("AceConfig-3.0")
 -- local MR_dialog = LibStub("AceConfigDialog-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
+local MR_configDialog = LibStub("AceConfigDialog-3.0")
+local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
+local appName = "MRadial"
 
 local function CreateSlider(parent, name, minVal, maxVal, step, variableName, defaultValue, toexec, tootip)
     local opt_slider = AceGUI:Create("Slider")
@@ -155,6 +158,7 @@ local function PopulateDropdown(scrollFrame, idx)
         CreateSlider(radialGroup, "Offset: ", 0, 3, .001, "offset", .70, mRadial.UpdateUI)
         CreateSlider(radialGroup, "Icon Size: ", 1, 200, .1, "watcherFrameSize", 40, mRadial.UpdateUI)
         CreateSlider(radialGroup, "Icon Spread: ", -40, 40, .01, "watcherFrameSpread", 0, mRadial.UpdateUI)
+        
         CreateSlider(radialGroup, "(de)BuffTimerScale: ", 0, 10, .01, "buffTimerScale", 0, mRadial.UpdateUI)
 
         CreateSlider(radialGroup, "Width Oval (default 1): ", .1, 10, .01, "widthDeform", 1, mRadial.UpdateUI)
@@ -259,76 +263,95 @@ local function PopulateDropdown(scrollFrame, idx)
 end
 
 MRADIALOptionsPane = nil
-function mRadial:OptionsPane()
-    if MRADIALOptionsPane == nil then
-        MRADIALOptionsPane = AceGUI:Create("Window")
-    end
-    MRADIALOptionsPane:SetWidth(850)
-    MRADIALOptionsPane:SetHeight(650)
-    MRADIALOptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
-    MRADIALOptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
-    MRADIALOptionsPane:SetLayout("Fill")
-    MRADIALOptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) MRADIALOptionsPane = nil end)
+-- function mRadial:OptionsPane()
+--     if MRADIALOptionsPane == nil then
+--         MRADIALOptionsPane = AceGUI:Create("Window")
+--     end
+--     MRADIALOptionsPane:SetWidth(850)
+--     MRADIALOptionsPane:SetHeight(650)
+--     MRADIALOptionsPane:SetPoint("CENTER", UIParent, "CENTER", -200, 0)
+--     MRADIALOptionsPane:SetTitle("mRadial - Options : " .. mRadial:GetSpecName() .. " " ..  UnitClass("player")) 
+--     MRADIALOptionsPane:SetLayout("Fill")
+--     MRADIALOptionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) mRadial:SetUIMovable(false) MRADIALOptionsPane = nil end)
 
-    local base = AceGUI:Create("SimpleGroup")
-    MRADIALOptionsPane:AddChild(base)
+--     local base = AceGUI:Create("SimpleGroup")
+--     MRADIALOptionsPane:AddChild(base)
 
-    local scrollcontainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
-    scrollcontainer:SetLayout("Flow")
-    scrollcontainer:SetFullWidth(true)
-    local generalGroup = AceGUI:Create("InlineGroup")
+--     local scrollcontainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
+--     scrollcontainer:SetLayout("Flow")
+--     scrollcontainer:SetFullWidth(true)
+--     local generalGroup = AceGUI:Create("InlineGroup")
 
-    local scrollFrame = AceGUI:Create("ScrollFrame")
-    scrollFrame:SetLayout("Flow")
-    scrollFrame:SetFullWidth(true)
-    scrollFrame:SetHeight(450)
-    scrollFrame.content:SetScript("OnSizeChanged", function() 
-        fixScrollBoxHeight(scrollFrame, generalGroup)
-        scrollFrame:FixScroll()
-    end)
-    scrollcontainer:AddChild(scrollFrame)
+--     local scrollFrame = AceGUI:Create("ScrollFrame")
+--     scrollFrame:SetLayout("Flow")
+--     scrollFrame:SetFullWidth(true)
+--     scrollFrame:SetHeight(450)
+--     scrollFrame.content:SetScript("OnSizeChanged", function() 
+--         fixScrollBoxHeight(scrollFrame, generalGroup)
+--         scrollFrame:FixScroll()
+--     end)
+--     scrollcontainer:AddChild(scrollFrame)
         
-    -- General shit
-    generalGroup:SetTitle("General: ")
-    generalGroup:SetFullWidth(true)
-    generalGroup:SetLayout("Flow")
-    local descrip = "Allow UI frames to be shift+click draggable."
-    mRadial:CreateAbilityCheckBox(generalGroup, "ConfigMode", descrip, "moveable", false, mRadial.SetUIMovable, true, nil)
-    mRadial:CreateAbilityCheckBox(generalGroup, "AsButtons", "Allow click to cast from radial buttons. \n Toggling this will reload the UI!", "asbuttons", false, ReloadUI, true, nil)
-    mRadial:CreateAbilityCheckBox(generalGroup, "Hide Out Of Combat", "Hide UI while out of combat.", "hideooc", false, mRadial.UpdateUI, true, nil)
-    mRadial:CreateAbilityCheckBox(generalGroup, "Hide Pet Frames", "Hide all pet frames from the UI.", "hidePetFrame", false, mRadial.TogglePetFrameVisibility, true, nil)
-    mRadial:CreateAbilityCheckBox(generalGroup, "Hide MiniMapIcon", "Hide the minimap icon and use the new container instead. Toggling this will reload the UI!", "hideMiniMapIcon", true, ReloadUI, true, nil, nil, nil)
-    mRadial:CreateAbilityCheckBox(generalGroup, "AutoSpread", "Try to automatically spread the icons resulting in an inital tighter layout to start from.", "autoSpread", true, mRadial.UpdateUI, true, nil, nil, nil)
-    CreateSlider(generalGroup, "Radius Multiplyer", .1, 10, .1, "radiusMult", 1, mRadial.UpdateUI)
+--     -- General shit
+--     generalGroup:SetTitle("General: ")
+--     generalGroup:SetFullWidth(true)
+--     generalGroup:SetLayout("Flow")
+--     local descrip = "Allow UI frames to be shift+click draggable."
+--     mRadial:CreateAbilityCheckBox(generalGroup, "ConfigMode", descrip, "moveable", false, mRadial.SetUIMovable, true, nil)
+--     mRadial:CreateAbilityCheckBox(generalGroup, "AsButtons", "Allow click to cast from radial buttons. \n Toggling this will reload the UI!", "asbuttons", false, ReloadUI, true, nil)
+--     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Out Of Combat", "Hide UI while out of combat.", "hideooc", false, mRadial.UpdateUI, true, nil)
+--     mRadial:CreateAbilityCheckBox(generalGroup, "Hide Pet Frames", "Hide all pet frames from the UI.", "hidePetFrame", false, mRadial.TogglePetFrameVisibility, true, nil)
+--     mRadial:CreateAbilityCheckBox(generalGroup, "Hide MiniMapIcon", "Hide the minimap icon and use the new container instead. Toggling this will reload the UI!", "hideMiniMapIcon", true, ReloadUI, true, nil, nil, nil)
+--     mRadial:CreateAbilityCheckBox(generalGroup, "AutoSpread", "Try to automatically spread the icons resulting in an inital tighter layout to start from.", "autoSpread", true, mRadial.UpdateUI, true, nil, nil, nil)
+--     CreateSlider(generalGroup, "Radius Multiplyer", .1, 10, .1, "radiusMult", 1, mRadial.UpdateUI)
     
-    base:AddChild(generalGroup)
+--     base:AddChild(generalGroup)
     
-    local wlckGroup = AceGUI:Create("SimpleGroup")
-    wlckGroup:SetFullWidth(true)
-    wlckGroup:SetLayout("Flow")
-    mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Shard Frames", "This will hide the custom warlock shardCounter frames. NOTE: this will hide the OutOfShards frame too.\nRequires a /reload", "hideShardFrame", false, mRadial.UpdateUI, true, nil)
-    mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Out Of Shards Frame:", "Hides the red out of shards frame for warlocks.", "hideOOShardFrame", false, mRadial.UpdateUI, true, nil)
-    local wlckSliderGroup = AceGUI:Create("SimpleGroup")
-    wlckSliderGroup:SetFullWidth(true)
-    wlckSliderGroup:SetLayout("Flow")
-    CreateSlider(wlckSliderGroup, "Wrlk Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
-    CreateSlider(wlckSliderGroup, "Shard Frm Transp", 0, 1, .01, "shardFrameTransparency", 1, mRadial.createShardCountFrame)
-    CreateSlider(wlckSliderGroup, "Wrlk Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
-    CreateSlider(wlckSliderGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
-    generalGroup:AddChild(wlckGroup)
-    generalGroup:AddChild(wlckSliderGroup)
+--     local wlckGroup = AceGUI:Create("SimpleGroup")
+--     wlckGroup:SetFullWidth(true)
+--     wlckGroup:SetLayout("Flow")
+--     mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Shard Frames", "This will hide the custom warlock shardCounter frames. NOTE: this will hide the OutOfShards frame too.\nRequires a /reload", "hideShardFrame", false, mRadial.UpdateUI, true, nil)
+--     mRadial:CreateAbilityCheckBox(wlckGroup, "Hide Wrlk Out Of Shards Frame:", "Hides the red out of shards frame for warlocks.", "hideOOShardFrame", false, mRadial.UpdateUI, true, nil)
+--     local wlckSliderGroup = AceGUI:Create("SimpleGroup")
+--     wlckSliderGroup:SetFullWidth(true)
+--     wlckSliderGroup:SetLayout("Flow")
+--     CreateSlider(wlckSliderGroup, "Wrlk Shards Frame Size: ", 10, 1000, 1, "shardTrackerFrameSize", 12, mRadial.setShardTrackerFramesSize)
+--     CreateSlider(wlckSliderGroup, "Shard Frm Transp", 0, 1, .01, "shardFrameTransparency", 1, mRadial.createShardCountFrame)
+--     CreateSlider(wlckSliderGroup, "Wrlk Out Of Shards Frame Size: ", 10, 1000, 1, "shardOutOfFrameSize", 12, mRadial.setOOSShardFramesSize)
+--     CreateSlider(wlckSliderGroup, "Pet Icon Size: ", 10, 150, 1, "PetFramesSize", 12, mRadial.SetPetFramePosAndSize)
+--     generalGroup:AddChild(wlckGroup)
+--     generalGroup:AddChild(wlckSliderGroup)
 
-    local optDpDwn = AceGUI:Create("DropdownGroup")
-    optDpDwn:SetTitle("Options:")
-    optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:PrimarySpells", "Radial:SecondarySpells", "LinkedSpells"})
-    optDpDwn:SetLayout("Flow")
-    optDpDwn:SetFullWidth(true)
-    optDpDwn:AddChild(scrollcontainer)
-    optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
-        PopulateDropdown(scrollFrame, groupIndex)
-    end)
-    optDpDwn:SetGroup(3)
-    base:AddChild(optDpDwn)
+--     local optDpDwn = AceGUI:Create("DropdownGroup")
+--     optDpDwn:SetTitle("Options:")
+--     optDpDwn:SetGroupList({"Radial:Icons", "Radial:Fonts", "Radial:PrimarySpells", "Radial:SecondarySpells", "LinkedSpells"})
+--     optDpDwn:SetLayout("Flow")
+--     optDpDwn:SetFullWidth(true)
+--     optDpDwn:AddChild(scrollcontainer)
+--     optDpDwn:SetCallback("OnGroupSelected", function(widget, event, groupIndex, groupName)
+--         PopulateDropdown(scrollFrame, groupIndex)
+--     end)
+--     optDpDwn:SetGroup(3)
+--     base:AddChild(optDpDwn)
+-- end
+
+function mRadial:OptionsPane()
+    -- Register options table
+    
+    local optionsPane = AceGUI:Create("Frame")
+        optionsPane:SetLayout("Flow")
+        optionsPane:SetTitle("---mRadial---")
+        optionsPane:SetStatusText("Select options")
+        optionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+    MR_configDialog:SetDefaultSize(appName, 800, 600)
+    MR_configDialog:Open(appName, optionsPane)
+    
+    MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive")
+    MROptionsTable.args.spellOptions.args.primarySpells.args.spellOrder.args = mRadial:BuildPrimarySpellOrder()
+    MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive")
+    MROptionsTable.args.spellOptions.args.secondarySpells.args.spellOrder.args = mRadial:BuildSecondarySpellOrder()
+    
+    MRADIALOptionsPane = optionsPane
 end
 
 -- Action button for dnd for linked spells..
@@ -523,3 +546,4 @@ function mRadial:linkedSpellPane(parent)
         parent:AddChild(linkedGroup)
     end
 end
+

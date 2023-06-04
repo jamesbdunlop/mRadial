@@ -550,6 +550,6 @@ function mRadial:BuildRadialOptionsPane(title, isActiveSavedVarStr, funcToExec, 
     parentFrame:AddChild(hidePassiveButton)
     parentFrame:AddChild(resetButton)
     parentFrame:AddChild(spellsGroup)
-
+    
     return spellsOrderFrame
 end

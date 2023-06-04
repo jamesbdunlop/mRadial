@@ -4,7 +4,9 @@
 -- Update pet frames for death of pets!
 -- "Import from" feature for the button layouts?
 ---------------------------------------------------------------------
-
+local MR_configDialog = LibStub("AceConfigDialog-3.0")
+local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
+local appName = "MRadial"
 
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
@@ -129,6 +131,9 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
+    
+    MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
+    MR_configDialog:AddToBlizOptions(appName, "mRadial")
 end
 
 function mRadial:OnEnable()
