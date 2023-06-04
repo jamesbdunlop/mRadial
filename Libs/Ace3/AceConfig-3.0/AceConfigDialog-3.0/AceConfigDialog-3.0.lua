@@ -1141,7 +1141,6 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 				local control
 
 				if v.type == "execute" then
-
 					local imageCoords = GetOptionsMemberValue("imageCoords",v, options, path, appName)
 					local image, width, height = GetOptionsMemberValue("image",v, options, path, appName)
 
@@ -1170,7 +1169,17 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					else
 						control:SetText(name)
 					end
-					control:SetCallback("OnClick",ActivateControl)
+					
+					if v.dialogControl == "ActionSlot" then
+						if v.onEnter ~= nil then
+							control.button:SetScript("OnEnter",v.onEnter)
+						end
+						if v.onClick ~= nil then
+							control.button:SetScript("OnClick", v.onClick)
+						end
+					else
+						control:SetCallback("OnClick", ActivateControl)
+					end
 
 				elseif v.type == "input" then
 					control = CreateControl(v.dialogControl or v.control, v.multiline and "MultiLineEditBox" or "EditBox")
@@ -1449,7 +1458,9 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						local disabled = CheckOptionDisabled(v, options, path, appName)
 						control:SetDisabled(disabled)
 					end
-
+					if control.onEnter then
+						print("WTF")
+					end
 					InjectInfo(control, options, v, path, rootframe, appName)
 					container:AddChild(control)
 				end

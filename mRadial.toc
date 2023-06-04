@@ -29,7 +29,7 @@ core\frames.lua
 
 mRadial.lua
 
-core\options.lua
+# core\options.lua
 core\shardtracker.lua
 core\slashcmds.lua
 

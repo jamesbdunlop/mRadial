@@ -196,7 +196,15 @@ do
 		end
 		OnHeightSet(self, self.frame:GetHeight())
 	end
+	
+	
+	local function SetImage(self, icon)
+		self.icon:SetTexture(icon)
+	end
 
+	local function SetImageSize(self, width, height)
+	end
+	
 	local function SetDisabled(self, disabled)
 		if disabled then
 			self.button:EnableMouse(false)
@@ -221,6 +229,8 @@ do
 		self.SetLabel = SetLabel
 		self.SetText = SetText
 		self.SetDisabled = SetDisabled
+		self.SetImage = SetImage
+		self.SetImageSize = SetImageSize
 
 		local frame = CreateFrame("Frame")
 		frame:SetWidth(200)
