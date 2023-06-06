@@ -784,6 +784,7 @@ function mRadial:OptionsPane()
   local hidePassive = MRadialSavedVariables["HidePassiveSpells"] or true
   MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
   MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
+  MROptionsTable.args.linkedSpellOptions.args = mRadial:linkedSpellPane()
   
   MRADIALOptionsPane = optionsPane
 end
@@ -857,11 +858,19 @@ local function SpellNameInActiveWatchers(spellName)
   return false
 end
 
+local function SpellNameInActiveSecondaryWatchers(spellName)
+  for _, watcher in ipairs(ACTIVESECONDARYWATCHERS) do
+      if watcher.spellName == spellName then
+          return true
+      end
+  end
+  return false
+end
 ------------------------------------------------------------------------------------------
 -- SPELL SELECTION
 function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   local widgetArgs = {}
-
+  
   local resetGrp = {
     name = "",
     type = "group",
@@ -894,7 +903,9 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   local activeSpells = {}
   local passiveSpells = {}
   
-  local isPrimary = isActiveSavedVarStr == "isActive"
+  local asPrimary = isActiveSavedVarStr == "isActive"
+  
+  -- BUILD SPELL TABLES NOW
   if activeTalentTreeSpells ~= nil then
       for _, spellData in ipairs(activeTalentTreeSpells) do
           -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
@@ -904,14 +915,14 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
           local desc = GetSpellDescription(spellID)
           local isActiveSavedVarStr = isActiveSavedVarStr .. spellName
 
-          if not isPrimary and not SpellNameInActiveWatchers(spellName) then
+          if not asPrimary and not SpellNameInActiveWatchers(spellName) then
               if IsPassiveSpell(spellID) then
                   table.insert(passiveSpells, {spellName, desc, isActiveSavedVarStr, false, spellID})
               else
                   table.insert(activeSpells, {spellName, desc, isActiveSavedVarStr, false, spellID})
               end
           -- PRIMARY SPELLS
-          elseif isPrimary then
+          elseif asPrimary and not SpellNameInActiveSecondaryWatchers(spellName) then
               if IsPassiveSpell(spellID) then
                   table.insert(passiveSpells, {spellName, desc, isActiveSavedVarStr, false, spellID})
               else
@@ -922,8 +933,8 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
       end
   end
 
-  -- Create checkboxes now.
-  activeIDX = 1
+  -- SPELLS
+  local activeIDX = 1
   for idx, activeSpellData in ipairs(activeSpells) do
       local spellName, desc, isactiveSpellName, defaultValue, spellID = unpack(activeSpellData)
       local iconPath
@@ -936,23 +947,28 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
           descp = desc,
           defaultValue = defaultValue,
           type = "toggle",
-          order = idx+2,
+          order = idx+1,
           image = iconPath,
           set = function(info, value)
-            print(isactiveSpellName, value)
+            -- Store the savedVars
             MRadialSavedVariables[isactiveSpellName] = value
-            mRadial:BuildPrimarySpellOrder(false)
-            mRadial:BuildSecondarySpellOrder(false)
             mRadial:UpdateUI(true)
+            -- Sync the checkboxes so we don't have them sharing selected spells.
+            if isActiveSavedVarStr == "isActive" then
+              MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
+            else
+              MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
+            end
           end,
           get = function(info) 
             return MRadialSavedVariables[isactiveSpellName]
           end,
       }
       table.insert(widgetArgs, spellsCbxs)
-      activeIDX = activeIDX + idx+2
+      activeIDX = activeIDX + idx+1
   end
 
+  -- PASSIVE
   if not hidePassive then
       for idx, passiveSpellData in ipairs(passiveSpells) do
           local parentWdg, spellName, desc, isactiveSpellName, defaultValue, updateUI, descAsTT, spellID = unpack(passiveSpellData)
@@ -972,7 +988,6 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
               order = idx+activeIDX,
               image = iconPath,
               set = function(info, value) 
-                  print(isactiveSpellName, value)
                   MRadialSavedVariables[isactiveSpellName] = value
                   mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
                   mRadial:BuildPrimarySpellOrder(false)
@@ -1012,10 +1027,6 @@ function createOrderParentFrame()
 end
 
 function mRadial:BuildPrimarySpellOrder(showUI)
-  -- First update for active spells for any checkboxes that may have been ticked
-  mRadial:UpdateActivePrimarySpells()
-  mRadial:UpdateActiveSecondarySpells()
-
   if MRPrimarySpellOrderFrame == nil then
     MRPrimarySpellOrderFrame = createOrderParentFrame()
   end
@@ -1027,10 +1038,6 @@ function mRadial:BuildPrimarySpellOrder(showUI)
 end
 
 function mRadial:BuildSecondarySpellOrder(showUI)
-  -- First update for active spells for any checkboxes that may have been ticked
-  mRadial:UpdateActivePrimarySpells()
-  mRadial:UpdateActiveSecondarySpells()
-
   if MRSecondarySpellOrderFrame == nil then
     MRSecondarySpellOrderFrame = createOrderParentFrame()
   end
@@ -1185,7 +1192,7 @@ local currentLinked
 local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, srcLink, destName, destSpellID, scrollFrame)
     local function acceptDrop(this)
         local self = this.obj
-		local _, data1, data2 = GetCursorInfo()
+		    local _, data1, data2 = GetCursorInfo()
         local link, spellID = GetSpellLink(data1, data2)
         local spellName, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
         self:SetUserData("hyperlink", link)
@@ -1305,68 +1312,140 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
     end
 end
 
-function mRadial:linkedSpellPane(parent)
-    local function updateLinked(scrollFrame)
-        if newlyLinked ~= nil then
-            for _, linkedWidgets in pairs(newlyLinked) do
-                local baseSpellname = linkedWidgets[1]:GetUserData("baseSpellName")
-                local destSpellName = linkedWidgets[2]:GetText()
-                local destSpellID = tonumber(linkedWidgets[3]:GetText())
-                if destSpellID == 0 then
-                    _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
-                    if spellID ~= nil then
-                        destSpellID = spellID
+function mRadial:linkedSpellPane()
+  local widgetArgs = {}
+
+  local function updateLinked()
+      if newlyLinked ~= nil then
+          for _, linkedWidgets in pairs(newlyLinked) do
+              local baseSpellname = linkedWidgets[1]:GetUserData("baseSpellName")
+              local destSpellName = linkedWidgets[2]:GetText()
+              local destSpellID = tonumber(linkedWidgets[3]:GetText())
+              if destSpellID == 0 then
+                  _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
+                  if spellID ~= nil then
+                      destSpellID = spellID
+                  end
+              end
+              currentLinked[baseSpellname] = {destSpellName, destSpellID}
+          end
+      end
+      MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
+      newlyLinked = {}
+  end
+
+  local linkedGroup = {
+    name = "Linked Spell (Buffs): ",
+    type = "group",
+    inline = true,
+    layout = "List",
+    args = {
+        update = {
+          name = "Update Saved Vars",
+          type = "execute",
+          order = 1,
+          func = function()
+            --updateLinked(parent)
+          end,
+        },
+        add = {
+          name = "Add",
+          type = "execute",
+          order = 2,
+          func = function()
+            print("Fart2")
+            -- createLinkedInput(true, linkedGroup, nil, nil, nil, nil, nil, nil, parent) 
+          end,
+        },
+        linkedGroup ={
+          name = "Linked Spells",
+          type = "group",
+          inline = true,
+          order = 3,
+          args = {
+          }
+        }
+    }
+  }
+ 
+
+  -- All from saved vars!
+  local firstTime = false
+  if MRadialSavedVariables["LINKEDSPELLS"] == nil then
+      -- LINKEDSPELLS[ATTACHTO_SPELLNAME] = {PROC_SPELLNAME, 571321}
+      firstTime = true
+  end
+  currentLinked = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+
+  local linkedStuff = {}
+  for spellName, linkedSpell in pairs(currentLinked) do
+      local link, spellID = GetSpellLink(spellName)
+      if link ~= nil then
+          _, _, srcIcon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
+          local destSpellName = linkedSpell[1]
+          local destSpellID = linkedSpell[2]
+          if spellName then
+            -- createLinkedInput(firstTime, linkedGroup, spellName, srcIcon, srcSpellID, link, destSpellName, destSpellID, parent)
+            local linkedLayout = {
+              name = "",
+              type = "group",
+              args = {
+                linkedInputActionSlot = {
+                  name = spellName,
+                  type = "execute",
+                  order = 1,
+                  dialogControl = "ActionSlot",
+                  image = srcIcon,
+                  func = function() print("burp") end,
+                  acceptDrop = function(info)
+                    local self 
+                    for k, v in pairs(info) do 
+                      if k == "obj" then
+                        self = v
+                      end
                     end
-                end
-                currentLinked[baseSpellname] = {destSpellName, destSpellID}
-            end
-        end
-        MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
-        newlyLinked = {}
-        PopulateDropdown(scrollFrame, 5)
-    end
-
-    local linkedGroup = AceGUI:Create("InlineGroup")
-    linkedGroup:SetTitle("Linked Spell (Buffs): ")
-    linkedGroup:SetFullWidth(true)
-    linkedGroup:SetLayout("List")
-
-    local updateButton = AceGUI:Create("Button")
-          updateButton:SetText("Update SavedVars")
-          updateButton:SetWidth(145)
-          updateButton:SetCallback("OnClick", function() 
-            updateLinked(parent) 
-        end)
-
-    local addButton = AceGUI:Create("Button")
-          addButton:SetText("Add")
-          addButton:SetWidth(145)
-          addButton:SetCallback("OnClick", function() 
-                createLinkedInput(true, linkedGroup, nil, nil, nil, nil, nil, nil, parent) 
-            end)
-    linkedGroup:AddChild(addButton)
-    linkedGroup:AddChild(updateButton)
-
-    -- All from saved vars!
-    local firstTime = false
-    if MRadialSavedVariables["LINKEDSPELLS"] == nil then
-        -- LINKEDSPELLS[ATTACHTO_SPELLNAME] = {PROC_SPELLNAME, 571321}
-        firstTime = true
-    end
-    currentLinked = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
-
-    for spellName, linkedSpell in pairs(currentLinked) do
-        local link, spellID = GetSpellLink(spellName)
-        if link ~= nil then
-            _, _, srcIcon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
-            local destSpellName = linkedSpell[1]
-            local destSpellID = linkedSpell[2]
-            if spellName then
-                createLinkedInput(firstTime, linkedGroup, spellName, srcIcon, srcSpellID, link, destSpellName, destSpellID, parent)
-            end
-        end
-    end
-    if linkedGroup ~= nil then
-        parent:AddChild(linkedGroup)
-    end
+                    local _, data1, data2 = GetCursorInfo()
+                    local link, spellID = GetSpellLink(data1, data2)
+                    local spellName, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
+                    self:SetUserData("hyperlink", link)
+                    self:SetUserData("srcSpellID", srcSpellID)
+                    self:SetUserData("baseSpellName", spellName)
+                    self.icon:SetTexture(icon)
+                    self.icon:Show()
+                    ClearCursor()
+                    end,
+                },
+                linkedSpellName ={
+                  name = "lnkedSpell",
+                  order = 2,
+                  type = "input",
+                  get = function(info) return destSpellName end,
+                  set = function(info, text) end,
+                },
+                linkedSpellID ={
+                  name = "",
+                  order = 3,
+                  type = "input",
+                  disabled = true,
+                  width = "half",
+                  get = function(info) 
+                    -- for k, v in pairs(info) do print(k, v) end
+                    return tostring(destSpellID) end,
+                },
+                removeLinkedSpell = {
+                  name = "-",
+                  type = "execute",
+                  order = 4,
+                  width = "half",
+                  func = function(info) end,
+                }
+              }
+            }
+            table.insert(linkedStuff, linkedLayout)
+          end
+      end
+  end
+  linkedGroup.args.linkedGroup.args = linkedStuff
+  table.insert(widgetArgs, linkedGroup)
+  return widgetArgs
 end

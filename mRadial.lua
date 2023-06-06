@@ -66,18 +66,21 @@ end
 
 function mRadial:UpdateUI(create)
     if create == nil then create = false end
-    if create then mRadial:CreateWatcherFrames() end
+    if create then 
+        mRadial:CreateWatcherFrames() 
+    end
     ---------------------------------
     -- PRIMARY SPELL RADIAL MENU
     local prevOrder = MRadialSavedVariables["primaryWatcherOrder"]
-    local currentOrder = {}
-    local activeSpells = mRadial:UpdateActivePrimarySpells()
+    local currentPrimaryOrder = {}
+    local activePrimarySpells = mRadial:UpdateActivePrimarySpells()
+    mRadial:BuildPrimarySpellOrder(false)
     if prevOrder ~= nil and #prevOrder > 0 then
         for idx, watcherData in ipairs(prevOrder) do
-            currentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSpells)
+            currentPrimaryOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activePrimarySpells)
         end
     else
-        currentOrder = activeSpells
+        currentPrimaryOrder = activePrimarySpells
     end
 
     local radius = MRadialSavedVariables.radius or 100
@@ -85,15 +88,16 @@ function mRadial:UpdateUI(create)
     local spread = MRadialSavedVariables.watcherFrameSpread or 0
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
-    mRadial:RadialButtonLayout(currentOrder, radius, offset, spread, widthDeform, heightDeform)
+    mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform)
     ---------------------------------
     -- SECONDARY SPELL RADIAL MENU
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
     local secondaryCurrentOrder = {}
     local activeSecondarySpells = mRadial:UpdateActiveSecondarySpells()
+    mRadial:BuildSecondarySpellOrder(false)
     if prevSecondaryOrder ~= nil and #prevSecondaryOrder > 0 then
         for idx, watcherData in ipairs(prevSecondaryOrder) do
-            secondaryCurrentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
+            secondaryCurrentOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
         end
     else
         secondaryCurrentOrder = activeSecondarySpells
