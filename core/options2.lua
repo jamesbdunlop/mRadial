@@ -110,7 +110,7 @@ https://github.com/jamesbdunlop/mRadial/wiki",
                   end,
                   get = function(info) return MRadialSavedVariables["asbuttons"] end,
                   order = 4,
-                }
+                } 
             }
           },
           
