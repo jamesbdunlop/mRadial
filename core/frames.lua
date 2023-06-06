@@ -866,9 +866,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             watcher.readyText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            if not InCombatLockdown then
-                watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
-            
+            watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
             
             -- We don't do ANY SHOW HIDE HERE!!
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
@@ -893,7 +891,6 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             end
             watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
-            end
         end
     end
 end
