@@ -1258,7 +1258,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         type = "input",
         defaultValue = destName,
         get = function()
-            local current = MRadialSavedVariables["LINKEDSPELLS"]
+            local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
             for srcSpellName, data in pairs(current) do
               if srcSpellName == spellName then
                 local destSpellName = data[1]

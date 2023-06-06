@@ -866,31 +866,33 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             watcher.readyText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
+            if not InCombatLockdown then
+                watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
             
-            -- We don't do ANY SHOW HIDE HERE!!
-            watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
-            watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
-            
-            if cosAng >= - 0.1 and cosAng <= 0.1 then
-                -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
-            elseif cosAng <= -0.1 then
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
-                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
-                watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
-            elseif  cosAng >= 0.1 then
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
-                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
-                watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
-                watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
+                -- We don't do ANY SHOW HIDE HERE!!
+                watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
+                
+                if cosAng >= - 0.1 and cosAng <= 0.1 then
+                    -- Bottom of the circle, we want to keep the text UNDER the icon here
+                    watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                    watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                    watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
+                elseif cosAng <= -0.1 then
+                    watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+                    watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+                    watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                    watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
+                    watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
+                elseif  cosAng >= 0.1 then
+                    watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
+                    watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
+                    watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                    watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
+                    watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
+                end
+                watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
             end
-            watcher.debuffTimerTextBG:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
         end
     end
 end
