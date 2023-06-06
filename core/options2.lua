@@ -54,7 +54,12 @@ MROptionsTable = {
             order=1
           },
           fagDesc = {
-            name = "Hello world. \n This is some general information.",
+            name = "Welcome to mRadial a little UI timer addon. \n \
+Q: What is mRadial?\
+This addon creates a little radial frame for you to assign spells to to track cooldowns / debuffs. These can be set to be clickable buttons as well if so desired.\
+\nIt helps keep these in a nice tight circle around your charcter so you don't stand in fire mkay!\
+For more info please visit the wiki from the curseForge addon here: \n \
+https://github.com/jamesbdunlop/mRadial/wiki",
             type = "description",
             order = 2
           }
@@ -1186,89 +1191,74 @@ end
 ------------------------------------------------------------------------------------------
 -- LINKED SPELLS
 -- Action button for dnd for linked spells..
-local newlyLinked = {}
 local currentLinked
 
-local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, srcLink, destName, destSpellID, scrollFrame)
-    local function acceptDrop(this)
-        local self = this.obj
-		    local _, data1, data2 = GetCursorInfo()
-        local link, spellID = GetSpellLink(data1, data2)
-        local spellName, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
-        self:SetUserData("hyperlink", link)
-        self:SetUserData("srcSpellID", srcSpellID)
-        self:SetUserData("baseSpellName", spellName)
-
-        self.icon:SetTexture(icon)
-        self.icon:Show()
-        ClearCursor()
-    end
-
-    local function removeItem(baseSpellIcon)
-        local baseSpellName = baseSpellIcon:GetUserData("baseSpellName")
-        if newlyLinked[baseSpellName] ~= nil then
-            newlyLinked[baseSpellName] = nil
-        end
-        if currentLinked[baseSpellName] ~= nil then
-            currentLinked[baseSpellName] = nil
-        end
-        -- REMOVE FRAMES
-        PopulateDropdown(scrollFrame, 5)
-    end
-
-    --- START LAYOUT
-    local grp = AceGUI:Create("SimpleGroup")
-    grp:SetFullWidth(true)
-    grp:SetFullHeight(true)
-    grp:SetLayout("Flow")
-
-    local baseSpellIcon = AceGUI:Create("ActionSlot")
-          baseSpellIcon.button:SetScript('OnReceiveDrag', acceptDrop)
-          baseSpellIcon.icon:SetTexture(srcIcon)
-          baseSpellIcon.icon:Show()
-          if srcLink ~= nil then
-            baseSpellIcon:SetUserData("hyperlink", srcLink)
-          end
-          
-          if srcSpellID ~= nil then
-            baseSpellIcon:SetUserData("srcSpellID", srcSpellID)
-          end
-          if srcName ~= nil then
-            baseSpellIcon:SetUserData("baseSpellName", srcName)
-          end
-
-          baseSpellIcon:SetCallback("OnEnter", function(widget)
-            local hLink = widget:GetUserData("hyperlink")
-            if hLink ~= nil then
-                GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOMRIGHT")
-                GameTooltip:SetHyperlink(hLink) 
-                GameTooltip:SetSize(80, 50) 
-                GameTooltip:SetWidth(80) GameTooltip:Show() 
+local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, destName, destSpellID)
+  local linkedLayout = {}
+    linkedLayout = {
+    name = "",
+    type = "group",
+    args = {
+      linkedInputActionSlot = {
+        name = spellName,
+        type = "execute",
+        order = 1,
+        dialogControl = "ActionSlot",
+        image = srcIcon,
+        func = function() print("burp") end,
+        acceptDrop = function(info)
+            print("Drop accepted")
+            local self 
+            for k, v in pairs(info) do 
+              if k == "obj" then
+                self = v
+              end
             end
-          end)
-          baseSpellIcon:SetCallback("OnLeave", function() 
-            GameTooltip:SetOwner(UIParent, "ANCHOR_BOTTOMRIGHT")
-            GameTooltip:SetText("")
-            GameTooltip:SetSize(80, 50) 
-            GameTooltip:SetWidth(80) 
-            GameTooltip:Show()
-          end)
-
-    local linkedSpellID = AceGUI:Create("EditBox")
-          linkedSpellID:SetText(tostring(destSpellID))
-          linkedSpellID:SetWidth(100)
-          linkedSpellID:SetHeight(25)
-          linkedSpellID:SetDisabled(true)
-
-    local linkedSpellInput = AceGUI:Create("EditBox")
-          linkedSpellInput:SetText(destName)
-          linkedSpellInput:SetWidth(225)
-          linkedSpellInput:SetHeight(25)
-          linkedSpellInput:SetCallback("OnTextChanged", function(widget, event, text)
-            _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
-            local spellNumber = spellID
+            local _, data1, data2 = GetCursorInfo()
+            local link, spellID = GetSpellLink(data1, data2)
+            local droppedSpellName, _, icon, _, _, _, _, _ = GetSpellInfo(spellID)
+            self.icon:SetTexture(icon)
+            self.icon:Show()
+            ClearCursor()
             
-            if spellNumber == nil then
+            local current = MRadialSavedVariables["LINKEDSPELLS"]
+            local updated = false
+            for srcSpellName, data in pairs(current) do
+              if srcSpellName == spellName then
+                data[1] = droppedSpellName
+                updated = true
+              end
+            end
+            if not updated then
+              -- we have a new entry being constructed.
+              local entry = {}
+              entry[1] = ""
+              entry[2] = ""
+              current[droppedSpellName] = entry
+            end
+          end,
+      },
+      linkedSpellName ={
+        name = "lnkedSpell",
+        order = 2,
+        type = "input",
+        defaultValue = destName,
+        get = function()
+            local current = MRadialSavedVariables["LINKEDSPELLS"]
+            for srcSpellName, data in pairs(current) do
+              if srcSpellName == spellName then
+                local destSpellName = data[1]
+                return destSpellName
+              end
+            end
+          end,
+        set = function(info, text) 
+          local current = MRadialSavedVariables["LINKEDSPELLS"]
+          for srcSpellName, data in pairs(current) do
+            if srcSpellName == spellName then
+              data[1] = text
+              _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
+              if spellID == nil then
                 local found = false
                 local activeTalentTreeSpells = mRadial:GetAllActiveTalentTreeSpells()
                 -- lower level classes might not have an active talent tree.
@@ -1276,85 +1266,85 @@ local function createLinkedInput(asNew, parent, srcName, srcIcon, srcSpellID, sr
                     for _, spellData in ipairs(mRadial:GetAllActiveTalentTreeSpells()) do
                         -- add a bool flag for each into the saved vars, so we can check against this in the radial menu!
                         local spellName = spellData[1]
-                        local spellID = spellData[2]
                         if text == spellName then
-                            spellNumber = spellID
+                            spellID = spellData[2]  
                             found = true
                         end
                     end
                 end
                 if not found then
                     if text == "Demonic Power" then
-                        spellNumber = "265273"    
+                      spellID = "265273"    
                     else
-                        spellNumber = ""
+                      spellID = ""
                     end
                 end
             end
-            linkedSpellID:SetText(tostring(spellNumber))
-            table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput, linkedSpellID})
-        end)
-
-    local removeButton = AceGUI:Create("Button")
-          removeButton:SetText("-")
-          removeButton:SetWidth(15)
-          removeButton:SetCallback("OnClick", function() removeItem(baseSpellIcon) end)
-
-    grp:AddChild(baseSpellIcon)
-    grp:AddChild(linkedSpellInput)
-    grp:AddChild(linkedSpellID)
-    grp:AddChild(removeButton)
-    parent:AddChild(grp)
-    
-    -- If we have a valid entry, we go ahead and add it to the table now.
-    if asNew then
-        table.insert(newlyLinked, {baseSpellIcon, linkedSpellInput, linkedSpellID})
-    end
+              data[2] = tonumber(spellID)
+            end
+          end
+        end,
+      },
+      linkedSpellID ={
+        name = "",
+        order = 3,
+        type = "input",
+        disabled = true,
+        width = "half",
+        get = function(info) 
+          local current = MRadialSavedVariables["LINKEDSPELLS"]
+          for srcSpellName, data in pairs(current) do
+            if srcSpellName == spellName then
+              local destSpellID = data[2]
+              return tostring(destSpellID)
+            end
+          end
+        end,
+      },
+      removeLinkedSpell = {
+        name = "-",
+        type = "execute",
+        order = 4,
+        width = "half",
+        func = function(info) 
+          local current = MRadialSavedVariables["LINKEDSPELLS"]
+          local cleaned = {}
+          for srcSpellName, spellID in pairs(current) do
+              if spellName ~= srcSpellName then
+                cleaned[srcSpellName] = spellID
+              end
+          end
+          MRadialSavedVariables["LINKEDSPELLS"] = cleaned
+        end,
+      }
+    }
+  }
+  return linkedLayout
 end
 
 function mRadial:linkedSpellPane()
   local widgetArgs = {}
-
-  local function updateLinked()
-      if newlyLinked ~= nil then
-          for _, linkedWidgets in pairs(newlyLinked) do
-              local baseSpellname = linkedWidgets[1]:GetUserData("baseSpellName")
-              local destSpellName = linkedWidgets[2]:GetText()
-              local destSpellID = tonumber(linkedWidgets[3]:GetText())
-              if destSpellID == 0 then
-                  _, _, _, _, _, _, spellID, _ = GetSpellInfo(text)
-                  if spellID ~= nil then
-                      destSpellID = spellID
-                  end
-              end
-              currentLinked[baseSpellname] = {destSpellName, destSpellID}
-          end
-      end
-      MRadialSavedVariables["LINKEDSPELLS"] = currentLinked
-      newlyLinked = {}
-  end
-
+  local linkedStuff = {}
+  -- Boilerplate for a linked layout
   local linkedGroup = {
     name = "Linked Spell (Buffs): ",
     type = "group",
     inline = true,
     layout = "List",
     args = {
-        update = {
-          name = "Update Saved Vars",
-          type = "execute",
+        info = {
+          name = "Linked spells are a way for you to link a buff to a core spell. \n eg: Linking Hand of Guldan to Demonic Core, will start a timer next to Hand of Guildan when DC procs to allow for timing of casts etc.",
+          type = "description",
           order = 1,
-          func = function()
-            --updateLinked(parent)
-          end,
         },
         add = {
           name = "Add",
           type = "execute",
           order = 2,
           func = function()
-            print("Fart2")
-            -- createLinkedInput(true, linkedGroup, nil, nil, nil, nil, nil, nil, parent) 
+            local emptyEntry = createLinkedInputTable("", "", "", "", "", "") 
+            table.insert(linkedStuff, emptyEntry) 
+            MROptionsTable.args.linkedSpellOptions.args = widgetArgs
           end,
         },
         linkedGroup ={
@@ -1367,81 +1357,17 @@ function mRadial:linkedSpellPane()
         }
     }
   }
- 
-
   -- All from saved vars!
-  local firstTime = false
-  if MRadialSavedVariables["LINKEDSPELLS"] == nil then
-      -- LINKEDSPELLS[ATTACHTO_SPELLNAME] = {PROC_SPELLNAME, 571321}
-      firstTime = true
-  end
   currentLinked = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
-
-  local linkedStuff = {}
   for spellName, linkedSpell in pairs(currentLinked) do
-      local link, spellID = GetSpellLink(spellName)
-      if link ~= nil then
+      local srcLink, spellID = GetSpellLink(spellName)
+      if srcLink ~= nil then
           _, _, srcIcon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
           local destSpellName = linkedSpell[1]
           local destSpellID = linkedSpell[2]
           if spellName then
-            -- createLinkedInput(firstTime, linkedGroup, spellName, srcIcon, srcSpellID, link, destSpellName, destSpellID, parent)
-            local linkedLayout = {
-              name = "",
-              type = "group",
-              args = {
-                linkedInputActionSlot = {
-                  name = spellName,
-                  type = "execute",
-                  order = 1,
-                  dialogControl = "ActionSlot",
-                  image = srcIcon,
-                  func = function() print("burp") end,
-                  acceptDrop = function(info)
-                    local self 
-                    for k, v in pairs(info) do 
-                      if k == "obj" then
-                        self = v
-                      end
-                    end
-                    local _, data1, data2 = GetCursorInfo()
-                    local link, spellID = GetSpellLink(data1, data2)
-                    local spellName, _, icon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
-                    self:SetUserData("hyperlink", link)
-                    self:SetUserData("srcSpellID", srcSpellID)
-                    self:SetUserData("baseSpellName", spellName)
-                    self.icon:SetTexture(icon)
-                    self.icon:Show()
-                    ClearCursor()
-                    end,
-                },
-                linkedSpellName ={
-                  name = "lnkedSpell",
-                  order = 2,
-                  type = "input",
-                  get = function(info) return destSpellName end,
-                  set = function(info, text) end,
-                },
-                linkedSpellID ={
-                  name = "",
-                  order = 3,
-                  type = "input",
-                  disabled = true,
-                  width = "half",
-                  get = function(info) 
-                    -- for k, v in pairs(info) do print(k, v) end
-                    return tostring(destSpellID) end,
-                },
-                removeLinkedSpell = {
-                  name = "-",
-                  type = "execute",
-                  order = 4,
-                  width = "half",
-                  func = function(info) end,
-                }
-              }
-            }
-            table.insert(linkedStuff, linkedLayout)
+            local entry = createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, destSpellName, destSpellID)
+            table.insert(linkedStuff, entry)
           end
       end
   end
