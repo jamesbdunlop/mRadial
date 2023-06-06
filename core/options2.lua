@@ -110,15 +110,7 @@ https://github.com/jamesbdunlop/mRadial/wiki",
                   end,
                   get = function(info) return MRadialSavedVariables["asbuttons"] end,
                   order = 4,
-                },
-              hideooc = {
-                  name = "Hide Out of Combat",
-                  desc = "Enables / disables the ui when out of combat.",
-                  type = "toggle",
-                  set = function(info,val) MRadialSavedVariables["hideooc"] = val end,
-                  get = function(info) return MRadialSavedVariables["hideooc"] end,
-                  order = 5,
-                }, 
+                }
             }
           },
           
