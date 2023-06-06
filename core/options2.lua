@@ -110,7 +110,15 @@ https://github.com/jamesbdunlop/mRadial/wiki",
                   end,
                   get = function(info) return MRadialSavedVariables["asbuttons"] end,
                   order = 4,
-                } 
+                },
+              hideooc = {
+                  name = "Hide Out of Combat",
+                  desc = "Enables / disables the ui when out of combat.",
+                  type = "toggle",
+                  set = function(info,val) MRadialSavedVariables["hideooc"] = val end,
+                  get = function(info) return MRadialSavedVariables["hideooc"] end,
+                  order = 5,
+                }, 
             }
           },
           
@@ -706,7 +714,6 @@ https://github.com/jamesbdunlop/mRadial/wiki",
                 order = 2,
                 min = 1,
                 max = 200,
-                step = .01,
                 isPercent = false,
                 default = 40,
                 set = function(self, val)
@@ -1250,7 +1257,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         type = "input",
         defaultValue = destName,
         get = function()
-            local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+            local current = MRadialSavedVariables["LINKEDSPELLS"]
             for srcSpellName, data in pairs(current) do
               if srcSpellName == spellName then
                 local destSpellName = data[1]
