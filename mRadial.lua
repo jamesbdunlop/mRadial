@@ -104,7 +104,7 @@ function mRadial:UpdateUI(create)
         secondaryCurrentOrder = activeSecondarySpells
     end
 
-    local radius2 = MRadialSavedVariables.radius2 or 100
+    local radius2 = MRadialSavedVariables.radius2 or 150
     local offset2 = MRadialSavedVariables.offset2 or .5
     local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
     local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1

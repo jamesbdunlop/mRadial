@@ -24,4 +24,5 @@ less problematic, so you don't have to always adjust the spread when adding a ne
 \n- If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
 \n- The WINDOW has changed to the base ace3 Frame. This frame annoys the crap out of me in respect to trying to shift+click move it out the way so I can move the radial stuff around, it's hit and miss \
 if it's going to start moving or not, but due to some nasty bugs in the Window frame I'm leaving it as is for now. \
+\b - Some of the default values don't apply in the options on first load. Need to start testing this. For now I have added info into the tooltips\
 "
