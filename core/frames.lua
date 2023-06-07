@@ -715,7 +715,9 @@ function mRadial:CreatePetFrames()
                 if plast <= .01 then
                     return
                 end
-                frame:SetAlpha(1)
+                if not MRadialSavedVariables['hidePetFrame'] then
+                    frame:SetAlpha(1)
+                end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
