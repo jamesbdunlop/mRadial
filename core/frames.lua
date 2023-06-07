@@ -697,7 +697,7 @@ function mRadial:CreatePetFrames()
                                                 UIParent,
                                                 "",
                                                 spellIcon,
-                                                "ARTWORK",
+                                                "OVERLAY",
                                                 "Interface/BUTTONS/UI-QuickslotRed",
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
@@ -715,6 +715,7 @@ function mRadial:CreatePetFrames()
                 if plast <= .01 then
                     return
                 end
+                frame:SetAlpha(1)
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
