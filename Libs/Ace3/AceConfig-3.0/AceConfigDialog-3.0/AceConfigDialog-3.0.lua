@@ -1142,8 +1142,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 
 				if v.type == "execute" then
 					local imageCoords = GetOptionsMemberValue("imageCoords",v, options, path, appName)
-					local image, width, height = GetOptionsMemberValue("image",v, options, path, appName)
-
+					local image, width, height = GetOptionsMemberValue("image", v, options, path, appName)
 					local iconControl = type(image) == "string" or type(image) == "number"
 					control = CreateControl(v.dialogControl or v.control, iconControl and "Icon" or "Button")
 					if iconControl then

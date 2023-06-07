@@ -3,7 +3,8 @@ local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local appName = "MRadial"
 
-
+------------------------------------------------------------------------------------------
+-- OPTIONS CONFIG TABLE
 MROptionsTable = {
     type = "group",
     childGroups = "tree",
@@ -779,6 +780,7 @@ https://github.com/jamesbdunlop/mRadial/wiki",
 }
 
 ------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 -- MAIN PANE
 function mRadial:OptionsPane()
   MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
@@ -787,7 +789,11 @@ function mRadial:OptionsPane()
   optionsPane:SetLayout("Flow")
   optionsPane:SetTitle("---mRadial---")
   optionsPane:SetStatusText("Select options")
-  optionsPane:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+  optionsPane:SetCallback("OnClose", function(widget)
+    MRadialSavedVariables["moveable"] = false
+    mRadial.SetUIMovable(false)
+    mRadial:UpdateUI(true)
+    AceGUI:Release(widget) end)
   MR_configDialog:SetDefaultSize(appName, 800, 600)
   MR_configDialog:Open(appName, optionsPane)
 
@@ -1016,7 +1022,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
 end
 
 -- SPELL ORDER
-function createOrderParentFrame()
+function mRadial:CreateOrderParentFrame()
   local parentFrame = AceGUI:Create("Frame")
         parentFrame:SetLayout("List")
         parentFrame:SetWidth(400)
@@ -1038,7 +1044,7 @@ end
 
 function mRadial:BuildPrimarySpellOrder(showUI)
   if MRPrimarySpellOrderFrame == nil then
-    MRPrimarySpellOrderFrame = createOrderParentFrame()
+    MRPrimarySpellOrderFrame = mRadial:CreateOrderParentFrame()
   end
   if showUI then
     MRPrimarySpellOrderFrame:Show()
@@ -1049,7 +1055,7 @@ end
 
 function mRadial:BuildSecondarySpellOrder(showUI)
   if MRSecondarySpellOrderFrame == nil then
-    MRSecondarySpellOrderFrame = createOrderParentFrame()
+    MRSecondarySpellOrderFrame = mRadial:CreateOrderParentFrame()
   end
   if showUI then
     MRSecondarySpellOrderFrame:Show()
@@ -1210,9 +1216,8 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         order = 1,
         dialogControl = "ActionSlot",
         image = srcIcon,
-        func = function() print("burp") end,
+        func = function() print("Nothing to see here...") end,
         acceptDrop = function(info)
-            print("Drop accepted")
             local self 
             for k, v in pairs(info) do 
               if k == "obj" then
@@ -1367,7 +1372,7 @@ function mRadial:linkedSpellPane()
   for spellName, linkedSpell in pairs(currentLinked) do
       local srcLink, spellID = GetSpellLink(spellName)
       if srcLink ~= nil then
-          _, _, srcIcon, _, _, srcSpellID, _, _ = GetSpellInfo(spellID)
+          _, _, srcIcon, _, _, srcSpellID, originalIcon, _ = GetSpellInfo(spellID)
           local destSpellName = linkedSpell[1]
           local destSpellID = linkedSpell[2]
           if spellName then

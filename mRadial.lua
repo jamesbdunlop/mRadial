@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------
 --- TO DO -----------------------------------------------------------
 -- Update pet frames for other classes?
--- Update pet frames for death of pets!
--- "Import from" feature for the button layouts?
+-- fix strata for movable stuff!
+-- get parent working for sub parent frames!
+-- fix missing movable on the subParent!
 ---------------------------------------------------------------------
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
@@ -88,7 +89,7 @@ function mRadial:UpdateUI(create)
     local spread = MRadialSavedVariables.watcherFrameSpread or 0
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
-    mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform)
+    mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
     ---------------------------------
     -- SECONDARY SPELL RADIAL MENU
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
@@ -108,7 +109,7 @@ function mRadial:UpdateUI(create)
     local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
     local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
     local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
-    mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2)
+    mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
 end
 
 local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
