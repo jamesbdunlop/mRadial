@@ -55,14 +55,19 @@ MROptionsTable = {
             order=1
           },
           fagDesc = {
-            name = "Welcome to mRadial a little UI timer addon. \n \
-Q: What is mRadial?\
-This addon creates a little radial frame for you to assign spells to to track cooldowns / debuffs. These can be set to be clickable buttons as well if so desired.\
-\nIt helps keep these in a nice tight circle around your charcter so you don't stand in fire mkay!\
-For more info please visit the wiki from the curseForge addon here: \n \
-https://github.com/jamesbdunlop/mRadial/wiki",
+            name = MRADIAL_ABOUT,
             type = "description",
             order = 2
+          },
+          changeLogHdr = {
+            name = "----CHANGE LOG----",
+            type = "header",
+            order=3
+          },
+          changeLog = {
+            name = MRADIAL_UPDATENOTES,
+            type = "description",
+            order = 4
           }
         }
       },
