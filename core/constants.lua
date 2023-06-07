@@ -23,7 +23,9 @@ MR_FONTS[7] = "DejaVuSansMono.ttf"
 MR_FONTS[8] = "AnonymousPro-Bold.ttf"
 MR_FONTS[9] = "MONOFONT.ttf"
 
-MAINBG_FRAMENAME = "mRadialBGFrame"
+MAINBG_FRAMENAME = "mRadialOutOfShardsFrame"
+PRIMARY_FRAMENAME = "mRadialPrimaryFrame"
+SECONDARY_FRAMENAME = "mRadialSecondaryFrame"
 SHARD_FRAMENAME = "MWShardFrame"
 ---------------------------------------------------------------------------------------------------
 ----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECTIONS YET

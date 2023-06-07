@@ -1,10 +1,13 @@
 ---------------------------------------------------------------------
 --- TO DO -----------------------------------------------------------
 -- Update pet frames for other classes?
--- Update pet frames for death of pets!
--- "Import from" feature for the button layouts?
+-- fix strata for movable stuff!
+-- get parent working for sub parent frames!
+-- fix missing movable on the subParent!
 ---------------------------------------------------------------------
-
+local MR_configDialog = LibStub("AceConfigDialog-3.0")
+local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
+local appName = "MRadial"
 
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
@@ -64,18 +67,21 @@ end
 
 function mRadial:UpdateUI(create)
     if create == nil then create = false end
-    if create then mRadial:CreateWatcherFrames() end
+    if create then 
+        mRadial:CreateWatcherFrames() 
+    end
     ---------------------------------
     -- PRIMARY SPELL RADIAL MENU
     local prevOrder = MRadialSavedVariables["primaryWatcherOrder"]
-    local currentOrder = {}
-    local activeSpells = mRadial:UpdateActivePrimarySpells()
+    local currentPrimaryOrder = {}
+    local activePrimarySpells = mRadial:UpdateActivePrimarySpells()
+    mRadial:BuildPrimarySpellOrder(false)
     if prevOrder ~= nil and #prevOrder > 0 then
         for idx, watcherData in ipairs(prevOrder) do
-            currentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSpells)
+            currentPrimaryOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activePrimarySpells)
         end
     else
-        currentOrder = activeSpells
+        currentPrimaryOrder = activePrimarySpells
     end
 
     local radius = MRadialSavedVariables.radius or 100
@@ -83,26 +89,27 @@ function mRadial:UpdateUI(create)
     local spread = MRadialSavedVariables.watcherFrameSpread or 0
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
-    mRadial:RadialButtonLayout(currentOrder, radius, offset, spread, widthDeform, heightDeform)
+    mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
     ---------------------------------
     -- SECONDARY SPELL RADIAL MENU
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
     local secondaryCurrentOrder = {}
     local activeSecondarySpells = mRadial:UpdateActiveSecondarySpells()
+    mRadial:BuildSecondarySpellOrder(false)
     if prevSecondaryOrder ~= nil and #prevSecondaryOrder > 0 then
         for idx, watcherData in ipairs(prevSecondaryOrder) do
-            secondaryCurrentOrder[idx] =  mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
+            secondaryCurrentOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
         end
     else
         secondaryCurrentOrder = activeSecondarySpells
     end
 
-    local radius2 = MRadialSavedVariables.radius2 or 100
+    local radius2 = MRadialSavedVariables.radius2 or 150
     local offset2 = MRadialSavedVariables.offset2 or .5
     local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
     local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
     local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
-    mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2)
+    mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
 end
 
 local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
@@ -129,6 +136,9 @@ function mRadial:OnInitialize()
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)
+    
+    MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
+    MR_configDialog:AddToBlizOptions(appName, "mRadial")
 end
 
 function mRadial:OnEnable()

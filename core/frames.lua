@@ -132,14 +132,14 @@ function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, text
     return frame
 end
 
-function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
+function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
     local asButtons = MRadialSavedVariables["asbuttons"] or false
     local size = 200
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
     local watcher = mRadial:CreateIconFrame(frameName, 
                                             {size, size}, 
-                                            MRadialMainFrame, 
+                                            parentFrame, 
                                             "BackdropTemplate", 
                                             iconPath, 
                                             "ARTWORK", 
@@ -238,14 +238,14 @@ function mRadial:SetUIMovable(isMovable)
     
     if isMovable then
         mRadial:ShowFrame(MRadialMainFrame.crosshair)
-        mRadial:ShowFrame(MRadialMainFrame.movetex)
-        mRadial:ShowFrame(MRadialMainFrame.movetext)
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+        MRadialPrimaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
+        MRadialSecondaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
     else
         mRadial:HideFrame(MRadialMainFrame.crosshair)
-        mRadial:HideFrame(MRadialMainFrame.movetex)
-        mRadial:HideFrame(MRadialMainFrame.movetext)
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
+        MRadialPrimaryFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
+        MRadialSecondaryFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
     end
 
     for _, pframe in pairs(MR_PARENTFRAMES) do
@@ -357,7 +357,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
 local last = 0
-function mRadial:CreateWatcherFrame(spellID)
+function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
@@ -365,8 +365,9 @@ function mRadial:CreateWatcherFrame(spellID)
     -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
     local spellName, _, iconPath, _, minRange, maxRange, spellID, _ = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
-    local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath)
+    local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     watcher.spellName = spellName
+    watcher:GetParent().spellName = spellName
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
     local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
@@ -530,7 +531,6 @@ function mRadial:CreateWatcherFrames()
             mRadial:HideFrame(pframe)
         end
     end
-
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
         local spellName, _, _, _, _, _, spellID, _ = GetSpellInfo(spellId)
@@ -542,24 +542,24 @@ function mRadial:CreateWatcherFrames()
             local isKnown = IsPlayerSpell(spellId)
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
-            if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
-                local frame = mRadial:CreateWatcherFrame(spellID)
+            -- if isActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
+            if isActive and isKnown and not mRadial:WatcherExists(frameName) then
+                local frame = mRadial:CreateWatcherFrame(spellID, MRadialPrimaryFrame)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
-                UdOffset = UdOffset + 32
                 local pframe = frame:GetParent()
                 if pframe ~= nil then
                     mRadial:HideFrame(pframe)
                 end
                 mRadial:HideFrame(frame)
-            elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
-                    local frame = mRadial:CreateWatcherFrame(spellID)
-                    MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
-                    UdOffset = UdOffset + 32
-                    local pframe = frame:GetParent()
-                    if pframe ~= nil then
-                        mRadial:HideFrame(pframe)
-                    end
-                    mRadial:HideFrame(frame)
+            -- elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
+            elseif isSecondaryActive and isKnown and not mRadial:WatcherExists(frameName) then
+                local frame = mRadial:CreateWatcherFrame(spellID, MRadialSecondaryFrame)
+                MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
+                local pframe = frame:GetParent()
+                if pframe ~= nil then
+                    mRadial:HideFrame(pframe)
+                end
+                mRadial:HideFrame(frame)
             elseif isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
                 if frame ~= nil then
@@ -580,6 +580,8 @@ function mRadial:CreateMainFrame()
     local ooShardsMult = MRadialSavedVariables.shardOutOfFrameSize or 150
     local size = radius*ooShardsMult
     local exists, frame = mRadial:GetFrameByName(MAINBG_FRAMENAME)
+    local primary_exists, primaryFrame = mRadial:GetFrameByName(PRIMARY_FRAMENAME)
+    local secondary_exists, secondaryFrame = mRadial:GetFrameByName(SECONDARY_FRAMENAME)
     -- Main Frame
     if not exists then
         MRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
@@ -589,10 +591,35 @@ function mRadial:CreateMainFrame()
                                                         "Interface/Tooltips/UI-Tooltip-Background",
                                                         "ARTWORK",
                                                         "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
-                                                        false, {size, size}, {size, size})
+                                                        false, {size, size}, {size, size}, false)
     else
         MRadialMainFrame = frame
     end
+    if not primary_exists then
+        MRadialPrimaryFrame = mRadial:CreateMovableFrame(PRIMARY_FRAMENAME,
+                                                        {300, 200},
+                                                        MRadialMainFrame,
+                                                        "BackdropTemplate",
+                                                        "Interface/Tooltips/UI-Tooltip-Background",
+                                                        "ARTWORK",
+                                                        "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+                                                        false, {size, size}, {size, size}, false)
+    else
+        MRadialPrimaryFrame = primaryFrame
+    end
+    if not secondary_exists then
+        MRadialSecondaryFrame = mRadial:CreateMovableFrame(SECONDARY_FRAMENAME,
+                                                        {300, 200},
+                                                        MRadialMainFrame,
+                                                        "BackdropTemplate",
+                                                        "Interface/Tooltips/UI-Tooltip-Background",
+                                                        "ARTWORK",
+                                                        "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+                                                        false, {size, size}, {size, size}, false)
+    else
+        MRadialSecondaryFrame = secondaryFrame
+    end
+
     -- Out of shards masks and textures are set on this base frame, so we scale this for the red out of shards indicator
     mRadial:setOOSShardFramesSize()
 
@@ -670,7 +697,7 @@ function mRadial:CreatePetFrames()
                                                 UIParent,
                                                 "",
                                                 spellIcon,
-                                                "ARTWORK",
+                                                "OVERLAY",
                                                 "Interface/BUTTONS/UI-QuickslotRed",
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
@@ -687,6 +714,9 @@ function mRadial:CreatePetFrames()
                 plast = plast + elapsed
                 if plast <= .01 then
                     return
+                end
+                if not MRadialSavedVariables['hidePetFrame'] then
+                    frame:SetAlpha(1)
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
@@ -737,49 +767,20 @@ function mRadial:SetPetFramePosAndSize()
     end
 end
 
----------------------------------------------------------------------------------------------------
--- Watcher radial layout.
-function mRadial:UpdateActivePrimarySpells()
-    -- Flush existing
-    ACTIVEPRIMARYWATCHERS = {}
+function mRadial:HideAllWatcherFrames()
     for x=1, #MR_WATCHERFRAMES do
         -- First we hide any and all watchers that may have been active.
         local watcher = MR_WATCHERFRAMES[x]
         mRadial:HideFrame(watcher)
-
-        -- -- Now we check for isActive (options toggles)
-        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
-        if isActive and not MRadialSavedVariables["isSecondaryActive".. watcher.spellName] then 
-            ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher 
-            if not InCombatLockdown then
-                watcher:Show()
-            end
+        if not InCombatLockdown then
+            watcher:GetParent():Hide()
         end
     end
-    return ACTIVEPRIMARYWATCHERS
 end
 
-function mRadial:UpdateActiveSecondarySpells()
-    -- Flush existing
-    ACTIVESECONDARYWATCHERS = {}
-    for x=1, #MR_WATCHERFRAMES do
-        -- First we hide any and all watchers that may have been active.
-        local watcher = MR_WATCHERFRAMES[x]
-        if not MRadialSavedVariables["isActive".. watcher.spellName] then
-            watcher:Hide()
-        end
-
-        -- Now we check for isActive (options toggles)
-        local isActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
-        if isActive and not MRadialSavedVariables["isActive".. watcher.spellName] then 
-            ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
-            watcher:Show()
-        end
-    end
-    return ACTIVESECONDARYWATCHERS
-end
-
-function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
+---------------------------------------------------------------------------------------------------
+-- Watcher radial layout.
+function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentFrame)
     -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
     local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
@@ -820,7 +821,6 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     -- if orderedWatchers == nil then
     --     orderedWatchers = mRadial:UpdateActiveSpells()
     -- end
-
     for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then
             mRadial:ShowFrame(watcher)
@@ -857,7 +857,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
             watcher.readyText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+readyFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            watcher:SetPoint("CENTER", MRadialMainFrame, "CENTER", w, h)
+            watcher:SetPoint("CENTER", parentFrame, "CENTER", w, h)
             
             -- We don't do ANY SHOW HIDE HERE!!
             watcher.buffTimerText:SetPoint("CENTER", watcher.buffTimerTextBG, "CENTER", 0, 0)
@@ -886,7 +886,17 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd)
     end
 end
 
+---------------------------------------------------------------------------------------------------
+-- SOME UTIL STUFF
 function mRadial:ShowFrame(frame, alpha) 
+    local spellName = frame.spellName
+    if spellName ~= nil then
+        local isActive = MRadialSavedVariables["isActive".. frame.spellName] or false
+        local isSecondaryActive = MRadialSavedVariables["isSecondaryActive".. frame.spellName] or false
+        if not isActive and not isSecondaryActive then
+            return
+        end
+    end
     if frame.isParentFrame then
         local childFrames = {}
         childFrames[1] = frame.iconFrame
@@ -947,4 +957,43 @@ function mRadial:HideFrame(frame)
     else
         frame:SetAlpha(0)   
     end
+end
+
+function mRadial:UpdateActivePrimarySpells()
+    -- Flush existing
+    ACTIVEPRIMARYWATCHERS = {}
+    mRadial:HideAllWatcherFrames()
+    for x=1, #MR_WATCHERFRAMES do
+        -- -- Now we check for isActive (options toggles)
+        local watcher = MR_WATCHERFRAMES[x]
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        if isActive then 
+            ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher
+            mRadial:ShowFrame(watcher)
+            if not InCombatLockdown then
+                watcher:GetParent():Show()
+            end
+        end
+    end
+    return ACTIVEPRIMARYWATCHERS
+end
+
+function mRadial:UpdateActiveSecondarySpells()
+    -- Flush existing
+    ACTIVESECONDARYWATCHERS = {}
+    for x=1, #MR_WATCHERFRAMES do
+        -- First we hide any and all watchers that may have been active.
+        local watcher = MR_WATCHERFRAMES[x]
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        local isSecondaryActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
+        -- Now we check for isActive (options toggles)
+        if isSecondaryActive and not isActive then 
+            ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
+            mRadial:ShowFrame(watcher)
+            if not InCombatLockdown then
+                watcher:Show()
+            end
+        end
+    end
+    return ACTIVESECONDARYWATCHERS
 end
