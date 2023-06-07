@@ -37,7 +37,7 @@ MROptionsTable = {
       }, 
       hideminimap = {
         name = "Hide MiniMap Icon",
-        desc = "Enables / disables miniMapIcon in fav of the new addon container.",
+        desc = "Enables / disables miniMapIcon in fav of the new addon container. This change will take effect on next reload/login.",
         type = "toggle",
         set = function(info,val) MRadialSavedVariables["hideMiniMapIcon"] = val end,
         get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] end,
@@ -1230,44 +1230,33 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
     args = {
       linkedInputActionSlot = {
         name = spellName,
-        type = "execute",
+        type = "input",
         order = 1,
-        dialogControl = "ActionSlot",
-        image = srcIcon,
-        func = function() print("Nothing to see here...") end,
-        acceptDrop = function(info)
-            local self 
-            for k, v in pairs(info) do 
-              if k == "obj" then
-                self = v
-              end
-            end
-            local _, data1, data2 = GetCursorInfo()
-            local link, spellID = GetSpellLink(data1, data2)
-            local droppedSpellName, _, icon, _, _, _, _, _ = GetSpellInfo(spellID)
-            self.icon:SetTexture(icon)
-            self.icon:Show()
-            ClearCursor()
-            
+        set = function(info, droppedSpellName)
             local current = MRadialSavedVariables["LINKEDSPELLS"]
-            local updated = false
-            for srcSpellName, data in pairs(current) do
+            for srcSpellName, _ in pairs(current) do
               if srcSpellName == spellName then
-                data[1] = droppedSpellName
-                updated = true
+                return
               end
             end
-            if not updated then
-              -- we have a new entry being constructed.
-              local entry = {}
-              entry[1] = ""
-              entry[2] = ""
-              current[droppedSpellName] = entry
-            end
+            -- we have a new entry being constructed.
+            local entry = {}
+            entry[1] = ""
+            entry[2] = ""
+            current[droppedSpellName] = entry
+            MROptionsTable.args.linkedSpellOptions.args = mRadial:linkedSpellPane()
           end,
+        get = function()
+          local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+          for srcSpellName, _ in pairs(current) do
+            if srcSpellName == spellName then
+              return srcSpellName
+            end
+          end
+        end,
       },
       linkedSpellName ={
-        name = "lnkedSpell",
+        name = "linkedTo",
         order = 2,
         type = "input",
         defaultValue = destName,
@@ -1330,7 +1319,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         end,
       },
       removeLinkedSpell = {
-        name = "-",
+        name = "Remove",
         type = "execute",
         order = 4,
         width = "half",
@@ -1361,7 +1350,7 @@ function mRadial:linkedSpellPane()
     layout = "List",
     args = {
         info = {
-          name = "Linked spells are a way for you to link a buff to a core spell. \n eg: Linking Hand of Guldan to Demonic Core, will start a timer next to Hand of Guildan when DC procs to allow for timing of casts etc.",
+          name = "Linked spells are a way for you to link a buff to a core spell. \n eg: Linking Hand of Guldan to Demonic Core, will start a timer next to Hand of Guildan when DC procs to allow for timing of casts etc. \n HowTo: \n Drag and drop a spell from the spell book into the left hand input. Type a name of the spell (or drag it) onto the linked spell input. The spellID should populate automatically. \n Note: Src spellNames are unique, and can only link once.",
           type = "description",
           order = 1,
         },

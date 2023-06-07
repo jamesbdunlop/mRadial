@@ -1169,20 +1169,6 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						control:SetText(name)
 					end
 					
-					if v.dialogControl == "ActionSlot" then
-						if v.onEnter ~= nil then
-							control.button:SetScript("OnEnter",v.onEnter)
-						end
-						if v.onClick ~= nil then
-							control.button:SetScript("OnClick", v.onClick)
-						end
-						if v.acceptDrop ~= nil then
-							control.button:SetScript("OnReceiveDrag", v.acceptDrop)
-						end
-					else
-						control:SetCallback("OnClick", ActivateControl)
-					end
-
 				elseif v.type == "input" then
 					control = CreateControl(v.dialogControl or v.control, v.multiline and "MultiLineEditBox" or "EditBox")
 
@@ -1196,7 +1182,6 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						text = ""
 					end
 					control:SetText(text)
-
 				elseif v.type == "toggle" then
 					control = CreateControl(v.dialogControl or v.control, "CheckBox")
 					control:SetLabel(name)
@@ -1459,9 +1444,6 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					if control.SetDisabled then
 						local disabled = CheckOptionDisabled(v, options, path, appName)
 						control:SetDisabled(disabled)
-					end
-					if control.onEnter then
-						print("WTF")
 					end
 					InjectInfo(control, options, v, path, rootframe, appName)
 					container:AddChild(control)

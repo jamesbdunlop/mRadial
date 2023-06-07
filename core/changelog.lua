@@ -12,17 +12,20 @@ This overhauls the options pane to use the Ace3ConfigTables. Wiki not yet update
 \nIf you find the spell icons have gone a bit crazy, this is most likely due to the autoSpread being turned ON by default now. The autospread option tries to make adding/removing spell watchers \
 less problematic, so you don't have to always adjust the spread when adding a new spell. So set any dimensions back to their defaults, and work from there.\
 \n- Primary / Secondary spell orders are now in their own frame (to avoid issues with the ActionSlot frame type) that can be opened using the buttons in the spell selection tab. \
+\n \
 \n -- IMPROVEMENTS \
 \n - Well the entire options pane for starters. \
 \n - Warlock specific options are now broken out to their own tab. \
 \n - Primary and Secondary radials are now able to be moved independently of each other. \
 \n - Spell selections in primary should correctly remove these from secondary selection as was originally intended. \
+\n - Linked spells no longer use the actionSlot widget as this doesn't play nice with the config and requires butchering base Ace3 code to get to work. Not advisable. Check the pane for more info. \
 \n \
--- KNOWN ISSUES: \n \
-- The linked spell icons vanish after you flick to the pane for the first time or start to add new ones. I don't know how to fix this (yet). \n \
-    The bonus here is the savedVars should auto update now when adding new ones. I'll be actively working on this section for the next release. \
+\n -- KNOWN ISSUES: \
 \n- If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
 \n- The WINDOW has changed to the base ace3 Frame. This frame annoys the crap out of me in respect to trying to shift+click move it out the way so I can move the radial stuff around, it's hit and miss \
 if it's going to start moving or not, but due to some nasty bugs in the Window frame I'm leaving it as is for now. \
-\b - Some of the default values don't apply in the options on first load. Need to start testing this. For now I have added info into the tooltips\
+\n - Some of the default values don't apply in the options on first load. Need to start testing this. For now I have added info into the tooltips \
+\n \
+\n -- TO DO: \
+\n - Get the reset all spells working again for the primary and secondary spell selections! \
 "
