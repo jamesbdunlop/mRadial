@@ -19,7 +19,14 @@ function mRadial:createShardCountFrame()
     end
     
     local alpha = MRadialSavedVariables["shardFrameTransparency"] or 1
+    local hide =  MRadialSavedVariables["hideShardFrame"] or false
     ShardCounterFrame:SetAlpha(alpha)
+    ShardCounterFrame:GetParent():SetAlpha(1)
+    if hide then
+        ShardCounterFrame:SetAlpha(0)
+        ShardCounterFrame:GetParent():SetAlpha(0)
+        return
+    end
     mRadial:setShardTrackerFramesSize()
     mRadial:SetMountedFrameScripts(ShardCounterFrame, alpha)
 end
@@ -44,13 +51,15 @@ function mRadial:shardtrack()
     if not mRadial:IsWarlock() then
         return
     end
+    local hide =  MRadialSavedVariables["hideShardFrame"] or false
+    if hide then
+        return
+    end
 
     local soulShards = mRadial:GetShardCount()
     -- Change the texture of the frame
     local iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
     ShardCounterFrame.iconFrame:SetTexture(iconPath)
-    local alpha = MRadialSavedVariables["shardFrameTransparency"] or 1
-    ShardCounterFrame:SetAlpha(alpha)
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     local hideOOfShardFrame = MRadialSavedVariables["hideOOShardFrame"] or false
