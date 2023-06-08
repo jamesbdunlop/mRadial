@@ -1,13 +1,13 @@
 --- AceConfigDialog-3.0 generates AceGUI-3.0 based windows based on option tables.
 -- @class file
 -- @name AceConfigDialog-3.0
--- @release $Id: AceConfigDialog-3.0.lua 1296 2022-11-04 18:50:10Z nevcairiel $
+-- @release $Id: AceConfigDialog-3.0.lua 1292 2022-09-29 08:00:11Z nevcairiel $
 
 local LibStub = LibStub
 local gui = LibStub("AceGUI-3.0")
 local reg = LibStub("AceConfigRegistry-3.0")
 
-local MAJOR, MINOR = "AceConfigDialog-3.0", 86
+local MAJOR, MINOR = "AceConfigDialog-3.0", 85
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -147,7 +147,6 @@ local stringIsLiteral = {
 	width = true,
 	image = true,
 	fontSize = true,
-	tooltipHyperlink = true
 }
 
 --Is Never a function or method
@@ -502,14 +501,6 @@ local function OptionOnMouseOver(widget, event)
 	local tooltip = AceConfigDialog.tooltip
 
 	tooltip:SetOwner(widget.frame, "ANCHOR_TOPRIGHT")
-
-	local tooltipHyperlink = GetOptionsMemberValue("tooltipHyperlink", opt, options, path, appName)
-	if tooltipHyperlink then
-		tooltip:SetHyperlink(tooltipHyperlink)
-		tooltip:Show()
-		return
-	end
-
 	local name = GetOptionsMemberValue("name", opt, options, path, appName)
 	local desc = GetOptionsMemberValue("desc", opt, options, path, appName)
 	local usage = GetOptionsMemberValue("usage", opt, options, path, appName)
@@ -1141,8 +1132,10 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 				local control
 
 				if v.type == "execute" then
+
 					local imageCoords = GetOptionsMemberValue("imageCoords",v, options, path, appName)
-					local image, width, height = GetOptionsMemberValue("image", v, options, path, appName)
+					local image, width, height = GetOptionsMemberValue("image",v, options, path, appName)
+
 					local iconControl = type(image) == "string" or type(image) == "number"
 					control = CreateControl(v.dialogControl or v.control, iconControl and "Icon" or "Button")
 					if iconControl then
@@ -1168,7 +1161,8 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					else
 						control:SetText(name)
 					end
-					
+					control:SetCallback("OnClick",ActivateControl)
+
 				elseif v.type == "input" then
 					control = CreateControl(v.dialogControl or v.control, v.multiline and "MultiLineEditBox" or "EditBox")
 
@@ -1182,6 +1176,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						text = ""
 					end
 					control:SetText(text)
+
 				elseif v.type == "toggle" then
 					control = CreateControl(v.dialogControl or v.control, "CheckBox")
 					control:SetLabel(name)
@@ -1445,6 +1440,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						local disabled = CheckOptionDisabled(v, options, path, appName)
 						control:SetDisabled(disabled)
 					end
+
 					InjectInfo(control, options, v, path, rootframe, appName)
 					container:AddChild(control)
 				end

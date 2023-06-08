@@ -916,14 +916,11 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
         type = "execute",
         order = 1,
         func = function(info, val)
-        local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
-        warning:Show()
-        warning.acceptButton:SetCallback("OnClick", function()  
-            print("TO DO REMOVE ALL ACTIVE PRIMARY AND SECONDARY WATCHERS HERE")
-            warning:Hide()
-        end)
-        warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
-        end,
+          local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+          warning:Show()
+          warning.acceptButton:SetCallback("OnClick", function() warning:Hide() end)
+          warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+          end,
       }
     }
   }
