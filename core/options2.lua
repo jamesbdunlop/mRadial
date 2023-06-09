@@ -810,7 +810,7 @@ function mRadial:OptionsPane()
   optionsPane:SetCallback("OnClose", function(widget)
     MRadialSavedVariables["moveable"] = false
     mRadial.SetUIMovable(false)
-    mRadial:UpdateUI(true)
+    mRadial:UpdateUI(false)
     AceGUI:Release(widget) end)
   MR_configDialog:SetDefaultSize(appName, 800, 600)
   MR_configDialog:Open(appName, optionsPane)
@@ -905,27 +905,29 @@ end
 function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   local widgetArgs = {}
   
-  local resetGrp = {
-    name = "",
-    type = "group",
-    inline = true,
-    order = 2,
-    args = {
-      reset = {
-        name = "Reset",
-        type = "execute",
-        order = 1,
-        func = function(info, val)
-          local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
-          warning:Show()
-          warning.acceptButton:SetCallback("OnClick", function() warning:Hide() end)
-          warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
-          end,
-      }
-    }
-  }
+  -- local resetGrp = {
+  --   name = "",
+  --   type = "group",
+  --   inline = true,
+  --   order = 2,
+  --   args = {
+  --     reset = {
+  --       name = "Reset",
+  --       type = "execute",
+  --       order = 1,
+  --       func = function(info, val)
+  --         local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+  --         warning:Show()
+  --         warning.acceptButton:SetCallback("OnClick", function() 
+            
+  --           warning:Hide() end)
+  --         warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+  --         end,
+  --     }
+  --   }
+  -- }
 
-  table.insert(widgetArgs, resetGrp)
+  -- table.insert(widgetArgs, resetGrp)
 
   ----- SPELL LIST
   if hidePassive == nil then hidePassive = false end

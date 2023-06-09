@@ -697,7 +697,7 @@ function mRadial:CreatePetFrames()
                                                 UIParent,
                                                 "",
                                                 spellIcon,
-                                                "OVERLAY",
+                                                "ARTWORK",
                                                 "Interface/BUTTONS/UI-QuickslotRed",
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
@@ -726,6 +726,7 @@ function mRadial:CreatePetFrames()
                 end
             end)
             MR_PETFAMES[#MR_PETFAMES+1] = frame
+            MR_ALLFRAMES[frameName] = frame
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             mRadial:ShowFrame(MR_ALLFRAMES[frameName])
         end
@@ -963,7 +964,7 @@ function mRadial:UpdateActivePrimarySpells()
     -- Flush existing
     ACTIVEPRIMARYWATCHERS = {}
     mRadial:HideAllWatcherFrames()
-    for x=1, #MR_WATCHERFRAMES do
+    for x=1, #MR_WATCHERFRAMES   do
         -- -- Now we check for isActive (options toggles)
         local watcher = MR_WATCHERFRAMES[x]
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false

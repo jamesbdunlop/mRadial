@@ -6,7 +6,13 @@ a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
 \n https://github.com/jamesbdunlop/mRadial/wiki \n"
 
 MRADIAL_UPDATENOTES = " \
--- v0.4.01 --\n \
+---------- v0.4.3 --\n \
+\n Hiding the reset for spell selection buttons for now. \
+\n -- FIXES \
+\n - Pet frames no longer create multiples of. \
+\n - Pet frames on cooldown no longer solid red color. \
+\n\n \
+---------- v0.4.1 (and .2)--\n \
 This overhauls the options pane to use the Ace3ConfigTables. Wiki not yet updated to reflect these changes! \
 \n!!THIS IS A BIG OPTIONS UPDATE!! EXISTING OPTIONS SHOULD STILL WORK! How ever a few things of note here: \
 \nIf you find the spell icons have gone a bit crazy, this is most likely due to the autoSpread being turned ON by default now. The autospread option tries to make adding/removing spell watchers \

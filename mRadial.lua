@@ -1,10 +1,3 @@
----------------------------------------------------------------------
---- TO DO -----------------------------------------------------------
--- Update pet frames for other classes?
--- fix strata for movable stuff!
--- get parent working for sub parent frames!
--- fix missing movable on the subParent!
----------------------------------------------------------------------
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local appName = "MRadial"
@@ -90,7 +83,7 @@ function mRadial:UpdateUI(create)
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
     mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
-    ---------------------------------
+    ------------------------------
     -- SECONDARY SPELL RADIAL MENU
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
     local secondaryCurrentOrder = {}
