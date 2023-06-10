@@ -1,5 +1,7 @@
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
+local LSM = LibStub("LibSharedMedia-3.0")
+
 local appName = "mRadial"
 
 if MRadialSavedVariables == nil then
@@ -105,6 +107,28 @@ function mRadial:UpdateUI(create)
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
 end
 
+local MediaPath = {
+	font	= [[Interface\AddOns\mRadial\fonts\]],
+}
+
+local function AddMedia(Type, File, Name, CustomType, Mask)
+	local path = MediaPath[Type]
+	if path then
+		local key = File:gsub('%.%w-$','')
+		local file = path .. File
+		if Name then -- Register to LSM
+			local nameKey = (Name == true and key) or Name
+			if type(CustomType) == 'table' then
+				for _, name in ipairs(CustomType) do
+					LSM:Register(name, nameKey, file, Mask)
+				end
+			else
+				LSM:Register(CustomType or Type, nameKey, file, Mask)
+			end
+		end
+	end
+end
+
 local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
     type = "data source",
     text = "mRadialIcon",
@@ -133,6 +157,9 @@ function mRadial:OnInitialize()
     -- Register options table
     MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
     MR_configDialog:AddToBlizOptions(appName, "mRadial")
+    for x, fontName in ipairs(MR_FONTS) do
+        AddMedia('font', fontName..'.ttf', fontName)
+    end
 end
 
 function mRadial:OnEnable()

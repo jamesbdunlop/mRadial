@@ -111,8 +111,7 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)
     
-    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+    local customFontPath = MRadialSavedVariables['Font'] 
     frame.buffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.debuffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.countText:SetFont(customFontPath,  24, "THICKOUTLINE")
@@ -702,8 +701,7 @@ function mRadial:CreatePetFrames()
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
-            local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-            local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+            local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
             -- Custom death indicator
             
             ---
@@ -755,8 +753,7 @@ end
 function mRadial:SetPetFramePosAndSize()
     local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
-    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+    local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
 
     for _, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
@@ -784,8 +781,7 @@ end
 function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentFrame)
     -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
-    local cfontName = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-    local customFontPath = "Interface\\Addons\\mRadial\\fonts\\" .. cfontName
+    local customFontPath =  MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
     local radiusMult = MRadialSavedVariables.radiusMult or 1
     local radius = r * radiusMult
@@ -819,9 +815,9 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
         angleStep = (((watcherFrameSize+8)/(radius * (math.pi/180))) * (math.pi/180)) + spread *.1 
     end
     
-    -- if orderedWatchers == nil then
-    --     orderedWatchers = mRadial:UpdateActiveSpells()
-    -- end
+    if orderedWatchers == nil then
+        orderedWatchers = mRadial:UpdateActiveSpells()
+    end
     for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then
             mRadial:ShowFrame(watcher)

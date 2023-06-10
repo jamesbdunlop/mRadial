@@ -2,11 +2,13 @@ MRADIAL_ABOUT  = "Welcome to mRadial a little UI for tracking spell timers etc. 
 \nYou have a Primary and a Secondary radial frame to assign spells to watch to. These can be set to be clickable buttons as well if so desired. \
 \nWhy did I write this? Well I like to keep my focus on my character as much as possible and this addon helps keep the most important spells I want to track in  \
 a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
-\nFor more info please visit the wiki from the curseForge addon here:  \
-\nhttps://github.com/jamesbdunlop/mRadial/wiki \n"
+\nFor more info please visit the wiki via curseForge.  \
+\n \n"
 
 MRADIAL_UPDATENOTES = " \
 ---------- v0.4.5 --\n \
+\n-- IMPROVEMENTS \
+\n    - Fonts now use the Shared Media Lib. \
 \n-- FIXES \
 \n    - Lower level characters won't be presented with spells they don't yet know for selecting. \
 \n\n \
