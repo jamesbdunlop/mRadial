@@ -2,7 +2,7 @@
 
 ## Title: mRadial
 ## Notes: Little Radial Menu for team Decrepit
-## Version: 0.4.4
+## Version: 0.4.5
 ## Author: Macka - JBD
 ## eMail: james@anim8d.com
 
@@ -42,4 +42,4 @@ events\specChanged.lua
 # Shard tracker
 events\unitpowerupdate.lua 
 core\changelog.lua
-core\options2.lua
+core\options.lua

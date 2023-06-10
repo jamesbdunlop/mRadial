@@ -6,6 +6,10 @@ a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
 \nhttps://github.com/jamesbdunlop/mRadial/wiki \n"
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.5 --\n \
+\n-- FIXES \
+\n    - Lower level characters won't be presented with spells they don't yet know for selecting. \
+\n\n \
 ---------- v0.4.4 --\n \
 \n-- CHANGES \
 \n    - Removed the welcome message from chat frame. \
