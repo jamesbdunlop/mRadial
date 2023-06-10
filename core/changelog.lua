@@ -6,6 +6,10 @@ a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
 \n \n"
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.6 --\n \
+\n-- FIXES \
+\n    - Missing default font. \
+\n\n \
 ---------- v0.4.5 --\n \
 \n-- IMPROVEMENTS \
 \n    - Fonts now use the Shared Media Lib. \

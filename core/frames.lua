@@ -111,7 +111,7 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)
     
-    local customFontPath = MRadialSavedVariables['Font'] 
+    local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
     frame.buffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.debuffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.countText:SetFont(customFontPath,  24, "THICKOUTLINE")
