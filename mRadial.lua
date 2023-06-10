@@ -1,6 +1,6 @@
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
-local appName = "MRadial"
+local appName = "mRadial"
 
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
@@ -130,17 +130,12 @@ function mRadial:OnInitialize()
         end
     end)
     
+    -- Register options table
     MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
     MR_configDialog:AddToBlizOptions(appName, "mRadial")
 end
 
 function mRadial:OnEnable()
-    local playerName = UnitName("player")
-    print("----------------------")
-    print("Welcome " .. playerName .. " -- mRadial")
-    print("/mr slash commands are: move, lock, options")
-    print("----------------------")
-    
     local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or false
     if not hideMiniMapIcon then
         self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })
