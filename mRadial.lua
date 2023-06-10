@@ -1,13 +1,6 @@
----------------------------------------------------------------------
---- TO DO -----------------------------------------------------------
--- Update pet frames for other classes?
--- fix strata for movable stuff!
--- get parent working for sub parent frames!
--- fix missing movable on the subParent!
----------------------------------------------------------------------
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
-local appName = "MRadial"
+local appName = "mRadial"
 
 if MRadialSavedVariables == nil then
     MRadialSavedVariables = {}
@@ -90,7 +83,7 @@ function mRadial:UpdateUI(create)
     local widthDeform = MRadialSavedVariables.widthDeform or 1
     local heightDeform = MRadialSavedVariables.heightDeform or 1
     mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
-    ---------------------------------
+    ------------------------------
     -- SECONDARY SPELL RADIAL MENU
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
     local secondaryCurrentOrder = {}
@@ -137,17 +130,12 @@ function mRadial:OnInitialize()
         end
     end)
     
+    -- Register options table
     MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
     MR_configDialog:AddToBlizOptions(appName, "mRadial")
 end
 
 function mRadial:OnEnable()
-    local playerName = UnitName("player")
-    print("----------------------")
-    print("Welcome " .. playerName .. " -- mRadial")
-    print("/mr slash commands are: move, lock, options")
-    print("----------------------")
-    
     local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or false
     if not hideMiniMapIcon then
         self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })

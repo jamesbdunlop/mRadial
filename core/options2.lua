@@ -1,7 +1,7 @@
 local AceGUI = LibStub("AceGUI-3.0")
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
-local appName = "MRadial"
+local appName = "mRadial"
 
 ------------------------------------------------------------------------------------------
 -- OPTIONS CONFIG TABLE
@@ -802,25 +802,51 @@ MROptionsTable = {
 -- MAIN PANE
 function mRadial:OptionsPane()
   MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
-  -- Register options table
-  local optionsPane = AceGUI:Create("Frame")
-  optionsPane:SetLayout("Flow")
-  optionsPane:SetTitle("---mRadial---")
-  optionsPane:SetStatusText("Select options")
-  optionsPane:SetCallback("OnClose", function(widget)
-    MRadialSavedVariables["moveable"] = false
-    mRadial.SetUIMovable(false)
-    mRadial:UpdateUI(true)
-    AceGUI:Release(widget) end)
-  MR_configDialog:SetDefaultSize(appName, 800, 600)
-  MR_configDialog:Open(appName, optionsPane)
-
-  local hidePassive = MRadialSavedVariables["HidePassiveSpells"] or true
-  MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
-  MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
-  MROptionsTable.args.linkedSpellOptions.args = mRadial:linkedSpellPane()
-  
-  MRADIALOptionsPane = optionsPane
+  if UnitAffectingCombat("player") then
+    return
+  end
+  if MRADIALOptionsPane == nil then
+    -- Create the frame
+    MRADIALOptionsPane = AceGUI:Create("Frame")
+    MR_configDialog:SetDefaultSize(appName, 800, 600)
+    MR_configDialog:Open(appName, MRADIALOptionsPane)
+    MRADIALOptionsPane:SetLayout("Flow")
+    MRADIALOptionsPane:SetTitle("---".. appName .. "---")
+    MRADIALOptionsPane:SetCallback("OnClose", function(widget)
+        MRadialSavedVariables["moveable"] = false
+        mRadial.SetUIMovable(false)
+        mRadial:UpdateUI(false)
+        AceGUI:Release(widget) 
+    end)
+    MRADIALOptionsPane.frame:EnableMouse(true)
+    MRADIALOptionsPane.frame:SetMovable(true)
+    MRADIALOptionsPane.frame:SetScript("OnMouseDown", function(self, button)
+      if button == "LeftButton" then
+        MRADIALOptionsPane.frame:StartMoving()
+      end
+    end)
+    MRADIALOptionsPane.frame:SetScript("OnMouseUp", function(self, button)
+      MRADIALOptionsPane.frame:StopMovingOrSizing()
+      local self = MRADIALOptionsPane.frame.obj
+      local status = self.status or self.localstatus
+      status.width = MRADIALOptionsPane.frame:GetWidth()
+      status.height = MRADIALOptionsPane.frame:GetHeight()
+      status.top = MRADIALOptionsPane.frame:GetTop()
+      status.left = MRADIALOptionsPane.frame:GetLeft()
+      MRADIALOptionsPane:SetTitle("---".. appName .. "---")
+      MRADIALOptionsPane:SetStatusText("Select options")
+      AceGUI:ClearFocus()
+  end)
+    local hidePassive = MRadialSavedVariables["HidePassiveSpells"] or true
+    MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
+    MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
+    MROptionsTable.args.linkedSpellOptions.args = mRadial:linkedSpellPane()
+  else
+    MR_configDialog:Open(appName, MRADIALOptionsPane)
+    MRADIALOptionsPane:SetTitle("---".. appName .. "---")
+    MRADIALOptionsPane:SetStatusText("Select options")
+  end
+  MR_configRegistry:NotifyChange(appName)
 end
 
 function mRadial:PopUpDialog(title, labelText, w, h)
@@ -905,30 +931,29 @@ end
 function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   local widgetArgs = {}
   
-  local resetGrp = {
-    name = "",
-    type = "group",
-    inline = true,
-    order = 2,
-    args = {
-      reset = {
-        name = "Reset",
-        type = "execute",
-        order = 1,
-        func = function(info, val)
-        local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
-        warning:Show()
-        warning.acceptButton:SetCallback("OnClick", function()  
-            print("TO DO REMOVE ALL ACTIVE PRIMARY AND SECONDARY WATCHERS HERE")
-            warning:Hide()
-        end)
-        warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
-        end,
-      }
-    }
-  }
+  -- local resetGrp = {
+  --   name = "",
+  --   type = "group",
+  --   inline = true,
+  --   order = 2,
+  --   args = {
+  --     reset = {
+  --       name = "Reset",
+  --       type = "execute",
+  --       order = 1,
+  --       func = function(info, val)
+  --         local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+  --         warning:Show()
+  --         warning.acceptButton:SetCallback("OnClick", function() 
+            
+  --           warning:Hide() end)
+  --         warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+  --         end,
+  --     }
+  --   }
+  -- }
 
-  table.insert(widgetArgs, resetGrp)
+  -- table.insert(widgetArgs, resetGrp)
 
   ----- SPELL LIST
   if hidePassive == nil then hidePassive = false end
@@ -1143,7 +1168,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
             -- cleanup current dragged
             ClearCursor()
             refreshFunc(_, parentFrame)
-            mRadial:UpdateUI(true)
+            mRadial:UpdateUI(false)
         end
 
         if button == "RightButton" then
