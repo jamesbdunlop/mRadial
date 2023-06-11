@@ -1,8 +1,8 @@
 function mRadial:PLAYER_SPECIALIZATION_CHANGED(self, event, ...)
-    if self == "player" then
+    if event == "player" then
+        print("Player spec changed, updating mRadial spells now...")
         mRadial:HideAllWatcherFrames()
         mRadial:InitUI()
-        mRadial:UpdateUI(true)
     end
 end
 
