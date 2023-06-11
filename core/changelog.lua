@@ -6,6 +6,10 @@ a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
 \n \n"
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.7 --\n \
+\n-- FIXES \
+\n    - Spec swap changes being blocked by InCombatLockdown. Clearly I don't change specs often on my lock so this took a while to detect. \
+\n\n \
 ---------- v0.4.6 --\n \
 \n-- FIXES \
 \n    - Missing default font. \

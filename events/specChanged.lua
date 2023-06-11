@@ -1,7 +1,8 @@
-function mRadial:PLAYER_SPECIALIZATION_CHANGED(eventName, ...)
-    -- print("-----------PLAYER SPEC CHANGED!")
-    if not InCombatLockdown then
+function mRadial:PLAYER_SPECIALIZATION_CHANGED(self, event, ...)
+    if self == "player" then
+        mRadial:HideAllWatcherFrames()
         mRadial:InitUI()
+        mRadial:UpdateUI(true)
     end
 end
 
