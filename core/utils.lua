@@ -1,5 +1,4 @@
 local mRadial = mRadial
-local AceGUI = LibStub("AceGUI-3.0")
 
 function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
@@ -43,7 +42,7 @@ function mRadial:CheckHasSpell(spellName)
 end
 
 function mRadial:IsWarlock()
-    return UnitClass("player") == "Warlock"
+    return UnitClass("player") == GetClassInfo(9)
 end
 
 function mRadial:GetSpecName()

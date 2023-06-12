@@ -1,11 +1,8 @@
-MRADIAL_ABOUT  = "Welcome to mRadial a little UI for tracking spell timers etc.  \
-\nYou have a Primary and a Secondary radial frame to assign spells to watch to. These can be set to be clickable buttons as well if so desired. \
-\nWhy did I write this? Well I like to keep my focus on my character as much as possible and this addon helps keep the most important spells I want to track in  \
-a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
-\nFor more info please visit the wiki via curseForge.  \
-\n \n"
-
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.8 --\n \
+\n-- IMPROVEMENTS \
+\n    - Adds locales to the addon. English / German / Spanish. Translation via chatGPT so.... \
+\n\n \
 ---------- v0.4.7 --\n \
 \n-- FIXES \
 \n    - Spec swap changes being blocked by InCombatLockdown. Clearly I don't change specs often on my lock so this took a while to detect. \

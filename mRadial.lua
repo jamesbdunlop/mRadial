@@ -2,6 +2,8 @@ local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local LSM = LibStub("LibSharedMedia-3.0")
 
+mRadial.L = LibStub("AceLocale-3.0"):GetLocale("mRadial", false) or nil
+
 local appName = "mRadial"
 
 if MRadialSavedVariables == nil then
@@ -157,7 +159,7 @@ function mRadial:OnInitialize()
     -- Register options table
     MR_configRegistry:RegisterOptionsTable(appName, MROptionsTable, true)
     MR_configDialog:AddToBlizOptions(appName, "mRadial")
-    for x, fontName in ipairs(MR_FONTS) do
+    for _, fontName in ipairs(MR_FONTS) do
         AddMedia('font', fontName..'.ttf', fontName)
     end
 end
