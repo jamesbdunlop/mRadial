@@ -1,7 +1,9 @@
 MRADIAL_UPDATENOTES = " \
 ---------- v0.4.8 --\n \
 \n-- IMPROVEMENTS \
-\n    - Adds locales to the addon. English / German / Spanish. Translation via chatGPT so.... \
+\n    - Adds locales to the addon. English / German / Spanish / SpanishMX. Translation via chatGPT so.... \
+\n-- FIXES \
+\n    - Linked spells empty table issues for new chars. \
 \n\n \
 ---------- v0.4.7 --\n \
 \n-- FIXES \
