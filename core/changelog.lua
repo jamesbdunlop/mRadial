@@ -1,4 +1,8 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.8 --\n \
+\n-- IMPROVEMENTS \
+\n    - Adds locales to the addon. English and Spanish. Translation via chatGPT so.... \
+\n\n \
 ---------- v0.4.7 --\n \
 \n-- FIXES \
 \n    - Spec swap changes being blocked by InCombatLockdown. Clearly I don't change specs often on my lock so this took a while to detect. \

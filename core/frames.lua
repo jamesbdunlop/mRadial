@@ -501,7 +501,6 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         end
 
         local inRange = IsSpellInRange(spellName)
-        print(spellName, inRange)
         if inRange ~= nil and inRange == 0 then
             watcher.movetex:SetColorTexture(.1, .1, 0, .65)
             watcher.iconFrame:SetAlpha(.2)
