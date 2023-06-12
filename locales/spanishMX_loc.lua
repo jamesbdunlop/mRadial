@@ -1,5 +1,5 @@
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
-local L = AceLocale:NewLocale("mRadial", "esES");
+local L = AceLocale:NewLocale("mRadial", "esMX");
 if not L then return end
 
 L["Opt_GenericOptions_name"] = "Opciones Genéricas"

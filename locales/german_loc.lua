@@ -1,7 +1,6 @@
--- English localization file for enUS and enGB.
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
-local L = AceLocale:NewLocale("mRadial", "deDE", true, true);
-if not L then return; end
+local L = AceLocale:NewLocale("mRadial", "deDE");
+if not L then return end
 
 L["Opt_GenericOptions_name"] = "Allgemeine Optionen"
 L["Opt_GenericOptions_desc"] = "Diese gelten für die gesamte Benutzeroberfläche"
@@ -121,3 +120,19 @@ L["Opt_HideShardTracker_desc"] = "Zeige/Verberge das Splitter-Tracker-Fenster de
 L["Opt_RDY_name"] = "RDY"
 L["Opt_NOSSSTR_name"] = "N/A"
 L["Opt_OOR_name"] = "OOR"
+
+L["Opt_LinkedSpellsInfo_name"] = "Verknüpfte Zauber sind eine Möglichkeit, einen Buff mit einem Kernzauber zu verknüpfen. \
+\n z.B.: Wenn man Demonischer Schlag mit Dämonenkern verknüpft, wird ein Timer neben Demonischer Schlag gestartet, wenn Dämonenkern aktiviert wird, um das Timing der Zauber zu ermöglichen usw. \
+\n Anleitung: \
+\n Ziehe einen Zauber aus dem Zauberbuch in das linke Eingabefeld. Gib den Namen des Zaubers ein (oder ziehe ihn), um ihn mit dem verknüpften Zauber zu verbinden. Die Zauber-ID sollte automatisch ausgefüllt werden. \
+\n Hinweis: Quell-Zaubernamen sind eindeutig und können nur einmal verknüpft werden."
+
+L["Opt_LinkedSpellsLinkedTo_name"] = "verknüpft mit:"
+
+L["Opt_LinkedSpellsRemove_name"] = "Entfernen"
+
+L["Opt_LinkedSpellsPane_name"] = "Verknüpfte Zauber (Buffs):"
+
+L["Opt_LinkedSpellsAdd_name"] = "Hinzufügen"
+
+L["Opt_LinkedSpellsGrp_name"] = "Verknüpfte Zauber"

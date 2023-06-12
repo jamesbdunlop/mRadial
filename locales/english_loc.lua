@@ -1,7 +1,7 @@
 -- English localization file for enUS and enGB.
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
-local L = AceLocale:NewLocale("mRadial", "enUS", true, true);
-if not L then return; end
+local L = AceLocale:NewLocale("mRadial", "enUS");
+if not L then return end
 
 L["Opt_GenericOptions_name"] = "Generic Options"
 L["Opt_GenericOptions_desc"] = "These apply to the entire UI"
@@ -122,3 +122,16 @@ L["Opt_HideShardTracker_desc"] = "Show/Hide the warlock shard tracker frame."
 L["Opt_RDY_name"] = "RDY"
 L["Opt_NOSSSTR_name"] = "N/A"
 L["Opt_OOR_name"] = "OOR"
+
+L["Opt_LinkedSpellsInfo_name"] = "Linked spells are a way for you to link a buff to a core spell. \
+\n eg: Linking DemonBolt to Demonic Core, will start a timer next to DemonBolt when DC procs to allow for timing of casts etc. \
+\n HowTo: \
+\n Drag and drop a spell from the spell book into the left hand input. Type a name of the spell (or drag it) onto the linked spell input. The spellID should populate automatically. \
+\n Note: Src spellNames are unique, and can only link once."
+
+L["Opt_LinkedSpellsLinkedTo_name"] = "linked to:"
+L["Opt_LinkedSpellsRemove_name"] = "Remove"
+
+L["Opt_LinkedSpellsPane_name"] = "Linked Spell (Buffs): "
+L["Opt_LinkedSpellsAdd_name"] = "Add"
+L["Opt_LinkedSpellsGrp_name"] = "Linked Spells"

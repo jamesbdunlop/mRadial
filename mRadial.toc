@@ -19,11 +19,12 @@
 ## IconTexture: Interface\AddOns\mRadial\media\miniMapIcon.blp
 
 embeds.xml 
-addon.lua
-
 locales\english_loc.lua
 locales\spanish_loc.lua
+locales\spanishMX_loc.lua
 locales\german_loc.lua
+
+addon.lua
 
 core\timers.lua
 core\constants.lua

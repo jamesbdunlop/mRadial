@@ -2,8 +2,6 @@ local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local LSM = LibStub("LibSharedMedia-3.0")
 
-mRadial.L = LibStub("AceLocale-3.0"):GetLocale("mRadial", false) or nil
-
 local appName = "mRadial"
 
 if MRadialSavedVariables == nil then

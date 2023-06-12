@@ -2,8 +2,10 @@ local AceGUI = LibStub("AceGUI-3.0")
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local LSM = LibStub("LibSharedMedia-3.0")
+
 local appName = "mRadial"
-mRadial.L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
+
+local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
 ------------------------------------------------------------------------------------------
 -- OPTIONS CONFIG TABLE
@@ -12,14 +14,14 @@ MROptionsTable = {
     childGroups = "tree",
     args = {
       header = {
-        name = mRadial.L["Opt_GenericOptions_name"],
-        desc = mRadial.L["Opt_GenericOptions_desc"],
+        name = L["Opt_GenericOptions_name"],
+        desc = L["Opt_GenericOptions_desc"],
         type = "header",
         order = 1,
       }, 
       configMode = {
-        name = mRadial.L["Opt_ConfigMode_name"],
-        desc = mRadial.L["Opt_ConfigMode_desc"],
+        name = L["Opt_ConfigMode_name"],
+        desc = L["Opt_ConfigMode_desc"],
         type = "toggle",
         set = function(info, val)
           MRadialSavedVariables["moveable"] = val 
@@ -30,16 +32,16 @@ MROptionsTable = {
         order = 2,
       },
       hideOutOfCombat = {
-        name = mRadial.L["Opt_HideOutOfCombat_name"],
-        desc = mRadial.L["Opt_HideOutOfCombat_desc"],
+        name = L["Opt_HideOutOfCombat_name"],
+        desc = L["Opt_HideOutOfCombat_desc"],
         type = "toggle",
         set = function(info, val) MRadialSavedVariables["hideooc"] = val end,
         get = function(info) return MRadialSavedVariables["hideooc"] end,
         order = 3,
       }, 
       hideminimap = {
-        name = mRadial.L["Opt_HideMiniMapIcon_name"],
-        desc = mRadial.L["Opt_HideMiniMapIcon_desc"],
+        name = L["Opt_HideMiniMapIcon_name"],
+        desc = L["Opt_HideMiniMapIcon_desc"],
         type = "toggle",
         set = function(info,val) MRadialSavedVariables["hideMiniMapIcon"] = val end,
         get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] end,
@@ -52,18 +54,18 @@ MROptionsTable = {
         order=1,
         args={
           faqHdr = {
-            name = mRadial.L["Opt_ABOUT_name"],
+            name = L["Opt_ABOUT_name"],
             type = "header",
             dialogControl = "SFX-Header-II",
             order = 1
           },
           fagDesc = {
-            name = mRadial.L["Opt_ABOUT_desc"],
+            name = L["Opt_ABOUT_desc"],
             type = "description",
             order = 2
           },
           changeLogHdr = {
-            name = mRadial.L["Opt_CHANGELOG_name"],
+            name = L["Opt_CHANGELOG_name"],
             type = "header",
             dialogControl = "SFX-Header-II",
             order = 3
@@ -77,20 +79,20 @@ MROptionsTable = {
       },
       
       iconOptions={
-        name = mRadial.L["Opt_RadialIcons_name"],
+        name = L["Opt_RadialIcons_name"],
         type = "group",
-        desc = mRadial.L["Opt_RadialIcons_desc"],
+        desc = L["Opt_RadialIcons_desc"],
         childGroups = "tab",
         order=2,
         args={
           header = {
-            name = mRadial.L["Opt_BaseIconOptions_name"],
+            name = L["Opt_BaseIconOptions_name"],
             desc = "",
             type = "header",
             order = 1,
           }, 
           desc = {
-            name = mRadial.L["Opt_BaseIconOptions_desc"],
+            name = L["Opt_BaseIconOptions_desc"],
             type = "description",
             order = 2,
           },
@@ -100,8 +102,8 @@ MROptionsTable = {
             inline = true,
             args = {
               autospread = {
-                name = mRadial.L["Opt_AutoSpread_name"],
-                desc = mRadial.L["Opt_AutoSpread_desc"],
+                name = L["Opt_AutoSpread_name"],
+                desc = L["Opt_AutoSpread_desc"],
                 type = "toggle",
                 default = true,
                 set = function(info,val)
@@ -112,8 +114,8 @@ MROptionsTable = {
                 order = 3,
               },
               asbuttons = {
-                  name = mRadial.L["Opt_AsButtons_name"],
-                  desc = mRadial.L["Opt_AsButtons_desc"],
+                  name = L["Opt_AsButtons_name"],
+                  desc = L["Opt_AsButtons_desc"],
                   type = "toggle",
                   set = function(info,val)
                     MRadialSavedVariables["asbuttons"] = val 
@@ -125,13 +127,13 @@ MROptionsTable = {
           },
           
           DimensionOptions={
-            name = mRadial.L["Opt_Dimensions_name"],
+            name = L["Opt_Dimensions_name"],
             type = "group",
             childGroups = "tab",
             args={
               radiusMult = {
-                name = mRadial.L["Opt_AsButtons_name"],
-                desc = mRadial.L["Opt_RadiusMultiplyer_desc"],
+                name = L["Opt_AsButtons_name"],
+                desc = L["Opt_RadiusMultiplyer_desc"],
                 type = "range",
                 min = .1,
                 max = 2,
@@ -145,8 +147,8 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["radiusMult"] end,
               },
               iconSize = {
-                name = mRadial.L["Opt_SpellIconSize_name"],
-                desc = mRadial.L["Opt_SpellIconSize_desc"],
+                name = L["Opt_SpellIconSize_name"],
+                desc = L["Opt_SpellIconSize_desc"],
                 type = "range",
                 min = 1,
                 max = 200,
@@ -160,12 +162,12 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["watcherFrameSize"] end,
               },
               Radial01 = {
-                name = mRadial.L["Opt_Primary_name"],
+                name = L["Opt_Primary_name"],
                 type = "group",
                 args = {
                   radius = {
-                    name = mRadial.L["Opt_Radius_name"],
-                    desc = mRadial.L["Opt_Radius_desc"],
+                    name = L["Opt_Radius_name"],
+                    desc = L["Opt_Radius_desc"],
                     type = "range",
                     order = 1,
                     min = 50,
@@ -180,8 +182,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["radius"] end,
                   },
                   spread = {
-                    name = mRadial.L["Opt_Spread_name"],
-                    desc = mRadial.L["Opt_Spread_desc"],
+                    name = L["Opt_Spread_name"],
+                    desc = L["Opt_Spread_desc"],
                     type = "range",
                     order = 2, 
                     min = -40,
@@ -196,8 +198,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["watcherFrameSpread"] end,
                   },
                   offset = {
-                    name = mRadial.L["Opt_Offset_name"],
-                    desc = mRadial.L["Opt_Offset_desc"],
+                    name = L["Opt_Offset_name"],
+                    desc = L["Opt_Offset_desc"],
                     type = "range",
                     order = 3, 
                     min = 0,
@@ -212,8 +214,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["offset"] end,
                   },
                   width = {
-                    name = mRadial.L["Opt_WidthAdjust_name"],
-                    desc = mRadial.L["Opt_WidthAdjust_desc"],
+                    name = L["Opt_WidthAdjust_name"],
+                    desc = L["Opt_WidthAdjust_desc"],
                     type = "range",
                     order = 4, 
                     min = 0.1,
@@ -228,8 +230,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["widthDeform"] end,
                   },
                   height = {
-                    name = mRadial.L["Opt_HeightAdjust_name"],
-                    desc = mRadial.L["Opt_HeightAdjust_desc"],
+                    name = L["Opt_HeightAdjust_name"],
+                    desc = L["Opt_HeightAdjust_desc"],
                     type = "range",
                     order = 5, 
                     min = 0.1,
@@ -251,8 +253,8 @@ MROptionsTable = {
                 type = "group",
                 args = {
                   radius = {
-                    name = mRadial.L["Opt_Radius_name"],
-                    desc = mRadial.L["Opt_Radius_desc"],
+                    name = L["Opt_Radius_name"],
+                    desc = L["Opt_Radius_desc"],
                     type = "range",
                     order = 1,
                     min = 50,
@@ -267,8 +269,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["radius2"] end,
                   },
                   spread = {
-                    name = mRadial.L["Opt_Spread_name"],
-                    desc = mRadial.L["Opt_Spread_desc"],
+                    name = L["Opt_Spread_name"],
+                    desc = L["Opt_Spread_desc"],
                     type = "range",
                     order = 2, 
                     min = -40,
@@ -283,8 +285,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["watcherFrameSpread2"] end,
                   },
                   offset = {
-                    name = mRadial.L["Opt_Offset_name"],
-                    desc = mRadial.L["Opt_Offset_desc"],
+                    name = L["Opt_Offset_name"],
+                    desc = L["Opt_Offset_desc"],
                     type = "range",
                     order = 3, 
                     min = 0,
@@ -299,8 +301,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["offset2"] end,
                   },
                   width = {
-                    name = mRadial.L["Opt_WidthAdjust_name"],
-                    desc = mRadial.L["Opt_WidthAdjust_desc"],
+                    name = L["Opt_WidthAdjust_name"],
+                    desc = L["Opt_WidthAdjust_desc"],
                     type = "range",
                     order = 4, 
                     min = 0.1,
@@ -315,8 +317,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["widthDeform2"] end,
                   },
                   height = {
-                    name = mRadial.L["Opt_HeightAdjust_name"],
-                    desc = mRadial.L["Opt_HeightAdjust_desc"],
+                    name = L["Opt_HeightAdjust_name"],
+                    desc = L["Opt_HeightAdjust_desc"],
                     type = "range",
                     order = 5, 
                     min = 0.1,
@@ -338,11 +340,11 @@ MROptionsTable = {
           },
         
           fontOptions={
-            name = mRadial.L["Opt_Text_name"],
+            name = L["Opt_Text_name"],
             type = "group",
             args={
               fontSelection = {
-                name = mRadial.L["Opt_Font_name"],
+                name = L["Opt_Font_name"],
                 type = "select",
                 style = "dropdown",
                 order = 1, 
@@ -365,8 +367,8 @@ MROptionsTable = {
                   end,
               },
               globalFontSize = {
-                name = mRadial.L["Opt_GlobalFont%_name"],
-                desc = mRadial.L["Opt_GlobalFont%_desc"],
+                name = L["Opt_GlobalFont%_name"],
+                desc = L["Opt_GlobalFont%_desc"],
                 type = "range",
                 order = 2,
                 min = .1,
@@ -381,14 +383,14 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["FontPercentage"] end,
               },
               fontSliderGrp = {
-                name = mRadial.L["Opt_FontSizeOverrides_name"],
+                name = L["Opt_FontSizeOverrides_name"],
                 type = "group",
                 inline = true,
                 order = 2.5,
                 args = {
                   countFontSize = {
-                    name = mRadial.L["Opt_count_name"],
-                    desc = mRadial.L["Opt_DEFAULT2_desc"],
+                    name = L["Opt_count_name"],
+                    desc = L["Opt_DEFAULT2_desc"],
                     type = "range",
                     order = 1,
                     min = 2,
@@ -403,8 +405,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["countFontSize"] end,
                   },
                   readyFontSize = {
-                    name = mRadial.L["Opt_ready_name"],
-                    desc = mRadial.L["Opt_DEFAULT2_desc"],
+                    name = L["Opt_ready_name"],
+                    desc = L["Opt_DEFAULT2_desc"],
                     type = "range",
                     order = 2,
                     min = 2,
@@ -419,8 +421,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["readyFontSize"] end,
                   },
                   coolDownFontSize = {
-                    name = mRadial.L["Opt_CoolDown_name"],
-                    desc = mRadial.L["Opt_DEFAULT2_desc"],
+                    name = L["Opt_CoolDown_name"],
+                    desc = L["Opt_DEFAULT2_desc"],
                     type = "range",
                     order = 3,
                     min = 2,
@@ -435,8 +437,8 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["coolDownFontSize"] end,
                   },
                   timerFontSize = {
-                    name = mRadial.L["Opt_timer_name"],
-                    desc = mRadial.L["Opt_DEFAULT2_desc"],
+                    name = L["Opt_timer_name"],
+                    desc = L["Opt_DEFAULT2_desc"],
                     type = "range",
                     order = 4,
                     min = 2,
@@ -453,13 +455,13 @@ MROptionsTable = {
                 }
               },
               fontAdjustWarning = {
-                name = mRadial.L["Opt_fontAdjustWarning_name"],
+                name = L["Opt_fontAdjustWarning_name"],
                 desc = "",
                 type = "header",
                 order = 3,
               },
               buffGrp = {
-                name =  mRadial.L["Opt_linked_name"],
+                name =  L["Opt_linked_name"],
                 type = "group",
                 inline = true,
                 order = 4,
@@ -499,7 +501,7 @@ MROptionsTable = {
                 }
               },
               cooldownGrp = {
-                name = mRadial.L["Opt_CoolDown_name"],
+                name = L["Opt_CoolDown_name"],
                 type = "group",
                 inline = true,
                 order = 4,
@@ -539,7 +541,7 @@ MROptionsTable = {
                 }
               },
               readyGrp = {
-                name = mRadial.L["Opt_ready_name"],
+                name = L["Opt_ready_name"],
                 type = "group",
                 inline = true,
                 order = 4,
@@ -579,7 +581,7 @@ MROptionsTable = {
                 }
               },
               countGrp = {
-                name = mRadial.L["Opt_count_name"],
+                name = L["Opt_count_name"],
                 type = "group",
                 inline = true,
                 order = 4,
@@ -625,19 +627,19 @@ MROptionsTable = {
       },
 
       spellOptions={
-        name = mRadial.L["Opt_radialSpells_desc"],
+        name = L["Opt_radialSpells_desc"],
         desc = "",
         type = "group",
         childGroups = "tab",
         layout = "Flow",
         args = {
           fagDesc = {
-            name = mRadial.L["Opt_fagDesc_desc"],
+            name = L["Opt_fagDesc_desc"],
             type = "description",
             order = 1
           },
           hidePassive = {
-            name = mRadial.L["Opt_hidePassiveSpells_name"],
+            name = L["Opt_hidePassiveSpells_name"],
             type = "toggle",
             order = 2,
             defaultValue = true,
@@ -649,28 +651,28 @@ MROptionsTable = {
             get = function(info) return MRadialSavedVariables["HidePassiveSpells"] end,
           },
           changePrimaryOrder = {
-            name = mRadial.L["Opt_primarySpellOrder_name"],
+            name = L["Opt_primarySpellOrder_name"],
             type = "execute",
             func = function(info, value)
               mRadial:BuildPrimarySpellOrder(true)
             end,
           },
           changeSecondaryOrder = {
-            name = mRadial.L["Opt_secondarySpellOrder_name"],
+            name = L["Opt_secondarySpellOrder_name"],
             type = "execute",
             func = function(info, value)
               mRadial:BuildSecondarySpellOrder(true)
             end,
           },
           primarySpells = {
-            name = mRadial.L["Opt_primarySpells_name"],
+            name = L["Opt_primarySpells_name"],
             type = "group",
             order=3,
             layout = "Flow",
             args = {}
           },
           secondarySpells = {
-            name = mRadial.L["Opt_secondarySpells_name"],
+            name = L["Opt_secondarySpells_name"],
             type = "group",
             order=4,
             args = {}
@@ -680,25 +682,25 @@ MROptionsTable = {
       },
 
       linkedSpellOptions={
-        name = mRadial.L["Opt_linkedSpells_name"],
+        name = L["Opt_linkedSpells_name"],
         type = "group",
         args={},
         order=4
       },
 
       warlockSpellOptions={
-        name = mRadial.L["Opt_warlock_name"],
+        name = L["Opt_warlock_name"],
         type = "group",
         args={
           pet ={
-            name = mRadial.L["Opt_PetFrames_name"],
+            name = L["Opt_PetFrames_name"],
             type = "group",
             inline = "true",
             order = 1,
             args = {
               hidePetFrames = {
-                name = mRadial.L["Opt_HidePetFrames_name"],
-                desc = mRadial.L["Opt_HidePetFrames_desc"],
+                name = L["Opt_HidePetFrames_name"],
+                desc = L["Opt_HidePetFrames_desc"],
                 type = "toggle",
                 order = 1,
                 defaultValue = false,
@@ -709,8 +711,8 @@ MROptionsTable = {
                 get = function(info) return MRadialSavedVariables["hidePetFrame"] end,
               },
               iconSize = {
-                name = mRadial.L["Opt_IconSize_name"],
-                desc = mRadial.L["Opt_IconSize_desc"],
+                name = L["Opt_IconSize_name"],
+                desc = L["Opt_IconSize_desc"],
                 type = "range",
                 order = 2,
                 min = 1,
@@ -726,14 +728,14 @@ MROptionsTable = {
             }
           },
           shards ={
-            name = mRadial.L["Opt_ShardFrames_name"],
+            name = L["Opt_ShardFrames_name"],
             type = "group",
             inline = "true",
             order = 2,
             args = {
               outOfShardsFrameSize = {
-                name = mRadial.L["Opt_OutOfShardsFrameSize_name"],
-                desc = mRadial.L["Opt_OutOfShardsFrameSize_desc"],
+                name = L["Opt_OutOfShardsFrameSize_name"],
+                desc = L["Opt_OutOfShardsFrameSize_desc"],
                 type = "range",
                 order = 1,
                 min = 10,
@@ -748,8 +750,8 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["shardOutOfFrameSize"] end,
               },
               shardFrameSize = {
-                name = mRadial.L["Opt_ShardTrackerFrameSize_name"],
-                desc = mRadial.L["Opt_ShardTrackerFrameSize_desc"],
+                name = L["Opt_ShardTrackerFrameSize_name"],
+                desc = L["Opt_ShardTrackerFrameSize_desc"],
                 type = "range",
                 order = 2,
                 min = 10,
@@ -764,8 +766,8 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["shardTrackerFrameSize"] end,
               },
               shardFrameTransparency = {
-                name = mRadial.L["Opt_ShardTrackerTrans_name"],
-                desc = mRadial.L["Opt_ShardTrackerTrans_desc"],
+                name = L["Opt_ShardTrackerTrans_name"],
+                desc = L["Opt_ShardTrackerTrans_desc"],
                 type = "range",
                 order = 3,
                 min = 0,
@@ -780,8 +782,8 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["shardFrameTransparency"] end,
               },
               hideShardFrame = {
-                name = mRadial.L["Opt_HideShardTracker_name"],
-                desc = mRadial.L["Opt_HideShardTracker_desc"],
+                name = L["Opt_HideShardTracker_name"],
+                desc = L["Opt_HideShardTracker_desc"],
                 type = "toggle",
                 order = 1,
                 defaultValue = false,
@@ -1284,7 +1286,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         end,
       },
       linkedSpellName ={
-        name = "linkedTo",
+        name = L["Opt_LinkedSpellsLinkedTo_name"],
         order = 2,
         type = "input",
         defaultValue = destName,
@@ -1347,7 +1349,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         end,
       },
       removeLinkedSpell = {
-        name = "Remove",
+        name = L["Opt_LinkedSpellsRemove_name"],
         type = "execute",
         order = 4,
         width = "half",
@@ -1372,18 +1374,18 @@ function mRadial:linkedSpellPane()
   local linkedStuff = {}
   -- Boilerplate for a linked layout
   local linkedGroup = {
-    name = "Linked Spell (Buffs): ",
+    name = L["Opt_LinkedSpellsPane_name"],
     type = "group",
     inline = true,
     layout = "List",
     args = {
         info = {
-          name = "Linked spells are a way for you to link a buff to a core spell. \n eg: Linking DemonBolt to Demonic Core, will start a timer next to DemonBolt when DC procs to allow for timing of casts etc. \n HowTo: \n Drag and drop a spell from the spell book into the left hand input. Type a name of the spell (or drag it) onto the linked spell input. The spellID should populate automatically. \n Note: Src spellNames are unique, and can only link once.",
+          name = L["Opt_LinkedSpellsInfo_name"],
           type = "description",
           order = 1,
         },
         add = {
-          name = "Add",
+          name = L["Opt_LinkedSpellsAdd_name"],
           type = "execute",
           order = 2,
           func = function()
@@ -1393,7 +1395,7 @@ function mRadial:linkedSpellPane()
           end,
         },
         linkedGroup ={
-          name = "Linked Spells",
+          name = L["Opt_LinkedSpellsGrp_name"],
           type = "group",
           inline = true,
           order = 3,
