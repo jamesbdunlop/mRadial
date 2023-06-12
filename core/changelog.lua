@@ -1,7 +1,7 @@
 MRADIAL_UPDATENOTES = " \
 ---------- v0.4.8 --\n \
 \n-- IMPROVEMENTS \
-\n    - Adds locales to the addon. English and Spanish. Translation via chatGPT so.... \
+\n    - Adds locales to the addon. English / German / Spanish. Translation via chatGPT so.... \
 \n\n \
 ---------- v0.4.7 --\n \
 \n-- FIXES \
