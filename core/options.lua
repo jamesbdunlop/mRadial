@@ -1264,6 +1264,10 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         order = 1,
         set = function(info, droppedSpellName)
             local current = MRadialSavedVariables["LINKEDSPELLS"]
+            if current == nil then
+              MRadialSavedVariables["LINKEDSPELLS"] = {}
+              current = MRadialSavedVariables["LINKEDSPELLS"]
+            end
             for srcSpellName, _ in pairs(current) do
               if srcSpellName == spellName then
                 return
