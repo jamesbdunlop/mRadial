@@ -1,12 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 ----GENERAL CRAP
 ---------------------------------------------------------------------------------------------------
+local appName = "mRadial"
+mRadial.L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
+
 ROOTICONPATH ="Interface/ICONS"
 MEDIAPATH = "Interface\\AddOns\\mRadial\\media"
 MAINFRAME_ISMOVING = false
-READYSTR = "RDY"
-NOSSSTR = "N/A"
-READYTEXT = "RDY"
+READYSTR = mRadial.L["Opt_RDY_name"]
+NOSSSTR = mRadial.L["Opt_NOSSSTR_name"]
+READYTEXT = mRadial.L["Opt_RDY_name"]
+OORTEXT = mRadial.L["Opt_OOR_name"]
+
 GCD = 1 --w as 1.5
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
@@ -27,8 +32,6 @@ MAINBG_FRAMENAME = "mRadialOutOfShardsFrame"
 PRIMARY_FRAMENAME = "mRadialPrimaryFrame"
 SECONDARY_FRAMENAME = "mRadialSecondaryFrame"
 SHARD_FRAMENAME = "MWShardFrame"
----------------------------------------------------------------------------------------------------
-----SPELL INFO - HARD CODED FOR NOW CAUSE I DO NOT WANT TO HAVE TO SETUP OPTIONS FOR TRACKING SELECTIONS YET
 ---------------------------------------------------------------------------------------------------
 -- WARLOCK
 POWERSIPHON_SPELLNAME = "Power Siphon"

@@ -21,6 +21,9 @@
 embeds.xml 
 addon.lua
 
+locales\english_ui.lua
+locales\spanish_ui.lua
+
 core\timers.lua
 core\constants.lua
 core\utils.lua

@@ -454,7 +454,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             mRadial:HideFrame(watcher.aura)
         end
 
-        -- TOTEM WATCHING FOR ZEN
+        -- TOTEM WATCHING
         for slot = 1, 4 do
             local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
             if haveTotem and totemName == spellName then
@@ -501,10 +501,11 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         end
 
         local inRange = IsSpellInRange(spellName)
+        print(spellName, inRange)
         if inRange ~= nil and inRange == 0 then
             watcher.movetex:SetColorTexture(.1, .1, 0, .65)
             watcher.iconFrame:SetAlpha(.2)
-            watcher.readyText:SetText("OOR")
+            watcher.readyText:SetText(OORTEXT)
         else
             watcher.movetex:SetColorTexture(0, 0, 0, 0)
             watcher.iconFrame:SetAlpha(1)
