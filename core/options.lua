@@ -648,7 +648,10 @@ MROptionsTable = {
               MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", val)
               MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", val)
             end,
-            get = function(info) return MRadialSavedVariables["HidePassiveSpells"] end,
+            get = function()
+              local hide = MRadialSavedVariables["HidePassiveSpells"]
+              if hide == nil then hide = true end
+              return hide end,
           },
           changePrimaryOrder = {
             name = L["Opt_primarySpellOrder_name"],
@@ -1018,7 +1021,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
             MRadialSavedVariables[isactiveSpellName] = value
             mRadial:UpdateUI(true)
             -- Sync the checkboxes so we don't have them sharing selected spells.
-            if isActiveSavedVarStr == "isActive" then
+            if asPrimary then
               MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
             else
               MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
@@ -1035,17 +1038,13 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   -- PASSIVE
   if not hidePassive then
       for idx, passiveSpellData in ipairs(passiveSpells) do
-          local parentWdg, spellName, desc, isactiveSpellName, defaultValue, updateUI, descAsTT, spellID = unpack(passiveSpellData)
+          local spellName, desc, isactiveSpellName, defaultValue, spellID = unpack(passiveSpellData)
           local iconPath
           if spellID ~= nil then
-              if IsPassiveSpell(spellID) then
-                  desc = "PASSIVE ABILITY"
-              end
-              
-              _, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
+            _, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
           end
           local spellsCbxs = {
-              name = spellName .. "-(PASSIVE)",
+              name = spellName .. "-PASSIVE",
               descp = desc,
               defaultValue = defaultValue,
               type = "toggle",
@@ -1053,13 +1052,14 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
               image = iconPath,
               set = function(info, value) 
                   MRadialSavedVariables[isactiveSpellName] = value
-                  mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
-                  mRadial:BuildPrimarySpellOrder(false)
-                  mRadial:BuildSecondarySpellOrder(false)
-                  mRadial:UpdateUI(true)
+                  if asPrimary then
+                    MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
+                  else
+                    MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
+                  end
               end,
               get = function(info) 
-                return MRadialSavedVariables[isactive]
+                return MRadialSavedVariables[isactiveSpellName]
               end,
           }
           table.insert(widgetArgs, spellsCbxs)

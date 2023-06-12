@@ -1,4 +1,10 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.9 --\n \
+\n-- IMPROVEMENTS \
+\n    - Options now updates correctly with spec changes. \
+\n-- FIXES \
+\n    - Bug in passive spells showing wrong table entries. \
+\n\n \
 ---------- v0.4.8 --\n \
 \n-- IMPROVEMENTS \
 \n    - Adds locales to the addon. English / German / Spanish / SpanishMX. Translation via chatGPT so.... \

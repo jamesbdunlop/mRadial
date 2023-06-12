@@ -39,7 +39,7 @@ function mRadial:CreatePlayerSavedVars()
     return PerPlayerPerSpecSavedVars[playerName][playerSpec]
 end
 
-function mRadial:InitUI()
+function mRadial:InitUI(create)
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     if MRadialSavedVariables["primaryWatcherOrder"] == nil then
         MRadialSavedVariables["primaryWatcherOrder"] = {}
@@ -57,7 +57,8 @@ function mRadial:InitUI()
     end
     mRadial:CreatePetFrames()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
-    mRadial:UpdateUI(false)
+    if create == nil then create = false end
+    mRadial:UpdateUI(create)
 end
 
 function mRadial:UpdateUI(create)
@@ -149,7 +150,7 @@ function mRadial:OnInitialize()
         -- ud stands for UpDown
         -- lr stands for leftRight
         if event == "PLAYER_ENTERING_WORLD" then
-            mRadial:InitUI()
+            mRadial:InitUI(true)
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
     end)

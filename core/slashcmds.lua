@@ -20,12 +20,12 @@ function MR_slashCommands(msg, editbox)
 
     if command == "disableooc" then
         MRadialSavedVariables["hideooc"] = false
-        mRadial:InitUI()
+        mRadial:InitUI(false)
     end
 
     if command == "enableooc" then
         MRadialSavedVariables["hideooc"] = true
-        mRadial:InitUI()
+        mRadial:InitUI(false)
     end
 end
 SlashCmdList["MR"] = MR_slashCommands
