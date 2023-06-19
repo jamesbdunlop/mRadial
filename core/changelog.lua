@@ -1,4 +1,11 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.10 --\n \
+\n-- IMPROVEMENTS \
+\n    - Options now has a checkbox to turn off the secondary spells panel without requiring one to remove all spells from it. \
+\n-- FIXES \
+\n    - Options text for General text which was previously not translated.do \
+\n    - Warlock pet frames now using locale spellNames. (Gleaned these from chatGPT so they could be wrong.) \
+\n\n \
 ---------- v0.4.9 --\n \
 \n-- IMPROVEMENTS \
 \n    - Options now updates correctly with spec changes. \

@@ -12,7 +12,8 @@ NOSSSTR = L["Opt_NOSSSTR_name"]
 READYTEXT = L["Opt_RDY_name"]
 OORTEXT = L["Opt_OOR_name"]
 
-GCD = 1 --w as 1.5
+MR_GCD = 1 --w as 1.5
+MR_INTERVAL = .01
 DEFAULT_FRAMESIZE = 150
 DEFAULT_RADIUS = 150
 

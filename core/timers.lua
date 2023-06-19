@@ -20,7 +20,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     local hideOOC = MRadialSavedVariables["hideooc"]
-    if enabled and remaining > GCD and not IsMounted() and not hideOOC then
+    if enabled and remaining > MR_GCD and not IsMounted() and not hideOOC then
         watcher.cooldownText:SetAlpha(1)
         watcher.cooldownText:SetTextColor(1, .1, .1)
         watcher.iconFrame:SetAlpha(1)
@@ -65,7 +65,7 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
         end
     end
     local hideOOC = MRadialSavedVariables["hideooc"]
-    if remaining > GCD and not IsMounted() and not hideOOC then
+    if remaining > MR_GCD and not IsMounted() and not hideOOC then
         mRadial:ShowFrame(watcher.debuffTimerTextBG)
         watcher.debuffTimerTextBG:SetTexture(iconPath)
         watcher.debuffTimerTextBG:SetAlpha(.5)

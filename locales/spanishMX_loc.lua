@@ -30,11 +30,16 @@ L["Opt_RadialIcons_desc"] = "Utilízalo para cambiar los iconos de los hechizos 
 L["Opt_BaseIconOptions_name"] = "Opciones de Icono Base"
 L["Opt_BaseIconOptions_desc"] = "Utiliza estas opciones para afectar la visualización de los iconos de 'vigilante'."
 
+L["Opt_general_name"] = "General"
+
 L["Opt_AutoSpread_name"] = "Distribución Automática"
 L["Opt_AutoSpread_desc"] = "Habilita/deshabilita la distribución automática alrededor del marco radial."
 
 L["Opt_AsButtons_name"] = "Como Botones"
-L["Opt_AsButtons_desc"] = "Habilita/deshabilita los iconos como botones. POR DEFECTO: Falso"
+L["Opt_AsButtons_desc"] = "Habilita/deshabilita los iconos como botones. \n Requiere reinicio. \n POR DEFECTO: Falso"
+
+L["Opt_HideSecondary_name"] = "Ocultar secundarios"
+L["Opt_HideSecondary_desc"] = "Permite activar/desactivar iconos secundarios. POR DEFECTO: Falso"
 
 L["Opt_Dimensions_name"] = "Dimensiones"
 
@@ -133,3 +138,17 @@ L["Opt_LinkedSpellsRemove_name"] = "Eliminar"
 L["Opt_LinkedSpellsPane_name"] = "Hechizo vinculado (Beneficios): "
 L["Opt_LinkedSpellsAdd_name"] = "Agregar"
 L["Opt_LinkedSpellsGrp_name"] = "Hechizos Vinculados"
+
+L["Opt_DemonicStrength"] = "Fuerza demoníaca"
+L["Opt_FelStorm"] = "Tormenta vil"
+L["Opt_AxeToss"] = "AxtwurfLanzamiento de hacha"
+L["Opt_SoulStrike"] = "Golpe de alma"
+
+L["Opt_Felguard"] = " Guardia vil"
+L["Opt_Wrathguard"] = "Guardia de la Ira"
+L["Opt_DemonicStrength"] = "Fuerza demoníaca"
+L["Opt_FelStorm"] = "Tormenta vil"
+L["Opt_AxeToss"] = "AxtwurfLanzamiento de hacha"
+L["Opt_SoulStrike"] = "Golpe de alma"
+L["Opt_Succubus"] = "Súcubo"
+L["Opt_Incubus"] = "Íncubo"

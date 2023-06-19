@@ -29,13 +29,18 @@ L["Opt_RadialIcons_desc"] = "Verwenden Sie dies, um die Zauber-Symbole und versc
 L["Opt_BaseIconOptions_name"] = "Basis-Symboloptionen"
 L["Opt_BaseIconOptions_desc"] = "Verwenden Sie diese Optionen, um die Anzeige der 'Watcher'-Symbole zu beeinflussen."
 
+L["Opt_general_name"] = "Allgemein"
+
 L["Opt_AutoSpread_name"] = "Automatische Verteilung"
 L["Opt_AutoSpread_desc"] = "Aktiviert/Deaktiviert eine automatische Verteilung um den radialen Rahmen."
 
 L["Opt_AsButtons_name"] = "Als Schaltflächen"
-L["Opt_AsButtons_desc"] = "Aktiviert/Deaktiviert die Symbole als Schaltflächen. STANDARD: Falsch"
+L["Opt_AsButtons_desc"] = "Aktiviert/Deaktiviert die Symbole als Schaltflächen. \n Erfordert Neuladen. \n STANDARD: Falsch"
 
 L["Opt_Dimensions_name"] = "Abmessungen"
+
+L["Opt_HideSecondary_name"] = "Sekundäre ausblenden"
+L["Opt_HideSecondary_desc"] =  "Aktiviert/deaktiviert sekundäre Symbole. STANDARD: Falsch"
 
 L["Opt_RadiusMultiplyer_name"] = "Radius-Multiplikator"
 L["Opt_RadiusMultiplyer_desc"] = "Verwenden Sie dies, um eine globale Änderung der Radiusgröße vorzunehmen. STANDARD: %100."
@@ -136,3 +141,13 @@ L["Opt_LinkedSpellsPane_name"] = "Verknüpfte Zauber (Buffs):"
 L["Opt_LinkedSpellsAdd_name"] = "Hinzufügen"
 
 L["Opt_LinkedSpellsGrp_name"] = "Verknüpfte Zauber"
+
+L["Opt_Felguard"] = "Teufelswache"
+L["Opt_Wrathguard"] = "Zornwache"
+L["Opt_DemonicStrength"] = "Dämonische Stärke"
+L["Opt_FelStorm"] = "Teufelssturm"
+L["Opt_AxeToss"] = "Axtwurf"
+L["Opt_SoulStrike"] = "Seelenschlag"
+
+L["Opt_Succubus"] = "Sukkubus"
+L["Opt_Incubus"] = "Inkubus"

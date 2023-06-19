@@ -88,6 +88,10 @@ function mRadial:UpdateUI(create)
     mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
     ------------------------------
     -- SECONDARY SPELL RADIAL MENU
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+    if hideSecondary then
+        return
+    end
     local prevSecondaryOrder = MRadialSavedVariables["secondaryWatcherOrder"]
     local secondaryCurrentOrder = {}
     local activeSecondarySpells = mRadial:UpdateActiveSecondarySpells()
@@ -105,6 +109,7 @@ function mRadial:UpdateUI(create)
     local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
     local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
     local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
+
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
 end
 

@@ -43,7 +43,7 @@ MROptionsTable = {
         name = L["Opt_HideMiniMapIcon_name"],
         desc = L["Opt_HideMiniMapIcon_desc"],
         type = "toggle",
-        set = function(info,val) MRadialSavedVariables["hideMiniMapIcon"] = val end,
+        set = function(info, val) MRadialSavedVariables["hideMiniMapIcon"] = val or false end,
         get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] end,
         order = 4,
       }, 
@@ -96,8 +96,8 @@ MROptionsTable = {
             type = "description",
             order = 2,
           },
-          chkboxes = {
-            name = "General",
+          general_chkboxes = {
+            name = L["Opt_general_name"],
             type = "group",
             inline = true,
             args = {
@@ -111,7 +111,7 @@ MROptionsTable = {
                   mRadial:UpdateUI(false)
                 end,
                 get = function(info) return MRadialSavedVariables["autoSpread"] end,
-                order = 3,
+                order = 1,
               },
               asbuttons = {
                   name = L["Opt_AsButtons_name"],
@@ -121,7 +121,18 @@ MROptionsTable = {
                     MRadialSavedVariables["asbuttons"] = val 
                   end,
                   get = function(info) return MRadialSavedVariables["asbuttons"] end,
-                  order = 4,
+                  order = 2,
+                },
+              hideSecondary = {
+                  name = L["Opt_HideSecondary_name"],
+                  desc = L["Opt_HideSecondary_desc"],
+                  type = "toggle",
+                  set = function(info,val)
+                    MRadialSavedVariables["hideSecondary"] = val 
+                    mRadial:UpdateUI()
+                  end,
+                  get = function(info) return MRadialSavedVariables["hideSecondary"] or false end,
+                  order = 3,
                 }
             }
           },

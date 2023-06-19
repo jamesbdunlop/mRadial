@@ -31,11 +31,16 @@ L["Opt_RadialIcons_desc"] = "Use this to change the spell icons and various text
 L["Opt_BaseIconOptions_name"] = "Base Icon Options"
 L["Opt_BaseIconOptions_desc"] = "Use these options to affect the display of the 'watcher' icons."
 
+L["Opt_general_name"] = "General"
+
 L["Opt_AutoSpread_name"] = "Auto Spread"
 L["Opt_AutoSpread_desc"] = "Enables / disables an auto spread around the radial frame."
 
 L["Opt_AsButtons_name"] = "As Buttons"
-L["Opt_AsButtons_desc"] =  "Enables / disables the icons as buttons. DEFAULT: False"
+L["Opt_AsButtons_desc"] =  "Enables / disables the icons as buttons. \n Requires reload. \n DEFAULT: False"
+
+L["Opt_HideSecondary_name"] = "Hide Secondary"
+L["Opt_HideSecondary_desc"] =  "Enables / disables secondary icons. DEFAULT: False"
 
 L["Opt_Dimensions_name"] = "Dimensions"
 
@@ -135,3 +140,13 @@ L["Opt_LinkedSpellsRemove_name"] = "Remove"
 L["Opt_LinkedSpellsPane_name"] = "Linked Spell (Buffs): "
 L["Opt_LinkedSpellsAdd_name"] = "Add"
 L["Opt_LinkedSpellsGrp_name"] = "Linked Spells"
+
+L["Opt_Felguard"] = "Felguard"
+L["Opt_Wrathguard"] = "Wrathguard"
+L["Opt_DemonicStrength"] = "Demonic Strength"
+L["Opt_FelStorm"] = "FelStorm"
+L["Opt_AxeToss"] = "Axe Toss"
+L["Opt_SoulStrike"] = "Soul Strike"
+
+L["Opt_Succubus"] = "Succubus"
+L["Opt_Incubus"] = "Incubus"

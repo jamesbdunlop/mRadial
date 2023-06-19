@@ -1,3 +1,6 @@
+local appName = "mRadial"
+local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
+
 function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton, spellName)
     if template == nil then template = "BackdropTemplate" end
     local sizeX = frameSize[1] or DEFAULT_FRAMESIZE
@@ -392,7 +395,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= .01 then
+        if last <= MR_INTERVAL then
             return
         end
 
@@ -549,6 +552,8 @@ function mRadial:CreateWatcherFrames()
                 if pframe ~= nil then
                     mRadial:HideFrame(pframe)
                 end
+                frame.isPrimary = true
+                frame.isSecondary = false
                 mRadial:HideFrame(frame)
             -- elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
             elseif isSecondaryActive and isKnown and not mRadial:WatcherExists(frameName) then
@@ -558,6 +563,8 @@ function mRadial:CreateWatcherFrames()
                 if pframe ~= nil then
                     mRadial:HideFrame(pframe)
                 end
+                frame.isPrimary = false
+                frame.isSecondary = true
                 mRadial:HideFrame(frame)
             elseif isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
@@ -644,13 +651,13 @@ function mRadial:CreatePetFrames()
     local petSpellData = {}
     if mRadial:IsFelguardSummoned() then 
         petSpellData = {
-            ["DemonicStrength"] = {["spellName"] = "Demonic Strength",
+            ["DemonicStrength"] = {["spellName"] = L["Opt_DemonicStrength"],
                                 ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)},
-            ["FelStorm"] = {["spellName"] = "FelStorm",
+            ["FelStorm"] = {["spellName"] = L["Opt_FelStorm"],
                             ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", ROOTICONPATH)},
-            ["AxeToss"] = {["spellName"] = "Axe Toss",
+            ["AxeToss"] = {["spellName"] = L["Opt_AxeToss"],
                                 ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", ROOTICONPATH)},
-            ["SoulStrike"] = {["spellName"] = "Soul Strike",
+            ["SoulStrike"] = {["spellName"] = L["Opt_SoulStrike"],
                             ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", ROOTICONPATH)}
         }
     elseif mRadial:IsSuccubusSummoned() then 
@@ -702,15 +709,12 @@ function mRadial:CreatePetFrames()
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
             local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
-            -- Custom death indicator
-            
-            ---
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
-                if plast <= .01 then
+                if plast <= MR_INTERVAL then
                     return
                 end
                 if not MRadialSavedVariables['hidePetFrame'] then
@@ -893,7 +897,12 @@ function mRadial:ShowFrame(frame, alpha)
         if not isActive and not isSecondaryActive then
             return
         end
+        local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+        if hideSecondary and frame.isSecondary then
+            return
+        end
     end
+
     if frame.isParentFrame then
         local childFrames = {}
         childFrames[1] = frame.iconFrame
@@ -978,6 +987,11 @@ end
 function mRadial:UpdateActiveSecondarySpells()
     -- Flush existing
     ACTIVESECONDARYWATCHERS = {}
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+    if hideSecondary then
+        print("Not procesing 2nd")
+        return
+    end
     for x=1, #MR_WATCHERFRAMES do
         -- First we hide any and all watchers that may have been active.
         local watcher = MR_WATCHERFRAMES[x]

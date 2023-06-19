@@ -1,4 +1,6 @@
 local mRadial = mRadial
+local appName = "mRadial"
+local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
 function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
@@ -186,7 +188,7 @@ end
 
 function mRadial:IsFelguardSummoned()
     local isSummoned, summonedPet = mRadial:HasPetSummoned()
-    if isSummoned and summonedPet == "Felguard" or summonedPet == "Wrathguard" then
+    if isSummoned and summonedPet == L["Opt_Felguard"] or summonedPet == L["Opt_Wrathguard"] then
       return true
     end
 
@@ -195,7 +197,7 @@ end
 
 function mRadial:IsSuccubusSummoned()
     local isSummoned, summonedPet = mRadial:HasPetSummoned()
-    if isSummoned and summonedPet == "Succubus" or summonedPet == "Incubus" then
+    if isSummoned and summonedPet == L["Opt_Succubus"] or summonedPet == L["Opt_Incubus"] then
       return true
     end
     
