@@ -811,7 +811,8 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or MR_DEFAULT_WATCHERFRAMESIZE
 
     local angleStep = (math.pi / #orderedWatchers) + spread*.1
-    local autoSpread =  MRadialSavedVariables['autoSpread'] or MR_DEFAULT_AUTOSPREAD
+    local autoSpread =  MRadialSavedVariables['autoSpread'] 
+    if autoSpread == nil then autoSpread = MR_DEFAULT_AUTOSPREAD end
     if autoSpread then
         angleStep = (((watcherFrameSize+8)/(radius * (math.pi/180))) * (math.pi/180)) + spread *.1 
     end
@@ -834,7 +835,6 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             -- because the graphic for the border is a little smaller.. we wanna handle the scale now too
             watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
             watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
-            
             watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
             local buffTimerScale = MRadialSavedVariables["buffTimerScale"] or 0
             watcher.buffTimerTextBG:SetSize(watcherFrameSize/1.2+buffTimerScale, watcherFrameSize/1.5+buffTimerScale)
@@ -863,19 +863,26 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             
             if cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                local centerBelow =  MRadialSavedVariables["centerBelow"]
+                if centerBelow == nil then centerBelow = MR_DEFAULT_CENTERBELOW end
+                if centerBelow then
+                    watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                    watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset - watcherFrameSize/1.5)-- - watcherFrameSize/2)
+                else
+                    watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset + watcherFrameSize+10)-- - watcherFrameSize/2)
+                    watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset + watcherFrameSize+10)-- - watcherFrameSize/2)
+                end
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
             elseif cosAng <= -0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
-                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
+                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             elseif  cosAng >= 0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
-                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
-                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset*cosAng, countUdOffset)
+                watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", -radialLROffset, radialUdOffset)
+                watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", -countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             end
@@ -984,9 +991,9 @@ end
 function mRadial:UpdateActiveSecondarySpells()
     -- Flush existing
     ACTIVESECONDARYWATCHERS = {}
-    local hideSecondary = MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] 
+    if hideSecondary == nil then hideSecondary = MR_DEFAULT_HIDESECONDARY end
     if hideSecondary then
-        print("Not procesing 2nd")
         return
     end
     for x=1, #MR_WATCHERFRAMES do

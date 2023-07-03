@@ -46,6 +46,9 @@ L["Opt_Dimensions_name"] = "Dimensiones"
 L["Opt_RadiusMultiplyer_name"] = "Multiplicador de Radio"
 L["Opt_RadiusMultiplyer_desc"] = "Utilízalo para aplicar un cambio global al tamaño del radio. POR DEFECTO: %100."
 
+L["Opt_Dimensions_CenterBelow_name"] = "CentrarTemporizadorAbajo"
+L["Opt_Dimensions_CenterBelow_desc"] = "Coloca los temporizadores directamente debajo o encima cuando los iconos están en la región central."
+
 L["Opt_SpellIconSize_name"] = "Tamaño del Icono de Hechizo"
 L["Opt_SpellIconSize_desc"] = "Utilízalo para cambiar el tamaño de los iconos de los hechizos. POR DEFECTO: 40"
 

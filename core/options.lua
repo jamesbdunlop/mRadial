@@ -28,7 +28,10 @@ MROptionsTable = {
           mRadial.SetUIMovable(val)
           mRadial:UpdateUI(true)
         end,
-        get = function(info) return MRadialSavedVariables["moveable"] end,
+        get = function(info) 
+          local current = MRadialSavedVariables["moveable"]
+          if current == nil then return false end
+          return current end,
         order = 2,
       },
       hideOutOfCombat = {
@@ -110,7 +113,12 @@ MROptionsTable = {
                   MRadialSavedVariables["autoSpread"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(info) return MRadialSavedVariables["autoSpread"] or MR_DEFAULT_AUTOSPREAD end,
+                get = function(info) 
+                  local current = MRadialSavedVariables["autoSpread"]
+                  if current == nil then return MR_DEFAULT_AUTOSPREAD end
+                  
+                  return current
+                end,
                 order = 1,
               },
               asbuttons = {
@@ -143,7 +151,7 @@ MROptionsTable = {
             childGroups = "tab",
             args={
               radiusMult = {
-                name = L["Opt_AsButtons_name"],
+                name = L["Opt_RadiusMultiplyer_name"],
                 desc = L["Opt_RadiusMultiplyer_desc"],
                 type = "range",
                 min = .1,
@@ -151,6 +159,7 @@ MROptionsTable = {
                 step = .01,
                 isPercent = true,
                 default = 1,
+                order = 1,
                 set = function(self, val)
                   MRadialSavedVariables["radiusMult"] = val
                   mRadial:UpdateUI(false)
@@ -166,12 +175,28 @@ MROptionsTable = {
                 step = .01,
                 isPercent = false,
                 default = 40,
+                order = 2,
                 set = function(self, val)
                   MRadialSavedVariables["watcherFrameSize"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(self) return MRadialSavedVariables["watcherFrameSize"] or MR_DEFAULT_WATCHERFRAMESIZE end,
+                get = function(self) 
+                  return MRadialSavedVariables["watcherFrameSize"] or MR_DEFAULT_WATCHERFRAMESIZE end,
               },
+              centerBelow = {
+                  name = L["Opt_Dimensions_CenterBelow_name"],
+                  desc = L["Opt_Dimensions_CenterBelow_desc"],
+                  type = "toggle",
+                  order = 3,
+                  set = function(info, val)
+                    MRadialSavedVariables["centerBelow"] = val
+                    mRadial:UpdateUI(false)
+                  end,
+                  get = function(info)
+                    local current = MRadialSavedVariables["centerBelow"]
+                    if current == nil then return MR_DEFAULT_CENTERBELOW end
+                    return current end
+                },
               Radial01 = {
                 name = L["Opt_Primary_name"],
                 type = "group",
@@ -431,7 +456,7 @@ MROptionsTable = {
                       MRadialSavedVariables["readyFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
                   },
                   coolDownFontSize = {
                     name = L["Opt_CoolDown_name"],
@@ -447,7 +472,7 @@ MROptionsTable = {
                       MRadialSavedVariables["coolDownFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
                   },
                   timerFontSize = {
                     name = L["Opt_timer_name"],

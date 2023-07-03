@@ -45,6 +45,9 @@ L["Opt_HideSecondary_desc"] =  "Aktiviert/deaktiviert sekundäre Symbole. STANDA
 L["Opt_RadiusMultiplyer_name"] = "Radius-Multiplikator"
 L["Opt_RadiusMultiplyer_desc"] = "Verwenden Sie dies, um eine globale Änderung der Radiusgröße vorzunehmen. STANDARD: %100."
 
+L["Opt_Dimensions_CenterBelow_name"] = "MitteTimerUnten"
+L["Opt_Dimensions_CenterBelow_desc"] = "Platziert die Timer direkt unterhalb oder oberhalb, wenn die Symbole im Mittelbereich sind."
+
 L["Opt_SpellIconSize_name"] = "Zauber-Symbolgröße"
 L["Opt_SpellIconSize_desc"] = "Verwenden Sie dies, um die Größe der Zauber-Symbole zu ändern. STANDARD: 40"
 

@@ -1,4 +1,13 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.12 --\n \
+\n-- IMPROVEMENTS \
+\n    - Added option for center icons to have their timers above or below. \
+\n-- FIXES \
+\n    - Options default value for linked timers to be +10 not -'ve. \
+\n    - Options default value for cooldown to be center. \
+\n    - Options default value for font % to be .25 and bigger RDY and Cooldown text defaults. \
+\n    - Option Radius Mult had the wrong title. \
+\n\n \
 ---------- v0.4.11 --\n \
 \n-- FIXES \
 \n    - Options default values now set in UI as expected for first time use. \

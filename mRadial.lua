@@ -80,15 +80,22 @@ function mRadial:UpdateUI(create)
         currentPrimaryOrder = activePrimarySpells
     end
 
-    local radius = MRadialSavedVariables["radius"] or MR_DEFAULT_RADIUS
-    local offset = MRadialSavedVariables["offset"] or MR_DEFAULT_OFFSET
-    local spread = MRadialSavedVariables["watcherFrameSpread"] or MR_DEFAULT_SPREAD
-    local widthDeform = MRadialSavedVariables["widthDeform"] or MR_DEFAULT_WIDTH
-    local heightDeform = MRadialSavedVariables["heightDeform"] or MR_DEFAULT_HEIGHT
+    local radius = MRadialSavedVariables["radius"] 
+    if radius == nil then radius = MR_DEFAULT_RADIUS end
+    local offset = MRadialSavedVariables["offset"]
+    if offset == nil then offset = MR_DEFAULT_OFFSET end
+    local spread = MRadialSavedVariables["watcherFrameSpread"]
+    if spread == nil then spread = MR_DEFAULT_SPREAD end
+    local widthDeform = MRadialSavedVariables["widthDeform"]
+    if widthDeform == nil then widthDeform = MR_DEFAULT_WIDTH end
+    local heightDeform = MRadialSavedVariables["heightDeform"] 
+    if heightDeform == nil then heightDeform = MR_DEFAULT_HEIGHT end
+
     mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
     ------------------------------
     -- SECONDARY SPELL RADIAL MENU
-    local hideSecondary = MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] 
+    if hideSecondary == nil then hideSecondary = MR_DEFAULT_HIDESECONDARY end
     if hideSecondary then
         return
     end

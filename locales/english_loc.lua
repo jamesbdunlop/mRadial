@@ -44,6 +44,9 @@ L["Opt_HideSecondary_desc"] =  "Enables / disables secondary icons. DEFAULT: Fal
 
 L["Opt_Dimensions_name"] = "Dimensions"
 
+L["Opt_Dimensions_CenterBelow_name"] = "CenterTimerBelow"
+L["Opt_Dimensions_CenterBelow_desc"] = "Put the timers directly below or above when the icons are in the center region."
+
 L["Opt_RadiusMultiplyer_name"] = "Radius Multiplyer"
 L["Opt_RadiusMultiplyer_desc"] = "Use this to apply a global change to the radius size. DEFAULT: %100."
 
