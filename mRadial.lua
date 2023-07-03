@@ -80,15 +80,15 @@ function mRadial:UpdateUI(create)
         currentPrimaryOrder = activePrimarySpells
     end
 
-    local radius = MRadialSavedVariables.radius or 100
-    local offset = MRadialSavedVariables.offset or .5
-    local spread = MRadialSavedVariables.watcherFrameSpread or 0
-    local widthDeform = MRadialSavedVariables.widthDeform or 1
-    local heightDeform = MRadialSavedVariables.heightDeform or 1
+    local radius = MRadialSavedVariables["radius"] or MR_DEFAULT_RADIUS
+    local offset = MRadialSavedVariables["offset"] or MR_DEFAULT_OFFSET
+    local spread = MRadialSavedVariables["watcherFrameSpread"] or MR_DEFAULT_SPREAD
+    local widthDeform = MRadialSavedVariables["widthDeform"] or MR_DEFAULT_WIDTH
+    local heightDeform = MRadialSavedVariables["heightDeform"] or MR_DEFAULT_HEIGHT
     mRadial:RadialButtonLayout(currentPrimaryOrder, radius, offset, spread, widthDeform, heightDeform, MRadialPrimaryFrame)
     ------------------------------
     -- SECONDARY SPELL RADIAL MENU
-    local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY
     if hideSecondary then
         return
     end
@@ -103,12 +103,11 @@ function mRadial:UpdateUI(create)
     else
         secondaryCurrentOrder = activeSecondarySpells
     end
-
-    local radius2 = MRadialSavedVariables.radius2 or 150
-    local offset2 = MRadialSavedVariables.offset2 or .5
-    local spread2 = MRadialSavedVariables.watcherFrameSpread2 or 0
-    local widthDeform2 = MRadialSavedVariables.widthDeform2 or 1
-    local heightDeform2 = MRadialSavedVariables.heightDeform2 or 1
+    local radius2 = MRadialSavedVariables["radius2"] or MR_DEFAULT_RADIUS2
+    local offset2 = MRadialSavedVariables["offset2"] or MR_DEFAULT_OFFSET
+    local spread2 = MRadialSavedVariables["watcherFrameSpread2"] or MR_DEFAULT_SPREAD
+    local widthDeform2 = MRadialSavedVariables["widthDeform2"] or MR_DEFAULT_WIDTH
+    local heightDeform2 = MRadialSavedVariables["heightDeform2"] or MR_DEFAULT_HEIGHT
 
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
 end
@@ -169,7 +168,7 @@ function mRadial:OnInitialize()
 end
 
 function mRadial:OnEnable()
-    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or false
+    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or MR_DEFAULT_HIDEMINIMAP
     if not hideMiniMapIcon then
         self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })
         icon:Register("mRadialIcon", db, mRadialICO)

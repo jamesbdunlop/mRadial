@@ -19,7 +19,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
-    local hideOOC = MRadialSavedVariables["hideooc"]
+    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if enabled and remaining > MR_GCD and not IsMounted() and not hideOOC then
         watcher.cooldownText:SetAlpha(1)
         watcher.cooldownText:SetTextColor(1, .1, .1)
@@ -64,7 +64,7 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
             break
         end
     end
-    local hideOOC = MRadialSavedVariables["hideooc"]
+    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if remaining > MR_GCD and not IsMounted() and not hideOOC then
         mRadial:ShowFrame(watcher.debuffTimerTextBG)
         watcher.debuffTimerTextBG:SetTexture(iconPath)
@@ -109,15 +109,12 @@ end
 
 function mRadial:DoBuffTimer(spellName, watcher, iconPath)
     local found = false
-    if MAINFRAME_ISMOVING then
-        return
-    end
-    local hideOOC = MRadialSavedVariables["hideooc"]
+    if MAINFRAME_ISMOVING then return end
+    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     for idx = 1, 40 do
         -- local name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal,
         -- spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = UnitBuff("player", idx)
-        local name, _, count, _, _, expirationTime, _, _, _,
-        _, _, _, _, _, _ = UnitBuff("player", idx)
+        local name, _, count, _, _, expirationTime, _, _, _, _, _, _, _, _, _ = UnitBuff("player", idx)
         
         if name == spellName then
             if count ~= 0 and count >= 1 and expirationTime ~= nil and not IsMounted() and not hideOOC then
@@ -158,7 +155,7 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         return
     end
 
-    local hideOOC = MRadialSavedVariables["hideooc"]
+    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     -- TIMERS
     if duration ~= nil and startTime ~= nil and not IsMounted() and not hideOOC then
         startTime = startTime or GetTime()
@@ -186,5 +183,25 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
     else
         mRadial:HideFrame(watcher.buffTimerText)
         mRadial:HideFrame(watcher.buffTimerTextBG)
+    end
+end
+
+function mRadial:DoChanneledTimer(spellID)
+    if MAINFRAME_ISMOVING then return end
+
+    local channeledWatcher
+    for _, watcher in ipairs(MR_WATCHERFRAMES) do
+        if watcher.spellID == spellID then
+            channeledWatcher = watcher
+            break
+        end
+    end
+    if channeledWatcher ~= nil then 
+        local spellName, _, spellIcon, startTime, endTime, isChanneling = UnitCastingInfo("player")
+        channeledWatcher.readyText:SetText("")
+        local currentTime = GetTime() * 1000 -- Convert current time to milliseconds
+        if endTime ~= nil then
+            local remainingTime = endTime - currentTime
+        end
     end
 end

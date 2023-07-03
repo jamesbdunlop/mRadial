@@ -39,6 +39,7 @@ core\shardtracker.lua
 core\slashcmds.lua
 
 events\combatlogUnfiltered.lua
+events\spellChannel.lua
 
 # show hide pet frames when pet is out.
 events\unitPet.lua

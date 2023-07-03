@@ -7,7 +7,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     local sizeY = frameSize[2] or DEFAULT_FRAMESIZE
     -- If we don't explicity set as buttons use the global saved variable.
     if asbutton == nil then
-        asbutton = MRadialSavedVariables["asbuttons"]
+        asbutton = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
     end
     local parentName = frameName .."_parent"
     local parentFrame = CreateFrame("Frame", parentName, parent, "BackdropTemplate")
@@ -114,7 +114,7 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)
     
-    local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
+    local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     frame.buffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.debuffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.countText:SetFont(customFontPath,  24, "THICKOUTLINE")
@@ -136,7 +136,7 @@ end
 
 function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
-    local asButtons = MRadialSavedVariables["asbuttons"] or false
+    local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
     local size = 200
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
     local watcher = mRadial:CreateIconFrame(frameName, 
@@ -204,7 +204,7 @@ end
 function mRadial:SetMountedFrameScripts(frame, alpha)
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
-        local asButtons = MRadialSavedVariables["asbuttons"] or false
+        local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
         -- Show the frame when entering combat
         if event == "PLAYER_REGEN_DISABLED" then
             mRadial:ShowFrame(frame)
@@ -215,8 +215,8 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
     end)
 
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
-        local hideOOC = MRadialSavedVariables["hideooc"]
-        local asButtons = MRadialSavedVariables["asbuttons"] or false
+        local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
+        local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
         if IsMounted() or IsFlying() or hideOOC then
             mRadial:HideFrame(frame)
             if asButtons and frame.isWatcher and not InCombatLockdown() then
@@ -365,10 +365,11 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
 
     -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
-    local spellName, _, iconPath, _, minRange, maxRange, spellID, _ = GetSpellInfo(spellID)
+    local spellName, _, iconPath, _, minRange, maxRange, _, _ = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
     local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     watcher.spellName = spellName
+    watcher.spellID = spellID
     watcher:GetParent().spellName = spellName
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
@@ -379,7 +380,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
 
     ----------------------------------------------
     -- Assign the spell to cast if we're a button!
-    local asButtons = MRadialSavedVariables["asbuttons"] or false
+    local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
     if asButtons then
         watcher:SetAttribute("spell", spellName)
         -- set the button tooltip
@@ -395,13 +396,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
         last = last + elapsed
-        if last <= MR_INTERVAL then
-            return
-        end
+        if last <= MR_INTERVAL then return end
 
-        if MAINFRAME_ISMOVING then
-            return
-        end
+        if MAINFRAME_ISMOVING then return end
         
         if isUnitPowerDependant then
             -- Do we have enough shards to allow this to show timers / cast from?
@@ -416,7 +413,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                local hideOOC = MRadialSavedVariables["hideooc"]
+                local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
                 if not IsMounted() and not hideOOC then
                     mRadial:ShowFrame(watcher.movetex)
                 end
@@ -446,7 +443,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             end
             mRadial:DoBuffTimer(linkedSpellName, watcher, linkedIconPath)
             
-            local hideOOC = MRadialSavedVariables["hideooc"]
+            local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
             if mRadial:HasActiveBuff(linkedSpellName) and not IsMounted() and not hideOOC then
                 mRadial:ShowFrame(watcher.aura)
             else
@@ -488,7 +485,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         end
 
         watcher.countText:SetText("")
-        local hideOOC = MRadialSavedVariables["hideooc"]
+        local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
         if count ~= 0 and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.countText)
             watcher.countText:SetText(tostring(count))
@@ -708,7 +705,7 @@ function mRadial:CreatePetFrames()
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
-            local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
+            local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
@@ -757,7 +754,7 @@ end
 function mRadial:SetPetFramePosAndSize()
     local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
-    local customFontPath = MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
+    local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
 
     for _, frame in ipairs(MR_ALLFRAMES) do
         if frame.isPetFrame then
@@ -785,36 +782,36 @@ end
 function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentFrame)
     -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
-    local customFontPath =  MRadialSavedVariables['Font'] or ("Interface\\Addons\\mRadial\\fonts\\" .. MR_DEFAULT_FONT)
-    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
-    local radiusMult = MRadialSavedVariables.radiusMult or 1
+    local customFontPath =  MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+    local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
+    local radiusMult = MRadialSavedVariables.radiusMult or MR_DEFAULT_RADIUSMULT
     local radius = r * radiusMult
     local offset = o
     local spread = sprd  -- -2.94  -- -5.0
     local widthDeform = wd
     local heightDeform = hd
 
-    local countFontSize = MRadialSavedVariables.countFontSize or 2
-    local readyFontSize = MRadialSavedVariables.readyFontSize or 2
-    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or 2
-    local timerFontSize = MRadialSavedVariables.timerFontSize or 2
+    local countFontSize = MRadialSavedVariables.countFontSize or MR_DEFAULT_FONTSIZE
+    local readyFontSize = MRadialSavedVariables.readyFontSize or MR_DEFAULT_FONTSIZE
+    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or MR_DEFAULT_FONTSIZE
+    local timerFontSize = MRadialSavedVariables.timerFontSize or MR_DEFAULT_FONTSIZE
 
-    local radialUdOffset = MRadialSavedVariables.radialUdOffset or 0
-    local radialLROffset = MRadialSavedVariables.radialLROffset or -10
+    local radialUdOffset = MRadialSavedVariables.radialUdOffset or MR_DEFAULT_UDOFFSET
+    local radialLROffset = MRadialSavedVariables.radialLROffset or MR_DEFAULT_LROFFSET
 
-    local cdUdOffset = MRadialSavedVariables.cdUdOffset or -17
-    local cdLROffset = MRadialSavedVariables.cdLROffset or 0
+    local cdUdOffset = MRadialSavedVariables.cdUdOffset or MR_DEFAULT_CDUDOFFSET
+    local cdLROffset = MRadialSavedVariables.cdLROffset or MR_DEFAULT_CDLROFFSET
 
-    local countUdOffset = MRadialSavedVariables.countUdOffset or 23
-    local countLROffset = MRadialSavedVariables.countLROffset or 0
+    local countUdOffset = MRadialSavedVariables.countUdOffset or MR_DEFAULT_COUNTUDOFFSET
+    local countLROffset = MRadialSavedVariables.countLROffset or MR_DEFAULT_COUNTLROFFSET
     
-    local readyUDOffset = MRadialSavedVariables.readyUDOffset or -17
-    local readyLROffset = MRadialSavedVariables.readyLROffset or 0
+    local readyUDOffset = MRadialSavedVariables.readyUDOffset or MR_DEFAULT_READYUDOFFSET
+    local readyLROffset = MRadialSavedVariables.readyLROffset or MR_DEFAULT_READYLROFFSET
 
-    local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or 45
+    local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or MR_DEFAULT_WATCHERFRAMESIZE
 
     local angleStep = (math.pi / #orderedWatchers) + spread*.1
-    local autoSpread =  MRadialSavedVariables['autoSpread'] or false
+    local autoSpread =  MRadialSavedVariables['autoSpread'] or MR_DEFAULT_AUTOSPREAD
     if autoSpread then
         angleStep = (((watcherFrameSize+8)/(radius * (math.pi/180))) * (math.pi/180)) + spread *.1 
     end
@@ -897,7 +894,7 @@ function mRadial:ShowFrame(frame, alpha)
         if not isActive and not isSecondaryActive then
             return
         end
-        local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+        local hideSecondary = MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY
         if hideSecondary and frame.isSecondary then
             return
         end
@@ -987,7 +984,7 @@ end
 function mRadial:UpdateActiveSecondarySpells()
     -- Flush existing
     ACTIVESECONDARYWATCHERS = {}
-    local hideSecondary = MRadialSavedVariables["hideSecondary"] or false
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY
     if hideSecondary then
         print("Not procesing 2nd")
         return

@@ -36,15 +36,15 @@ MROptionsTable = {
         desc = L["Opt_HideOutOfCombat_desc"],
         type = "toggle",
         set = function(info, val) MRadialSavedVariables["hideooc"] = val end,
-        get = function(info) return MRadialSavedVariables["hideooc"] end,
+        get = function(info) return MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC end,
         order = 3,
       }, 
       hideminimap = {
         name = L["Opt_HideMiniMapIcon_name"],
         desc = L["Opt_HideMiniMapIcon_desc"],
         type = "toggle",
-        set = function(info, val) MRadialSavedVariables["hideMiniMapIcon"] = val or false end,
-        get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] end,
+        set = function(info, val) MRadialSavedVariables["hideMiniMapIcon"] = val end,
+        get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] or MR_DEFAULT_HIDEMINIMAP end,
         order = 4,
       }, 
 
@@ -110,7 +110,7 @@ MROptionsTable = {
                   MRadialSavedVariables["autoSpread"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(info) return MRadialSavedVariables["autoSpread"] end,
+                get = function(info) return MRadialSavedVariables["autoSpread"] or MR_DEFAULT_AUTOSPREAD end,
                 order = 1,
               },
               asbuttons = {
@@ -120,7 +120,7 @@ MROptionsTable = {
                   set = function(info,val)
                     MRadialSavedVariables["asbuttons"] = val 
                   end,
-                  get = function(info) return MRadialSavedVariables["asbuttons"] end,
+                  get = function(info) return MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS end,
                   order = 2,
                 },
               hideSecondary = {
@@ -131,7 +131,7 @@ MROptionsTable = {
                     MRadialSavedVariables["hideSecondary"] = val 
                     mRadial:UpdateUI()
                   end,
-                  get = function(info) return MRadialSavedVariables["hideSecondary"] or false end,
+                  get = function(info) return MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY end,
                   order = 3,
                 }
             }
@@ -155,7 +155,7 @@ MROptionsTable = {
                   MRadialSavedVariables["radiusMult"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(self) return MRadialSavedVariables["radiusMult"] end,
+                get = function(self) return MRadialSavedVariables["radiusMult"] or MR_DEFAULT_RADIUSMULT end,
               },
               iconSize = {
                 name = L["Opt_SpellIconSize_name"],
@@ -170,7 +170,7 @@ MROptionsTable = {
                   MRadialSavedVariables["watcherFrameSize"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(self) return MRadialSavedVariables["watcherFrameSize"] end,
+                get = function(self) return MRadialSavedVariables["watcherFrameSize"] or MR_DEFAULT_WATCHERFRAMESIZE end,
               },
               Radial01 = {
                 name = L["Opt_Primary_name"],
@@ -190,7 +190,7 @@ MROptionsTable = {
                       MRadialSavedVariables["radius"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radius"] end,
+                    get = function(self) return MRadialSavedVariables["radius"] or MR_DEFAULT_RADIUS end,
                   },
                   spread = {
                     name = L["Opt_Spread_name"],
@@ -206,7 +206,7 @@ MROptionsTable = {
                       MRadialSavedVariables["watcherFrameSpread"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["watcherFrameSpread"] end,
+                    get = function(self) return MRadialSavedVariables["watcherFrameSpread"] or MR_DEFAULT_SPREAD end,
                   },
                   offset = {
                     name = L["Opt_Offset_name"],
@@ -222,7 +222,7 @@ MROptionsTable = {
                       MRadialSavedVariables["offset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["offset"] end,
+                    get = function(self) return MRadialSavedVariables["offset"] or MR_DEFAULT_OFFSET end,
                   },
                   width = {
                     name = L["Opt_WidthAdjust_name"],
@@ -238,7 +238,7 @@ MROptionsTable = {
                       MRadialSavedVariables["widthDeform"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["widthDeform"] end,
+                    get = function(self) return MRadialSavedVariables["widthDeform"] or MR_DEFAULT_WIDTH end,
                   },
                   height = {
                     name = L["Opt_HeightAdjust_name"],
@@ -254,7 +254,7 @@ MROptionsTable = {
                       MRadialSavedVariables["heightDeform"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["heightDeform"] end,
+                    get = function(self) return MRadialSavedVariables["heightDeform"] or MR_DEFAULT_HEIGHT end,
                   },
                 },
                 order=1
@@ -277,7 +277,7 @@ MROptionsTable = {
                       MRadialSavedVariables["radius2"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radius2"] end,
+                    get = function(self) return MRadialSavedVariables["radius2"] or MR_DEFAULT_RADIUS end,
                   },
                   spread = {
                     name = L["Opt_Spread_name"],
@@ -293,7 +293,7 @@ MROptionsTable = {
                       MRadialSavedVariables["watcherFrameSpread2"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["watcherFrameSpread2"] end,
+                    get = function(self) return MRadialSavedVariables["watcherFrameSpread2"] or MR_DEFAULT_SPREAD end,
                   },
                   offset = {
                     name = L["Opt_Offset_name"],
@@ -309,7 +309,7 @@ MROptionsTable = {
                       MRadialSavedVariables["offset2"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["offset2"] end,
+                    get = function(self) return MRadialSavedVariables["offset2"] or MR_DEFAULT_OFFSET end,
                   },
                   width = {
                     name = L["Opt_WidthAdjust_name"],
@@ -325,7 +325,7 @@ MROptionsTable = {
                       MRadialSavedVariables["widthDeform2"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["widthDeform2"] end,
+                    get = function(self) return MRadialSavedVariables["widthDeform2"] or MR_DEFAULT_WIDTH end,
                   },
                   height = {
                     name = L["Opt_HeightAdjust_name"],
@@ -341,7 +341,7 @@ MROptionsTable = {
                       MRadialSavedVariables["heightDeform2"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["heightDeform2"] end,
+                    get = function(self) return MRadialSavedVariables["heightDeform2"] or MR_DEFAULT_HEIGHT end,
                   },
                 },
                 order=2
@@ -371,6 +371,7 @@ MROptionsTable = {
                     local values = LSM:HashTable("font")
                     local font = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
                     for idx, fontName in pairs(values) do
+                      print(fontName)
                       if fontName == font then
                         return idx
                       end
@@ -387,11 +388,12 @@ MROptionsTable = {
                 step = .01,
                 isPercent = false,
                 default = .5,
+                defaultValue = .5,
                 set = function(self, val)
                   MRadialSavedVariables["FontPercentage"] = val
                   mRadial:GlobalFontPercentageChanged()
                 end,
-                get = function(self) return MRadialSavedVariables["FontPercentage"] end,
+                get = function(self) return MRadialSavedVariables["FontPercentage"] or MR_DEFAULT_FONTPERCENTAGE end,
               },
               fontSliderGrp = {
                 name = L["Opt_FontSizeOverrides_name"],
@@ -413,7 +415,7 @@ MROptionsTable = {
                       MRadialSavedVariables["countFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countFontSize"] end,
+                    get = function(self) return MRadialSavedVariables["countFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                   readyFontSize = {
                     name = L["Opt_ready_name"],
@@ -429,7 +431,7 @@ MROptionsTable = {
                       MRadialSavedVariables["readyFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyFontSize"] end,
+                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                   coolDownFontSize = {
                     name = L["Opt_CoolDown_name"],
@@ -445,7 +447,7 @@ MROptionsTable = {
                       MRadialSavedVariables["coolDownFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] end,
+                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                   timerFontSize = {
                     name = L["Opt_timer_name"],
@@ -461,7 +463,7 @@ MROptionsTable = {
                       MRadialSavedVariables["timerFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["timerFontSize"] end,
+                    get = function(self) return MRadialSavedVariables["timerFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                 }
               },
@@ -491,7 +493,7 @@ MROptionsTable = {
                       MRadialSavedVariables["radialUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radialUdOffset"] end,
+                    get = function(self) return MRadialSavedVariables["radialUdOffset"] or MR_DEFAULT_UDOFFSET end,
                   },
                   LeftRight = {
                     name = "Left/Right",
@@ -507,7 +509,7 @@ MROptionsTable = {
                       MRadialSavedVariables["radialLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radialLROffset"] end,
+                    get = function(self) return MRadialSavedVariables["radialLROffset"] or MR_DEFAULT_LROFFSET end,
                   },
                 }
               },
@@ -531,7 +533,7 @@ MROptionsTable = {
                       MRadialSavedVariables["cdUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["cdUdOffset"] end,
+                    get = function(self) return MRadialSavedVariables["cdUdOffset"] or MR_DEFAULT_CDUDOFFSET end,
                   },
                   LeftRight = {
                     name = "Left/Right",
@@ -547,7 +549,7 @@ MROptionsTable = {
                       MRadialSavedVariables["cdLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["cdLROffset"] end,
+                    get = function(self) return MRadialSavedVariables["cdLROffset"] or MR_DEFAULT_CDLROFFSET end,
                   },
                 }
               },
@@ -571,7 +573,7 @@ MROptionsTable = {
                       MRadialSavedVariables["readyUDOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyUDOffset"] end,
+                    get = function(self) return MRadialSavedVariables["readyUDOffset"] or MR_DEFAULT_READYUDOFFSET end,
                   },
                   LeftRight = {
                     name = "Left/Right",
@@ -587,7 +589,7 @@ MROptionsTable = {
                       MRadialSavedVariables["readyLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyLROffset"] end,
+                    get = function(self) return MRadialSavedVariables["readyLROffset"] or MR_DEFAULT_READYLROFFSET end,
                   },
                 }
               },
@@ -611,7 +613,7 @@ MROptionsTable = {
                       MRadialSavedVariables["countUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countUdOffset"] end,
+                    get = function(self) return MRadialSavedVariables["countUdOffset"] or MR_DEFAULT_COUNTUDOFFSET end,
                   },
                   LeftRight = {
                     name = "Left/Right",
@@ -627,7 +629,7 @@ MROptionsTable = {
                       MRadialSavedVariables["countLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countLROffset"] end,
+                    get = function(self) return MRadialSavedVariables["countLROffset"] or MR_DEFAULT_COUNTLROFFSET end,
                   },
                 }
               }
