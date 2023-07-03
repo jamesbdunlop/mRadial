@@ -1,4 +1,8 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.11 --\n \
+\n-- FIXES \
+\n    - Options default values now set in UI as expected for first time use. \
+\n\n \
 ---------- v0.4.10 --\n \
 \n-- IMPROVEMENTS \
 \n    - Options now has a checkbox to turn off the secondary spells panel without requiring one to remove all spells from it. \
