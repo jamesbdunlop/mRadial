@@ -12,6 +12,7 @@ MRADIAL_UPDATENOTES = " \
 \n    - CONST for Summon SoulKeeper and Shadow Fury spell names into locales. NFI if these actually work. \
 \n-- KNOWN ISSUES \
 \n    - DEBUFF timers share the timer size. I will look to split this out. \
+\n    - Frame positions are shared across specs. \
 \n\n \
 ---------- v0.4.12 --\n \
 \n-- IMPROVEMENTS \
