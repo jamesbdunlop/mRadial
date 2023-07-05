@@ -127,7 +127,7 @@ L["Opt_HideShardTracker_name"] = "Ocultar Marco de Fragmentos"
 L["Opt_HideShardTracker_desc"] = "Mostrar/Ocultar el marco de rastreo de fragmentos del brujo."
 
 L["Opt_RDY_name"] = "RDY"
-L["Opt_NOSSSTR_name"] = "N/A"
+L["Opt_NOSSSTR_name"] = "X"
 L["Opt_OOR_name"] = "OOR"
 
 L["Opt_LinkedSpellsInfo_name"] = "Los hechizos vinculados son una forma de vincular un beneficio a un hechizo principal. \
@@ -151,3 +151,5 @@ L["Opt_SoulStrike"] = "Golpe de alma"
 L["Opt_Succubus"] = "Súcubo"
 L["Opt_Incubus"] = "Íncubo"
 
+L["SummonSoulKeeperSpellname"] = "Invocar guardianalmas"
+L["ShadowFurySpellname"] = "Furia de las Sombras"

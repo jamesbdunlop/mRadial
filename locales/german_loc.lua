@@ -126,7 +126,7 @@ L["Opt_HideShardTracker_name"] = "Splitter-Fenster ausblenden"
 L["Opt_HideShardTracker_desc"] = "Zeige/Verberge das Splitter-Tracker-Fenster des Hexenmeisters."
 
 L["Opt_RDY_name"] = "RDY"
-L["Opt_NOSSSTR_name"] = "N/A"
+L["Opt_NOSSSTR_name"] = "X"
 L["Opt_OOR_name"] = "OOR"
 
 L["Opt_LinkedSpellsInfo_name"] = "Verknüpfte Zauber sind eine Möglichkeit, einen Buff mit einem Kernzauber zu verknüpfen. \
@@ -154,3 +154,7 @@ L["Opt_SoulStrike"] = "Seelenschlag"
 
 L["Opt_Succubus"] = "Sukkubus"
 L["Opt_Incubus"] = "Inkubus"
+
+L["SummonSoulKeeperSpellname"] = "Seelenwärter herbeirufen"
+L["ShadowFurySpellname"] = "Schattenfuror"
+

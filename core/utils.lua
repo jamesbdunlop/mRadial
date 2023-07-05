@@ -85,7 +85,7 @@ function mRadial:GetAllSpells(activeTable)
                 local spellName, rank, icon, castingTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(x, "spell")
                 if spellID and IsSpellKnown(spellID) then
                     -- SOME WEIRD BUG WITH SHADOWFURY the names don't match??! Yet you print it and it's the same fkin name!
-                    if spellID == 30283 and GetLocale() == "enUS" then
+                    if spellID == 30283 then
                         spellName = SHADOWFURY_SPELLNAME
                     end
                     if spellName and spellID then

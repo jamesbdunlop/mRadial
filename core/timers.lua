@@ -17,32 +17,46 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     if MAINFRAME_ISMOVING then
         return
     end
+    -- Try to make sure we have NOTHING competting against a running debuff dot etc
+    local debuffCheck = nil
+    for idx = 1, 40 do
+        local name, _, _, _, _, expirationTime, source, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
+        if name == spellName and source == "player" then 
+            debuffCheck = expirationTime - GetTime()
+            break
+        end
+    end
+    if debuffCheck ~= nil then
+        mRadial:HideFrame(watcher.readyText)
+        mRadial:HideFrame(watcher.debuffTimerTextBG)
+        watcher.cooldownText:SetAlpha(0)
+        watcher.cooldownText:SetTextColor(1, .1, .1)
+        watcher.cooldownText:SetText(string.format(""))
+        return
+    end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if enabled and remaining > MR_GCD and not IsMounted() and not hideOOC then
+        mRadial:HideFrame(watcher.readyText)
         watcher.cooldownText:SetAlpha(1)
         watcher.cooldownText:SetTextColor(1, .1, .1)
         watcher.iconFrame:SetAlpha(1)
-        watcher.movetex:SetColorTexture(1, 0, 0, .5)
-
-        if watcher.readyText ~= nil then
-            watcher.readyText:SetAlpha(0)
-        end
         if minutes and minutes > 0 then
+            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
             watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
         elseif seconds then
-            watcher.cooldownText:SetText(string.format("%ds", seconds))
+            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+            watcher.cooldownText:SetText(string.format("%d", seconds))
         else
             watcher.cooldownText:SetText(string.format(""))
             watcher.iconFrame:SetAlpha(1)
-            watcher.movetex:SetColorTexture(1, 0, 0, 0)
         end
     else
         watcher.cooldownText:SetAlpha(0)
         watcher.cooldownText:SetText(string.format(""))
         watcher.iconFrame:SetAlpha(1)
-        watcher.movetex:SetColorTexture(1, 0, 0, 0)
+        watcher.movetex:SetColorTexture(0, 0, 0, 0)
         if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.readyText)
         end
@@ -56,33 +70,32 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
     end
 
     local remaining = 0
+
     for idx = 1, 40 do
-        -- name, icon, count, dispelType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
-        local name, _, _, _, _, expirationTime, _, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
-        if name == spellName then 
+        local name, _, _, _, _, expirationTime, source, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
+        if name == spellName and source == "player" then 
             remaining = expirationTime - GetTime()
             break
         end
     end
+
     local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if remaining > MR_GCD and not IsMounted() and not hideOOC then
-        mRadial:ShowFrame(watcher.debuffTimerTextBG)
+        mRadial:ShowFrame(watcher.debuffTimerTextBG, .5)
+        mRadial:HideFrame(watcher.readyText)
+        watcher.movetex:SetColorTexture(.2, .2, .2, .5)
         watcher.debuffTimerTextBG:SetTexture(iconPath)
-        watcher.debuffTimerTextBG:SetAlpha(.5)
-
+        
         mRadial:ShowFrame(watcher.debuffTimerText)
-        watcher.debuffTimerText:SetText(string.format("%ds", remaining))
-
+        watcher.debuffTimerText:SetText(string.format("%d", remaining))
+        
         watcher.iconFrame:SetAlpha(0.5)
-        watcher.movetex:SetColorTexture(1, 0, 0, 1)
     else
+        mRadial:ShowFrame(watcher.readyText)
         mRadial:HideFrame(watcher.debuffTimerTextBG)
         mRadial:HideFrame(watcher.debuffTimerText)
         watcher.iconFrame:SetAlpha(1)
-        watcher.movetex:SetColorTexture(1, 0, 0, 0)
-        if not IsMounted() and not hideOOC then
-            mRadial:ShowFrame(watcher.readyText)
-        end
+        watcher.movetex:SetColorTexture(0, 0, 0, 0)
     end
 end
 
@@ -137,7 +150,7 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
             if minutes~= nil and minutes > 0 then
                 watcher.buffTimerText:SetText(string.format("%d:%d", minutes, seconds))
             elseif seconds > 0 then
-                watcher.buffTimerText:SetText(string.format("%ds", seconds))
+                watcher.buffTimerText:SetText(string.format("%d", seconds))
             else
                 mRadial:HideFrame(watcher.buffTimerText)
                 mRadial:HideFrame(watcher.buffTimerTextBG)
@@ -175,7 +188,7 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         if minutes~= nil and minutes > 0 then
             watcher.buffTimerText:SetText(string.format("%d:%d", minutes, seconds))
         elseif seconds > 0 then
-            watcher.buffTimerText:SetText(string.format("%ds", seconds))
+            watcher.buffTimerText:SetText(string.format("%d", seconds))
         else
             mRadial:HideFrame(watcher.buffTimerText)
             mRadial:HideFrame(watcher.buffTimerTextBG)

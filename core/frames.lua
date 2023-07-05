@@ -217,13 +217,17 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
     frame:GetParent():SetScript("OnUpdate", function(self, elapsed)
         local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
         local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
-        if IsMounted() or IsFlying() or hideOOC then
+        if IsMounted() or IsFlying() then
             mRadial:HideFrame(frame)
             if asButtons and frame.isWatcher and not InCombatLockdown() then
                 frame:EnableMouse(false)
             end
         else
-            mRadial:ShowFrame(frame, alpha)
+            if hideOOC and not InCombatLockdown() then 
+                mRadial:HideFrame(frame)
+            else
+                mRadial:ShowFrame(frame, alpha)
+            end
             if asButtons and frame.isWatcher and not InCombatLockdown() then
                 frame:EnableMouse(true)
             end
@@ -234,13 +238,15 @@ end
 function mRadial:SetUIMovable(isMovable)
     --Sets frames to be moveable or not. Assigns a blue color to their respective movetex, textures.
     if isMovable == nil then
-        isMovable=MRadialSavedVariables["moveable"] or false
+        isMovable = MRadialSavedVariables["moveable"] or false
     end
     MAINFRAME_ISMOVING = isMovable
     
     if isMovable then
-        mRadial:ShowFrame(MRadialMainFrame.crosshair)
-        MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+        if mRadial:IsWarlock() then
+            mRadial:ShowFrame(MRadialMainFrame.crosshair)
+            MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+        end
         MRadialPrimaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
         MRadialSecondaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
     else
@@ -254,7 +260,7 @@ function mRadial:SetUIMovable(isMovable)
         if isMovable then
             if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .25)
-                mRadial:ShowFrame(pframe.baseFrame.movetext)
+                mRadial:ShowFrame(pframe.baseFrame.movetext, .25)
                 pframe.baseFrame:EnableMouse(isMovable)
                 pframe.baseFrame:SetMovable(isMovable)
                 local srdFrm = pframe.ShardCounterFrame
@@ -405,22 +411,18 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             local unitpower = 0
             if mRadial:IsWarlock() then
                 unitpower = UnitPower("player", 7) -- soul shards
-            else
-                unitpower = UnitPower("player") -- hopefully the rest list insanity etc
+            elseif UnitClass("player") == GetClassInfo(5) then
+                unitpower = UnitPower("player", 13) -- hopefully the rest list insanity etc
             end
-
             if unitpower == 0 or unitpower < UnitPowerCount then
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
-                watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
-                if not IsMounted() and not hideOOC then
-                    mRadial:ShowFrame(watcher.movetex)
-                end
+                mRadial:DoDebuffTimer(spellName, watcher, iconPath)
+                mRadial:DoSpellFrameCooldown(spellName, watcher)
+                return
             else
                 watcher.readyText:SetText(READYSTR)
                 watcher.readyText:SetTextColor(0, 1, 0)
-                mRadial:HideFrame(watcher.movetex)
             end
         end
 
@@ -502,11 +504,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
 
         local inRange = IsSpellInRange(spellName)
         if inRange ~= nil and inRange == 0 then
-            watcher.movetex:SetColorTexture(.1, .1, 0, .65)
             watcher.iconFrame:SetAlpha(.2)
             watcher.readyText:SetText(OORTEXT)
         else
-            watcher.movetex:SetColorTexture(0, 0, 0, 0)
             watcher.iconFrame:SetAlpha(1)
             watcher.readyText:SetText(READYSTR)
         end
@@ -587,13 +587,17 @@ function mRadial:CreateMainFrame()
     local secondary_exists, secondaryFrame = mRadial:GetFrameByName(SECONDARY_FRAMENAME)
     -- Main Frame
     if not exists then
+        local mask = ""
+        if mRadial:IsWarlock() then
+            mask = "Interface/Artifacts/Artifacts-PerkRing-Final-Mask"
+        end
         MRadialMainFrame = mRadial:CreateMovableFrame(MAINBG_FRAMENAME,
                                                         {size, size},
                                                         UIParent,
                                                         "BackdropTemplate",
                                                         "Interface/Tooltips/UI-Tooltip-Background",
                                                         "ARTWORK",
-                                                        "Interface/Artifacts/Artifacts-PerkRing-Final-Mask",
+                                                        mask,
                                                         false, {size, size}, {size, size}, false)
     else
         MRadialMainFrame = frame

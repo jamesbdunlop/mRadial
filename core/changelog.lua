@@ -1,4 +1,18 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.4.13 --\n \
+\n-- IMPROVEMENTS \
+\n    - Dropped the s from the timers incase fonts make it look like a 5. \
+\n    - Cleans out the out of shard frame texture if on a different class and in config mode. \
+\n    - Debuff timers (dots in particular) should not cross talk with cooldowns now and the watchers should reflect their timers. \
+\n    - Spells not avail now just so X rather than N/A \
+\n    - Spell icons grey out cleaner now when on cooldown. \
+\n-- FIXES \
+\n    - Closing options pane with config mode on now turns off correctly. \
+\n    - Hide out of combat bug fixed. \
+\n    - CONST for Summon SoulKeeper and Shadow Fury spell names into locales. NFI if these actually work. \
+\n-- KNOWN ISSUES \
+\n    - DEBUFF timers share the timer size. I will look to split this out. \
+\n\n \
 ---------- v0.4.12 --\n \
 \n-- IMPROVEMENTS \
 \n    - Added option for center icons to have their timers above or below. \
