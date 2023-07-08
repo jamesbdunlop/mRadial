@@ -30,7 +30,6 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
         mRadial:HideFrame(watcher.readyText)
         mRadial:HideFrame(watcher.debuffTimerTextBG)
         watcher.cooldownText:SetAlpha(0)
-        watcher.cooldownText:SetTextColor(1, .1, .1)
         watcher.cooldownText:SetText(string.format(""))
         return
     end
@@ -40,7 +39,6 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     if enabled and remaining > MR_GCD and not IsMounted() and not hideOOC then
         mRadial:HideFrame(watcher.readyText)
         watcher.cooldownText:SetAlpha(1)
-        watcher.cooldownText:SetTextColor(1, .1, .1)
         watcher.iconFrame:SetAlpha(1)
         if minutes and minutes > 0 then
             watcher.movetex:SetColorTexture(.2, .2, .2, .5)
@@ -84,14 +82,14 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
         mRadial:ShowFrame(watcher.debuffTimerTextBG, .5)
         mRadial:HideFrame(watcher.readyText)
         watcher.movetex:SetColorTexture(.2, .2, .2, .5)
-        watcher.debuffTimerTextBG:SetTexture(iconPath)
+        -- watcher.debuffTimerTextBG:SetTexture(iconPath)
 
         mRadial:ShowFrame(watcher.debuffTimerText)
         watcher.debuffTimerText:SetText(string.format("%d", remaining))
         watcher.iconFrame:SetAlpha(0.5)
     else
         mRadial:ShowFrame(watcher.readyText)
-        mRadial:HideFrame(watcher.debuffTimerTextBG)
+        -- mRadial:HideFrame(watcher.debuffTimerTextBG)
         mRadial:HideFrame(watcher.debuffTimerText)
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(0, 0, 0, 0)
@@ -179,7 +177,6 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         mRadial:ShowFrame(watcher.buffTimerText)
         mRadial:ShowFrame(watcher.buffTimerTextBG)
         watcher.buffTimerTextBG:SetTexture(iconPath)
-        watcher.buffTimerText:SetTextColor(.1, 1, .1)
         watcher.buffTimerTextBG:SetAlpha(.5)
         
         if minutes~= nil and minutes > 0 then

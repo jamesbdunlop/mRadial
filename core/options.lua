@@ -471,7 +471,7 @@ MROptionsTable = {
                     hasAlpha = false,
                     get = function(info)
                       local color = MRadialSavedVariables["buffColor"]
-                      if color == nil then color = {.5, .5, .5, 1} end
+                      if color == nil then color = {.1, 1, .1, 1} end
                       local r, g, b, a = color[1], color[2], color[3], color[4]
                       return r, g, b, a
                     end,
@@ -714,6 +714,79 @@ MROptionsTable = {
                       mRadial:UpdateUI(false)
                     end,
                     get = function(self) return MRadialSavedVariables["countFontSize"] or MR_DEFAULT_FONTSIZE end,
+                  },
+                }
+              },
+              debuffGrp = {
+                name = L["Opt_debuff_name"],
+                type = "group",
+                inline = true,
+                order = 8,
+                args = {
+                  UpDown = {
+                    name = "Up/Down",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 1,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["debuffUdOffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["debuffUdOffset"] or MR_DEFAULT_DEBUFFUDOFFSET end,
+                  },
+                  LeftRight = {
+                    name = "Left/Right",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 2,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["debuffLROffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["debuffLROffset"] or MR_DEFAULT_DEBUFFLROFFSET end,
+                  },
+                  debuffColour = {
+                    type = "color",
+                    name = "debuff Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["debuffColor"]
+                      if color == nil then color = {0, 1, 1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["debuffColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  debuffFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["debuffFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["debuffFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                 }
               }

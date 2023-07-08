@@ -86,6 +86,7 @@ L["Opt_ready_name"] = "Listo"
 L["Opt_CoolDown_name"] = "Tiempo de Enfriamiento"
 L["Opt_timer_name"] = "Temporizador"
 L["Opt_linked_name"] = "Vinculado"
+L["Opt_debuff_name"] = "DoT"
 L["Opt_fontAdjustWarning_name"] = "--- Activa el Modo de Configuración al Ajustar los Parámetros Siguientes ---"
 
 L["Opt_DEFAULT2_desc"] = "POR DEFECTO: 2"
@@ -151,7 +152,7 @@ L["Opt_SoulStrike"] = "Golpe de alma"
 L["Opt_Succubus"] = "Súcubo"
 L["Opt_Incubus"] = "Íncubo"
 
-L["Opt_Size"] = "Größe"
+L["Opt_Size"] = "tamaño"
 
 L["SummonSoulKeeperSpellname"] = "Invocar guardianalmas"
 L["ShadowFurySpellname"] = "Furia de las Sombras"

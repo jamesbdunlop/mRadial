@@ -85,6 +85,7 @@ L["Opt_ready_name"] = "Bereit"
 L["Opt_CoolDown_name"] = "Abklingzeit"
 L["Opt_timer_name"] = "Timer"
 L["Opt_linked_name"] = "Verknüpft"
+L["Opt_debuff_name"] = "DoT"
 L["Opt_fontAdjustWarning_name"] = "--- Schalten Sie den Konfigurationsmodus ein, während Sie die untenstehenden Parameter anpassen ---"
 
 L["Opt_DEFAULT2_desc"] = "STANDARD: 2"

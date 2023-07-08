@@ -86,6 +86,7 @@ L["Opt_count_name"] = "Count"
 L["Opt_ready_name"] = "Ready"
 L["Opt_CoolDown_name"] = "Cool Down"
 L["Opt_timer_name"] = "Timer"
+L["Opt_debuff_name"] = "DoT"
 L["Opt_linked_name"] = "Linked"
 L["Opt_fontAdjustWarning_name"] = "--- Turn on Config Mode While Adjusting The Below Params ---"
 
