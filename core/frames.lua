@@ -404,12 +404,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         
         if isUnitPowerDependant then
             -- Do we have enough shards to allow this to show timers / cast from?
-            local unitpower = 0
-            if mRadial:IsWarlock() then
-                unitpower = UnitPower("player", 7) -- soul shards
-            elseif UnitClass("player") == GetClassInfo(5) then
-                unitpower = UnitPower("player", 13) -- Insanity
-            end
+            local unitpower
+            local unitPowerType = UnitPowerType("player")
+            unitpower = UnitPower("player", unitPowerType)
             if unitpower == 0 or unitpower < UnitPowerCount then
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)

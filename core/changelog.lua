@@ -4,6 +4,7 @@ MRADIAL_UPDATENOTES = " \
 \n    - Added font colors to the options. \
 \n    - Moves the font size over rides into each font area rather the on top, and lets these scale down fonts as well as up. \
 \n    - Dot timers now have their own config for timer position/size in the UI. \
+\n    - UnitPower should work across all classes as expect??? \
 \n-- FIXES \
 \n    - Linked timer box was still moving in and out based on position around circle. This is now static. \
 \n    !!NOTE: This will require you to fix the Left/Right values in the options!! Sorry! :) \
