@@ -156,5 +156,7 @@ L["Opt_SoulStrike"] = "Golpe de alma"
 L["Opt_Succubus"] = "Súcubo"
 L["Opt_Incubus"] = "Íncubo"
 
+L["Opt_Size"] = "tamaño"
+
 L["SummonSoulKeeperSpellname"] = "Invocar guardianalmas"
 L["ShadowFurySpellname"] = "Furia de las Sombras"

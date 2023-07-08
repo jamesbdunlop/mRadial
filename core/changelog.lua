@@ -1,6 +1,13 @@
 MRADIAL_UPDATENOTES = " \
 ---------- v0.4.13 --\n \
 \n-- IMPROVEMENTS \
+\n    - Added font colors to the options. \
+\n    - Moves the font size over rides into each font area rather the on top, and lets these scale down fonts as well as up. \
+\n-- FIXES \
+\n    - Linked timer box was still moving in and out based on position around circle. This is now static. \
+\n\n \
+---------- v0.4.13 --\n \
+\n-- IMPROVEMENTS \
 \n    - Dropped the s from the timers incase fonts make it look like a 5. \
 \n    - Cleans out the out of shard frame texture if on a different class and in config mode. \
 \n    - Debuff timers (dots in particular) should not cross talk with cooldowns now and the watchers should reflect their timers. \

@@ -154,5 +154,7 @@ L["Opt_SoulStrike"] = "Soul Strike"
 L["Opt_Succubus"] = "Succubus"
 L["Opt_Incubus"] = "Incubus"
 
+L["Opt_Size"] = "Size"
+
 L["SummonSoulKeeperSpellname"] = "Summon Soulkeeper"
 L["ShadowFurySpellname"] = "ShadowFury"

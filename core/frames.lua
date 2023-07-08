@@ -91,7 +91,7 @@ end
 function mRadial:CreateFrameTimerElements(frame)
     -- TEXTS
     frame.countText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    frame.countText:SetTextColor(0, 1, 1)
+    -- frame.countText:SetTextColor(0, 1, 1)
     frame.countText:SetPoint("CENTER", frame.iconFrame, "TOP", 00, -15)
 
     frame.buffTimerTextBG = frame:CreateTexture(nil, "BACKGROUND")
@@ -111,7 +111,6 @@ function mRadial:CreateFrameTimerElements(frame)
 
     frame.readyText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.readyText:SetPoint("CENTER", frame, "CENTER", 0, 0)
-    frame.readyText:SetTextColor(.1, 1, .1)
     frame.readyText:SetText(READYSTR)
     
     local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
@@ -795,6 +794,12 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     local widthDeform = wd
     local heightDeform = hd
 
+    local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
+    local countColor = MRadialSavedVariables.countColor or MR_DEFAULT_COUNTCOLOR
+    local cdColor = MRadialSavedVariables.cdColor or MR_DEFAULT_CDCOLOR
+    local buffColor = MRadialSavedVariables.buffColor or MR_DEFAULT_BUFFCOLOR
+    local debuffColor = MRadialSavedVariables.debuffColor or MR_DEFAULT_DEBUFFCOLOR
+
     local countFontSize = MRadialSavedVariables.countFontSize or MR_DEFAULT_FONTSIZE
     local readyFontSize = MRadialSavedVariables.readyFontSize or MR_DEFAULT_FONTSIZE
     local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or MR_DEFAULT_FONTSIZE
@@ -828,11 +833,19 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
         if watcher ~= nil and watcher.isWatcher then
             mRadial:ShowFrame(watcher)
             mRadial:ShowFrame(watcher:GetParent())
+
             local angle = ((x-1)*angleStep) + (offset*math.pi) 
             local sinAng = math.sin(angle)
             local cosAng = math.cos(angle)
             local w = (cosAng*radius)*widthDeform
             local h = (sinAng*radius)*heightDeform
+
+            -- BASE COLORS
+            watcher.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
+            watcher.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
+            watcher.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
+            watcher.buffTimerText:SetTextColor(buffColor[1], buffColor[2], buffColor[3])
+            
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
             -- expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
@@ -878,13 +891,13 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
                 end
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", 0, readyUDOffset)
             elseif cosAng <= -0.1 then
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset*cosAng, radialUdOffset)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "LEFT", radialLROffset, radialUdOffset)
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
             elseif  cosAng >= 0.1 then
-                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", radialLROffset*cosAng, radialUdOffset)
+                watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", -radialLROffset, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "RIGHT", -radialLROffset, radialUdOffset)
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", -countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)

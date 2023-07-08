@@ -85,10 +85,9 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
         mRadial:HideFrame(watcher.readyText)
         watcher.movetex:SetColorTexture(.2, .2, .2, .5)
         watcher.debuffTimerTextBG:SetTexture(iconPath)
-        
+
         mRadial:ShowFrame(watcher.debuffTimerText)
         watcher.debuffTimerText:SetText(string.format("%d", remaining))
-        
         watcher.iconFrame:SetAlpha(0.5)
     else
         mRadial:ShowFrame(watcher.readyText)
@@ -115,7 +114,6 @@ function mRadial:DoPetFrameAuraTimer(spellName, frame)
             else
                 frame.cooldownText:SetText(string.format("%ds", seconds))
             end
-            frame.cooldownText:SetTextColor(.1, 1, .1)
         end
     end
 end
@@ -142,7 +140,6 @@ function mRadial:DoBuffTimer(spellName, watcher, iconPath)
             found = true
             mRadial:ShowFrame(watcher.buffTimerText)
             mRadial:ShowFrame(watcher.buffTimerTextBG)
-            watcher.buffTimerText:SetTextColor(.1, 1, .1)
             watcher.buffTimerTextBG:SetTexture(iconPath)
             watcher.buffTimerTextBG:SetAlpha(.5)
             

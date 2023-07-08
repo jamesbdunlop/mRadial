@@ -18,7 +18,7 @@ MROptionsTable = {
         desc = L["Opt_GenericOptions_desc"],
         type = "header",
         order = 1,
-      }, 
+      },
       configMode = {
         name = L["Opt_ConfigMode_name"],
         desc = L["Opt_ConfigMode_desc"],
@@ -80,7 +80,7 @@ MROptionsTable = {
           }
         }
       },
-      
+
       iconOptions={
         name = L["Opt_RadialIcons_name"],
         type = "group",
@@ -396,7 +396,6 @@ MROptionsTable = {
                     local values = LSM:HashTable("font")
                     local font = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
                     for idx, fontName in pairs(values) do
-                      print(fontName)
                       if fontName == font then
                         return idx
                       end
@@ -419,78 +418,6 @@ MROptionsTable = {
                   mRadial:GlobalFontPercentageChanged()
                 end,
                 get = function(self) return MRadialSavedVariables["FontPercentage"] or MR_DEFAULT_FONTPERCENTAGE end,
-              },
-              fontSliderGrp = {
-                name = L["Opt_FontSizeOverrides_name"],
-                type = "group",
-                inline = true,
-                order = 2.5,
-                args = {
-                  countFontSize = {
-                    name = L["Opt_count_name"],
-                    desc = L["Opt_DEFAULT2_desc"],
-                    type = "range",
-                    order = 1,
-                    min = 2,
-                    max = 55,
-                    step = 1,
-                    isPercent = false,
-                    default = 2,
-                    set = function(self, val)
-                      MRadialSavedVariables["countFontSize"] = val
-                      mRadial:UpdateUI(false)
-                    end,
-                    get = function(self) return MRadialSavedVariables["countFontSize"] or MR_DEFAULT_FONTSIZE end,
-                  },
-                  readyFontSize = {
-                    name = L["Opt_ready_name"],
-                    desc = L["Opt_DEFAULT2_desc"],
-                    type = "range",
-                    order = 2,
-                    min = 2,
-                    max = 55,
-                    step = 1,
-                    isPercent = false,
-                    default = 2,
-                    set = function(self, val)
-                      MRadialSavedVariables["readyFontSize"] = val
-                      mRadial:UpdateUI(false)
-                    end,
-                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
-                  },
-                  coolDownFontSize = {
-                    name = L["Opt_CoolDown_name"],
-                    desc = L["Opt_DEFAULT2_desc"],
-                    type = "range",
-                    order = 3,
-                    min = 2,
-                    max = 55,
-                    step = 1,
-                    isPercent = false,
-                    default = 2,
-                    set = function(self, val)
-                      MRadialSavedVariables["coolDownFontSize"] = val
-                      mRadial:UpdateUI(false)
-                    end,
-                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
-                  },
-                  timerFontSize = {
-                    name = L["Opt_timer_name"],
-                    desc = L["Opt_DEFAULT2_desc"],
-                    type = "range",
-                    order = 4,
-                    min = 2,
-                    max = 55,
-                    step = 1,
-                    isPercent = false,
-                    default = 2,
-                    set = function(self, val)
-                      MRadialSavedVariables["timerFontSize"] = val
-                      mRadial:UpdateUI(false)
-                    end,
-                    get = function(self) return MRadialSavedVariables["timerFontSize"] or MR_DEFAULT_FONTSIZE end,
-                  },
-                }
               },
               fontAdjustWarning = {
                 name = L["Opt_fontAdjustWarning_name"],
@@ -536,13 +463,46 @@ MROptionsTable = {
                     end,
                     get = function(self) return MRadialSavedVariables["radialLROffset"] or MR_DEFAULT_LROFFSET end,
                   },
+                  BuffColour = {
+                    type = "color",
+                    name = "Pick Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["buffColor"]
+                      if color == nil then color = {.5, .5, .5, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["buffColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  timerFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["timerFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["timerFontSize"] or MR_DEFAULT_FONTSIZE end,
+                  },
                 }
               },
               cooldownGrp = {
                 name = L["Opt_CoolDown_name"],
                 type = "group",
                 inline = true,
-                order = 4,
+                order = 6,
                 args = {
                   UpDown = {
                     name = "Up/Down",
@@ -576,13 +536,46 @@ MROptionsTable = {
                     end,
                     get = function(self) return MRadialSavedVariables["cdLROffset"] or MR_DEFAULT_CDLROFFSET end,
                   },
+                  CDColour = {
+                    type = "color",
+                    name = "Cooldown Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["cdColor"]
+                      if color == nil then color = {.1, 1, .1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["cdColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  coolDownFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["coolDownFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                  },
                 }
               },
               readyGrp = {
                 name = L["Opt_ready_name"],
                 type = "group",
                 inline = true,
-                order = 4,
+                order = 7,
                 args = {
                   UpDown = {
                     name = "Up/Down",
@@ -616,13 +609,46 @@ MROptionsTable = {
                     end,
                     get = function(self) return MRadialSavedVariables["readyLROffset"] or MR_DEFAULT_READYLROFFSET end,
                   },
+                  ReadyColour = {
+                    type = "color",
+                    name = "Pick Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["readyColor"]
+                      if color == nil then color = {.1, 1, .1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["readyColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  readyFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["readyFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                  },
                 }
               },
               countGrp = {
                 name = L["Opt_count_name"],
                 type = "group",
                 inline = true,
-                order = 4,
+                order = 8,
                 args = {
                   UpDown = {
                     name = "Up/Down",
@@ -655,6 +681,39 @@ MROptionsTable = {
                       mRadial:UpdateUI(false)
                     end,
                     get = function(self) return MRadialSavedVariables["countLROffset"] or MR_DEFAULT_COUNTLROFFSET end,
+                  },
+                  CountColour = {
+                    type = "color",
+                    name = "Count Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["countColor"]
+                      if color == nil then color = {0, 1, 1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["countColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  countFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["countFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["countFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                 }
               }
@@ -854,7 +913,7 @@ function mRadial:OptionsPane()
   if MRADIALOptionsPane == nil then
     -- Create the frame
     MRADIALOptionsPane = AceGUI:Create("Frame")
-    MR_configDialog:SetDefaultSize(appName, 800, 600)
+    MR_configDialog:SetDefaultSize(appName, 820, 600)
     MR_configDialog:Open(appName, MRADIALOptionsPane)
     MRADIALOptionsPane:SetLayout("Flow")
     MRADIALOptionsPane:SetTitle("---".. appName .. "---")

@@ -155,6 +155,8 @@ L["Opt_SoulStrike"] = "Seelenschlag"
 L["Opt_Succubus"] = "Sukkubus"
 L["Opt_Incubus"] = "Inkubus"
 
+L["Opt_Size"] = "Größe"
+
 L["SummonSoulKeeperSpellname"] = "Seelenwärter herbeirufen"
 L["ShadowFurySpellname"] = "Schattenfuror"
 
