@@ -688,7 +688,7 @@ function mRadial:CreatePetFrames()
 
     for frameName, spellData in pairs(petSpellData) do
         local spellName = spellData["spellName"]
-        local spellIcon = spellData["spellIcon"]
+        local spellIconPath = spellData["spellIcon"]
         if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) then
             -- print("Creating new pet  frame: %s", frameName)
             local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
@@ -697,9 +697,9 @@ function mRadial:CreatePetFrames()
                                                 {petFrameSize, petFrameSize},
                                                 UIParent,
                                                 "",
-                                                spellIcon,
+                                                spellIconPath,
                                                 "ARTWORK",
-                                                "Interface/BUTTONS/UI-QuickslotRed",
+                                                nil,
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
@@ -707,6 +707,14 @@ function mRadial:CreatePetFrames()
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
+            -- Colors
+            local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
+            local cdColor = MRadialSavedVariables.cdColor or MR_DEFAULT_CDCOLOR
+            local countColor = MRadialSavedVariables.countColor or MR_DEFAULT_COUNTCOLOR
+            frame.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
+            frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
+            frame.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
+
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
                 if plast <= MR_INTERVAL then
@@ -813,7 +821,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     local readyUDOffset = MRadialSavedVariables.readyUDOffset or MR_DEFAULT_READYUDOFFSET
     local readyLROffset = MRadialSavedVariables.readyLROffset or MR_DEFAULT_READYLROFFSET
 
-    local debuffUDOffset = MRadialSavedVariables.debuffUDOffset or MR_DEFAULT_DEBUFFUDOFFSET
+    local debuffUDOffset = MRadialSavedVariables.debuffUdOffset or MR_DEFAULT_DEBUFFUDOFFSET
     local debuffLROffset = MRadialSavedVariables.debuffLROffset or MR_DEFAULT_DEBUFFLROFFSET
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or MR_DEFAULT_WATCHERFRAMESIZE

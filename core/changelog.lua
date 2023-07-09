@@ -1,4 +1,8 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.1 --\n \
+\n-- FIXES \
+\n    -Dot timer updown typo in name preventing position to work. \
+\n    -Pet frames not using the custom colors. \
 ---------- v0.5.0 --\n \
 \n-- IMPROVEMENTS \
 \n    - Added font colors to the options. \
