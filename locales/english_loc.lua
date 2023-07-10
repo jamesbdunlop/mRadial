@@ -167,3 +167,6 @@ L["Opt_Size"] = "Size"
 
 L["SummonSoulKeeperSpellname"] = "Summon Soulkeeper"
 L["ShadowFurySpellname"] = "ShadowFury"
+
+L["Opt_PetIgnoreInput_name"] = "Pet Abilities To Ignore"
+L["Opt_PetIgnoreInput_desc"] = "Type the name of the pet ability you want to ignore on a newLine. No trailing spaces!"

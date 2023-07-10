@@ -12,7 +12,8 @@ function mRadial:GetSpellRemaining(spellName)
     return enabled, remaining, minutes, seconds
 end
 
-function mRadial:DoSpellFrameCooldown(spellName, watcher)
+function mRadial:DoSpellFrameCooldown(spellName, watcher, noPower)
+    if noPower == nil then noPower = false end
     -- COOLDOWNS FOR PARENT SPELLS
     if MAINFRAME_ISMOVING then
         return
@@ -41,12 +42,21 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
         watcher.cooldownText:SetAlpha(1)
         watcher.iconFrame:SetAlpha(1)
         if minutes and minutes > 0 then
-            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+            if noPower then
+                watcher.movetex:SetColorTexture(1, 0, 0, .5)
+            else
+                watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+            end
             watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
         elseif seconds then
-            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+            if noPower then
+                watcher.movetex:SetColorTexture(1, 0, 0, .5)
+            else
+                watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+            end
             watcher.cooldownText:SetText(string.format("%d", seconds))
         else
+            watcher.movetex:SetColorTexture(0, 0, 0, 0)
             watcher.cooldownText:SetText(string.format(""))
             watcher.iconFrame:SetAlpha(1)
         end
@@ -61,7 +71,8 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher)
     end
 end
 
-function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
+function mRadial:DoDebuffTimer(spellName, watcher, iconPath, noPower)
+    if noPower == nil then noPower = false end
     -- DEBUFF TIMERS
     if MAINFRAME_ISMOVING then
         return
@@ -81,9 +92,12 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath)
     if remaining > MR_GCD and not IsMounted() and not hideOOC then
         mRadial:ShowFrame(watcher.debuffTimerTextBG, .5)
         mRadial:HideFrame(watcher.readyText)
-        watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+        if noPower then
+            watcher.movetex:SetColorTexture(1, 0, 0, .5)
+        else
+            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
+        end
         -- watcher.debuffTimerTextBG:SetTexture(iconPath)
-
         mRadial:ShowFrame(watcher.debuffTimerText)
         watcher.debuffTimerText:SetText(string.format("%d", remaining))
         watcher.iconFrame:SetAlpha(0.5)

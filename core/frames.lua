@@ -184,6 +184,7 @@ function mRadial:SetMoveFrameScripts(frame)
     frame:SetScript("OnMouseUp", function(self, button)
         frame:StopMovingOrSizing()
         local frameName = frame:GetName()
+        -- print("storing frame pos: %s", frameName)
         local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
         MRadialSavedVariables.framePositions[frameName] = {}
         MRadialSavedVariables.framePositions[frameName]["point"] = point
@@ -319,11 +320,13 @@ function mRadial:SetUIMovable(isMovable)
     end
 end
 
-function mRadial:RestoreFrame(frameName, frame)
+function mRadial:RestoreFrame(frameName, frame, forceDefault)
+    if forceDefault == nil then forceDefault = false end
     local framePosData = MRadialSavedVariables.framePositions[frameName]
-    if framePosData == nil then
+    if framePosData == nil or forceDefault then
+        print("Setting defaults for petFrame: %s", frameName)
         framePosData = {}
-        framePosData["x"] = 0
+        framePosData["x"] = -100
         framePosData["y"] = 0
         framePosData["point"] = "CENTER"
         framePosData["relativeTo"] = "UIParent"
@@ -442,9 +445,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
                 watcher.debuffTimerText:SetText("")
                 mRadial:ShowFrame(watcher.readyText)
                 mRadial:ShowFrame(watcher.movetex)
-                watcher.movetex:SetColorTexture(1, 0, 0, .5)
-                -- mRadial:DoDebuffTimer(spellName, watcher, iconPath)
-                -- mRadial:DoSpellFrameCooldown(spellName, watcher)
+                
+                mRadial:DoDebuffTimer(spellName, watcher, iconPath, true)
+                mRadial:DoSpellFrameCooldown(spellName, watcher)
                 return
             else
                 watcher.readyText:SetText(READYSTR)
@@ -454,7 +457,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             end
         end
 
-        mRadial:DoDebuffTimer(spellName, watcher, iconPath)
+        mRadial:DoDebuffTimer(spellName, watcher, iconPath, false)
         mRadial:DoSpellFrameCooldown(spellName, watcher)
 
         local allLinkedSpells = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
@@ -681,7 +684,12 @@ function mRadial:CreatePetFrames()
     for frameName, spellData in pairs(petAbilities) do
         local spellName = spellData["spellName"]
         local spellIconPath = spellData["spellIcon"]
-        if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) then
+        local ignoreFrameNames = MRadialSavedVariables["hidePetAbilities"] or ""
+        local toIgnore = false
+        for line in ignoreFrameNames:gmatch("[^\r\n]+") do
+            if spellName == line then toIgnore = true break end
+        end
+        if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
             local fontPercentage = MRadialSavedVariables.FontPercentage or .5
             local frame = mRadial:CreateMovableFrame(frameName,

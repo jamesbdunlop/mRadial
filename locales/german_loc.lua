@@ -167,3 +167,5 @@ L["Opt_Size"] = "Größe"
 L["SummonSoulKeeperSpellname"] = "Seelenwärter herbeirufen"
 L["ShadowFurySpellname"] = "Schattenfuror"
 
+L["Opt_PetIgnoreInput_name"] = "Zu ignorierende Begleiterfähigkeiten"
+L["Opt_PetIgnoreInput_desc"] = "Geben Sie den Namen der Begleiterfähigkeit ein, die Sie ignorieren möchten, jeweils in einer neuen Zeile. Keine Leerzeichen am Ende!"

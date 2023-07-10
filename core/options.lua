@@ -975,6 +975,41 @@ MROptionsTable = {
                 end,
                 get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
               },
+              resetPetPos = {
+                name = "Reset PetFrames",
+                desc = "Resets petFrames to center screen if they went missing.",
+                type = "execute",
+                order = 3,
+                func  = function(self, val)
+                  local petFrames = MR_PETFAMES
+                  for _, frame in ipairs(petFrames) do
+                    local frameName = frame:GetName()
+                    mRadial:RestoreFrame(frameName, frame, true)
+                  end
+                end,
+              },
+              petAbilityIgnore ={
+                name = "Ignore",
+                type = "group",
+                inline = "true",
+                order = 4,
+                args = {
+                  ingoreInput = {
+                    name = L["Opt_PetIgnoreInput_name"],
+                    desc = L["Opt_PetIgnoreInput_desc"],
+                    width  = "full",
+                    type = "input",
+                    multiline = true,
+                    order = 1,
+                    set = function(info, val)
+                      MRadialSavedVariables["hidePetAbilities"] = val
+                    end,
+                    get = function()
+                        return MRadialSavedVariables["hidePetAbilities"] or ""
+                    end,
+                  },
+                },
+              },
               pet_cooldownGrp = {
                 name = L["Opt_CoolDown_name"],
                 type = "group",

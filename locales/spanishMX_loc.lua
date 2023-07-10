@@ -168,3 +168,6 @@ L["Opt_Size"] = "tamaño"
 
 L["SummonSoulKeeperSpellname"] = "Invocar guardianalmas"
 L["ShadowFurySpellname"] = "Furia de las Sombras"
+
+L["Opt_PetIgnoreInput_name"] = "Habilidades de Mascota a Ignorar"
+L["Opt_PetIgnoreInput_desc"] = "Escribe el nombre de la habilidad de mascota que deseas ignorar en una nueva línea. ¡Sin espacios al final!"

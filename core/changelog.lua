@@ -1,19 +1,32 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.5 --\n \
+\n-- IMPROVEMENTS \
+\n    - New Pet frames go to the left rather then the center of screen for easier click + move. \
+\n    - Added a reset pet frames button incase you're getting the wonderful UI bug were the positions wig out. \
+\n    - Added an input option to add the names of any pet ability frames you might want to ignore.\
+\n-- FIXES \
+\n    - VSCode unsaved file. Whoops! Fixes config for pet frame cd position. \
+\n    - UnitPower + Spell on cooldown play. I removed a called to the debuff/cd timers to stop the greying out of the icons, which was a bad idea in hindsight. \
+\n\n \
 ---------- v0.5.4 --\n \
 \n-- IMPROVEMENTS \
 \n    - Pet frame options for fonts etc. \
 \n    - Red frame spells whose power is not enough to use. \
+\n\n \
 ---------- v0.5.3 --\n \
 \n Seems that the 5.2 picked up the deleted archive. I'm releasing this for the IsPriest error so that gets gone. \
 \n-- IMPROVEMENTS \
 \n    - Adds the pet abilities from the spell book for any class now. Have added a pet options into the config. More to come here...WIP \
+\n\n \
 ---------- v0.5.2 --\n \
 \n-- FIXES \
 \n    -I broke unitPower trying to be clever with it! This should fix for all classes.\
+\n\n \
 ---------- v0.5.1 --\n \
 \n-- FIXES \
 \n    -Dot timer updown typo in name preventing position to work. \
 \n    -Pet frames not using the custom colors. \
+\n\n \
 ---------- v0.5.0 --\n \
 \n-- IMPROVEMENTS \
 \n    - Added font colors to the options. \
@@ -23,6 +36,7 @@ MRADIAL_UPDATENOTES = " \
 \n-- FIXES \
 \n    - Linked timer box was still moving in and out based on position around circle. This is now static. \
 \n    !!NOTE: This will require you to fix the Left/Right values in the options!! Sorry! :) \
+\n\n \
 ---------- v0.4.13 --\n \
 \n-- IMPROVEMENTS \
 \n    - Dropped the s from the timers incase fonts make it look like a 5. \
