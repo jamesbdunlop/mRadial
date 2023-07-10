@@ -2,6 +2,7 @@ MRADIAL_UPDATENOTES = " \
 ---------- v0.5.4 --\n \
 \n-- IMPROVEMENTS \
 \n    - Pet frame options for fonts etc. \
+\n    - Red frame spells whose power is not enough to use. \
 ---------- v0.5.3 --\n \
 \n Seems that the 5.2 picked up the deleted archive. I'm releasing this for the IsPriest error so that gets gone. \
 \n-- IMPROVEMENTS \

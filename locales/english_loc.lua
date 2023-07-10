@@ -131,7 +131,7 @@ L["Opt_HideShardTracker_desc"] = "Show/Hide the warlock shard tracker frame."
 L["Opt_pet_name"] = "Pet Options"
 
 L["Opt_RDY_name"] = "RDY"
-L["Opt_NOSSSTR_name"] = "X"
+L["Opt_NOPOWER_name"] = "X"
 L["Opt_OOR_name"] = "OOR"
 
 L["Opt_LinkedSpellsInfo_name"] = "Linked spells are a way for you to link a buff to a core spell. \

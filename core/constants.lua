@@ -8,7 +8,7 @@ ROOTICONPATH ="Interface/ICONS"
 MEDIAPATH = "Interface\\AddOns\\mRadial\\media"
 MAINFRAME_ISMOVING = false
 READYSTR = L["Opt_RDY_name"]
-NOSSSTR = L["Opt_NOSSSTR_name"]
+NOPOWER = L["Opt_NOPOWER_name"]
 READYTEXT = L["Opt_RDY_name"]
 OORTEXT = L["Opt_OOR_name"]
 

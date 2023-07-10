@@ -253,7 +253,7 @@ function mRadial:SetUIMovable(isMovable)
 
     for _, pframe in pairs(MR_PARENTFRAMES) do
         if isMovable then
-            if not pframe.baseFrame.isWatcher and not pframe.baseFrame.isPetFrame then
+            if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .25)
                 mRadial:ShowFrame(pframe.baseFrame.movetext, .25)
                 pframe.baseFrame:EnableMouse(isMovable)
@@ -264,6 +264,19 @@ function mRadial:SetUIMovable(isMovable)
                         pframe.ShardCounterFrame:EnableMouse(isMovable)
                     end
                     pframe.ShardCounterFrame:SetMovable(isMovable)
+                end
+                if pframe.baseFrame.isPetFrame then
+                    mRadial:ShowFrame(pframe.baseFrame.readyText)
+                    mRadial:ShowFrame(pframe.baseFrame.countText)
+                    mRadial:ShowFrame(pframe.baseFrame.cooldownText)
+                    mRadial:ShowFrame(pframe.baseFrame.debuffTimerText)
+                    mRadial:ShowFrame(pframe.baseFrame.buffTimerText)
+                    mRadial:ShowFrame(pframe.baseFrame.buffTimerTextBG)
+                    pframe.baseFrame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
+                    pframe.baseFrame.buffTimerText:SetText("00")
+                    pframe.baseFrame.countText:SetText("00")
+                    pframe.baseFrame.cooldownText:SetText("00")
+                    pframe.baseFrame.debuffTimerText:SetText("00")
                 end
             else
                 mRadial:ShowFrame(pframe.baseFrame.readyText)
@@ -279,13 +292,21 @@ function mRadial:SetUIMovable(isMovable)
                 pframe.baseFrame.debuffTimerText:SetText("00")
             end
         else
-            if not pframe.baseFrame.isWatcher and not pframe.baseFrame.isPetFrame then
+            if not pframe.baseFrame.isWatcher then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
                 mRadial:HideFrame(pframe.baseFrame.movetext)
                 if not InCombatLockdown() then 
                     pframe.baseFrame:EnableMouse(isMovable)
                 end
                 pframe.baseFrame:SetMovable(isMovable)
+                if pframe.baseFrame.isPetFrame then
+                    mRadial:HideFrame(pframe.baseFrame.readyText)
+                    mRadial:HideFrame(pframe.baseFrame.countText)
+                    mRadial:HideFrame(pframe.baseFrame.cooldownText)
+                    mRadial:HideFrame(pframe.baseFrame.debuffTimerText)
+                    mRadial:HideFrame(pframe.baseFrame.buffTimerText)
+                    mRadial:HideFrame(pframe.baseFrame.buffTimerTextBG)
+                end
             else
                 mRadial:HideFrame(pframe.baseFrame.readyText)
                 mRadial:HideFrame(pframe.baseFrame.countText)
@@ -415,13 +436,19 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             -- Do we have enough shards to allow this to show timers / cast from?
             local power = UnitPower("player", powerType)
             if power == 0 or power < powerTypeCost then
-                watcher.readyText:SetText(NOSSSTR)
+                watcher.readyText:SetText(NOPOWER)
                 watcher.readyText:SetTextColor(1, 0, 0)
-                mRadial:DoDebuffTimer(spellName, watcher, iconPath)
-                mRadial:DoSpellFrameCooldown(spellName, watcher)
+                watcher.cooldownText:SetText("")
+                watcher.debuffTimerText:SetText("")
+                mRadial:ShowFrame(watcher.readyText)
+                mRadial:ShowFrame(watcher.movetex)
+                watcher.movetex:SetColorTexture(1, 0, 0, .5)
+                -- mRadial:DoDebuffTimer(spellName, watcher, iconPath)
+                -- mRadial:DoSpellFrameCooldown(spellName, watcher)
                 return
             else
                 watcher.readyText:SetText(READYSTR)
+                mRadial:HideFrame(watcher.movetex)
                 local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
                 watcher.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
             end
