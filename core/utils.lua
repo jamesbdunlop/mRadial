@@ -47,6 +47,10 @@ function mRadial:IsWarlock()
     return UnitClass("player") == GetClassInfo(9)
 end
 
+function mRadial:IsPriest()
+    return UnitClass("player") == GetClassInfo(5)
+end
+
 function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))

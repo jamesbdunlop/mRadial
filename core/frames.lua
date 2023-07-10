@@ -375,11 +375,20 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     watcher:GetParent().spellName = spellName
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
-    local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
-    -- local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
-    -- local pSpellName, _, pIconPath, _, pMinRange, pMaxRange, _, _ = GetSpellInfo(overrideSpellID)
-    -- local disabled = C_SpellBook.IsSpellDisabled(spellID)
-
+    -- local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
+    local costInfo = GetSpellPowerCost(spellID)
+    local isUnitPowerDependant = false
+    local powerTypeRequired = nil
+    local powerTypeCost = 0
+    local powerType = 0
+    if costInfo[1] == nil then 
+        isUnitPowerDependant = false
+    else 
+        isUnitPowerDependant = true
+        powerType = costInfo[1]["type"]
+        powerTypeRequired = costInfo[1]["name"]
+        powerTypeCost = costInfo[1]["minCost"]
+    end
     ----------------------------------------------
     -- Assign the spell to cast if we're a button!
     local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
@@ -404,16 +413,8 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         
         if isUnitPowerDependant then
             -- Do we have enough shards to allow this to show timers / cast from?
-            local unitPower = 0
-            local powerType, powerToken, altR, altG, altB = UnitPowerType("player")
-            if mRadial:IsWarlock() then
-                unitPower = UnitPower("player", 7)
-            elseif mRadial:IsPriest() then
-                unitPower = UnitPower("player", 13)
-            else
-                unitPower = unitPower("player", powerType)
-            end
-            if unitPower == 0 or unitPower < UnitPowerCount then
+            local power = UnitPower("player", powerType)
+            if power == 0 or power < powerTypeCost then
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 mRadial:DoDebuffTimer(spellName, watcher, iconPath)
