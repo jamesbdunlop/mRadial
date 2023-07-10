@@ -404,10 +404,16 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         
         if isUnitPowerDependant then
             -- Do we have enough shards to allow this to show timers / cast from?
-            local unitpower
-            local unitPowerType = UnitPowerType("player")
-            unitpower = UnitPower("player", unitPowerType)
-            if unitpower == 0 or unitpower < UnitPowerCount then
+            local unitPower = 0
+            local powerType, powerToken, altR, altG, altB = UnitPowerType("player")
+            if mRadial:IsWarlock() then
+                unitPower = UnitPower("player", 7)
+            elseif mRadial:IsPriest() then
+                unitPower = UnitPower("player", 13)
+            else
+                unitPower = unitPower("player", powerType)
+            end
+            if unitPower == 0 or unitPower < UnitPowerCount then
                 watcher.readyText:SetText(NOSSSTR)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 mRadial:DoDebuffTimer(spellName, watcher, iconPath)

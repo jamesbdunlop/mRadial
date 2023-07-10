@@ -1,4 +1,7 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.2 --\n \
+\n-- FIXES \
+\n    -I broke unitPower trying to be clever with it. Fixes in directly for Priest and Warlock will have to figure out the other classes. \
 ---------- v0.5.1 --\n \
 \n-- FIXES \
 \n    -Dot timer updown typo in name preventing position to work. \
