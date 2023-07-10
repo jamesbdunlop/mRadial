@@ -109,7 +109,7 @@ L["Opt_warlock_name"] = "Warlock"
 
 L["Opt_PetFrames_name"] = "Pet Frames"
 L["Opt_HidePetFrames_name"] = "Hide Pet Frames"
-L["Opt_HidePetFrames_desc"] = "Show/Hide the warlock pet frames."
+L["Opt_HidePetFrames_desc"] = "Show/Hide the pet frames."
 
 L["Opt_IconSize_name"] = "Icon Size"
 L["Opt_IconSize_desc"] = "Use this change the spell icon sizes."
@@ -127,6 +127,8 @@ L["Opt_ShardTrackerTrans_desc"] = "Use this change alpha of the shard frame. Tur
 
 L["Opt_HideShardTracker_name"] = "Hide Shard Frame"
 L["Opt_HideShardTracker_desc"] = "Show/Hide the warlock shard tracker frame."
+
+L["Opt_pet_name"] = "Pet Options"
 
 L["Opt_RDY_name"] = "RDY"
 L["Opt_NOSSSTR_name"] = "X"
@@ -153,7 +155,13 @@ L["Opt_AxeToss"] = "Axe Toss"
 L["Opt_SoulStrike"] = "Soul Strike"
 
 L["Opt_Succubus"] = "Succubus"
+L["Opt_Seduction"] = "Seduction"
+L["Opt_LashOfPain"] = "Lash Of Pain"
+L["Opt_Whiplash"] = "Whiplash"
+
 L["Opt_Incubus"] = "Incubus"
+
+L["Opt_Felhunter"] = "Felhunter"
 
 L["Opt_Size"] = "Size"
 

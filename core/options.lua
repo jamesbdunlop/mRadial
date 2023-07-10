@@ -865,41 +865,6 @@ MROptionsTable = {
         name = L["Opt_warlock_name"],
         type = "group",
         args={
-          pet ={
-            name = L["Opt_PetFrames_name"],
-            type = "group",
-            inline = "true",
-            order = 1,
-            args = {
-              hidePetFrames = {
-                name = L["Opt_HidePetFrames_name"],
-                desc = L["Opt_HidePetFrames_desc"],
-                type = "toggle",
-                order = 1,
-                defaultValue = false,
-                set = function(info, val)
-                  MRadialSavedVariables["hidePetFrame"] = val 
-                  mRadial:TogglePetFrameVisibility()
-                end,
-                get = function(info) return MRadialSavedVariables["hidePetFrame"] end,
-              },
-              iconSize = {
-                name = L["Opt_IconSize_name"],
-                desc = L["Opt_IconSize_desc"],
-                type = "range",
-                order = 2,
-                min = 1,
-                max = 200,
-                isPercent = false,
-                default = 40,
-                set = function(self, val)
-                  MRadialSavedVariables["PetFramesSize"] = val
-                  mRadial:SetPetFramePosAndSize()
-                end,
-                get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
-              },
-            }
-          },
           shards ={
             name = L["Opt_ShardFrames_name"],
             type = "group",
@@ -968,6 +933,49 @@ MROptionsTable = {
                 get = function(info) return MRadialSavedVariables["hideShardFrame"] end,
               },
             },
+          },
+        },
+        order=4
+      },
+
+      petOptions={
+        name = L["Opt_pet_name"],
+        type = "group",
+        args={
+          pet ={
+            name = L["Opt_PetFrames_name"],
+            type = "group",
+            inline = "true",
+            order = 1,
+            args = {
+              hidePetFrames = {
+                name = L["Opt_HidePetFrames_name"],
+                desc = L["Opt_HidePetFrames_desc"],
+                type = "toggle",
+                order = 1,
+                defaultValue = false,
+                set = function(info, val)
+                  MRadialSavedVariables["hidePetFrame"] = val 
+                  mRadial:TogglePetFrameVisibility()
+                end,
+                get = function(info) return MRadialSavedVariables["hidePetFrame"] end,
+              },
+              iconSize = {
+                name = L["Opt_IconSize_name"],
+                desc = L["Opt_IconSize_desc"],
+                type = "range",
+                order = 2,
+                min = 1,
+                max = 200,
+                isPercent = false,
+                default = 40,
+                set = function(self, val)
+                  MRadialSavedVariables["PetFramesSize"] = val
+                  mRadial:SetPetFramePosAndSize()
+                end,
+                get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
+              },
+            }
           },
         },
         order=4

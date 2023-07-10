@@ -1,4 +1,8 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.3 --\n \
+\n Seems that the 5.2 picked up the deleted archive. I'm releasing this for the IsPriest error so that gets gone. \
+\n-- IMPROVEMENTS \
+\n    - Adds the pet abilities from the spell book for any class now. Have added a pet options into the config. More to come here...WIP \
 ---------- v0.5.2 --\n \
 \n-- FIXES \
 \n    -I broke unitPower trying to be clever with it! This should fix for all classes.\

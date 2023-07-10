@@ -648,56 +648,13 @@ end
 -- PET FRAMES
 local plast = 0
 function mRadial:CreatePetFrames()
-    mRadial:HideAllPetFrames()
     -- Clear out existing
-    local petSpellData = {}
-    if mRadial:IsFelguardSummoned() then 
-        petSpellData = {
-            ["DemonicStrength"] = {["spellName"] = L["Opt_DemonicStrength"],
-                                ["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)},
-            ["FelStorm"] = {["spellName"] = L["Opt_FelStorm"],
-                            ["spellIcon"] = string.format("%s/Ability_warrior_bladestorm.blp", ROOTICONPATH)},
-            ["AxeToss"] = {["spellName"] = L["Opt_AxeToss"],
-                                ["spellIcon"] = string.format("%s/Ability_warrior_titansgrip.blp", ROOTICONPATH)},
-            ["SoulStrike"] = {["spellName"] = L["Opt_SoulStrike"],
-                            ["spellIcon"] = string.format("%s/Inv_polearm_2h_fellord_04.blp", ROOTICONPATH)}
-        }
-    elseif mRadial:IsSuccubusSummoned() then 
-        petSpellData = {
-            ["Seduction"] = {["spellName"] = "Seduction",
-                             ["spellIcon"] = string.format("%s/Spell_shadow_seduction.blp", ROOTICONPATH)},
-                             ["Whiplash"] = {["spellName"] = "Whiplash",
-                             ["spellIcon"] = string.format("%s/Ability_warlock_whiplash.blp", ROOTICONPATH)},        
-                            }
-    elseif mRadial:IsFelhunterSummoned() then 
-        petSpellData = {
-            ["SpelLock"] = {["spellName"] = "Spell Lock",
-                            ["spellIcon"] = string.format("%s/Spell_shadow_mindrot.blp", ROOTICONPATH)},
-            ["DevourMagic"] = {["spellName"] = "Devour Magic",
-                               ["spellIcon"] = string.format("%s/Spell_nature_purge.blp", ROOTICONPATH)},
-                            }
-
-    elseif mRadial:IsVoidWalkerSummoned() then 
-        petSpellData = {
-            ["ShadowBulwark"] = {["spellName"] = "Shadow Bulwark",
-                            ["spellIcon"] = string.format("%s/Spell_shadow_antishadow.blp", ROOTICONPATH)},
-            ["Suffering"] = {["spellName"] = "Suffering",
-                                ["spellIcon"] = string.format("%s/Spell_shadow_blackplague.blp", ROOTICONPATH)},
-                            }
-    elseif mRadial:IsFelImpSummoned() then 
-        petSpellData = {
-            ["SingeMagic"] = {["spellName"] = "Singe Magic",
-                            ["spellIcon"] = string.format("%s/Spell_fire_elementaldevastation.blp", ROOTICONPATH) },
-            ["Flee"] = {["spellName"] = "Flee",
-                                ["spellIcon"] = string.format("%s/Ability_heroicleap.blp", ROOTICONPATH)},
-                            }
-    end
-
-    for frameName, spellData in pairs(petSpellData) do
+    mRadial:HideAllPetFrames()
+    local petAbilities = mRadial:GetPetAbilities()
+    for frameName, spellData in pairs(petAbilities) do
         local spellName = spellData["spellName"]
         local spellIconPath = spellData["spellIcon"]
         if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) then
-            -- print("Creating new pet  frame: %s", frameName)
             local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
             local fontPercentage = MRadialSavedVariables.FontPercentage or .5
             local frame = mRadial:CreateMovableFrame(frameName,
@@ -740,7 +697,9 @@ function mRadial:CreatePetFrames()
             MR_PETFAMES[#MR_PETFAMES+1] = frame
             MR_ALLFRAMES[frameName] = frame
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
-            mRadial:ShowFrame(MR_ALLFRAMES[frameName])
+            local frame = MR_ALLFRAMES[frameName]
+            mRadial:ShowFrame(frame)
+            if not InCombatLockdown() then frame:Show() end
         end
     end
 end
@@ -760,6 +719,7 @@ function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
             mRadial:HideFrame(frame)
+            if not InCombatLockdown() then frame:Hide() end
         end
     end
 end

@@ -126,6 +126,8 @@ L["Opt_ShardTrackerTrans_desc"] = "Verwenden Sie dies, um die Transparenz des Sp
 L["Opt_HideShardTracker_name"] = "Splitter-Fenster ausblenden"
 L["Opt_HideShardTracker_desc"] = "Zeige/Verberge das Splitter-Tracker-Fenster des Hexenmeisters."
 
+L["Opt_pet_name"] = "Pet Options"
+
 L["Opt_RDY_name"] = "RDY"
 L["Opt_NOSSSTR_name"] = "X"
 L["Opt_OOR_name"] = "OOR"
@@ -154,6 +156,10 @@ L["Opt_AxeToss"] = "Axtwurf"
 L["Opt_SoulStrike"] = "Seelenschlag"
 
 L["Opt_Succubus"] = "Sukkubus"
+L["Opt_Seduction"] = "Verführung"
+L["Opt_LashOfPain"] = "Peitsche des Schmerzes"
+L["Opt_Whiplash"] = "Peitschenhieb"
+
 L["Opt_Incubus"] = "Inkubus"
 
 L["Opt_Size"] = "Größe"

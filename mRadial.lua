@@ -55,10 +55,10 @@ function mRadial:InitUI(create)
         mRadial:createShardCountFrame()
         mRadial:shardtrack()
     end
-    mRadial:CreatePetFrames()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     if create == nil then create = false end
     mRadial:UpdateUI(create)
+    
 end
 
 function mRadial:UpdateUI(create)

@@ -77,6 +77,42 @@ function mRadial:OrderTableContains(myTable, watcher)
     return false
 end
 
+function mRadial:TableContainsKey(myTable, key)
+    for tablekey, _ in pairs(myTable) do
+        if tablekey == key then
+            return true
+        end
+    end
+
+    return false
+end
+
+function mRadial:GetPetAbilities()
+    local petAbilities = {}
+    local numPetSpells = HasPetSpells()
+    if not numPetSpells then
+        return {}
+    end
+    for i = 1, numPetSpells do
+        local spellName, _, _ = GetSpellBookItemName(i, "pet")
+        local spellTexture = GetSpellTexture(i, "pet")
+        local isPassive = IsPassiveSpell(i, "pet")
+        if spellName and not isPassive and not mRadial:TableContainsKey(petAbilities, spellName) and spellTexture ~= nil then
+            petAbilities[spellName] = {}
+            petAbilities[spellName]["spellName"] = spellName
+            petAbilities[spellName]["spellIcon"] = spellTexture
+        end
+    end
+
+    -- Special cases, such as the talent for the felguard on lock.
+    if mRadial:IsWarlock() and mRadial:IsFelguardSummoned() and not mRadial:TableContainsKey(petAbilities, L["Opt_DemonicStrength"]) then
+        petAbilities[L["Opt_DemonicStrength"]] = {}
+        petAbilities[L["Opt_DemonicStrength"]]["spellName"] = L["Opt_DemonicStrength"]
+        petAbilities[L["Opt_DemonicStrength"]]["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)
+    end
+    return petAbilities
+end
+
 function mRadial:GetAllSpells(activeTable)
     local spellData = {}
     --- Trawl the entire spell book for spells.
@@ -209,7 +245,7 @@ end
 
 function mRadial:IsFelhunterSummoned()
     local isSummoned, summonedPet = mRadial:HasPetSummoned()
-    if isSummoned and summonedPet == "Felhunter" then
+    if isSummoned and summonedPet == L["Opt_Felhunter"] then
       return true
     end
     

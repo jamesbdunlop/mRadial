@@ -127,6 +127,8 @@ L["Opt_ShardTrackerTrans_desc"] = "Utilízalo para cambiar la transparencia del 
 L["Opt_HideShardTracker_name"] = "Ocultar Marco de Fragmentos"
 L["Opt_HideShardTracker_desc"] = "Mostrar/Ocultar el marco de rastreo de fragmentos del brujo."
 
+L["Opt_pet_name"] = "Pet Options"
+
 L["Opt_RDY_name"] = "RDY"
 L["Opt_NOSSSTR_name"] = "X"
 L["Opt_OOR_name"] = "OOR"
@@ -149,7 +151,12 @@ L["Opt_DemonicStrength"] = "Fuerza demoníaca"
 L["Opt_FelStorm"] = "Tormenta vil"
 L["Opt_AxeToss"] = "AxtwurfLanzamiento de hacha"
 L["Opt_SoulStrike"] = "Golpe de alma"
+
 L["Opt_Succubus"] = "Súcubo"
+L["Opt_Seduction"] = "Seducción"
+L["Opt_LashOfPain"] = "Látigo de Dolor"
+L["Opt_Whiplash"] = "Látigo"
+
 L["Opt_Incubus"] = "Íncubo"
 
 L["Opt_Size"] = "tamaño"
