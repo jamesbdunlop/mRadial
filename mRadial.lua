@@ -117,6 +117,8 @@ function mRadial:UpdateUI(create)
     local heightDeform2 = MRadialSavedVariables["heightDeform2"] or MR_DEFAULT_HEIGHT
 
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
+    
+    mRadial:SetPetFramePosAndSize()
 end
 
 local MediaPath = {

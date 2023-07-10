@@ -253,7 +253,7 @@ function mRadial:SetUIMovable(isMovable)
 
     for _, pframe in pairs(MR_PARENTFRAMES) do
         if isMovable then
-            if not pframe.baseFrame.isWatcher then
+            if not pframe.baseFrame.isWatcher and not pframe.baseFrame.isPetFrame then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, .25)
                 mRadial:ShowFrame(pframe.baseFrame.movetext, .25)
                 pframe.baseFrame:EnableMouse(isMovable)
@@ -279,7 +279,7 @@ function mRadial:SetUIMovable(isMovable)
                 pframe.baseFrame.debuffTimerText:SetText("00")
             end
         else
-            if not pframe.baseFrame.isWatcher then
+            if not pframe.baseFrame.isWatcher and not pframe.baseFrame.isPetFrame then
                 pframe.baseFrame.movetex:SetColorTexture(0, 0, 1, 0)
                 mRadial:HideFrame(pframe.baseFrame.movetext)
                 if not InCombatLockdown() then 
@@ -701,6 +701,7 @@ function mRadial:CreatePetFrames()
             mRadial:ShowFrame(frame)
             if not InCombatLockdown() then frame:Show() end
         end
+
     end
 end
 
@@ -733,8 +734,31 @@ function mRadial:SetPetFramePosAndSize()
         if frame.isPetFrame then
             mRadial:RestoreFrame(frame:GetName(), frame)
             frame:SetSize(petFrameSize, petFrameSize)
-            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
-            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
+            local pet_readyColor = MRadialSavedVariables.pet_readyColor or MR_DEFAULT_READYCOLOR
+            local pet_countColor = MRadialSavedVariables.pet_countColor or MR_DEFAULT_COUNTCOLOR
+            local pet_cdColor = MRadialSavedVariables.pet_cdColor or MR_DEFAULT_CDCOLOR
+            
+            local pet_readyFontSize = MRadialSavedVariables.pet_readyFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_countFontSize = MRadialSavedVariables.pet_countFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_coolDownFontSize = MRadialSavedVariables.pet_coolDownFontSize or MR_DEFAULT_PET_FONTSIZE
+
+            local pet_readyUDOffset = MRadialSavedVariables.pet_readyUDOffset or MR_DEFAULT_READYUDOFFSET
+            local pet_readyLROffset = MRadialSavedVariables.pet_readyLROffset or MR_DEFAULT_READYLROFFSET
+            local pet_countUdOffset = MRadialSavedVariables.pet_countUdOffset or MR_DEFAULT_COUNTUDOFFSET
+            local pet_countLROffset = MRadialSavedVariables.pet_countLROffset or MR_DEFAULT_COUNTLROFFSET
+            local pet_cdUdOffset = MRadialSavedVariables.pet_cdUdOffset or MR_DEFAULT_CDUDOFFSET
+            local pet_cdLROffset = MRadialSavedVariables.pet_cdLROffset or MR_DEFAULT_CDLROFFSET
+
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_readyFontSize, "THICKOUTLINE")
+            frame.countText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_countFontSize, "THICKOUTLINE")
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_coolDownFontSize, "OUTLINE, MONOCHROME")
+            
+            frame.readyText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_readyLROffset, pet_readyUDOffset)
+            frame.readyText:SetTextColor(pet_readyColor[1], pet_readyColor[2], pet_readyColor[3])
+            frame.countText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_countLROffset, pet_countUdOffset)
+            frame.countText:SetTextColor(pet_countColor[1], pet_countColor[2], pet_countColor[3])
+            frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_cdLROffset, pet_cdUdOffset)
+            frame.cooldownText:SetTextColor(pet_cdColor[1], pet_cdColor[2], pet_cdColor[3])
         end
     end
 end

@@ -975,6 +975,225 @@ MROptionsTable = {
                 end,
                 get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
               },
+              pet_cooldownGrp = {
+                name = L["Opt_CoolDown_name"],
+                type = "group",
+                inline = true,
+                order = 6,
+                args = {
+                  pet_cooldownUpDown = {
+                    name = "Up/Down",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 1,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_cdUdOffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_cdUdOffset"] or MR_DEFAULT_CDUDOFFSET end,
+                  },
+                  pet_cooldown_LeftRight = {
+                    name = "Left/Right",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 2,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_cdLROffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_cdLROffset"] or MR_DEFAULT_CDLROFFSET end,
+                  },
+                  pet_cooldownColour = {
+                    type = "color",
+                    name = "Cooldown Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["pet_cdColor"]
+                      if color == nil then color = {.1, 1, .1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["pet_cdColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  pet_coolDownFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_coolDownFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                  },
+                }
+              },
+              pet_readyGrp = {
+                name = L["Opt_ready_name"],
+                type = "group",
+                inline = true,
+                order = 7,
+                args = {
+                  pet_readyUpDown = {
+                    name = "Up/Down",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 1,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_readyUDOffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_readyUDOffset"] or MR_DEFAULT_READYUDOFFSET end,
+                  },
+                  pet_readyLeftRight = {
+                    name = "Left/Right",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 2,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_readyLROffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_readyLROffset"] or MR_DEFAULT_READYLROFFSET end,
+                  },
+                  pet_ReadyColour = {
+                    type = "color",
+                    name = "Pick Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["pet_readyColor"]
+                      if color == nil then color = {.1, 1, .1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["pet_readyColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  pet_readyFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_readyFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                  },
+                }
+              },
+              pet_countGrp = {
+                name = L["Opt_count_name"],
+                type = "group",
+                inline = true,
+                order = 8,
+                args = {
+                  pet_countUpDown = {
+                    name = "Up/Down",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 1,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_countUdOffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_countUdOffset"] or MR_DEFAULT_COUNTUDOFFSET end,
+                  },
+                  pet_countLeftRight = {
+                    name = "Left/Right",
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 2,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_countLROffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_countLROffset"] or MR_DEFAULT_COUNTLROFFSET end,
+                  },
+                  pet_CountColour = {
+                    type = "color",
+                    name = "Count Colour",
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["pet_countColor"]
+                      if color == nil then color = {0, 1, 1, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["pet_countColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  pet_countFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["pet_countFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["pet_countFontSize"] or MR_DEFAULT_FONTSIZE end,
+                  },
+                }
+              },
             }
           },
         },
