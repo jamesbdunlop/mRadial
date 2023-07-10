@@ -995,7 +995,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_cdUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_cdUdOffset"] or MR_DEFAULT_CDUDOFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_cdUdOffset"] or MR_DEFAULT_PET_CDUDOFFSET end,
                   },
                   pet_cooldown_LeftRight = {
                     name = "Left/Right",
@@ -1011,7 +1011,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_cdLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_cdLROffset"] or MR_DEFAULT_CDLROFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_cdLROffset"] or MR_DEFAULT_PET_CDLROFFSET end,
                   },
                   pet_cooldownColour = {
                     type = "color",
@@ -1044,7 +1044,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_coolDownFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                    get = function(self) return MRadialSavedVariables["pet_coolDownFontSize"] or MR_DEFAULT_PET_FONTBIGGERSIZE end,
                   },
                 }
               },
@@ -1068,7 +1068,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_readyUDOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyUDOffset"] or MR_DEFAULT_READYUDOFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_readyUDOffset"] or MR_DEFAULT_PET_READYUDOFFSET end,
                   },
                   pet_readyLeftRight = {
                     name = "Left/Right",
@@ -1084,7 +1084,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_readyLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyLROffset"] or MR_DEFAULT_READYLROFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_readyLROffset"] or MR_DEFAULT_PET_READYLROFFSET end,
                   },
                   pet_ReadyColour = {
                     type = "color",
@@ -1117,7 +1117,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_readyFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                    get = function(self) return MRadialSavedVariables["pet_readyFontSize"] or MR_DEFAULT_PET_FONTBIGGERSIZE end,
                   },
                 }
               },
@@ -1141,7 +1141,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_countUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countUdOffset"] or MR_DEFAULT_COUNTUDOFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_countUdOffset"] or MR_DEFAULT_PET_COUNTUDOFFSET end,
                   },
                   pet_countLeftRight = {
                     name = "Left/Right",
@@ -1157,7 +1157,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_countLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countLROffset"] or MR_DEFAULT_COUNTLROFFSET end,
+                    get = function(self) return MRadialSavedVariables["pet_countLROffset"] or MR_DEFAULT_PET_COUNTLROFFSET end,
                   },
                   pet_CountColour = {
                     type = "color",
@@ -1190,7 +1190,7 @@ MROptionsTable = {
                       MRadialSavedVariables["pet_countFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self) return MRadialSavedVariables["pet_countFontSize"] or MR_DEFAULT_PET_FONTSIZE end,
                   },
                 }
               },
