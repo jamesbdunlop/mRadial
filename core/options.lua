@@ -67,16 +67,27 @@ MROptionsTable = {
             type = "description",
             order = 2
           },
-          changeLogHdr = {
-            name = L["Opt_CHANGELOG_name"],
+          knownIssuesHdr = {
+            name = L["Opt_KNOWNISSUES_name"],
             type = "header",
             dialogControl = "SFX-Header-II",
             order = 3
           },
+          knownIssues = {
+            name = MRADIAL_KNOWNISSUES,
+            type = "description",
+            order = 4,
+          },
+          changeLogHdr = {
+            name = L["Opt_CHANGELOG_name"],
+            type = "header",
+            dialogControl = "SFX-Header-II",
+            order = 5
+          },
           changeLog = {
             name = MRADIAL_UPDATENOTES,
             type = "description",
-            order = 4,
+            order = 6,
           }
         }
       },

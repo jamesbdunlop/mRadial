@@ -36,6 +36,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
     end
     -- if watcher.isPassive and watcher.spellName == "Void Bolt" then
     --     print("HELLO WORLD")
+        -- print(GetIndirectSpellID(watcher.spellId))
     -- end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)

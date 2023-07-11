@@ -24,6 +24,7 @@ a nice tight circle around the charcter (so I don't stand in fire mkay!)  \
 \n \n"
 
 L["Opt_CHANGELOG_name"] = "CHANGE LOG"
+L["Opt_KNOWNISSUES_name"] = "Known Issues"
 
 L["Opt_RadialIcons_name"] = "Radial Icons"
 L["Opt_RadialIcons_desc"] = "Use this to change the spell icons and various text timers."

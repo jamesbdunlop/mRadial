@@ -23,6 +23,7 @@ un círculo ajustado alrededor del personaje (¡así que no me quedo parado en e
 \n \n"
 
 L["Opt_CHANGELOG_name"] = "REGISTRO DE CAMBIOS"
+L["Opt_KNOWNISSUES_name"] = "Problemas conocidos"
 
 L["Opt_RadialIcons_name"] = "Iconos Radiales"
 L["Opt_RadialIcons_desc"] = "Utilízalo para cambiar los iconos de los hechizos y los diversos temporizadores de texto."

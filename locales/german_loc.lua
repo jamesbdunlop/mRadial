@@ -22,6 +22,7 @@ L["Opt_ABOUT_desc"] = "Willkommen bei mRadial, einer kleinen Benutzeroberfläche
 \n \n"
 
 L["Opt_CHANGELOG_name"] = "ÄNDERUNGSPROTOKOLL"
+L["Opt_KNOWNISSUES_name"] = "Bekannte Probleme"
 
 L["Opt_RadialIcons_name"] = "Radiale Symbole"
 L["Opt_RadialIcons_desc"] = "Verwenden Sie dies, um die Zauber-Symbole und verschiedene Text-Timer zu ändern."

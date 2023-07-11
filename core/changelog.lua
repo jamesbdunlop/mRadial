@@ -1,6 +1,15 @@
+MRADIAL_KNOWNISSUES = " \
+\n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
+\n    - Some of the default values don't apply in the options on first load. This should now be resolved, but keeping an eye on this. \
+\n    - Void Bolt passive when added will read ready all the time without Void Form. \
+\n \
+"
+
 MRADIAL_UPDATENOTES = " \
 ---------- v0.5.6 --\n \
 \n-- IMPROVEMENTS \
+\n    - General Debuff stuff, still keeping an eye on this side of the gameplay.\
+\n    - Moved the known issues into it's own area in the about so it's persistant.\
 \n-- FIXES \
 \n    - Default cooldown color being GREEN! It's now red.\
 \n    - Devouring Plague should register it's quriky play style a bit better.\
@@ -131,12 +140,4 @@ less problematic, so you don't have to always adjust the spread etc when adding 
 \n    - Spell selections in primary should correctly remove these from secondary selection as was originally intended. \
 \n    - Linked spells no longer use the actionSlot widget as this doesn't play nice with the config and requires butchering base Ace3 code to get to work. Not advisable. Check the pane for more info. \
 \n \
-\n-- KNOWN ISSUES: \
-\n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
-\n    - The WINDOW has changed to the base ace3 Frame. This frame annoys the crap out of me in respect to trying to shift+click move it out the way so I can move the radial stuff around, it's hit and miss \
-if it's going to start moving or not, but due to some nasty bugs in the Window frame I'm leaving it as is for now. \
-\n    - Some of the default values don't apply in the options on first load. Need to start testing this. For now I have added info into the tooltips \
-\n \
-\n-- TO DO: \
-\n    - Get the reset all spells working again for the primary and secondary spell selections! \
 "
