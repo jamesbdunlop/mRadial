@@ -34,9 +34,9 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
         watcher.cooldownText:SetText(string.format(""))
         return
     end
-    if watcher.isPassive and watcher.spellName == "Void Bolt" then
-        print("HELLO WORLD")
-    end
+    -- if watcher.isPassive and watcher.spellName == "Void Bolt" then
+    --     print("HELLO WORLD")
+    -- end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
