@@ -68,6 +68,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
         end
         if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.readyText)
+            watcher.movetex:SetColorTexture(0, 0, 0, 0)
         end
     end
     if outOfPower then
@@ -129,6 +130,7 @@ function mRadial:DoPetFrameAuraTimer(spellName, frame)
                 frame.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
             else
                 frame.cooldownText:SetText(string.format("%ds", seconds))
+                frame.movetex:SetColorTexture(0, 0, 0, 0)
             end
         end
     end

@@ -171,3 +171,16 @@ L["ShadowFurySpellname"] = "ShadowFury"
 
 L["Opt_PetIgnoreInput_name"] = "Pet Abilities To Ignore"
 L["Opt_PetIgnoreInput_desc"] = "Type the name of the pet ability you want to ignore on a newLine. No trailing spaces!"
+
+L["Opt_power_name"] = "Power Text"
+L["Power Colour"] = "Power Colour"
+
+L["Opt_PowerEnabled_name"] = "Enable"
+L["Opt_PowerEnabled_desc"] = "Counter for abilities dependant on power."
+
+L["Opt_PowerPersists_name"] = "Persist"
+L["Opt_PowerPersists_desc"] = "Hide the counter when the minimum amount of power is required to cast, or always show the power count."
+
+L["Up/Down"] = "Up/Down"
+L["Left/Right"] = "Left/Right"
+

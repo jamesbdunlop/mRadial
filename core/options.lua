@@ -443,7 +443,7 @@ MROptionsTable = {
                 order = 4,
                 args = {
                   UpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -459,7 +459,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["radialUdOffset"] or MR_DEFAULT_UDOFFSET end,
                   },
                   LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -516,7 +516,7 @@ MROptionsTable = {
                 order = 6,
                 args = {
                   UpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -532,7 +532,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["cdUdOffset"] or MR_DEFAULT_CDUDOFFSET end,
                   },
                   LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -589,7 +589,7 @@ MROptionsTable = {
                 order = 7,
                 args = {
                   UpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -605,7 +605,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["readyUDOffset"] or MR_DEFAULT_READYUDOFFSET end,
                   },
                   LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -662,7 +662,7 @@ MROptionsTable = {
                 order = 8,
                 args = {
                   UpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -678,7 +678,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["countUdOffset"] or MR_DEFAULT_COUNTUDOFFSET end,
                   },
                   LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -735,7 +735,7 @@ MROptionsTable = {
                 order = 8,
                 args = {
                   UpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -751,7 +751,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["debuffUdOffset"] or MR_DEFAULT_DEBUFFUDOFFSET end,
                   },
                   LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -798,6 +798,113 @@ MROptionsTable = {
                       mRadial:UpdateUI(false)
                     end,
                     get = function(self) return MRadialSavedVariables["debuffFontSize"] or MR_DEFAULT_FONTSIZE end,
+                  },
+                }
+              },
+              powerGrp = {
+                name = L["Opt_power_name"],
+                type = "group",
+                inline = true,
+                order = 8,
+                args = {
+                  powerEnabled = {
+                    name = L["Opt_PowerEnabled_name"],
+                    desc = L["Opt_PowerEnabled_desc"],
+                    type = "toggle",
+                    default = true,
+                    set = function(info,val)
+                      MRadialSavedVariables["powerTextEnabled"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(info) 
+                      local current = MRadialSavedVariables["powerTextEnabled"]
+                      if current == nil then return MR_DEFAULT_POWERENABLED end
+                      
+                      return current
+                    end,
+                    order = 1,
+                  },
+                  powerAlways = {
+                    name = L["Opt_PowerPersists_name"],
+                    desc = L["Opt_PowerPersists_desc"],
+                    type = "toggle",
+                    default = true,
+                    set = function(info,val)
+                      MRadialSavedVariables["powerPersistsEnabled"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(info) 
+                      local current = MRadialSavedVariables["powerPersistsEnabled"]
+                      if current == nil then return MR_DEFAULT_POWERPERSISTS end
+                      
+                      return current
+                    end,
+                    order = 1,
+                  },
+                  powerUpDown = {
+                    name = L["Up/Down"],
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 1,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["powerUdOffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["powerUdOffset"] or MR_DEFAULT_POWERUDOFFSET end,
+                  },
+                  powerLeftRight = {
+                    name = L["Left/Right"],
+                    desc = "DEFAULT: 0",
+                    type = "range",
+                    order = 2,
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                    isPercent = false,
+                    default = 0,
+                    set = function(self, val)
+                      MRadialSavedVariables["powerLROffset"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["powerLROffset"] or MR_DEFAULT_POWERLROFFSET end,
+                  },
+                  powerColour = {
+                    type = "color",
+                    name = L["Power Colour"],
+                    desc = "",
+                    order = 3,
+                    hasAlpha = false,
+                    get = function(info)
+                      local color = MRadialSavedVariables["powerColor"]
+                      if color == nil then color = {.3, .2, .5, 1} end
+                      local r, g, b, a = color[1], color[2], color[3], color[4]
+                      return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                      MRadialSavedVariables["powerColor"] = {r, g, b, a}
+                      mRadial:UpdateUI(false)
+                    end,
+                  },
+                  powerFontSize = {
+                    name = L["Opt_Size"],
+                    desc = L["Opt_DEFAULT2_desc"],
+                    type = "range",
+                    order = 4,
+                    min = -4,
+                    max = 55,
+                    step = 1,
+                    isPercent = false,
+                    default = 2,
+                    set = function(self, val)
+                      MRadialSavedVariables["powerFontSize"] = val
+                      mRadial:UpdateUI(false)
+                    end,
+                    get = function(self) return MRadialSavedVariables["powerFontSize"] or MR_DEFAULT_FONTSIZE end,
                   },
                 }
               }
@@ -1028,7 +1135,7 @@ MROptionsTable = {
                 order = 6,
                 args = {
                   pet_cooldownUpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -1044,7 +1151,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["pet_cdUdOffset"] or MR_DEFAULT_PET_CDUDOFFSET end,
                   },
                   pet_cooldown_LeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -1101,7 +1208,7 @@ MROptionsTable = {
                 order = 7,
                 args = {
                   pet_readyUpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -1117,7 +1224,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["pet_readyUDOffset"] or MR_DEFAULT_PET_READYUDOFFSET end,
                   },
                   pet_readyLeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,
@@ -1174,7 +1281,7 @@ MROptionsTable = {
                 order = 8,
                 args = {
                   pet_countUpDown = {
-                    name = "Up/Down",
+                    name = L["Up/Down"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 1,
@@ -1190,7 +1297,7 @@ MROptionsTable = {
                     get = function(self) return MRadialSavedVariables["pet_countUdOffset"] or MR_DEFAULT_PET_COUNTUDOFFSET end,
                   },
                   pet_countLeftRight = {
-                    name = "Left/Right",
+                    name = L["Left/Right"],
                     desc = "DEFAULT: 0",
                     type = "range",
                     order = 2,

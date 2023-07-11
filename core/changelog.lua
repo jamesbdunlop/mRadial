@@ -6,6 +6,13 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.7 --\n \
+\n-- IMPROVEMENTS \
+\n    - Adds a power text count for spells that are depenent on player power like shards or insanity etc. This can be turned off.\
+\n -- FIXES \
+\n    - Pet timers locking to a grey background.\
+\n    - Pet frames not showing if you fly in like superman directly into combat (I mean who doesn't).\
+\n\n \
 ---------- v0.5.6 --\n \
 \n-- IMPROVEMENTS \
 \n    - General Debuff stuff, still keeping an eye on this side of the gameplay.\

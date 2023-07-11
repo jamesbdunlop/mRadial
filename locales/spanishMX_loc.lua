@@ -172,3 +172,15 @@ L["ShadowFurySpellname"] = "Furia de las Sombras"
 
 L["Opt_PetIgnoreInput_name"] = "Habilidades de Mascota a Ignorar"
 L["Opt_PetIgnoreInput_desc"] = "Escribe el nombre de la habilidad de mascota que deseas ignorar en una nueva línea. ¡Sin espacios al final!"
+
+L["Opt_power_name"] = "Texto de poder"
+L["Power Colour"] = "Color de poder"
+
+L["Opt_PowerEnabled_name"] = "Habilitar"
+L["Opt_PowerEnabled_desc"] = "Contador para habilidades que dependen del poder."
+
+L["Opt_PowerPersists_name"] = "Persistencia"
+L["Opt_PowerPersists_desc"] = "Ocultar el contador cuando se requiere la cantidad mínima de poder para lanzar, o mostrar siempre el contador de poder."
+
+L["Up/Down"] = "Arriba/Abajo"
+L["Left/Right"] = "Izquierda/Derecha"

@@ -109,6 +109,9 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText:SetPoint("CENTER", frame, "CENTER", 0, 0)
     frame.readyText:SetText(READYSTR)
     
+    frame.powerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    frame.powerText:SetPoint("CENTER", frame, "CENTER", 0, 0)
+
     local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
     frame.buffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
     frame.debuffTimerText:SetFont(customFontPath,  24, "OUTLINE, MONOCHROME")
@@ -280,6 +283,7 @@ function mRadial:SetUIMovable(isMovable)
                     pframe.baseFrame.debuffTimerText:SetText("00")
                 end
             else
+                mRadial:ShowFrame(pframe.baseFrame.powerText)
                 mRadial:ShowFrame(pframe.baseFrame.readyText)
                 mRadial:ShowFrame(pframe.baseFrame.countText)
                 mRadial:ShowFrame(pframe.baseFrame.cooldownText)
@@ -291,6 +295,7 @@ function mRadial:SetUIMovable(isMovable)
                 pframe.baseFrame.countText:SetText("00")
                 pframe.baseFrame.cooldownText:SetText("00")
                 pframe.baseFrame.debuffTimerText:SetText("00")
+                pframe.baseFrame.powerText:SetText("00")
             end
         else
             if not pframe.baseFrame.isWatcher then
@@ -310,6 +315,7 @@ function mRadial:SetUIMovable(isMovable)
                 end
             else
                 mRadial:HideFrame(pframe.baseFrame.readyText)
+                mRadial:HideFrame(pframe.baseFrame.powerText)
                 mRadial:HideFrame(pframe.baseFrame.countText)
                 mRadial:HideFrame(pframe.baseFrame.cooldownText)
                 mRadial:HideFrame(pframe.baseFrame.debuffTimerText)
@@ -399,11 +405,10 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     watcher:GetParent().spellName = spellName
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
-    -- local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
     local costInfo = GetSpellPowerCost(spellID)
     local isUnitPowerDependant = false
     -- local powerTypeRequired = nil
-    local powerTypeCost = 0
+    local powerMinCost = 0
     local powerType = 0
     if costInfo[1] == nil then 
         isUnitPowerDependant = false
@@ -411,7 +416,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         isUnitPowerDependant = true
         powerType = costInfo[1]["type"]
         -- powerTypeRequired = costInfo[1]["name"]
-        powerTypeCost = costInfo[1]["minCost"]
+        powerMinCost = costInfo[1]["minCost"]
     end
     ----------------------------------------------
     -- Assign the spell to cast if we're a button!
@@ -438,7 +443,16 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         if isUnitPowerDependant then
             -- Do we have enough shards to allow this to show timers / cast from?
             local power = UnitPower("player", powerType)
-            if power == 0 or power < powerTypeCost then
+            local powerTextEnabled = MRadialSavedVariables["powerTextEnabled"]
+            if powerTextEnabled == nil then powerTextEnabled = MR_DEFAULT_POWERENABLED end
+            if power == 0 or power < powerMinCost then
+                if powerTextEnabled then
+                    watcher.powerText:SetText(tostring(power))
+                    mRadial:ShowFrame(watcher.powerText, 1)
+                else
+                    watcher.powerText:SetText("")
+                    mRadial:HideFrame(watcher.powerText)
+                end
                 watcher.readyText:SetText(NOPOWER)
                 watcher.readyText:SetTextColor(1, 0, 0)
                 watcher.cooldownText:SetText("")
@@ -446,11 +460,17 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
                 mRadial:ShowFrame(watcher.readyText)
                 mRadial:ShowFrame(watcher.movetex)
                 watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
-                -- mRadial:DoDebuffTimer(spellName, watcher, iconPath, true)
-                -- mRadial:DoSpellFrameCooldown(spellName, watcher, true)
-                -- return
             else
                 watcher.readyText:SetText(READYSTR)
+                local powerPersists = MRadialSavedVariables["powerPersistsEnabled"]
+                if powerPersists == nil then powerPersists = MR_DEFAULT_POWERPERSISTS end
+                if powerTextEnabled and powerPersists and power >= powerMinCost and powerType ~= 0 then
+                    watcher.powerText:SetText(tostring(power))
+                    mRadial:ShowFrame(watcher.powerText, 1)
+                else
+                   watcher.powerText:SetText("")
+                   mRadial:HideFrame(watcher.powerText)
+                end
                 mRadial:HideFrame(watcher.movetex)
                 local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
                 watcher.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
@@ -499,7 +519,6 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         local count = 0
         if getLinked ~= nil then
             local linkedSpellName = getLinked[1] 
-            -- local linkedSpellID = getLinked[2]
             local hasActiveBuff, scount = mRadial:HasActiveBuff(linkedSpellName)
             if hasActiveBuff then
                 count = scount
@@ -720,7 +739,7 @@ function mRadial:CreatePetFrames()
                     return
                 end
                 if not MRadialSavedVariables['hidePetFrame'] then
-                    frame:SetAlpha(1)
+                    mRadial:ShowFrame(frame, 1)
                 end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
@@ -733,8 +752,8 @@ function mRadial:CreatePetFrames()
             MR_ALLFRAMES[frameName] = frame
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             local frame = MR_ALLFRAMES[frameName]
-            mRadial:ShowFrame(frame)
-            if not InCombatLockdown() then frame:Show() end
+            mRadial:ShowFrame(frame, 1)
+            frame:Show()
         end
 
     end
@@ -828,12 +847,14 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     local cdColor = MRadialSavedVariables.cdColor or MR_DEFAULT_CDCOLOR
     local buffColor = MRadialSavedVariables.buffColor or MR_DEFAULT_BUFFCOLOR
     local debuffColor = MRadialSavedVariables.debuffColor or MR_DEFAULT_DEBUFFCOLOR
+    local powerColor = MRadialSavedVariables.powerColor or MR_DEFAULT_POWERCOLOR
 
     local countFontSize = MRadialSavedVariables.countFontSize or MR_DEFAULT_FONTSIZE
     local readyFontSize = MRadialSavedVariables.readyFontSize or MR_DEFAULT_FONTSIZE
     local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or MR_DEFAULT_FONTSIZE
     local timerFontSize = MRadialSavedVariables.timerFontSize or MR_DEFAULT_FONTSIZE
     local debuffFontSize = MRadialSavedVariables.debuffFontSize or MR_DEFAULT_FONTSIZE
+    local powerFontSize = MRadialSavedVariables.powerFontSize or MR_DEFAULT_FONTSIZE
 
     local radialUdOffset = MRadialSavedVariables.radialUdOffset or MR_DEFAULT_UDOFFSET
     local radialLROffset = MRadialSavedVariables.radialLROffset or MR_DEFAULT_LROFFSET
@@ -849,6 +870,9 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
 
     local debuffUDOffset = MRadialSavedVariables.debuffUdOffset or MR_DEFAULT_DEBUFFUDOFFSET
     local debuffLROffset = MRadialSavedVariables.debuffLROffset or MR_DEFAULT_DEBUFFLROFFSET
+
+    local powerUDOffset = MRadialSavedVariables.powerUdOffset or MR_DEFAULT_POWERUDOFFSET
+    local powerLROffset = MRadialSavedVariables.powerLROffset or MR_DEFAULT_POWERLROFFSET
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or MR_DEFAULT_WATCHERFRAMESIZE
 
@@ -879,11 +903,12 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             watcher.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
             watcher.buffTimerText:SetTextColor(buffColor[1], buffColor[2], buffColor[3])
             watcher.debuffTimerText:SetTextColor(debuffColor[1], debuffColor[2], debuffColor[3])
+            watcher.powerText:SetTextColor(powerColor[1], powerColor[2], powerColor[3])
             
             watcher:SetSize(watcherFrameSize, watcherFrameSize)
-            -- expand the iconFrame a little so we don't get strange squares in the circles.
+            -- Expand the iconFrame a little so we don't get strange squares in the circles.
             watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
-            -- because the graphic for the border is a little smaller.. we wanna handle the scale now too
+            -- Because the graphic for the border is a little smaller.. we wanna handle the scale now too
             watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
             watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
             watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
@@ -894,6 +919,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
             watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset, readyUDOffset)
             watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", debuffLROffset, debuffUDOffset)
+            watcher.powerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", powerLROffset, powerUDOffset)
             
             -- SET FONT
             watcher.buffTimerText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+timerFontSize, "OUTLINE, MONOCHROME")
@@ -901,6 +927,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             watcher.countText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+countFontSize, "THICKOUTLINE")
             watcher.cooldownText:SetFont(customFontPath,  (watcherFrameSize*fontPercentage)+coolDownFontSize, "THICKOUTLINE")
             watcher.readyText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+readyFontSize, "THICKOUTLINE")
+            watcher.powerText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+powerFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
             watcher:SetPoint("CENTER", parentFrame, "CENTER", w, h)
@@ -926,12 +953,14 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
+                watcher.powerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", powerLROffset, powerUDOffset)
             elseif  cosAng >= 0.1 then
                 watcher.buffTimerTextBG:SetPoint("CENTER", watcher.iconFrame, "RIGHT", -radialLROffset, radialUdOffset)
                 watcher.debuffTimerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", -debuffLROffset, debuffUDOffset)
                 watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", -countLROffset, countUdOffset)
                 watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset*cosAng, cdUdOffset)
                 watcher.readyText:SetPoint("CENTER", watcher.iconFrame, "CENTER", readyLROffset*cosAng, readyUDOffset)
+                watcher.powerText:SetPoint("CENTER", watcher.iconFrame, "CENTER", -powerLROffset, powerUDOffset)
             end
         end
     end

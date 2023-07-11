@@ -170,3 +170,16 @@ L["ShadowFurySpellname"] = "Schattenfuror"
 
 L["Opt_PetIgnoreInput_name"] = "Zu ignorierende Begleiterfähigkeiten"
 L["Opt_PetIgnoreInput_desc"] = "Geben Sie den Namen der Begleiterfähigkeit ein, die Sie ignorieren möchten, jeweils in einer neuen Zeile. Keine Leerzeichen am Ende!"
+
+L["Opt_power_name"] = "Krafttext"
+L["Power Colour"] = "Kraftfarbe"
+
+L["Opt_PowerEnabled_name"] = "Aktivieren"
+L["Opt_PowerEnabled_desc"] = "Zähler für Fähigkeiten, die von der Kraft abhängen."
+
+L["Opt_PowerPersists_name"] = "Fortbestehen"
+L["Opt_PowerPersists_desc"] = "Den Zähler ausblenden, wenn die minimale Kraftmenge zum Zaubern benötigt wird oder die Kraftmenge immer anzeigen."
+
+L["Up/Down"] = "Auf/Ab"
+L["Left/Right"] = "Links/Rechts"
+
