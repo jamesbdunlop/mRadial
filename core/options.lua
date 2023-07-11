@@ -248,12 +248,12 @@ MROptionsTable = {
                     name = L["Opt_Offset_name"],
                     desc = L["Opt_Offset_desc"],
                     type = "range",
-                    order = 3, 
-                    min = 0,
-                    max = 3,
-                    step = .01,
+                    order = 3,
+                    min = 0.000,
+                    max = 3.000,
+                    step = .001,
                     isPercent = false,
-                    default = 0.7,
+                    default = 0.700,
                     set = function(self, val)
                       MRadialSavedVariables["offset"] = val
                       mRadial:UpdateUI(false)
