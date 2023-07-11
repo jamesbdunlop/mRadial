@@ -384,7 +384,7 @@ function mRadial:GetFrameByName(frameName)
 end
 ---------------------------------------------------------------------------------------------------
 -- Spell watchers for timers/cooldowns.
-local last = 0
+local cdlast = 0
 function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- Create the watcher frame
     -- If we have a parentSpell, this is cast and goes on cooldown, and the buff is the result 
@@ -402,7 +402,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- local isUnitPowerDependant, UnitPowerCount = mRadial:IsSpellUnitPowerDependant(spellID)
     local costInfo = GetSpellPowerCost(spellID)
     local isUnitPowerDependant = false
-    local powerTypeRequired = nil
+    -- local powerTypeRequired = nil
     local powerTypeCost = 0
     local powerType = 0
     if costInfo[1] == nil then 
@@ -410,7 +410,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     else 
         isUnitPowerDependant = true
         powerType = costInfo[1]["type"]
-        powerTypeRequired = costInfo[1]["name"]
+        -- powerTypeRequired = costInfo[1]["name"]
         powerTypeCost = costInfo[1]["minCost"]
     end
     ----------------------------------------------
@@ -430,8 +430,8 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     end
     
     watcher:SetScript("OnUpdate", function(self, elapsed)
-        last = last + elapsed
-        if last <= MR_INTERVAL then return end
+        cdlast = cdlast + elapsed
+        if cdlast <= MR_INTERVAL then return end
 
         if MAINFRAME_ISMOVING then return end
         
@@ -445,10 +445,10 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
                 watcher.debuffTimerText:SetText("")
                 mRadial:ShowFrame(watcher.readyText)
                 mRadial:ShowFrame(watcher.movetex)
-                
-                mRadial:DoDebuffTimer(spellName, watcher, iconPath, true)
-                mRadial:DoSpellFrameCooldown(spellName, watcher)
-                return
+                watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+                -- mRadial:DoDebuffTimer(spellName, watcher, iconPath, true)
+                -- mRadial:DoSpellFrameCooldown(spellName, watcher, true)
+                -- return
             else
                 watcher.readyText:SetText(READYSTR)
                 mRadial:HideFrame(watcher.movetex)
@@ -456,9 +456,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
                 watcher.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
             end
         end
-
-        mRadial:DoDebuffTimer(spellName, watcher, iconPath, false)
-        mRadial:DoSpellFrameCooldown(spellName, watcher)
+        
+        mRadial:DoDebuffTimer(spellName, watcher, iconPath, isUnitPowerDependant)
+        mRadial:DoSpellFrameCooldown(spellName, watcher, isUnitPowerDependant)
 
         local allLinkedSpells = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
         local getLinked = allLinkedSpells[spellName] or nil
@@ -539,9 +539,8 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             watcher.readyText:SetText(OORTEXT)
         else
             watcher.iconFrame:SetAlpha(1)
-            watcher.readyText:SetText(READYSTR)
         end
-        last = 0
+        cdlast = 0
     end)
 
     return watcher
@@ -582,6 +581,7 @@ function mRadial:CreateWatcherFrames()
                 end
                 frame.isPrimary = true
                 frame.isSecondary = false
+                frame.isPassive = isPassive
                 mRadial:HideFrame(frame)
             -- elseif isSecondaryActive and isKnown and not isPassive and not mRadial:WatcherExists(frameName) then
             elseif isSecondaryActive and isKnown and not mRadial:WatcherExists(frameName) then

@@ -12,8 +12,8 @@ function mRadial:GetSpellRemaining(spellName)
     return enabled, remaining, minutes, seconds
 end
 
-function mRadial:DoSpellFrameCooldown(spellName, watcher, noPower)
-    if noPower == nil then noPower = false end
+function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
+    if outOfPower == nil then outOfPower = false end
     -- COOLDOWNS FOR PARENT SPELLS
     if MAINFRAME_ISMOVING then
         return
@@ -34,29 +34,27 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, noPower)
         watcher.cooldownText:SetText(string.format(""))
         return
     end
+    if watcher.isPassive and watcher.spellName == "Void Bolt" then
+        print("HELLO WORLD")
+    end
 
     local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
     local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if enabled and remaining > MR_GCD and not IsMounted() and not hideOOC then
         mRadial:HideFrame(watcher.readyText)
+        mRadial:ShowFrame(watcher.movetex)
         watcher.cooldownText:SetAlpha(1)
         watcher.iconFrame:SetAlpha(1)
         if minutes and minutes > 0 then
-            if noPower then
-                watcher.movetex:SetColorTexture(1, 0, 0, .5)
-            else
-                watcher.movetex:SetColorTexture(.2, .2, .2, .5)
-            end
+            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
             watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
         elseif seconds then
-            if noPower then
-                watcher.movetex:SetColorTexture(1, 0, 0, .5)
-            else
-                watcher.movetex:SetColorTexture(.2, .2, .2, .5)
-            end
+            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
             watcher.cooldownText:SetText(string.format("%d", seconds))
         else
-            watcher.movetex:SetColorTexture(0, 0, 0, 0)
+            if debuffCheck ~= nil then
+                watcher.movetex:SetColorTexture(0, 0, 0, 0)
+            end
             watcher.cooldownText:SetText(string.format(""))
             watcher.iconFrame:SetAlpha(1)
         end
@@ -64,15 +62,20 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, noPower)
         watcher.cooldownText:SetAlpha(0)
         watcher.cooldownText:SetText(string.format(""))
         watcher.iconFrame:SetAlpha(1)
-        watcher.movetex:SetColorTexture(0, 0, 0, 0)
+        if debuffCheck ~= nil then
+            watcher.movetex:SetColorTexture(0, 0, 0, 0)
+        end
         if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.readyText)
         end
     end
+    if outOfPower then
+        watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+    end
 end
 
-function mRadial:DoDebuffTimer(spellName, watcher, iconPath, noPower)
-    if noPower == nil then noPower = false end
+function mRadial:DoDebuffTimer(spellName, watcher, iconPath, outOfPower)
+    if outOfPower == nil then outOfPower = false end
     -- DEBUFF TIMERS
     if MAINFRAME_ISMOVING then
         return
@@ -83,30 +86,30 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath, noPower)
     for idx = 1, 40 do
         local name, _, _, _, _, expirationTime, source, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
         if name == spellName and source == "player" then 
-            remaining = expirationTime - GetTime()
+            remaining = expirationTime - GetTime() +1
             break
         end
     end
 
     local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
     if remaining > MR_GCD and not IsMounted() and not hideOOC then
-        mRadial:ShowFrame(watcher.debuffTimerTextBG, .5)
-        mRadial:HideFrame(watcher.readyText)
-        if noPower then
-            watcher.movetex:SetColorTexture(1, 0, 0, .5)
-        else
-            watcher.movetex:SetColorTexture(.2, .2, .2, .5)
-        end
+        -- mRadial:ShowFrame(watcher.debuffTimerTextBG, .5)
+        -- mRadial:HideFrame(watcher.readyText)
+        watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
         -- watcher.debuffTimerTextBG:SetTexture(iconPath)
         mRadial:ShowFrame(watcher.debuffTimerText)
         watcher.debuffTimerText:SetText(string.format("%d", remaining))
         watcher.iconFrame:SetAlpha(0.5)
     else
+        watcher.movetex:SetColorTexture(0, 0, 0, 0)
         mRadial:ShowFrame(watcher.readyText)
         -- mRadial:HideFrame(watcher.debuffTimerTextBG)
         mRadial:HideFrame(watcher.debuffTimerText)
         watcher.iconFrame:SetAlpha(1)
         watcher.movetex:SetColorTexture(0, 0, 0, 0)
+    end
+    if outOfPower then
+        watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
     end
 end
 

@@ -1,4 +1,10 @@
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.6 --\n \
+\n-- IMPROVEMENTS \
+\n-- FIXES \
+\n    - Default cooldown color being GREEN! It's now red.\
+\n    - Devouring Plague should register it's quriky play style a bit better.\
+\n\n \
 ---------- v0.5.5 --\n \
 \n-- IMPROVEMENTS \
 \n    - New Pet frames go to the left rather then the center of screen for easier click + move. \
