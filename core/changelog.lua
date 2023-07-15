@@ -6,9 +6,19 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.5.8 --\n \
+\n-- IMPROVEMENTS \
+\n    - Some Options cleanup. Added the reset to the spell selection. Note this requires a toggle of the view atm to update it.\
+\n -- FIXES \
+\n    - Some spells like immolate return a valid spellID etc but IsKnown(spellID) was returning false. I'm letting all pass along now and it's up to the user to select valid spells.\
+\n    - Radial spells info on hover was incorrectly named descp rather than desc.\
+\n    - Some more timer tweaking.\
+\n    - Spell order description was missing from locales.\
+\n    - Updates to latest Ace3.\
+\n\n \
 ---------- v0.5.7 --\n \
 \n-- IMPROVEMENTS \
-\n    - Adds a power text count for spells that are depenent on player power like shards or insanity etc. This can be turned off.\
+\n    - Adds a power text count for spells that are dependant on player power like shards or insanity etc. This can be turned off.\
 \n -- FIXES \
 \n    - Pet timers locking to a grey background.\
 \n    - Pet frames not showing if you fly in like superman directly into combat (I mean who doesn't).\

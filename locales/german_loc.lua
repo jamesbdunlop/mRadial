@@ -183,3 +183,5 @@ L["Opt_PowerPersists_desc"] = "Den Zähler ausblenden, wenn die minimale Kraftme
 L["Up/Down"] = "Auf/Ab"
 L["Left/Right"] = "Links/Rechts"
 
+L["Opt_SpellOrderFrame_Name"] = "Zauberreihenfolge"
+L["Opt_SpellOrderFrame_Desc"] = "Hiermit wird die Reihenfolge im radialen Rahmen festgelegt. Um die Reihenfolge zu ändern, klicken Sie mit der rechten Maustaste auf einen Zauber, um ihn aufzuheben, und lassen Sie ihn auf den Zauber fallen, mit dem Sie ihn tauschen möchten."

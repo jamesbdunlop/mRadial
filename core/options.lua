@@ -1489,29 +1489,42 @@ end
 function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
   local widgetArgs = {}
   
-  -- local resetGrp = {
-  --   name = "",
-  --   type = "group",
-  --   inline = true,
-  --   order = 2,
-  --   args = {
-  --     reset = {
-  --       name = "Reset",
-  --       type = "execute",
-  --       order = 1,
-  --       func = function(info, val)
-  --         local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
-  --         warning:Show()
-  --         warning.acceptButton:SetCallback("OnClick", function() 
-            
-  --           warning:Hide() end)
-  --         warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
-  --         end,
-  --     }
-  --   }
-  -- }
+  local resetGrp = {
+    name = "",
+    type = "group",
+    inline = true,
+    order = 2,
+    args = {
+      reset = {
+        name = "Reset",
+        type = "execute",
+        order = 1,
+        func = function(info, val)
+          local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+          warning:Show()
+          warning.acceptButton:SetCallback("OnClick", function() 
+            for x=1, #MR_WATCHERFRAMES do
+              local watcher = MR_WATCHERFRAMES[x]
+              local isActive = MRadialSavedVariables[isActiveSavedVarStr .. watcher.spellName] or false
+              if isActive then
+                MRadialSavedVariables[isActiveSavedVarStr .. watcher.spellName] = false
+              end
+            end
+            warning:Hide()
+            mRadial:UpdateActivePrimarySpells()
+            mRadial:UpdateActiveSecondarySpells()
+            mRadial:UpdateUI(false)
+            MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
+            MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
+            end)
+          
+          warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+          end,
+      }
+    }
+  }
 
-  -- table.insert(widgetArgs, resetGrp)
+  table.insert(widgetArgs, resetGrp)
 
   ----- SPELL LIST
   if hidePassive == nil then hidePassive = false end
@@ -1561,7 +1574,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
 
       local spellsCbxs = {
           name = spellName,
-          descp = desc,
+          desc = desc,
           defaultValue = defaultValue,
           type = "toggle",
           order = idx+1,
@@ -1595,7 +1608,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
           end
           local spellsCbxs = {
               name = spellName .. "-PASSIVE",
-              descp = desc,
+              desc = desc,
               defaultValue = defaultValue,
               type = "toggle",
               order = idx+activeIDX,
@@ -1621,17 +1634,21 @@ end
 
 -- SPELL ORDER
 function mRadial:CreateOrderParentFrame()
-  local parentFrame = AceGUI:Create("Frame")
+  local parentFrame = AceGUI:Create("Window")
+        local title = L["Opt_SpellOrderFrame_Name"]
+        parentFrame:SetTitle(title)
         parentFrame:SetLayout("List")
         parentFrame:SetWidth(400)
-        parentFrame:SetHeight(300)
+        parentFrame:SetHeight(200)
 
         local info = AceGUI:Create("Label") 
-        info:SetText("This sets the order along the radial frame. To use change the order, right click a spell to pick it up, and drop it onto the spell you want to swap it with.")
+        local text = L["Opt_SpellOrderFrame_Desc"]
+        info:SetText(text)
         info:SetWidth(350)
 
         local grp = AceGUI:Create("InlineGroup")
         grp:SetLayout("Flow")
+        grp:SetFullWidth(true)
         parentFrame.order = grp
 
         parentFrame:AddChild(info)

@@ -184,3 +184,6 @@ L["Opt_PowerPersists_desc"] = "Hide the counter when the minimum amount of power
 L["Up/Down"] = "Up/Down"
 L["Left/Right"] = "Left/Right"
 
+L["Opt_SpellOrderFrame_Name"] = "Spell Order"
+L["Opt_SpellOrderFrame_Desc"] = "This sets the order along the radial frame. To use change the order, right click a spell to pick it up, and drop it onto the spell you want to swap it with."
+

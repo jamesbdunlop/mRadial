@@ -184,3 +184,6 @@ L["Opt_PowerPersists_desc"] = "Ocultar el contador cuando se requiere la cantida
 
 L["Up/Down"] = "Arriba/Abajo"
 L["Left/Right"] = "Izquierda/Derecha"
+
+L["Opt_SpellOrderFrame_Name"] = "Orden de hechizos"
+L["Opt_SpellOrderFrame_Desc"] = "Esto establece el orden en el marco radial. Para cambiar el orden, haz clic derecho en un hechizo para recogerlo y luego suéltalo sobre el hechizo con el que deseas intercambiarlo."

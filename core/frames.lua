@@ -330,7 +330,6 @@ function mRadial:RestoreFrame(frameName, frame, forceDefault)
     if forceDefault == nil then forceDefault = false end
     local framePosData = MRadialSavedVariables.framePositions[frameName]
     if framePosData == nil or forceDefault then
-        print("Setting defaults for petFrame: %s", frameName)
         framePosData = {}
         framePosData["x"] = -100
         framePosData["y"] = 0
@@ -753,7 +752,9 @@ function mRadial:CreatePetFrames()
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             local frame = MR_ALLFRAMES[frameName]
             mRadial:ShowFrame(frame, 1)
-            frame:Show()
+            if not InCombatLockdown() then
+                frame:Show()
+            end
         end
 
     end

@@ -58,7 +58,6 @@ function mRadial:InitUI(create)
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     if create == nil then create = false end
     mRadial:UpdateUI(create)
-    
 end
 
 function mRadial:UpdateUI(create)
