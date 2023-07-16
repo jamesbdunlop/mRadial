@@ -784,7 +784,12 @@ function mRadial:CreatePetFrames()
             frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
             frame.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
             
-            mRadial:RestoreFrame(frameName, frame, true, x, -150)
+            local playerName = UnitName("player")
+            local playerSpec = GetSpecialization()
+            local frameCache = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"]
+            if not mRadial:TableContainsKey(frameCache, frameName) then 
+                mRadial:RestoreFrame(frameName, frame, true, x, -150)
+            end
 
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed

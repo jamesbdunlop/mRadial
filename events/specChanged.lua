@@ -7,6 +7,7 @@ function mRadial:PLAYER_SPECIALIZATION_CHANGED(self, event, ...)
         mRadial:BuildPrimarySpellOrder(false)
         mRadial:BuildSecondarySpellOrder(false)
         mRadial:InitUI(true)
+        mRadial:SetPetFramePosAndSize()
     end
 end
 

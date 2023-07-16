@@ -43,6 +43,7 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
         mRadial:HideFrame(watcher.debuffTimerTextBG)
         watcher.cooldownText:SetAlpha(0)
         watcher.cooldownText:SetText(string.format(""))
+        watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
         return
     end
 
@@ -53,21 +54,13 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
         mRadial:HideFrame(watcher.readyText)
         watcher.cooldownText:SetAlpha(1)
         watcher.iconFrame:SetAlpha(1)
+        watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+        
         if minutes == 0 then
             watcher.cooldownText:SetText(string.format("%d", seconds))
         else
             watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
         end
-        if debuffCheck ~= nil then
-            watcher.movetex:SetColorTexture(0, 0, 0, 0)
-        else
-            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
-        end
-        
-        if outOfPower then
-            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
-        end
-
         return
     end
 
@@ -127,7 +120,6 @@ function mRadial:DoDebuffTimer(spellName, watcher, iconPath, outOfPower)
         mRadial:ShowFrame(watcher.readyText)
         mRadial:HideFrame(watcher.debuffTimerText)
         watcher.iconFrame:SetAlpha(1)
-        watcher.movetex:SetColorTexture(0, 0, 0, 0)
     end
     if outOfPower then
         watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])

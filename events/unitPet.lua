@@ -9,6 +9,7 @@ function mRadial:UNIT_PET(_, arg1)
         mRadial:HideAllPetFrames()
     else
         mRadial:CreatePetFrames()
+        mRadial:SetPetFramePosAndSize()
     end
 end
 

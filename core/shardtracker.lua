@@ -68,7 +68,7 @@ function mRadial:shardtrack()
     if hideOOfShardFrame == nil then hideOOfShardFrame = MR_DEFAULT_HIDE_OOSF end
     if soulShards == 0 and not MAINFRAME_ISMOVING and not hideOOfShardFrame then
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .2) -- red, 10% opacity
-    elseif soulShards > 0 or hideOOfShardFrame then
+    elseif soulShards > 0 and not MAINFRAME_ISMOVING or hideOOfShardFrame then
         MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
     end
 end
