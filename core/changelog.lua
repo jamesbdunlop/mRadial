@@ -7,7 +7,7 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
----------- v0.5.8 --\n \
+---------- v0.6.0 --\n \
 \n-- IMPROVEMENTS \
 \n    - Some Options cleanup. Added the reset to the spell selection. Note this requires a toggle of the view atm to update it.\
 \n    - Step one of the transfer process started. This is for frame positions. Next step will be for transferring the dimension settings across specs.\
