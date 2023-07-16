@@ -7,6 +7,9 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.3 --\n \
+\n    - Checks for frame validity before removal.\
+\n\n \
 ---------- v0.6.2 --\n \
 \n-- IMPROVEMENTS \
 \n    - Noticed a HUGE bloat in the saved vars (especially for pet classes). I have tracked this down to the frame positions and a returned val from the API being huge tables. I've push in a fix that should see the memory usage and file size come down significantly.\

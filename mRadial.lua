@@ -169,8 +169,10 @@ function mRadial:OnInitialize()
             local playerName = UnitName("player")
             for x=1, 3 do
                 local frameCache = PerPlayerPerSpecSavedVars[playerName][x]["framePositions"]
-                for frameName, fameData in pairs(frameCache) do
-                    fameData["relativeTo"] = "UIParent"
+                if frameCache ~= nil then
+                    for frameName, fameData in pairs(frameCache) do
+                        fameData["relativeTo"] = "UIParent"
+                    end
                 end
             end
         end
