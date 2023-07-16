@@ -9,7 +9,7 @@ MRADIAL_KNOWNISSUES = " \
 MRADIAL_UPDATENOTES = " \
 ---------- v0.6.2 --\n \
 \n-- IMPROVEMENTS \
-\n    - Noticed a HUGE bloat in the saved vars. Have tracked this down to the frame positions and a returned val from the API being huge tables. I've push in a fix that should see the memory usage and file size come down significantly.\
+\n    - Noticed a HUGE bloat in the saved vars (especially for pet classes). I have tracked this down to the frame positions and a returned val from the API being huge tables. I've push in a fix that should see the memory usage and file size come down significantly.\
 \n    The next time you log in and reload, this file should drop from anywhere around 8-10mb in size and mem usage back down to where I'd expect it to be.\
 \n\n \
 ---------- v0.6.1 --\n \
