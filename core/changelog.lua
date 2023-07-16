@@ -2,6 +2,7 @@ MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
 \n    - Some of the default values don't apply in the options on first load. This should now be resolved, but keeping an eye on this. \
 \n    - Void Bolt passive when added will read ready all the time without Void Form. \
+\n    - Changing the type of pet you have out during combat, with this new block on fame:Show() Hide() during combat is going to freak out the ui. \
 \n \
 "
 
@@ -14,7 +15,7 @@ MRADIAL_UPDATENOTES = " \
 \n    - Radial spells info on hover was incorrectly named descp rather than desc.\
 \n    - Some more timer tweaking.\
 \n    - Spell order description was missing from locales.\
-\n    - Updates to latest Ace3.\
+\n    - Update lib to latest Ace3.\
 \n\n \
 ---------- v0.5.7 --\n \
 \n-- IMPROVEMENTS \
