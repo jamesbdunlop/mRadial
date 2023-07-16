@@ -169,6 +169,9 @@ L["Opt_Size"] = "Size"
 L["SummonSoulKeeperSpellname"] = "Summon Soulkeeper"
 L["ShadowFurySpellname"] = "ShadowFury"
 
+L["Opt_Reset_PetFrames_name"] = "Reset Pet Frames"
+L["Opt_Reset_PetFrames_desc"] = "Resets pet frames to center screen if they went missing."
+
 L["Opt_PetIgnoreInput_name"] = "Pet Abilities To Ignore"
 L["Opt_PetIgnoreInput_desc"] = "Type the name of the pet ability you want to ignore on a newLine. No trailing spaces!"
 
@@ -187,3 +190,11 @@ L["Left/Right"] = "Left/Right"
 L["Opt_SpellOrderFrame_Name"] = "Spell Order"
 L["Opt_SpellOrderFrame_Desc"] = "This sets the order along the radial frame. To use change the order, right click a spell to pick it up, and drop it onto the spell you want to swap it with."
 
+L["Warning"] = "WARNING!"
+L["ResetWarning"] = "This will reset all selected spells! Continue?"
+
+L["Opt_copy_name"] = "Copy Frame Positions From Spec:"
+L["Opt_copy_desc"] = "This will replace your current frame positions with the chosen spec. Note the current spec is always shown in this drop down as the active value. Selecting another spec will trigger the transfer process."
+L["CopyWarning1"] = "This will replace the positions for all moveable frames! Continue?"
+
+L["Opt_Transfer_name"] = "Transfer"

@@ -168,6 +168,9 @@ L["Opt_Size"] = "Größe"
 L["SummonSoulKeeperSpellname"] = "Seelenwärter herbeirufen"
 L["ShadowFurySpellname"] = "Schattenfuror"
 
+L["Opt_Reset_PetFrames_name"] = "Haustierfenster zurücksetzen"
+L["Opt_Reset_PetFrames_desc"] = "Setzt die Haustierfenster in die Bildschirmmitte zurück, falls sie verschwunden sind."
+
 L["Opt_PetIgnoreInput_name"] = "Zu ignorierende Begleiterfähigkeiten"
 L["Opt_PetIgnoreInput_desc"] = "Geben Sie den Namen der Begleiterfähigkeit ein, die Sie ignorieren möchten, jeweils in einer neuen Zeile. Keine Leerzeichen am Ende!"
 
@@ -185,3 +188,12 @@ L["Left/Right"] = "Links/Rechts"
 
 L["Opt_SpellOrderFrame_Name"] = "Zauberreihenfolge"
 L["Opt_SpellOrderFrame_Desc"] = "Hiermit wird die Reihenfolge im radialen Rahmen festgelegt. Um die Reihenfolge zu ändern, klicken Sie mit der rechten Maustaste auf einen Zauber, um ihn aufzuheben, und lassen Sie ihn auf den Zauber fallen, mit dem Sie ihn tauschen möchten."
+
+L["Warning"] = "WARNUNG!"
+L["ResetWarning"] = "Dadurch werden alle ausgewählten Zauber zurückgesetzt! Fortfahren?"
+
+L["Opt_copy_name"] = "Rahmenpositionen von Spezialisierung kopieren:"
+L["Opt_copy_desc"] = "Dies ersetzt Ihre aktuellen Rahmenpositionen durch die gewählte Spezialisierung. Beachten Sie, dass die aktuelle Spezialisierung immer als aktiver Wert in diesem Dropdown-Menü angezeigt wird. Wenn Sie eine andere Spezialisierung auswählen, wird der Übertragungsprozess ausgelöst."
+L["CopyWarning1"] = "Dies wird die Positionen aller verschiebbaren Rahmen ersetzen! Fortfahren?"
+
+L["Opt_Transfer_name"] = "Übertragung"

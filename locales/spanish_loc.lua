@@ -165,6 +165,8 @@ L["Opt_Size"] = "tamaño"
 L["SummonSoulKeeperSpellname"] = "Invocar guardianalmas"
 L["ShadowFurySpellname"] = "Furia de las Sombras"
 
+L["Opt_Reset_PetFrames_name"] = "Restablecer marcos de mascotas"
+L["Opt_Reset_PetFrames_desc"] = "Restablece los marcos de mascotas al centro de la pantalla si desaparecieron."
 
 L["Opt_PetIgnoreInput_name"] = "Habilidades de Mascota a Ignorar"
 L["Opt_PetIgnoreInput_desc"] = "Escribe el nombre de la habilidad de mascota que deseas ignorar en una nueva línea. ¡Sin espacios al final!"
@@ -183,3 +185,12 @@ L["Left/Right"] = "Izquierda/Derecha"
 
 L["Opt_SpellOrderFrame_Name"] = "Orden de hechizos"
 L["Opt_SpellOrderFrame_Desc"] = "Esto establece el orden en el marco radial. Para cambiar el orden, haz clic derecho en un hechizo para recogerlo y luego suéltalo sobre el hechizo con el que deseas intercambiarlo."
+
+L["Warning"] = "¡ADVERTENCIA!"
+L["ResetWarning"] = "¿Esto restablecerá todos los hechizos seleccionados! ¿Continuar?"
+
+L["Opt_copy_name"] = "Copiar posiciones del marco desde la especialización:"
+L["Opt_copy_desc"] = "Esto reemplazará las posiciones actuales de tus marcos con la especialización elegida. Ten en cuenta que la especialización actual siempre se muestra en este menú desplegable como el valor activo. Al seleccionar otra especialización, se activará el proceso de transferencia."
+L["CopyWarning1"] = "¡Esto reemplazará las posiciones de todos los marcos móviles! ¿Continuar?"
+
+L["Opt_Transfer_name"] = "Transferencia"

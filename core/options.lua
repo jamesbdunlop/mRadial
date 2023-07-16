@@ -1094,8 +1094,8 @@ MROptionsTable = {
                 get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
               },
               resetPetPos = {
-                name = "Reset PetFrames",
-                desc = "Resets petFrames to center screen if they went missing.",
+                name = L["Opt_Reset_PetFrames_name"],
+                desc = L["Opt_Reset_PetFrames_desc"],
                 type = "execute",
                 order = 3,
                 func  = function(self, val)
@@ -1351,8 +1351,46 @@ MROptionsTable = {
           },
         },
         order=4
+      },
+
+      transferOptions={
+        name = L["Opt_Transfer_name"],
+        type = "group",
+        args={
+          specPositions = {
+              name = L["Opt_copy_name"],
+              desc = L["Opt_copy_desc"],
+              type = "select",
+              style = "dropdown",
+              values = function()
+                local specNames = {}
+                local numSpecializations = GetNumSpecializations(false, false)
+                for x=1, numSpecializations do
+                    local _, name, _, _, _, _ENV = GetSpecializationInfo(x)
+                    specNames[#specNames+1] = name
+                end
+                return specNames
+            end,
+              order = 1,
+              get = function(widget, val) 
+                local playerSpec = GetSpecialization()
+                return playerSpec
+              end,
+              set = function(widget, val) 
+                local warning = mRadial:PopUpDialog(L["Warning"], L["CopyWarning1"], 400, 120)
+                warning:Show()
+                warning.acceptButton:SetCallback("OnClick", function()
+                  warning:Hide()
+                  mRadial:CopyFromSpec(val)
+                  mRadial:InitUI(false)
+                end) 
+                
+                warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+              end,
+          }
+        }
       }
-    }
+  }
 }
 
 ------------------------------------------------------------------------------------------
@@ -1500,7 +1538,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
         type = "execute",
         order = 1,
         func = function(info, val)
-          local warning = mRadial:PopUpDialog("WARNING!", "This will reset all selected spells! Continue?", 400, 120)
+          local warning = mRadial:PopUpDialog(L["Warning"], L["ResetWarning"], 400, 120)
           warning:Show()
           warning.acceptButton:SetCallback("OnClick", function() 
             for x=1, #MR_WATCHERFRAMES do

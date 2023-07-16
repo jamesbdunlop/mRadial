@@ -10,12 +10,15 @@ MRADIAL_UPDATENOTES = " \
 ---------- v0.5.8 --\n \
 \n-- IMPROVEMENTS \
 \n    - Some Options cleanup. Added the reset to the spell selection. Note this requires a toggle of the view atm to update it.\
+\n    - Step one of the transfer process started. This is for frame positions. Next step will be for transferring the dimension settings across specs.\
 \n -- FIXES \
 \n    - Some spells like immolate return a valid spellID etc but IsKnown(spellID) was returning false. I'm letting all pass along now and it's up to the user to select valid spells.\
 \n    - Radial spells info on hover was incorrectly named descp rather than desc.\
 \n    - Some more timer tweaking.\
 \n    - Spell order description was missing from locales.\
 \n    - Update lib to latest Ace3.\
+\n    - Bug where power was showing initally for MANA types which I do not want to show.\
+\n    - Specs moving the frames to the one location. Spec frame positions should now respect each spec as expected.\
 \n\n \
 ---------- v0.5.7 --\n \
 \n-- IMPROVEMENTS \

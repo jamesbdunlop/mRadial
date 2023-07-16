@@ -186,17 +186,20 @@ function mRadial:SetMoveFrameScripts(frame)
 
     frame:SetScript("OnMouseUp", function(self, button)
         frame:StopMovingOrSizing()
+        local playerName = UnitName("player")
+        local playerSpec = GetSpecialization()
+        local frameCache = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"]
         local frameName = frame:GetName()
         -- print("storing frame pos: %s", frameName)
         local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
-        MRadialSavedVariables.framePositions[frameName] = {}
-        MRadialSavedVariables.framePositions[frameName]["point"] = point
-        MRadialSavedVariables.framePositions[frameName]["relativeTo"] = relativeTo
-        MRadialSavedVariables.framePositions[frameName]["relativePoint"] = relativePoint
-        MRadialSavedVariables.framePositions[frameName]["x"] = offsetX
-        MRadialSavedVariables.framePositions[frameName]["y"] = offsetY
-        MRadialSavedVariables.framePositions[frameName]["sx"] = frame:GetWidth()
-        MRadialSavedVariables.framePositions[frameName]["sy"] = frame:GetHeight()
+        frameCache[frameName] = {}
+        frameCache[frameName]["point"] = point
+        frameCache[frameName]["relativeTo"] = relativeTo
+        frameCache[frameName]["relativePoint"] = relativePoint
+        frameCache[frameName]["x"] = offsetX
+        frameCache[frameName]["y"] = offsetY
+        frameCache[frameName]["sx"] = frame:GetWidth()
+        frameCache[frameName]["sy"] = frame:GetHeight()
     end)
 end
 
@@ -326,12 +329,45 @@ function mRadial:SetUIMovable(isMovable)
     end
 end
 
+function mRadial:ForceUpdateAllMoveableFramePositions()
+    for x=1, #MR_ALLFRAMES do
+        local frame = MR_ALLFRAMES[x]
+        if not frame.isWatcher then
+            mRadial:RestoreFrame(frame:GetName(), frame, false)
+        end
+    end
+    mRadial:UpdateUI(false)
+    mRadial:setShardTrackerFramesSize()
+    mRadial:setOOSShardFramesSize()
+    mRadial:SetPetFramePosAndSize()
+end
+
+function mRadial:CopyFromSpec(specNum)
+    local playerName = UnitName("player")
+    local playerSpec = GetSpecialization()
+    local srcFramePosData = PerPlayerPerSpecSavedVars[playerName][specNum]["framePositions"]
+    local destFramePosData = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"]
+
+    local srcPetAbilitesToIgnore = PerPlayerPerSpecSavedVars[playerName][specNum]["hidePetAbilities"]
+    PerPlayerPerSpecSavedVars[playerName][playerSpec]["hidePetAbilities"] = srcPetAbilitesToIgnore
+
+    for frameName, framePositionData in pairs(srcFramePosData) do
+        destFramePosData[frameName] = framePositionData
+    end
+    mRadial:ForceUpdateAllMoveableFramePositions()
+end
+
 function mRadial:RestoreFrame(frameName, frame, forceDefault)
     if forceDefault == nil then forceDefault = false end
-    local framePosData = MRadialSavedVariables.framePositions[frameName]
+    local playerName = UnitName("player")
+    local playerSpec = GetSpecialization()
+    local framePosData = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"][frameName]
+    -- local framePosData = MRadialSavedVariables.framePositions[frameName]
     if framePosData == nil or forceDefault then
         framePosData = {}
-        framePosData["x"] = -100
+        local x = 0
+        if frame.isPetFrame then x = -100 end
+        framePosData["x"] = x
         framePosData["y"] = 0
         framePosData["point"] = "CENTER"
         framePosData["relativeTo"] = "UIParent"
@@ -444,7 +480,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
             local power = UnitPower("player", powerType)
             local powerTextEnabled = MRadialSavedVariables["powerTextEnabled"]
             if powerTextEnabled == nil then powerTextEnabled = MR_DEFAULT_POWERENABLED end
-            if power == 0 or power < powerMinCost then
+            if power == 0 or power < powerMinCost and powerType ~= 0 then
                 if powerTextEnabled then
                     watcher.powerText:SetText(tostring(power))
                     mRadial:ShowFrame(watcher.powerText, 1)

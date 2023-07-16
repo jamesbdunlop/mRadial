@@ -57,7 +57,9 @@ function mRadial:InitUI(create)
     end
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     if create == nil then create = false end
-    mRadial:UpdateUI(create)
+    
+    -- Now force a read for all the positions as spec changes don't update as expected without it.
+    mRadial:ForceUpdateAllMoveableFramePositions()
 end
 
 function mRadial:UpdateUI(create)
@@ -116,8 +118,6 @@ function mRadial:UpdateUI(create)
     local heightDeform2 = MRadialSavedVariables["heightDeform2"] or MR_DEFAULT_HEIGHT
 
     mRadial:RadialButtonLayout(secondaryCurrentOrder, radius2, offset2, spread2, widthDeform2, heightDeform2, MRadialSecondaryFrame)
-    
-    mRadial:SetPetFramePosAndSize()
 end
 
 local MediaPath = {
