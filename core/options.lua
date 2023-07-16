@@ -226,7 +226,11 @@ MROptionsTable = {
                       MRadialSavedVariables["radius"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radius"] or MR_DEFAULT_RADIUS end,
+                    get = function(self)
+                      local radius = MRadialSavedVariables["radius"]
+                      if radius == nil then radius = MR_DEFAULT_RADIUS end
+                      return radius
+                    end,
                   },
                   spread = {
                     name = L["Opt_Spread_name"],
@@ -401,7 +405,8 @@ MROptionsTable = {
                     local selectedFont = LSM:HashTable("font")[groupIndex]
                     MRadialSavedVariables['Font'] = selectedFont
                     mRadial:UpdateUI(true)
-                    mRadial:SetPetFramePosAndSize()
+                    -- mRadial:SetPetFramePosAndSize()
+                    mRadial:GlobalFontPercentageChanged()
                   end,
                 get = function(info)
                     local values = LSM:HashTable("font")
@@ -1003,7 +1008,10 @@ MROptionsTable = {
                   MRadialSavedVariables["shardOutOfFrameSize"] = val
                   mRadial:setOOSShardFramesSize()
                 end,
-                get = function(self) return MRadialSavedVariables["shardOutOfFrameSize"] end,
+                get = function(self) 
+                  local oosfs = MRadialSavedVariables["shardOutOfFrameSize"]
+                  if oosfs == nil then oosfs = MR_DEFAULT_OOS_FS end
+                  return  oosfs end,
               },
               shardFrameSize = {
                 name = L["Opt_ShardTrackerFrameSize_name"],
@@ -1019,7 +1027,10 @@ MROptionsTable = {
                   MRadialSavedVariables["shardTrackerFrameSize"] = val
                   mRadial:setShardTrackerFramesSize()
                 end,
-                get = function(self) return MRadialSavedVariables["shardTrackerFrameSize"] end,
+                get = function(self) 
+                  local sfs = MRadialSavedVariables["shardTrackerFrameSize"]
+                  if sfs == nil then sfs = MR_DEFAULT_OOS_FS end
+                  return sfs end,
               },
               shardFrameTransparency = {
                 name = L["Opt_ShardTrackerTrans_name"],
@@ -1035,20 +1046,41 @@ MROptionsTable = {
                   MRadialSavedVariables["shardFrameTransparency"] = val
                   mRadial:createShardCountFrame()
                 end,
-                get = function(self) return MRadialSavedVariables["shardFrameTransparency"] end,
+                get = function(self) 
+                  local trans = MRadialSavedVariables["shardFrameTransparency"]
+                  if trans == nil then trans = MR_DEFAULT_SHARD_TRANS end
+                  return trans end,
               },
               hideShardFrame = {
                 name = L["Opt_HideShardTracker_name"],
                 desc = L["Opt_HideShardTracker_desc"],
                 type = "toggle",
-                order = 1,
+                order = 4,
                 defaultValue = false,
                 set = function(info, val)
                   MRadialSavedVariables["hideShardFrame"] = val
                   mRadial:createShardCountFrame()
                   mRadial:UpdateUI()
                 end,
-                get = function(info) return MRadialSavedVariables["hideShardFrame"] end,
+                get = function(info)
+                  local hideShardFrame = MRadialSavedVariables["hideShardFrame"]
+                  if hideShardFrame == nil then hideShardFrame = false end
+                  return hideShardFrame end,
+              },
+              hideOOSShardFrame = {
+                name = L["Opt_HideOOSShardTracker_name"],
+                desc = L["Opt_HideOOSShardTracker_desc"],
+                type = "toggle",
+                order = 4,
+                defaultValue = false,
+                set = function(info, val)
+                  MRadialSavedVariables["hideOOShardFrame"] = val
+                  mRadial:shardtrack()
+                end,
+                get = function(info)
+                  local hideShardFrame = MRadialSavedVariables["hideOOShardFrame"]
+                  if hideShardFrame == nil then hideShardFrame = MR_DEFAULT_HIDE_OOSF end
+                  return hideShardFrame end,
               },
             },
           },
@@ -1090,8 +1122,13 @@ MROptionsTable = {
                 set = function(self, val)
                   MRadialSavedVariables["PetFramesSize"] = val
                   mRadial:SetPetFramePosAndSize()
+                  mRadial:UpdateUI(false)
                 end,
-                get = function(self) return MRadialSavedVariables["PetFramesSize"] end,
+                get = function(self) 
+                  local current = MRadialSavedVariables["PetFramesSize"]
+                  if current == nil then current = 40 end
+                  return current
+                 end,
               },
               resetPetPos = {
                 name = L["Opt_Reset_PetFrames_name"],
@@ -1100,9 +1137,13 @@ MROptionsTable = {
                 order = 3,
                 func  = function(self, val)
                   local petFrames = MR_PETFAMES
+                  local petFrameSize = MRadialSavedVariables.PetFramesSize
+                  if petFrameSize == nil then petFrameSize = MR_DEFAULT_PET_FRAMESIZE end
+                  local x = -50
                   for _, frame in ipairs(petFrames) do
                     local frameName = frame:GetName()
-                    mRadial:RestoreFrame(frameName, frame, true)
+                    mRadial:RestoreFrame(frameName, frame, true, x, -150)
+                    x = x + (5+petFrameSize)
                   end
                 end,
               },
@@ -1146,9 +1187,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_cdUdOffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_cdUdOffset"] or MR_DEFAULT_PET_CDUDOFFSET end,
+                    get = function(self) 
+                      local cdoffset =  MRadialSavedVariables["pet_cdUdOffset"]
+                      if cdoffset == nil then cdoffset = MR_DEFAULT_PET_CDUDOFFSET end
+                      return cdoffset end,
                   },
                   pet_cooldown_LeftRight = {
                     name = L["Left/Right"],
@@ -1162,9 +1207,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_cdLROffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_cdLROffset"] or MR_DEFAULT_PET_CDLROFFSET end,
+                    get = function(self) 
+                      local lroffset =  MRadialSavedVariables["pet_cdLROffset"]
+                      if lroffset == nil then lroffset = MR_DEFAULT_PET_CDLROFFSET end
+                      return lroffset end,
                   },
                   pet_cooldownColour = {
                     type = "color",
@@ -1180,6 +1229,7 @@ MROptionsTable = {
                     end,
                     set = function(info, r, g, b, a)
                       MRadialSavedVariables["pet_cdColor"] = {r, g, b, a}
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
                   },
@@ -1195,9 +1245,13 @@ MROptionsTable = {
                     default = 2,
                     set = function(self, val)
                       MRadialSavedVariables["pet_coolDownFontSize"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_coolDownFontSize"] or MR_DEFAULT_PET_FONTBIGGERSIZE end,
+                    get = function(self) 
+                      local cdFontSize = MRadialSavedVariables["pet_coolDownFontSize"]
+                      if cdFontSize == nil then cdFontSize = MR_DEFAULT_PET_FONTBIGGERSIZE end
+                      return cdFontSize end,
                   },
                 }
               },
@@ -1219,9 +1273,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_readyUDOffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyUDOffset"] or MR_DEFAULT_PET_READYUDOFFSET end,
+                    get = function(self) 
+                      local val = MRadialSavedVariables["pet_readyUDOffset"]
+                      if val == nil then val = MR_DEFAULT_PET_READYUDOFFSET end
+                      return val end,
                   },
                   pet_readyLeftRight = {
                     name = L["Left/Right"],
@@ -1235,9 +1293,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_readyLROffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyLROffset"] or MR_DEFAULT_PET_READYLROFFSET end,
+                    get = function(self) 
+                      local val = MRadialSavedVariables["pet_readyLROffset"]
+                      if val == nil then val = MR_DEFAULT_PET_READYLROFFSET end
+                      return val end,
                   },
                   pet_ReadyColour = {
                     type = "color",
@@ -1268,9 +1330,13 @@ MROptionsTable = {
                     default = 2,
                     set = function(self, val)
                       MRadialSavedVariables["pet_readyFontSize"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_readyFontSize"] or MR_DEFAULT_PET_FONTBIGGERSIZE end,
+                    get = function(self) 
+                      local val = MRadialSavedVariables["pet_readyFontSize"]
+                      if val == nil then val = MR_DEFAULT_PET_FONTBIGGERSIZE end
+                      return val end,
                   },
                 }
               },
@@ -1292,9 +1358,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_countUdOffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countUdOffset"] or MR_DEFAULT_PET_COUNTUDOFFSET end,
+                    get = function(self)
+                      local val = MRadialSavedVariables["pet_countUdOffset"]
+                      if val == nil then val = MR_DEFAULT_PET_COUNTUDOFFSET end
+                      return val end,
                   },
                   pet_countLeftRight = {
                     name = L["Left/Right"],
@@ -1308,9 +1378,13 @@ MROptionsTable = {
                     default = 0,
                     set = function(self, val)
                       MRadialSavedVariables["pet_countLROffset"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countLROffset"] or MR_DEFAULT_PET_COUNTLROFFSET end,
+                    get = function(self) 
+                      local val = MRadialSavedVariables["pet_countLROffset"]
+                      if val == nil then val = MR_DEFAULT_PET_COUNTLROFFSET end
+                      return val end,
                   },
                   pet_CountColour = {
                     type = "color",
@@ -1326,6 +1400,7 @@ MROptionsTable = {
                     end,
                     set = function(info, r, g, b, a)
                       MRadialSavedVariables["pet_countColor"] = {r, g, b, a}
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
                   },
@@ -1341,9 +1416,13 @@ MROptionsTable = {
                     default = 2,
                     set = function(self, val)
                       MRadialSavedVariables["pet_countFontSize"] = val
+                      mRadial:SetPetFramePosAndSize()
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["pet_countFontSize"] or MR_DEFAULT_PET_FONTSIZE end,
+                    get = function(self)
+                      local val = MRadialSavedVariables["pet_countFontSize"]
+                      if val == nil then val = MR_DEFAULT_PET_FONTSIZE end
+                      return val end,
                   },
                 }
               },

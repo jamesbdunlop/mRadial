@@ -129,6 +129,9 @@ L["Opt_ShardTrackerTrans_desc"] = "Use this change alpha of the shard frame. Tur
 L["Opt_HideShardTracker_name"] = "Hide Shard Frame"
 L["Opt_HideShardTracker_desc"] = "Show/Hide the warlock shard tracker frame."
 
+L["Opt_HideOOSShardTracker_name"] = "Hide Out of Shards Frame"
+L["Opt_HideOOSShardTracker_desc"] = "Show/Hide the warlock out of shards frame."
+
 L["Opt_pet_name"] = "Pet Options"
 
 L["Opt_RDY_name"] = "RDY"

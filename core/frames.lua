@@ -247,7 +247,13 @@ function mRadial:SetUIMovable(isMovable)
     if isMovable then
         if mRadial:IsWarlock() then
             mRadial:ShowFrame(MRadialMainFrame.crosshair)
-            MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+            local hideOOfShardFrame = MRadialSavedVariables["hideOOShardFrame"]
+            if hideOOfShardFrame == nil then hideOOfShardFrame = MR_DEFAULT_HIDE_OOSF end
+            if not hideOOfShardFrame then 
+                MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, .5)
+            else
+                MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0)
+            end
         end
         MRadialPrimaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
         MRadialSecondaryFrame.iconFrame:SetColorTexture(1, 0, 1, .5)
@@ -357,18 +363,18 @@ function mRadial:CopyFromSpec(specNum)
     mRadial:ForceUpdateAllMoveableFramePositions()
 end
 
-function mRadial:RestoreFrame(frameName, frame, forceDefault)
+function mRadial:RestoreFrame(frameName, frame, forceDefault, dx, dy)
     if forceDefault == nil then forceDefault = false end
     local playerName = UnitName("player")
     local playerSpec = GetSpecialization()
     local framePosData = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"][frameName]
-    -- local framePosData = MRadialSavedVariables.framePositions[frameName]
+    
     if framePosData == nil or forceDefault then
         framePosData = {}
-        local x = 0
-        if frame.isPetFrame then x = -100 end
+        local x = dx or 0
+        local y = dy or 0
         framePosData["x"] = x
-        framePosData["y"] = 0
+        framePosData["y"] = y
         framePosData["point"] = "CENTER"
         framePosData["relativeTo"] = "UIParent"
         framePosData["relativePoint"] = "CENTER"
@@ -392,6 +398,7 @@ function mRadial:RestoreFrame(frameName, frame, forceDefault)
     frame:SetSize(sx, sy)
     -- WHY THE FUCK DOES THIS NOT WORK ANYMORE!!!!!??????
     -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
+    MRadialSavedVariables.framePositions[frameName] = framePosData
 end
 
 function mRadial:WatcherExists(frameName)
@@ -735,6 +742,7 @@ function mRadial:CreatePetFrames()
     -- Clear out existing
     mRadial:HideAllPetFrames()
     local petAbilities = mRadial:GetPetAbilities()
+    local x = -100
     for frameName, spellData in pairs(petAbilities) do
         local spellName = spellData["spellName"]
         local spellIconPath = spellData["spellIcon"]
@@ -744,8 +752,12 @@ function mRadial:CreatePetFrames()
             if spellName == line then toIgnore = true break end
         end
         if MR_ALLFRAMES[frameName] == nil and mRadial:CheckHasSpell(spellName) and not toIgnore then
-            local petFrameSize = MRadialSavedVariables.PetFramesSize or 100
-            local fontPercentage = MRadialSavedVariables.FontPercentage or .5
+            local petFrameSize = MRadialSavedVariables.PetFramesSize 
+            if petFrameSize == nil then petFrameSize = MR_DEFAULT_PET_FRAMESIZE end
+            
+            local fontPercentage = MRadialSavedVariables.FontPercentage
+            if fontPercentage == nil then fontPercentage = MR_DEFAULT_FONTPERCENTAGE end
+
             local frame = mRadial:CreateMovableFrame(frameName,
                                                 {petFrameSize, petFrameSize},
                                                 UIParent,
@@ -756,17 +768,23 @@ function mRadial:CreatePetFrames()
                                                 true, 
                                                 {petFrameSize, petFrameSize}, {petFrameSize, petFrameSize},
                                                 true)
-            local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+            local customFontPath = MRadialSavedVariables['Font'] 
+            if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
             -- Colors
-            local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
-            local cdColor = MRadialSavedVariables.cdColor or MR_DEFAULT_CDCOLOR
-            local countColor = MRadialSavedVariables.countColor or MR_DEFAULT_COUNTCOLOR
+            local readyColor = MRadialSavedVariables.readyColor
+            if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
+            local cdColor = MRadialSavedVariables.cdColor 
+            if cdColor == nil then cdColor = MR_DEFAULT_CDCOLOR end
+            local countColor = MRadialSavedVariables.countColor 
+            if countColor == nil then countColor = MR_DEFAULT_COUNTCOLOR end
             frame.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
             frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
             frame.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
+            
+            mRadial:RestoreFrame(frameName, frame, true, x, -150)
 
             frame:SetScript("OnUpdate", function(self, elapsed)
                 plast = plast + elapsed
@@ -785,6 +803,7 @@ function mRadial:CreatePetFrames()
             end)
             MR_PETFAMES[#MR_PETFAMES+1] = frame
             MR_ALLFRAMES[frameName] = frame
+            x = x + (5+petFrameSize)
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             local frame = MR_ALLFRAMES[frameName]
             mRadial:ShowFrame(frame, 1)
@@ -870,48 +889,88 @@ end
 function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentFrame)
     -- This function handles adding the frames around a unit circle cause I like it better this way....
     -- orderedWatchers (table): ordered set of watchers.
-    local customFontPath =  MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
-    local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
-    local radiusMult = MRadialSavedVariables.radiusMult or MR_DEFAULT_RADIUSMULT
+    local customFontPath =  MRadialSavedVariables['Font']
+    if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
+    local fontPercentage = MRadialSavedVariables.FontPercentage 
+    if fontPercentage == nil then fontPercentage = MR_DEFAULT_FONTPERCENTAGE end
+    local radiusMult = MRadialSavedVariables.radiusMult
+    if radiusMult == nil then radiusMult = MR_DEFAULT_RADIUSMULT end
     local radius = r * radiusMult
     local offset = o
     local spread = sprd  -- -2.94  -- -5.0
     local widthDeform = wd
     local heightDeform = hd
 
-    local readyColor = MRadialSavedVariables.readyColor or MR_DEFAULT_READYCOLOR
-    local countColor = MRadialSavedVariables.countColor or MR_DEFAULT_COUNTCOLOR
-    local cdColor = MRadialSavedVariables.cdColor or MR_DEFAULT_CDCOLOR
-    local buffColor = MRadialSavedVariables.buffColor or MR_DEFAULT_BUFFCOLOR
-    local debuffColor = MRadialSavedVariables.debuffColor or MR_DEFAULT_DEBUFFCOLOR
-    local powerColor = MRadialSavedVariables.powerColor or MR_DEFAULT_POWERCOLOR
+    local readyColor = MRadialSavedVariables.readyColor
+    if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
 
-    local countFontSize = MRadialSavedVariables.countFontSize or MR_DEFAULT_FONTSIZE
-    local readyFontSize = MRadialSavedVariables.readyFontSize or MR_DEFAULT_FONTSIZE
-    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize or MR_DEFAULT_FONTSIZE
-    local timerFontSize = MRadialSavedVariables.timerFontSize or MR_DEFAULT_FONTSIZE
-    local debuffFontSize = MRadialSavedVariables.debuffFontSize or MR_DEFAULT_FONTSIZE
-    local powerFontSize = MRadialSavedVariables.powerFontSize or MR_DEFAULT_FONTSIZE
-
-    local radialUdOffset = MRadialSavedVariables.radialUdOffset or MR_DEFAULT_UDOFFSET
-    local radialLROffset = MRadialSavedVariables.radialLROffset or MR_DEFAULT_LROFFSET
-
-    local cdUdOffset = MRadialSavedVariables.cdUdOffset or MR_DEFAULT_CDUDOFFSET
-    local cdLROffset = MRadialSavedVariables.cdLROffset or MR_DEFAULT_CDLROFFSET
-
-    local countUdOffset = MRadialSavedVariables.countUdOffset or MR_DEFAULT_COUNTUDOFFSET
-    local countLROffset = MRadialSavedVariables.countLROffset or MR_DEFAULT_COUNTLROFFSET
+    local countColor = MRadialSavedVariables.countColor
+    if countColor == nil then countColor = MR_DEFAULT_COUNTCOLOR end
     
-    local readyUDOffset = MRadialSavedVariables.readyUDOffset or MR_DEFAULT_READYUDOFFSET
-    local readyLROffset = MRadialSavedVariables.readyLROffset or MR_DEFAULT_READYLROFFSET
+    local cdColor = MRadialSavedVariables.cdColor
+    if cdColor == nil then cdColor = MR_DEFAULT_CDCOLOR end
 
-    local debuffUDOffset = MRadialSavedVariables.debuffUdOffset or MR_DEFAULT_DEBUFFUDOFFSET
-    local debuffLROffset = MRadialSavedVariables.debuffLROffset or MR_DEFAULT_DEBUFFLROFFSET
+    local buffColor = MRadialSavedVariables.buffColor
+    if buffColor == nil then buffColor = MR_DEFAULT_BUFFCOLOR end
 
-    local powerUDOffset = MRadialSavedVariables.powerUdOffset or MR_DEFAULT_POWERUDOFFSET
-    local powerLROffset = MRadialSavedVariables.powerLROffset or MR_DEFAULT_POWERLROFFSET
+    local debuffColor = MRadialSavedVariables.debuffColor
+    if debuffColor == nil then debuffColor = MR_DEFAULT_DEBUFFCOLOR end
 
-    local watcherFrameSize = MRadialSavedVariables.watcherFrameSize or MR_DEFAULT_WATCHERFRAMESIZE
+    local powerColor = MRadialSavedVariables.powerColor
+    if powerColor == nil then powerColor = MR_DEFAULT_POWERCOLOR end
+
+    local countFontSize = MRadialSavedVariables.countFontSize
+    if countFontSize == nil then countFontSize = MR_DEFAULT_FONTSIZE end
+    
+    local readyFontSize = MRadialSavedVariables.readyFontSize
+    if readyFontSize == nil then readyFontSize = MR_DEFAULT_FONTSIZE end
+
+    local coolDownFontSize = MRadialSavedVariables.coolDownFontSize
+    if coolDownFontSize == nil then coolDownFontSize = MR_DEFAULT_FONTSIZE end
+
+    local timerFontSize = MRadialSavedVariables.timerFontSize
+    if timerFontSize == nil then timerFontSize = MR_DEFAULT_FONTSIZE end
+
+    local debuffFontSize = MRadialSavedVariables.debuffFontSize
+    if debuffFontSize == nil then debuffFontSize = MR_DEFAULT_FONTSIZE end
+
+    local powerFontSize = MRadialSavedVariables.powerFontSize
+    if powerFontSize == nil then powerFontSize = MR_DEFAULT_FONTSIZE end
+
+
+    local radialUdOffset = MRadialSavedVariables.radialUdOffset
+    local radialLROffset = MRadialSavedVariables.radialLROffset
+    if radialUdOffset == nil then radialUdOffset = MR_DEFAULT_UDOFFSET end
+    if radialLROffset == nil then radialLROffset = MR_DEFAULT_LROFFSET end
+
+    local cdUdOffset = MRadialSavedVariables.cdUdOffset
+    local cdLROffset = MRadialSavedVariables.cdLROffset 
+    if cdUdOffset == nil then cdUdOffset = MR_DEFAULT_CDUDOFFSET end
+    if cdLROffset == nil then cdLROffset = MR_DEFAULT_CDLROFFSET end
+
+    local countUdOffset = MRadialSavedVariables.countUdOffset
+    local countLROffset = MRadialSavedVariables.countLROffset
+    if countUdOffset == nil then countUdOffset = MR_DEFAULT_COUNTUDOFFSET end
+    if countLROffset == nil then countLROffset = MR_DEFAULT_COUNTLROFFSET end
+
+    
+    local readyUDOffset = MRadialSavedVariables.readyUDOffset
+    local readyLROffset = MRadialSavedVariables.readyLROffset
+    if readyUDOffset == nil then readyUDOffset = MR_DEFAULT_READYUDOFFSET end
+    if readyLROffset == nil then readyLROffset = MR_DEFAULT_READYLROFFSET end
+
+    local debuffUDOffset = MRadialSavedVariables.debuffUdOffset
+    local debuffLROffset = MRadialSavedVariables.debuffLROffset
+    if debuffUDOffset == nil then debuffUDOffset = MR_DEFAULT_DEBUFFUDOFFSET end
+    if debuffLROffset == nil then debuffLROffset = MR_DEFAULT_DEBUFFLROFFSET end
+
+    local powerUDOffset = MRadialSavedVariables.powerUdOffset
+    local powerLROffset = MRadialSavedVariables.powerLROffset
+    if powerUDOffset == nil then powerUDOffset = MR_DEFAULT_POWERUDOFFSET end
+    if powerLROffset == nil then powerLROffset = MR_DEFAULT_POWERLROFFSET end
+
+    local watcherFrameSize = MRadialSavedVariables.watcherFrameSize
+    if watcherFrameSize == nil then watcherFrameSize = MR_DEFAULT_WATCHERFRAMESIZE end
 
     local angleStep = (math.pi / #orderedWatchers) + spread*.1
     local autoSpread =  MRadialSavedVariables['autoSpread'] 

@@ -7,6 +7,13 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.1 --\n \
+\n-- IMPROVEMENTS \
+\n    - More default option cleanup for first time user experience improvements.\
+\n    - Adds option to warlock section to hide the out of shards frame. If in Config mode this won't be reflected as expected here just yet. Need to suss out some changes.\
+\n -- FIXES \
+\n    - More cooldown timer tweaking. I'm trying to avoid a bunch of GCD spam but also get these to clock out correctly. \
+\n\n \
 ---------- v0.6.0 --\n \
 \n-- IMPROVEMENTS \
 \n    - Some Options cleanup. Added the reset to the spell selection. Note this requires a toggle of the view atm to update it.\

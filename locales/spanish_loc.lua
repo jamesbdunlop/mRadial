@@ -119,6 +119,9 @@ L["Opt_ShardFrames_name"] = "Marcos de Fragmentos"
 L["Opt_OutOfShardsFrameSize_name"] = "Tamaño del Marco Sin Fragmentos"
 L["Opt_OutOfShardsFrameSize_desc"] = "Utilízalo para cambiar el marco que muestra el círculo de 'sin fragmentos'. ¡Activa el modo de configuración para esto!"
 
+L["Opt_HideOOSShardTracker_name"] = "Ocultar marco de Sin fragmentos"
+L["Opt_HideOOSShardTracker_desc"] = "Mostrar/Ocultar el marco de los fragmentos agotados del brujo."
+
 L["Opt_ShardTrackerFrameSize_name"] = "Tamaño del Marco de Rastreador de Fragmentos"
 L["Opt_ShardTrackerFrameSize_desc"] = "Utilízalo para cambiar el marco que muestra el rastreador personalizado de fragmentos."
 

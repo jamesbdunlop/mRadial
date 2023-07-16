@@ -57,17 +57,17 @@ function mRadial:GetSpecName()
     return currentSpecName
 end
 
-function mRadial:SpecInfo()
-    local specNames = {}
-    local numSpecializations = GetNumSpecializations(false, false)
-    for x=1, numSpecializations do
-        local id, name, description, icon, role, primaryStat = GetSpecializationInfo(x)
-        -- specNames[#specNames+1] = name
-        print("added: %s", name)
-        specNames[name] = id
-    end
-    return specNames
-end
+-- function mRadial:SpecInfo()
+--     local specNames = {}
+--     local numSpecializations = GetNumSpecializations(false, false)
+--     for x=1, numSpecializations do
+--         local id, name, description, icon, role, primaryStat = GetSpecializationInfo(x)
+--         -- specNames[#specNames+1] = name
+--         print("added: %s", name)
+--         specNames[name] = id
+--     end
+--     return specNames
+-- end
 
 function mRadial:TableContains(myTable, value)
     for _, v in ipairs(myTable) do
@@ -285,7 +285,8 @@ end
 function mRadial:GlobalFontPercentageChanged()
     -- print("Global font percentage changed!")
     mRadial:UpdateUI(false)
-    mRadial:SetPetFramePosAndSize()
+    mRadial:CreatePetFrames()
+    -- mRadial:SetPetFramePosAndSize()
 end
 
 function mRadial:GetFromTable(spellName, activespells)

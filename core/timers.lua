@@ -1,23 +1,35 @@
 local mRadial = mRadial
 
-function mRadial:GetSpellRemaining(spellName)
+function mRadial:GetSpellCoolDown(spellName)
     local start, duration, enabled, _ = GetSpellCooldown(spellName)
     start = start or GetTime()
     duration = duration or 0
-    local remaining = start + duration - GetTime()
+    if start and duration > 1.5 then
+        local remaining = start + duration - GetTime()
 
-    local minutes = math.floor(remaining / 60)
-    local seconds = (remaining - minutes * 60) + 1
-    return enabled, remaining, minutes, seconds
+        local minutes = math.floor(remaining / 60)
+        local seconds = (remaining+1 - minutes * 60) 
+        return enabled, remaining, minutes, seconds
+    end
+    return false, 0, 0, 0 -- If the spell is not on cooldown or invalid spellID provided
 end
 
 function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
     if outOfPower == nil then outOfPower = false end
-    -- COOLDOWNS FOR PARENT SPELLS
-    if MAINFRAME_ISMOVING then
+    local hideOOC = MRadialSavedVariables["hideooc"]
+    if hideOOC == nil then hideOOC = MR_DEFAULT_HIDEOOC end
+    
+    -- UI is in config mode, or we are mounted.
+    if MAINFRAME_ISMOVING or IsMounted() then
         return
     end
-    -- Try to make sure we have NOTHING competting against a running debuff dot etc
+    -- We are out of combat, but we want to hide the ui when out of combat.
+    if not InCombatLockdown() and hideOOC then
+        return
+    end
+    
+    -- COOLDOWNS FOR PARENT SPELLS
+    -- Try to make sure we have NOTHING competing against a running debuff dot etc
     local debuffCheck = nil
     for idx = 1, 40 do
         local name, _, _, _, _, expirationTime, source, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
@@ -34,33 +46,42 @@ function mRadial:DoSpellFrameCooldown(spellName, watcher, outOfPower)
         return
     end
 
-    local enabled, remaining, minutes, seconds = mRadial:GetSpellRemaining(spellName)
-    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
-    if enabled and remaining > 0 and remaining > MR_GCD and not IsMounted() and not hideOOC then
+    ----------------------------
+    -- COOLDOWN NOW
+    local enabled, remaining, minutes, seconds = mRadial:GetSpellCoolDown(spellName)
+    if enabled and minutes > 0 or seconds > 0 then
         mRadial:HideFrame(watcher.readyText)
-        mRadial:ShowFrame(watcher.movetex)
         watcher.cooldownText:SetAlpha(1)
         watcher.iconFrame:SetAlpha(1)
-        if minutes and minutes > 0 then
-            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
-            watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
-        elseif seconds and remaining > MR_GCD then
-            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+        if minutes == 0 then
             watcher.cooldownText:SetText(string.format("%d", seconds))
         else
-            if debuffCheck ~= nil then
-                watcher.movetex:SetColorTexture(0, 0, 0, 0)
-            end
-            watcher.cooldownText:SetText(string.format(""))
-            watcher.iconFrame:SetAlpha(1)
+            watcher.cooldownText:SetText(string.format("%d:%d", minutes, seconds))
         end
-    else
+        if debuffCheck ~= nil then
+            watcher.movetex:SetColorTexture(0, 0, 0, 0)
+        else
+            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+        end
+        
+        if outOfPower then
+            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+        end
+
+        return
+    end
+
+    -- No cooldown running.
+    if minutes <= 0 and seconds <= 0 then
         watcher.cooldownText:SetAlpha(0)
         watcher.cooldownText:SetText(string.format(""))
         watcher.iconFrame:SetAlpha(1)
-        if debuffCheck ~= nil then
+        if debuffCheck ~= nil or outOfPower then
+            watcher.movetex:SetColorTexture(MR_DEFAULT_NOPOWER[1], MR_DEFAULT_NOPOWER[2], MR_DEFAULT_NOPOWER[3], MR_DEFAULT_NOPOWER[4])
+        else
             watcher.movetex:SetColorTexture(0, 0, 0, 0)
         end
+
         if watcher.readyText ~= nil and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.readyText)
             watcher.movetex:SetColorTexture(0, 0, 0, 0)
