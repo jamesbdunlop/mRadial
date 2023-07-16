@@ -194,7 +194,7 @@ function mRadial:SetMoveFrameScripts(frame)
         local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint()
         frameCache[frameName] = {}
         frameCache[frameName]["point"] = point
-        frameCache[frameName]["relativeTo"] = relativeTo
+        frameCache[frameName]["relativeTo"] = "UIParent"
         frameCache[frameName]["relativePoint"] = relativePoint
         frameCache[frameName]["x"] = offsetX
         frameCache[frameName]["y"] = offsetY
@@ -348,7 +348,7 @@ function mRadial:ForceUpdateAllMoveableFramePositions()
     mRadial:SetPetFramePosAndSize()
 end
 
-function mRadial:CopyFromSpec(specNum)
+function mRadial:CopyFramesFromSpec(specNum)
     local playerName = UnitName("player")
     local playerSpec = GetSpecialization()
     local srcFramePosData = PerPlayerPerSpecSavedVars[playerName][specNum]["framePositions"]
@@ -361,6 +361,32 @@ function mRadial:CopyFromSpec(specNum)
         destFramePosData[frameName] = framePositionData
     end
     mRadial:ForceUpdateAllMoveableFramePositions()
+end
+
+function mRadial:CopyDimensionsFromSpec(specNum)
+    local playerName = UnitName("player")
+    local playerSpec = GetSpecialization()
+    -- radiusMult, watcherFrameSize, centerBelow
+    -- radial1: radius, spread, offset, widthDeform, heightDeform
+    -- radial2: radius2, spread2, offset2, widthDeform2, heightDeform2
+    -- fonts: 
+    local options = {}
+    options[1] = "radius"
+    options[2] = "spread"
+    options[3] = "offset"
+    options[4] = "widthDeform"
+    options[5] = "heightDeform"
+    options[6] = "radius2"
+    options[7] = "spread2"
+    options[8] = "offset2"
+    options[9] = "widthDeform2"
+    options[10] = "heightDeform2"
+
+    for _, optionName in ipairs(options) do
+        local src = PerPlayerPerSpecSavedVars[playerName][specNum][optionName]
+        local current = PerPlayerPerSpecSavedVars[playerName][playerSpec][optionName]
+        print(src, current)
+    end
 end
 
 function mRadial:RestoreFrame(frameName, frame, forceDefault, dx, dy)

@@ -175,7 +175,10 @@ MROptionsTable = {
                   MRadialSavedVariables["radiusMult"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(self) return MRadialSavedVariables["radiusMult"] or MR_DEFAULT_RADIUSMULT end,
+                get = function(self) 
+                  local val = MRadialSavedVariables["radiusMult"]
+                  if val == nil then val = MR_DEFAULT_RADIUSMULT end
+                  return val end,
               },
               iconSize = {
                 name = L["Opt_SpellIconSize_name"],
@@ -191,8 +194,10 @@ MROptionsTable = {
                   MRadialSavedVariables["watcherFrameSize"] = val
                   mRadial:UpdateUI(false)
                 end,
-                get = function(self) 
-                  return MRadialSavedVariables["watcherFrameSize"] or MR_DEFAULT_WATCHERFRAMESIZE end,
+                get = function(self)
+                  local val = MRadialSavedVariables["watcherFrameSize"]
+                  if val == nil then val = MR_DEFAULT_WATCHERFRAMESIZE end
+                  return val end,
               },
               centerBelow = {
                   name = L["Opt_Dimensions_CenterBelow_name"],
@@ -204,9 +209,9 @@ MROptionsTable = {
                     mRadial:UpdateUI(false)
                   end,
                   get = function(info)
-                    local current = MRadialSavedVariables["centerBelow"]
-                    if current == nil then return MR_DEFAULT_CENTERBELOW end
-                    return current end
+                    local val = MRadialSavedVariables["centerBelow"]
+                    if val == nil then return MR_DEFAULT_CENTERBELOW end
+                    return val end
                 },
               Radial01 = {
                 name = L["Opt_Primary_name"],
@@ -227,9 +232,9 @@ MROptionsTable = {
                       mRadial:UpdateUI(false)
                     end,
                     get = function(self)
-                      local radius = MRadialSavedVariables["radius"]
-                      if radius == nil then radius = MR_DEFAULT_RADIUS end
-                      return radius
+                      local val = MRadialSavedVariables["radius"]
+                      if val == nil then val = MR_DEFAULT_RADIUS end
+                      return val
                     end,
                   },
                   spread = {
@@ -246,7 +251,10 @@ MROptionsTable = {
                       MRadialSavedVariables["watcherFrameSpread"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["watcherFrameSpread"] or MR_DEFAULT_SPREAD end,
+                    get = function(self) 
+                      local val = MRadialSavedVariables["watcherFrameSpread"]
+                      if val == nil then val = MR_DEFAULT_SPREAD end
+                      return val end
                   },
                   offset = {
                     name = L["Opt_Offset_name"],
@@ -262,7 +270,10 @@ MROptionsTable = {
                       MRadialSavedVariables["offset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["offset"] or MR_DEFAULT_OFFSET end,
+                    get = function(self)
+                      local val = MRadialSavedVariables["offset"]
+                      if val == nil then val = MR_DEFAULT_OFFSET end
+                      return val end
                   },
                   width = {
                     name = L["Opt_WidthAdjust_name"],
@@ -278,7 +289,10 @@ MROptionsTable = {
                       MRadialSavedVariables["widthDeform"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["widthDeform"] or MR_DEFAULT_WIDTH end,
+                    get = function(self)
+                      local val = MRadialSavedVariables["widthDeform"]
+                      if val == nil then val = MR_DEFAULT_WIDTH end
+                      return val end
                   },
                   height = {
                     name = L["Opt_HeightAdjust_name"],
@@ -294,7 +308,10 @@ MROptionsTable = {
                       MRadialSavedVariables["heightDeform"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["heightDeform"] or MR_DEFAULT_HEIGHT end,
+                    get = function(self)
+                      local val = MRadialSavedVariables["heightDeform"]
+                      if val == nil then val = MR_DEFAULT_HEIGHT end
+                      return val end
                   },
                 },
                 order=1
@@ -1460,15 +1477,46 @@ MROptionsTable = {
                 warning:Show()
                 warning.acceptButton:SetCallback("OnClick", function()
                   warning:Hide()
-                  mRadial:CopyFromSpec(val)
+                  mRadial:CopyFramesFromSpec(val)
                   mRadial:InitUI(false)
                 end) 
                 
                 warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
               end,
-          }
+          },
+        --   specDimensions = {
+        --     name = L["Opt_copy_dimensions_name"],
+        --     desc = L["Opt_copy_desc"],
+        --     type = "select",
+        --     style = "dropdown",
+        --     values = function()
+        --       local specNames = {}
+        --       local numSpecializations = GetNumSpecializations(false, false)
+        --       for x=1, numSpecializations do
+        --           local _, name, _, _, _, _ENV = GetSpecializationInfo(x)
+        --           specNames[#specNames+1] = name
+        --       end
+        --       return specNames
+        --   end,
+        --     order = 1,
+        --     get = function(widget, val) 
+        --       local playerSpec = GetSpecialization()
+        --       return playerSpec
+        --     end,
+        --     set = function(widget, val) 
+        --       local warning = mRadial:PopUpDialog(L["Warning"], L["CopyWarning1"], 400, 120)
+        --       warning:Show()
+        --       warning.acceptButton:SetCallback("OnClick", function()
+        --         warning:Hide()
+        --         mRadial:CopyDimensionsFromSpec(val)
+        --         mRadial:InitUI(false)
+        --       end) 
+              
+        --       warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+        --     end,
+        -- },
         }
-      }
+      },
   }
 }
 

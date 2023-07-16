@@ -198,6 +198,9 @@ L["ResetWarning"] = "This will reset all selected spells! Continue?"
 
 L["Opt_copy_name"] = "Copy Frame Positions From Spec:"
 L["Opt_copy_desc"] = "This will replace your current frame positions with the chosen spec. Note the current spec is always shown in this drop down as the active value. Selecting another spec will trigger the transfer process."
+
 L["CopyWarning1"] = "This will replace the positions for all moveable frames! Continue?"
 
 L["Opt_Transfer_name"] = "Transfer"
+
+L["Opt_copy_dimensions_name"] = "Copy Frame Dimensions From Spec:"

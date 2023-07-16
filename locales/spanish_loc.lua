@@ -197,3 +197,6 @@ L["Opt_copy_desc"] = "Esto reemplazará las posiciones actuales de tus marcos co
 L["CopyWarning1"] = "¡Esto reemplazará las posiciones de todos los marcos móviles! ¿Continuar?"
 
 L["Opt_Transfer_name"] = "Transferencia"
+
+L["Opt_copy_dimensions_name"] = "Copy Frame Dimensions From Spec:"
+

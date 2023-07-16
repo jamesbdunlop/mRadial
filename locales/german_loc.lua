@@ -200,3 +200,5 @@ L["Opt_copy_desc"] = "Dies ersetzt Ihre aktuellen Rahmenpositionen durch die gew
 L["CopyWarning1"] = "Dies wird die Positionen aller verschiebbaren Rahmen ersetzen! Fortfahren?"
 
 L["Opt_Transfer_name"] = "Übertragung"
+
+L["Opt_copy_dimensions_name"] = "Copy Frame Dimensions From Spec:"
