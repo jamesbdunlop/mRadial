@@ -197,8 +197,13 @@ L["ResetWarning"] = "Dadurch werden alle ausgewählten Zauber zurückgesetzt! Fo
 
 L["Opt_copy_name"] = "Rahmenpositionen von Spezialisierung kopieren:"
 L["Opt_copy_desc"] = "Dies ersetzt Ihre aktuellen Rahmenpositionen durch die gewählte Spezialisierung. Beachten Sie, dass die aktuelle Spezialisierung immer als aktiver Wert in diesem Dropdown-Menü angezeigt wird. Wenn Sie eine andere Spezialisierung auswählen, wird der Übertragungsprozess ausgelöst."
-L["CopyWarning1"] = "Dies wird die Positionen aller verschiebbaren Rahmen ersetzen! Fortfahren?"
 
-L["Opt_Transfer_name"] = "Übertragung"
+L["CopyWarning1"] = "Dadurch werden die Daten für die aktuelle Spezialisierung ersetzt! Fortfahren?"
 
-L["Opt_copy_dimensions_name"] = "Copy Frame Dimensions From Spec:"
+L["Opt_Transfer_name"] = "Übertragen"
+
+L["Opt_copy_dimensions_name"] = "Rahmendimensionen von Spezialisierung kopieren:"
+L["Opt_copy_dimensions_desc"] = "Kopiert den Radius / die Ausbreitung usw. von der ausgewählten Spezialisierung."
+
+L["Opt_copy_font_name"] = "Schriftarten-Daten von Spezialisierung kopieren:"
+L["Opt_copy_font_desc"] = "Kopiert die Schriftarten-Daten, -Größe und -Farben von der ausgewählten Spezialisierung."

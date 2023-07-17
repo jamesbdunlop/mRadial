@@ -1,12 +1,16 @@
 MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
-\n    - Some of the default values don't apply in the options on first load. This should now be resolved, but keeping an eye on this. \
 \n    - Void Bolt passive when added will read ready all the time without Void Form. \
 \n    - Changing the type of pet you have out during combat, with this new block on fame:Show() Hide() during combat is going to freak out the ui. \
+\n    - Sometimes dropping off mount into combat causes pet frames not to show. GRRRRR. A mount / dismount out of combat fixes this, but I want this resolved once and for all so.. watch this space. \
 \n \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.4 --\n \
+\n-- IMPROVEMENTS \
+\n    - Adds the dimensions / font transfers from another spec. Use this if you want to quickly line up fonts/colors/frame positions from a spec you spent some time tweaking.\
+\n\n \
 ---------- v0.6.3 --\n \
 \n    - Checks for frame validity before removal.\
 \n\n \

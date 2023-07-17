@@ -2,7 +2,7 @@
 
 ## Title: mRadial
 ## Notes: Little Radial Menu for team Decrepit
-## Version: 0.6.3
+## Version: 0.6.4
 ## Author: Macka - JBD
 ## eMail: james@anim8d.com
 

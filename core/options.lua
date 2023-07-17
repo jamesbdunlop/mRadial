@@ -139,7 +139,10 @@ MROptionsTable = {
                   set = function(info,val)
                     MRadialSavedVariables["asbuttons"] = val 
                   end,
-                  get = function(info) return MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS end,
+                  get = function(info)
+                    local current = MRadialSavedVariables["asbuttons"]
+                    if current == nil then return MR_DEFAULT_ASBUTTONS end
+                    return current end,
                   order = 2,
                 },
               hideSecondary = {
@@ -150,7 +153,10 @@ MROptionsTable = {
                     MRadialSavedVariables["hideSecondary"] = val 
                     mRadial:UpdateUI()
                   end,
-                  get = function(info) return MRadialSavedVariables["hideSecondary"] or MR_DEFAULT_HIDESECONDARY end,
+                  get = function(info)
+                    local current = MRadialSavedVariables["hideSecondary"]
+                    if current == nil then return MR_DEFAULT_ASBUTTONS end
+                    return current end,
                   order = 3,
                 }
             }
@@ -427,7 +433,8 @@ MROptionsTable = {
                   end,
                 get = function(info)
                     local values = LSM:HashTable("font")
-                    local font = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+                    local font = MRadialSavedVariables['Font'] 
+                    if font == nil then font = MR_DEFAULT_FONT end
                     for idx, fontName in pairs(values) do
                       if fontName == font then
                         return idx
@@ -450,7 +457,10 @@ MROptionsTable = {
                   MRadialSavedVariables["FontPercentage"] = val
                   mRadial:GlobalFontPercentageChanged()
                 end,
-                get = function(self) return MRadialSavedVariables["FontPercentage"] or MR_DEFAULT_FONTPERCENTAGE end,
+                get = function(self) 
+                  local current = MRadialSavedVariables["FontPercentage"]
+                  if current == nil then current = MR_DEFAULT_FONTPERCENTAGE end
+                  return current end,
               },
               fontAdjustWarning = {
                 name = L["Opt_fontAdjustWarning_name"],
@@ -478,7 +488,10 @@ MROptionsTable = {
                       MRadialSavedVariables["radialUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radialUdOffset"] or MR_DEFAULT_UDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["radialUdOffset"]
+                      if current == nil then current = MR_DEFAULT_UDOFFSET end
+                      return current end,
                   },
                   LeftRight = {
                     name = L["Left/Right"],
@@ -494,7 +507,10 @@ MROptionsTable = {
                       MRadialSavedVariables["radialLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["radialLROffset"] or MR_DEFAULT_LROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["radialLROffset"]
+                      if current == nil then current = MR_DEFAULT_LROFFSET end
+                      return current end,
                   },
                   BuffColour = {
                     type = "color",
@@ -527,7 +543,10 @@ MROptionsTable = {
                       MRadialSavedVariables["timerFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["timerFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["timerFontSize"]
+                      if current == nil then current = MR_DEFAULT_FONTSIZE end
+                      return current end,
                   },
                 }
               },
@@ -551,7 +570,10 @@ MROptionsTable = {
                       MRadialSavedVariables["cdUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["cdUdOffset"] or MR_DEFAULT_CDUDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["cdUdOffset"]
+                      if current == nil then current = MR_DEFAULT_CDUDOFFSET end
+                      return current end,
                   },
                   LeftRight = {
                     name = L["Left/Right"],
@@ -567,7 +589,10 @@ MROptionsTable = {
                       MRadialSavedVariables["cdLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["cdLROffset"] or MR_DEFAULT_CDLROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["cdLROffset"]
+                      if current == nil then current = MR_DEFAULT_CDLROFFSET end
+                      return current end,
                   },
                   CDColour = {
                     type = "color",
@@ -600,7 +625,10 @@ MROptionsTable = {
                       MRadialSavedVariables["coolDownFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["coolDownFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["coolDownFontSize"]
+                      if current == nil then current = MR_DEFAULT_FONTBIGGERSIZE end
+                      return current end,
                   },
                 }
               },
@@ -624,7 +652,10 @@ MROptionsTable = {
                       MRadialSavedVariables["readyUDOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyUDOffset"] or MR_DEFAULT_READYUDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["readyUDOffset"]
+                      if current == nil then current = MR_DEFAULT_READYUDOFFSET end
+                      return current end,
                   },
                   LeftRight = {
                     name = L["Left/Right"],
@@ -640,7 +671,10 @@ MROptionsTable = {
                       MRadialSavedVariables["readyLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyLROffset"] or MR_DEFAULT_READYLROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["readyLROffset"]
+                      if current == nil then current = MR_DEFAULT_READYLROFFSET end
+                      return current end,
                   },
                   ReadyColour = {
                     type = "color",
@@ -673,7 +707,10 @@ MROptionsTable = {
                       MRadialSavedVariables["readyFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["readyFontSize"] or MR_DEFAULT_FONTBIGGERSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["readyFontSize"]
+                      if current == nil then current = MR_DEFAULT_FONTBIGGERSIZE end
+                      return current end,
                   },
                 }
               },
@@ -697,7 +734,10 @@ MROptionsTable = {
                       MRadialSavedVariables["countUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countUdOffset"] or MR_DEFAULT_COUNTUDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["countUdOffset"]
+                      if current == nil then current = MR_DEFAULT_COUNTUDOFFSET end
+                      return current end,
                   },
                   LeftRight = {
                     name = L["Left/Right"],
@@ -713,7 +753,10 @@ MROptionsTable = {
                       MRadialSavedVariables["countLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countLROffset"] or MR_DEFAULT_COUNTLROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["countLROffset"]
+                      if current == nil then current = MR_DEFAULT_COUNTLROFFSET end
+                      return current end,
                   },
                   CountColour = {
                     type = "color",
@@ -746,7 +789,10 @@ MROptionsTable = {
                       MRadialSavedVariables["countFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["countFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["countFontSize"]
+                      if current == nil then current = MR_DEFAULT_FONTSIZE end
+                      return current end,
                   },
                 }
               },
@@ -770,7 +816,10 @@ MROptionsTable = {
                       MRadialSavedVariables["debuffUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["debuffUdOffset"] or MR_DEFAULT_DEBUFFUDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["debuffUdOffset"]
+                      if current == nil then current = MR_DEFAULT_DEBUFFUDOFFSET end
+                      return current end,
                   },
                   LeftRight = {
                     name = L["Left/Right"],
@@ -786,7 +835,10 @@ MROptionsTable = {
                       MRadialSavedVariables["debuffLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["debuffLROffset"] or MR_DEFAULT_DEBUFFLROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["debuffLROffset"]
+                      if current == nil then current = MR_DEFAULT_DEBUFFLROFFSET end
+                      return current end,
                   },
                   debuffColour = {
                     type = "color",
@@ -819,7 +871,10 @@ MROptionsTable = {
                       MRadialSavedVariables["debuffFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["debuffFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["debuffFontSize"]
+                      if current == nil then current = MR_DEFAULT_FONTSIZE end
+                      return current end,
                   },
                 }
               },
@@ -841,7 +896,6 @@ MROptionsTable = {
                     get = function(info) 
                       local current = MRadialSavedVariables["powerTextEnabled"]
                       if current == nil then return MR_DEFAULT_POWERENABLED end
-                      
                       return current
                     end,
                     order = 1,
@@ -858,7 +912,6 @@ MROptionsTable = {
                     get = function(info) 
                       local current = MRadialSavedVariables["powerPersistsEnabled"]
                       if current == nil then return MR_DEFAULT_POWERPERSISTS end
-                      
                       return current
                     end,
                     order = 1,
@@ -877,7 +930,11 @@ MROptionsTable = {
                       MRadialSavedVariables["powerUdOffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["powerUdOffset"] or MR_DEFAULT_POWERUDOFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["powerUdOffset"]
+                      if current == nil then return MR_DEFAULT_POWERUDOFFSET end
+                      return current 
+                    end,
                   },
                   powerLeftRight = {
                     name = L["Left/Right"],
@@ -893,7 +950,11 @@ MROptionsTable = {
                       MRadialSavedVariables["powerLROffset"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["powerLROffset"] or MR_DEFAULT_POWERLROFFSET end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["powerLROffset"]
+                      if current == nil then return MR_DEFAULT_POWERLROFFSET end
+                      return current 
+                    end,
                   },
                   powerColour = {
                     type = "color",
@@ -926,7 +987,11 @@ MROptionsTable = {
                       MRadialSavedVariables["powerFontSize"] = val
                       mRadial:UpdateUI(false)
                     end,
-                    get = function(self) return MRadialSavedVariables["powerFontSize"] or MR_DEFAULT_FONTSIZE end,
+                    get = function(self)
+                      local current = MRadialSavedVariables["powerFontSize"]
+                      if current == nil then return MR_DEFAULT_FONTSIZE end
+                      return current 
+                    end,
                   },
                 }
               }
@@ -1484,37 +1549,68 @@ MROptionsTable = {
                 warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
               end,
           },
-        --   specDimensions = {
-        --     name = L["Opt_copy_dimensions_name"],
-        --     desc = L["Opt_copy_desc"],
-        --     type = "select",
-        --     style = "dropdown",
-        --     values = function()
-        --       local specNames = {}
-        --       local numSpecializations = GetNumSpecializations(false, false)
-        --       for x=1, numSpecializations do
-        --           local _, name, _, _, _, _ENV = GetSpecializationInfo(x)
-        --           specNames[#specNames+1] = name
-        --       end
-        --       return specNames
-        --   end,
-        --     order = 1,
-        --     get = function(widget, val) 
-        --       local playerSpec = GetSpecialization()
-        --       return playerSpec
-        --     end,
-        --     set = function(widget, val) 
-        --       local warning = mRadial:PopUpDialog(L["Warning"], L["CopyWarning1"], 400, 120)
-        --       warning:Show()
-        --       warning.acceptButton:SetCallback("OnClick", function()
-        --         warning:Hide()
-        --         mRadial:CopyDimensionsFromSpec(val)
-        --         mRadial:InitUI(false)
-        --       end) 
+          specDimensions = {
+            name = L["Opt_copy_dimensions_name"],
+            desc = L["Opt_copy_dimensions_desc"],
+            type = "select",
+            style = "dropdown",
+            values = function()
+              local specNames = {}
+              local numSpecializations = GetNumSpecializations(false, false)
+              for x=1, numSpecializations do
+                  local _, name, _, _, _, _ENV = GetSpecializationInfo(x)
+                  specNames[#specNames+1] = name
+              end
+              return specNames
+          end,
+            order = 1,
+            get = function(widget, val) 
+              local playerSpec = GetSpecialization()
+              return playerSpec
+            end,
+            set = function(widget, val) 
+              local warning = mRadial:PopUpDialog(L["Warning"], L["CopyWarning1"], 400, 120)
+              warning:Show()
+              warning.acceptButton:SetCallback("OnClick", function()
+                warning:Hide()
+                mRadial:CopyDimensionsFromSpec(val)
+                mRadial:InitUI(false)
+              end) 
               
-        --       warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
-        --     end,
-        -- },
+              warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+            end,
+        },
+          specFont = {
+            name = L["Opt_copy_font_name"],
+            desc = L["Opt_copy_font_desc"],
+            type = "select",
+            style = "dropdown",
+            values = function()
+              local specNames = {}
+              local numSpecializations = GetNumSpecializations(false, false)
+              for x=1, numSpecializations do
+                  local _, name, _, _, _, _ENV = GetSpecializationInfo(x)
+                  specNames[#specNames+1] = name
+              end
+              return specNames
+          end,
+            order = 1,
+            get = function(widget, val) 
+              local playerSpec = GetSpecialization()
+              return playerSpec
+            end,
+            set = function(widget, val) 
+              local warning = mRadial:PopUpDialog(L["Warning"], L["CopyWarning1"], 400, 120)
+              warning:Show()
+              warning.acceptButton:SetCallback("OnClick", function()
+                warning:Hide()
+                mRadial:CopyFontFromSpec(val)
+                mRadial:InitUI(false)
+              end) 
+              
+              warning.cancelButton:SetCallback("OnClick", function() warning:Hide() end)
+            end,
+      },
         }
       },
   }

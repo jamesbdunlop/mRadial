@@ -194,9 +194,14 @@ L["ResetWarning"] = "¿Esto restablecerá todos los hechizos seleccionados! ¿Co
 
 L["Opt_copy_name"] = "Copiar posiciones del marco desde la especialización:"
 L["Opt_copy_desc"] = "Esto reemplazará las posiciones actuales de tus marcos con la especialización elegida. Ten en cuenta que la especialización actual siempre se muestra en este menú desplegable como el valor activo. Al seleccionar otra especialización, se activará el proceso de transferencia."
-L["CopyWarning1"] = "¡Esto reemplazará las posiciones de todos los marcos móviles! ¿Continuar?"
 
-L["Opt_Transfer_name"] = "Transferencia"
+L["CopyWarning1"] = "¡Esto reemplazará los datos de la especialización actual! ¿Continuar?"
 
-L["Opt_copy_dimensions_name"] = "Copy Frame Dimensions From Spec:"
+L["Opt_Transfer_name"] = "Transferir"
+
+L["Opt_copy_dimensions_name"] = "Copiar dimensiones del marco de la especialización:"
+L["Opt_copy_dimensions_desc"] = "Copia el radio / extensión, etc. de la especialización seleccionada."
+
+L["Opt_copy_font_name"] = "Copiar datos de fuente del marco de la especialización:"
+L["Opt_copy_font_desc"] = "Copia los datos de fuente / tamaño / colores del marco de la especialización seleccionada."
 
