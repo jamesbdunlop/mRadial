@@ -208,3 +208,10 @@ L["Opt_copy_dimensions_desc"] = "Copy the radius / spread etc from the selected 
 
 L["Opt_copy_font_name"] = "Copy Frame Font Data From Spec:"
 L["Opt_copy_font_desc"] = "Copy the font data / size / colors from the selected spec."
+
+-- SPELL NAMES
+L["Demonic Power"] = "Demonic Power"
+L["Rite of Ruvaraad"] = "Rite of Ruvaraad"
+
+L["Opt_HideImpCountFrame_name"] = "Hide Imp Count Frame"
+L["Opt_HideImpCountFrame_desc"] = "Toggles the Imp Counter Frame for specs without implosion."

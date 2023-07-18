@@ -91,7 +91,7 @@ end
 function mRadial:CreateFrameTimerElements(frame)
     -- TEXTS
     frame.countText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    frame.countText:SetPoint("CENTER", frame.iconFrame, "TOP", 00, -15)
+    frame.countText:SetPoint("CENTER", frame.iconFrame, "TOP", 0, -15)
 
     frame.buffTimerTextBG = frame:CreateTexture(nil, "BACKGROUND")
     frame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
@@ -135,7 +135,7 @@ end
 function mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     -- Timer frame, that is part of the radial menu that doesn't get moved when the UI is set to movable state.
     local asButtons = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
-    local size = 200
+    local size = 20
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
     local watcher = mRadial:CreateIconFrame(frameName, 
                                             {size, size}, 
@@ -286,10 +286,10 @@ function mRadial:SetUIMovable(isMovable)
                     mRadial:ShowFrame(pframe.baseFrame.buffTimerText)
                     mRadial:ShowFrame(pframe.baseFrame.buffTimerTextBG)
                     pframe.baseFrame.buffTimerTextBG:SetColorTexture(0, .25, 0, 1)
-                    pframe.baseFrame.buffTimerText:SetText("00")
-                    pframe.baseFrame.countText:SetText("00")
-                    pframe.baseFrame.cooldownText:SetText("00")
-                    pframe.baseFrame.debuffTimerText:SetText("00")
+                    pframe.baseFrame.buffTimerText:SetText("0")
+                    pframe.baseFrame.countText:SetText("0")
+                    pframe.baseFrame.cooldownText:SetText("0")
+                    pframe.baseFrame.debuffTimerText:SetText("0")
                 end
             else
                 mRadial:ShowFrame(pframe.baseFrame.powerText)
@@ -665,7 +665,8 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         end
 
         watcher.countText:SetText("")
-        local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
+        local hideOOC = MRadialSavedVariables["hideooc"]
+        if hideOOC == nil then hideOOC = MR_DEFAULT_HIDEOOC end
         if count ~= 0 and not IsMounted() and not hideOOC then
             mRadial:ShowFrame(watcher.countText)
             watcher.countText:SetText(tostring(count))
@@ -774,7 +775,7 @@ function mRadial:CreateMainFrame()
                                                         UIParent,
                                                         "BackdropTemplate",
                                                         "Interface/Tooltips/UI-Tooltip-Background",
-                                                        "ARTWORK",
+                                                        "BACKGROUND",
                                                         mask,
                                                         false, {size, size}, {size, size}, false)
     else
@@ -812,7 +813,7 @@ function mRadial:CreateMainFrame()
     MRadialMainFrame.crosshair = MRadialMainFrame:CreateTexture("crossHair")
     MRadialMainFrame.crosshair:SetPoint("CENTER", 0, 0)
     
-    local crossHairPath = MEDIAPATH .."\\crosshair.blp"
+    local crossHairPath = MR_MEDIAPATH .."\\crosshair.blp"
     MRadialMainFrame.crosshair:SetTexture(crossHairPath)
     MRadialMainFrame.crosshair:SetSize(25, 25)
     mRadial:HideFrame(MRadialMainFrame.crosshair)
@@ -821,12 +822,73 @@ function mRadial:CreateMainFrame()
         MRadialMainFrame:Show()
     end
 end
+
+local impCDLast = 0
+function mRadial:CreateImpCounterFrame()
+    if not mRadial:IsWarlock() then return end
+    
+    local frameName = IMPCOUNT_FRAMENAME
+    local exists, frame = mRadial:GetFrameByName(frameName)
+    local hideFrame = MRadialSavedVariables["impCounterFrame"]
+
+    if hideFrame == nil then hideFrame = MR_DEFAULT_IMPCOUNTERFRAME end
+    local iconPath = string.format("%s\\imp3.blp", MR_MEDIAPATH)
+    local size = 150
+    if not exists then
+        MRadialImpFrame =  mRadial:CreateMovableFrame(frameName,
+                                                    {size, size},
+                                                    UIParent,
+                                                    "",
+                                                    "",
+                                                    "ARTWORK",
+                                                    "Interface/CHARACTERFRAME/TempPortraitAlphaMask", 
+                                                    true, 
+                                                    {size, size}, {size, size})
+                                                     
+        MRadialImpFrame.iconFrame:SetTexture(iconPath)
+        MRadialImpFrame:SetAlpha(1)
+        MRadialImpFrame:GetParent():SetAlpha(1)
+        MRadialImpFrame:Show()
+        MRadialImpFrame:GetParent():Show()
+        MR_ALLFRAMES[#MR_ALLFRAMES+1] = MRadialImpFrame
+
+        mRadial:SetMountedFrameScripts(MRadialImpFrame)
+        MRadialImpFrame.countText = MRadialImpFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        MRadialImpFrame.countText:SetPoint("CENTER", MRadialImpFrame.iconFrame, "CENTER", -8, -8)
+        
+        MRadialImpFrame:SetScript("OnUpdate", function(self, elapsed)
+            impCDLast = impCDLast + elapsed
+            if impCDLast <= MR_INTERVAL then return end
+            local charges = GetSpellCharges(196277)
+            local count = GetSpellCount(196277) 
+            MRadialImpFrame.countText:SetText(tostring(count))
+            impCDLast = 0
+        end)
+
+    else
+        MRadialImpFrame = frame
+    end
+    local customFontPath =  MRadialSavedVariables['Font']
+    if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
+    if fontPercentage == nil then fontPercentage = MR_DEFAULT_FONTPERCENTAGE end
+    MRadialImpFrame.countText:SetFont(customFontPath,  32, "OUTLINE, MONOCHROME")
+    
+    local hideOOC = MRadialSavedVariables["hideooc"] 
+    if hideOOC == nil then hideOOC = MR_DEFAULT_HIDEOOC end
+    if hideFrame then
+        mRadial:HideFrame(MRadialImpFrame, 0) 
+        MRadialImpFrame:GetParent():SetAlpha(0)
+    elseif not IsMounted() and not hideOOC then 
+        mRadial:ShowFrame(MRadialImpFrame, 1) 
+        MRadialImpFrame:GetParent():SetAlpha(1)
+    end
+end
+
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 local plast = 0
 function mRadial:CreatePetFrames()
     -- Clear out existing
-    mRadial:HideAllPetFrames()
     local petAbilities = mRadial:GetPetAbilities()
     local x = -100
     for frameName, spellData in pairs(petAbilities) do
@@ -859,6 +921,7 @@ function mRadial:CreatePetFrames()
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
+            frame:GetParent().isPetFrame = true
             -- Colors
             local readyColor = MRadialSavedVariables.readyColor
             if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
@@ -882,9 +945,9 @@ function mRadial:CreatePetFrames()
                 if plast <= MR_INTERVAL then
                     return
                 end
-                if not MRadialSavedVariables['hidePetFrame'] then
-                    mRadial:ShowFrame(frame, 1)
-                end
+                -- if not MRadialSavedVariables['hidePetFrame'] then
+                --     mRadial:ShowFrame(frame, 1)
+                -- end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
@@ -898,9 +961,6 @@ function mRadial:CreatePetFrames()
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             local frame = MR_ALLFRAMES[frameName]
             mRadial:ShowFrame(frame, 1)
-            if not InCombatLockdown() then
-                frame:Show()
-            end
         end
 
     end
@@ -921,7 +981,6 @@ function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
             mRadial:HideFrame(frame)
-            if not InCombatLockdown() then frame:Hide() end
         end
     end
 end

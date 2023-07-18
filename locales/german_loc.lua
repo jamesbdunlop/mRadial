@@ -207,3 +207,9 @@ L["Opt_copy_dimensions_desc"] = "Kopiert den Radius / die Ausbreitung usw. von d
 
 L["Opt_copy_font_name"] = "Schriftarten-Daten von Spezialisierung kopieren:"
 L["Opt_copy_font_desc"] = "Kopiert die Schriftarten-Daten, -Größe und -Farben von der ausgewählten Spezialisierung."
+
+L["Demonic Power"] = "Dämonische Macht"
+L["Rite of Ruvaraad"] = "Ritus von Ruvaraad"
+
+L["Opt_HideImpCountFrame_name"] = "Imp-Zähler ausblenden"
+L["Opt_HideImpCountFrame_desc"] = "Schaltet das Imp-Zählerfenster für Spezialisierungen ohne Implosion um."

@@ -1166,6 +1166,21 @@ MROptionsTable = {
               },
             },
           },
+          impCounterFrame = {
+            name = L["Opt_HideImpCountFrame_name"],
+            desc = L["Opt_HideImpCountFrame_desc"],
+            type = "toggle",
+            order = 4,
+            defaultValue = false,
+            set = function(info, val)
+              MRadialSavedVariables["impCounterFrame"] = val
+              mRadial:InitUI(false)
+            end,
+            get = function(info)
+              local current = MRadialSavedVariables["impCounterFrame"]
+              if current == nil then current = MR_DEFAULT_IMPCOUNTERFRAME end
+              return current end,
+          },
         },
         order=4
       },
@@ -1523,6 +1538,7 @@ MROptionsTable = {
               desc = L["Opt_copy_desc"],
               type = "select",
               style = "dropdown",
+              width = "full",
               values = function()
                 local specNames = {}
                 local numSpecializations = GetNumSpecializations(false, false)
@@ -1531,7 +1547,7 @@ MROptionsTable = {
                     specNames[#specNames+1] = name
                 end
                 return specNames
-            end,
+              end,
               order = 1,
               get = function(widget, val) 
                 local playerSpec = GetSpecialization()
@@ -1554,6 +1570,7 @@ MROptionsTable = {
             desc = L["Opt_copy_dimensions_desc"],
             type = "select",
             style = "dropdown",
+            width = "full",
             values = function()
               local specNames = {}
               local numSpecializations = GetNumSpecializations(false, false)
@@ -1562,8 +1579,8 @@ MROptionsTable = {
                   specNames[#specNames+1] = name
               end
               return specNames
-          end,
-            order = 1,
+            end,
+            order = 2,
             get = function(widget, val) 
               local playerSpec = GetSpecialization()
               return playerSpec
@@ -1585,6 +1602,7 @@ MROptionsTable = {
             desc = L["Opt_copy_font_desc"],
             type = "select",
             style = "dropdown",
+            width = "full",
             values = function()
               local specNames = {}
               local numSpecializations = GetNumSpecializations(false, false)
@@ -1593,8 +1611,8 @@ MROptionsTable = {
                   specNames[#specNames+1] = name
               end
               return specNames
-          end,
-            order = 1,
+            end,
+            order = 3,
             get = function(widget, val) 
               local playerSpec = GetSpecialization()
               return playerSpec
@@ -2132,7 +2150,8 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
             end
           end,
         set = function(info, text) 
-          local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
+          local current = MRadialSavedVariables["LINKEDSPELLS"] 
+          if current == nil then current = LINKEDSPELLS end
           for srcSpellName, data in pairs(current) do
             if srcSpellName == spellName then
               data[1] = text
@@ -2152,8 +2171,10 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
                     end
                 end
                 if not found then
-                    if text == "Demonic Power" then
+                    if text == L["Demonic Power"] then
                       spellID = "265273"    
+                    elseif text == L["Rite of Ruvaraad"] then
+                      spellID = "409725"
                     else
                       spellID = ""
                     end

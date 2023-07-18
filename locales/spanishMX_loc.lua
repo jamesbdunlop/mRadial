@@ -209,3 +209,9 @@ L["Opt_copy_dimensions_desc"] = "Copia el radio / extensión, etc. de la especia
 
 L["Opt_copy_font_name"] = "Copiar datos de fuente del marco de la especialización:"
 L["Opt_copy_font_desc"] = "Copia los datos de fuente / tamaño / colores del marco de la especialización seleccionada."
+
+L["Demonic Power"] = "Poder demoníaco"
+L["Rite of Ruvaraad"] = "Rito de Ruvaraad"
+
+L["Opt_HideImpCountFrame_name"] = "Ocultar marco de recuento de diablillos"
+L["Opt_HideImpCountFrame_desc"] = "Activa o desactiva el marco de recuento de diablillos para especializaciones sin implosión."

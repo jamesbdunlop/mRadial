@@ -10,12 +10,12 @@ function mRadial:createShardCountFrame()
                                             UIParent,
                                             "",
                                             "",
-                                            "BACKGROUND",
+                                            "ARTWORK",
                                             nil,
                                             true, 
                                             {size, size}, {size, size})
     else
-        ShardCounterFrame = frame    
+        ShardCounterFrame = frame
     end
     
     local alpha = MRadialSavedVariables["shardFrameTransparency"]
@@ -60,7 +60,7 @@ function mRadial:shardtrack()
 
     local soulShards = mRadial:GetShardCount()
     -- Change the texture of the frame
-    local iconPath = string.format("%s\\shards_%d.blp", MEDIAPATH, soulShards)
+    local iconPath = string.format("%s\\shards_%d.blp", MR_MEDIAPATH, soulShards)
     ShardCounterFrame.iconFrame:SetTexture(iconPath)
 
     -- Change the main frame bg if we're out of shards and not in moving mode..

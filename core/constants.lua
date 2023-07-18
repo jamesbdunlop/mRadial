@@ -5,7 +5,7 @@ local appName = "mRadial"
 local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
 ROOTICONPATH ="Interface/ICONS"
-MEDIAPATH = "Interface\\AddOns\\mRadial\\media"
+MR_MEDIAPATH = "Interface\\AddOns\\mRadial\\media"
 MAINFRAME_ISMOVING = false
 READYSTR = L["Opt_RDY_name"]
 NOPOWER = L["Opt_NOPOWER_name"]
@@ -33,6 +33,7 @@ MAINBG_FRAMENAME = "mRadialOutOfShardsFrame"
 PRIMARY_FRAMENAME = "mRadialPrimaryFrame"
 SECONDARY_FRAMENAME = "mRadialSecondaryFrame"
 SHARD_FRAMENAME = "MWShardFrame"
+IMPCOUNT_FRAMENAME = "MRImpFrame"
 LINKEDSPELLS = {}
 
 
@@ -42,6 +43,7 @@ MR_DEFAULT_WATCHERFRAMESIZE = 34
 MR_DEFAULT_AUTOSPREAD = true
 MR_DEFAULT_ASBUTTONS = false
 MR_DEFAULT_HIDESECONDARY = false
+MR_DEFAULT_IMPCOUNTERFRAME = true
 MR_DEFAULT_HIDEOOC = false
 MR_DEFAULT_HIDEMINIMAP = true
 MR_DEFAULT_RADIUSMULT = 1

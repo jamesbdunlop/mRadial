@@ -50,14 +50,18 @@ function mRadial:InitUI(create)
     mRadial:CreateMainFrame()
     mRadial:CreateWatcherFrames()
 
-    local hideShardFrame = MRadialSavedVariables["hideShardFrame"] or false
+    local hideShardFrame = MRadialSavedVariables["hideShardFrame"]
+    if hideShardFrame == nil then hideShardFrame = MR_DEFAULT_SHARD_FS end
     if mRadial:IsWarlock() and not hideShardFrame then
         mRadial:createShardCountFrame()
         mRadial:shardtrack()
     end
+    mRadial:CreateImpCounterFrame()
     mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     if create == nil then create = false end
     
+    mRadial:HideAllPetFrames()
+    mRadial:CreatePetFrames()
     -- Now force a read for all the positions as spec changes don't update as expected without it.
     mRadial:ForceUpdateAllMoveableFramePositions()
 end
@@ -145,7 +149,7 @@ end
 local db = LibStub("LibDataBroker-1.1"):NewDataObject("mRadialDB", {
     type = "data source",
     text = "mRadialIcon",
-    icon = MEDIAPATH.."\\miniMapIcon",
+    icon = MR_MEDIAPATH.."\\miniMapIcon",
     iconR = .5,
     iconG = .9,
     iconB = .5,
