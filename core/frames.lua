@@ -889,6 +889,7 @@ end
 local plast = 0
 function mRadial:CreatePetFrames()
     -- Clear out existing
+    mRadial:HideAllPetFrames()
     local petAbilities = mRadial:GetPetAbilities()
     local x = -100
     for frameName, spellData in pairs(petAbilities) do
@@ -921,7 +922,6 @@ function mRadial:CreatePetFrames()
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
             frame.isPetFrame = true
-            frame:GetParent().isPetFrame = true
             -- Colors
             local readyColor = MRadialSavedVariables.readyColor
             if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
@@ -945,9 +945,9 @@ function mRadial:CreatePetFrames()
                 if plast <= MR_INTERVAL then
                     return
                 end
-                -- if not MRadialSavedVariables['hidePetFrame'] then
-                --     mRadial:ShowFrame(frame, 1)
-                -- end
+                if not MRadialSavedVariables['hidePetFrame'] then
+                    mRadial:ShowFrame(frame, 1)
+                end
                 mRadial:DoSpellFrameCooldown(spellName, frame)
                 mRadial:DoPetFrameAuraTimer(spellName, frame)
                 plast = 0
@@ -961,6 +961,9 @@ function mRadial:CreatePetFrames()
         elseif MR_ALLFRAMES[frameName] and mRadial:CheckHasSpell(spellName) then
             local frame = MR_ALLFRAMES[frameName]
             mRadial:ShowFrame(frame, 1)
+            if not InCombatLockdown() then
+                frame:Show()
+            end
         end
 
     end
@@ -981,6 +984,7 @@ function mRadial:HideAllPetFrames()
     for _, frame in pairs(MR_PETFAMES) do
         if frame.isPetFrame then
             mRadial:HideFrame(frame)
+            if not InCombatLockdown()then frame:Hide() end
         end
     end
 end

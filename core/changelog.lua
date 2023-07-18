@@ -5,6 +5,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.5 --\n \
+\n -- FIXES \
+\n    - Small bug when one doens't have 3 specs to itr through for flushing the savedVar. \
+\n\n \
 ---------- v0.6.4 --\n \
 \n-- IMPROVEMENTS \
 \n    - Adds the dimensions / font transfers from another spec. Use this if you want to quickly line up fonts/colors/frame positions from a spec you spent some time tweaking.\

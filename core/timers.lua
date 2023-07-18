@@ -6,7 +6,6 @@ function mRadial:GetSpellCoolDown(spellName)
     duration = duration or 0
     if start and duration > 1.5 then
         local remaining = start + duration - GetTime()
-
         local minutes = math.floor(remaining / 60)
         local seconds = (remaining+1 - minutes * 60) 
         return enabled, remaining, minutes, seconds
