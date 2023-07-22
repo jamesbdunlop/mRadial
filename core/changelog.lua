@@ -6,8 +6,12 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.7 --\n \
+\n -- FIXES \
+\n    - Mem leak in pet frames. \
+\n\n \
 ---------- v0.6.6 --\n \
-\n I have spent quite a bit of time trying to debug pets that die during combat, and looking to cast a different pet.\ 
+\n I have spent quite a bit of time trying to debug pets that die during combat, and looking to cast a different pet. \
 \n I think this is entirely appropriate, but Blizz CreateFontString does not want to show the new timers for the new pet.\
 \n I can't for the life of me find out how to fix this atm so for now, if your pet dies and you cast a DIFFERENT pet during combat don't expect timers to work. \
 \n Existing pets should restore from existing cached frames that should have valid timers if they were summoned out of combat.\

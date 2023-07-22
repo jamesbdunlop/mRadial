@@ -483,7 +483,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
-function mRadial:CreatePetFrames()  
+function mRadial:CreatePetFrames()
     -- Clear out existing
     mRadial:HidePetFrames()
 
@@ -504,7 +504,8 @@ function mRadial:CreatePetFrames()
         local frame
         local frameExists = MR_ALLFRAMES[frameName]
         local spellExists = mRadial:CheckHasPetSpell(spellName)
-        if frameExists == nil and spellExists and not toIgnore then
+        if frameExists == nil then
+            if not spellExists and toIgnore then return end
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
 
@@ -542,8 +543,7 @@ function mRadial:CreatePetFrames()
             
             mRadial:SetPetFrameScripts(frame, spellName)
 
-            frame.isPetFrame = true
-            frame.petGUID = UnitGUID("pet")
+            -- frame.isPetFrame = true
             frame.spellName = spellName
             frame.isMovable = true
 
@@ -557,18 +557,18 @@ function mRadial:CreatePetFrames()
 
             MR_PETFAMES[#MR_PETFAMES+1] = frame
             MR_ALLFRAMES[frameName] = frame
-            
             -- Offset default locations
             x = x + (5+petFrameSize)
         elseif frameExists and spellExists and not toIgnore then
-            mRadial:ShowFrame(MR_ALLFRAMES[frameName])
+            mRadial:ShowFrame(frameExists)
         end
     end
 end
 
 function mRadial:HidePetFrames()
     for x=1, #MR_PETFAMES do
-        mRadial:HideFrame(MR_PETFAMES[x])
+        local frame = MR_PETFAMES[x]
+        mRadial:HideFrame(frame)
     end
 end
 ---------------------------------------------------------------------------------------------------

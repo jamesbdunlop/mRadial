@@ -41,7 +41,7 @@ function mRadial:SetMountedFrameScripts(frame, alpha)
     end)
 end
 
-plast = 0
+local plast = 0
 function mRadial:SetPetFrameScripts(frame, spellName)
     frame:SetScript("OnUpdate", function(self, elapsed)
         plast = plast + elapsed
