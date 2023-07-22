@@ -6,7 +6,7 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
----------- v0.6.7 --\n \
+---------- v0.6.8 --\n \
 \n -- FIXES \
 \n    - Mem leak in pet frames. \
 \n\n \

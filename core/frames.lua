@@ -504,8 +504,7 @@ function mRadial:CreatePetFrames()
         local frame
         local frameExists = MR_ALLFRAMES[frameName]
         local spellExists = mRadial:CheckHasPetSpell(spellName)
-        if frameExists == nil then
-            if not spellExists and toIgnore then return end
+        if frameExists == nil and spellExists and not toIgnore then 
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
 
