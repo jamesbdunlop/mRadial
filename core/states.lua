@@ -14,7 +14,6 @@ function mRadial:SetFrameState_Active_Cooldown(frame)
     if MAINFRAME_ISMOVING then return end
     -- hide
     mRadial:HideFrame(frame.readyText)
-    
     -- show
     frame.iconFrame:SetDesaturated(true)
     mRadial:ShowFrame(frame.cooldownText)
@@ -280,15 +279,8 @@ function mRadial:SetFrameVisibility(frame)
             return
         end
         
-        -- NEW PET SUMMONED SO WE SHOULD HAVE NEW FRAMES
-        if frame.petGUID ~= petGUID then
-            mRadial:HideFrame(frame)
-            return
-        end
-
-        -- DEAD PET
         local spellName = frame.spellName
-        spellExists = mRadial:CheckHasSpell(spellName)
+        local spellExists = mRadial:CheckHasPetSpell(spellName)
         if not spellExists then
             mRadial:HideFrame(frame)
             return

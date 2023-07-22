@@ -148,18 +148,18 @@ function mRadial:CreateFrameTimerElements(frame)
     frame.readyText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     -- POWER
     frame.powerText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-
+    
     local timerTextElements = {}
-    timerTextElements[1] = frame.countText
-    timerTextElements[2] = frame.linkedTimerText
-    timerTextElements[3] = frame.deBuffTimerText
-    timerTextElements[4] = frame.cooldownText
-    timerTextElements[5] = frame.readyText
-    timerTextElements[6] = frame.powerText
+          timerTextElements[1] = frame.countText
+          timerTextElements[2] = frame.linkedTimerText
+          timerTextElements[3] = frame.deBuffTimerText
+          timerTextElements[4] = frame.cooldownText
+          timerTextElements[5] = frame.readyText
+          timerTextElements[6] = frame.powerText
     
     local timerTextBGElements = {}
-    timerTextBGElements[1] = frame.linkedTimerTextBG
-    timerTextBGElements[2] = frame.deBuffTimerTextBG
+          timerTextBGElements[1] = frame.linkedTimerTextBG
+          timerTextBGElements[2] = frame.deBuffTimerTextBG
     
     frame:GetParent().timerTextElements = timerTextElements
     frame:GetParent().timerBGElements = timerTextBGElements
@@ -389,6 +389,7 @@ function mRadial:CreateMainFrame()
     end
 end
 
+
 ---------------------------------------------------------------------------------------------------
 -- WARLOCK
 local impCDLast = 0
@@ -478,6 +479,8 @@ function mRadial:createShardCountFrame()
     mRadial:SetFrameVisibility(ShardCounterFrame)
     ShardCounterFrame:EnableMouse(false)
 end
+
+
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 function mRadial:CreatePetFrames()  
@@ -486,6 +489,8 @@ function mRadial:CreatePetFrames()
 
     local petAbilities = mRadial:GetPetAbilities()
     local x = -100
+    local customFontPath = MRadialSavedVariables['Font'] 
+
     for frameName, spellData in pairs(petAbilities) do
         local spellName = spellData["spellName"]
         local spellIconPath = spellData["spellIcon"]
@@ -498,7 +503,7 @@ function mRadial:CreatePetFrames()
         -- CREATE
         local frame
         local frameExists = MR_ALLFRAMES[frameName]
-        local spellExists = mRadial:CheckHasSpell(spellName)
+        local spellExists = mRadial:CheckHasPetSpell(spellName)
         if frameExists == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
@@ -515,27 +520,32 @@ function mRadial:CreatePetFrames()
                                                 petFrameSize,
                                                 true)
             
-            local function SetPetFrameDefaults(frame)
-                local customFontPath = MRadialSavedVariables['Font'] 
-                if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
-                frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
-                frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
-                -- Colors
-                local readyColor = MRadialSavedVariables.readyColor
-                if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
-                local cdColor = MRadialSavedVariables.cdColor 
-                if cdColor == nil then cdColor = MR_DEFAULT_CDCOLOR end
-                local countColor = MRadialSavedVariables.countColor 
-                if countColor == nil then countColor = MR_DEFAULT_COUNTCOLOR end
-                frame.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
-                frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
-                frame.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
-            end
-            SetPetFrameDefaults(frame)
+            if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
+            
+            -- Colors
+            local readyColor = MRadialSavedVariables.readyColor
+            if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
+            
+            local cdColor = MRadialSavedVariables.cdColor 
+            if cdColor == nil then cdColor = MR_DEFAULT_CDCOLOR end
+            
+            local countColor = MRadialSavedVariables.countColor 
+            if countColor == nil then countColor = MR_DEFAULT_COUNTCOLOR end
+            frame.cooldownText:SetTextColor(cdColor[1], cdColor[2], cdColor[3])
+            frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3])
+            frame.countText:SetTextColor(countColor[1], countColor[2], countColor[3])
+            frame.cooldownText:SetAlpha(1)
+            frame.countText:SetAlpha(1)
+            frame.readyText:SetAlpha(1)
+            
             mRadial:SetPetFrameScripts(frame, spellName)
+
             frame.isPetFrame = true
             frame.petGUID = UnitGUID("pet")
             frame.spellName = spellName
+            frame.isMovable = true
 
             local playerName = UnitName("player")
             local playerSpec = GetSpecialization()
@@ -550,22 +560,15 @@ function mRadial:CreatePetFrames()
             
             -- Offset default locations
             x = x + (5+petFrameSize)
-        
-        elseif frameExists and spellExists then
-            mRadial:ShowFrame(frameExists)
+        elseif frameExists and spellExists and not toIgnore then
+            mRadial:ShowFrame(MR_ALLFRAMES[frameName])
         end
     end
 end
 
 function mRadial:HidePetFrames()
-    local petGUID = UnitGUID("pet")
     for x=1, #MR_PETFAMES do
-        frame = MR_PETFAMES[x]
-        mRadial:HideFrame(frame)
-        if frame.petGUID ~= petGUID then
-            MR_PETFAMES[x] = nil
-            MR_ALLFRAMES[frame:GetName()] = nil
-        end
+        mRadial:HideFrame(MR_PETFAMES[x])
     end
 end
 ---------------------------------------------------------------------------------------------------

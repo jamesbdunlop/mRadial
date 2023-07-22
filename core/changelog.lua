@@ -1,10 +1,19 @@
 MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
 \n    - Void Bolt passive when added will read ready all the time without Void Form. \
+\n    - Pet frames will not generate fontStrings when swapping to new pets during combat. \
 \n \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.6 --\n \
+\n I have spent quite a bit of time trying to debug pets that die during combat, and looking to cast a different pet.\ 
+\n I think this is entirely appropriate, but Blizz CreateFontString does not want to show the new timers for the new pet.\
+\n I can't for the life of me find out how to fix this atm so for now, if your pet dies and you cast a DIFFERENT pet during combat don't expect timers to work. \
+\n Existing pets should restore from existing cached frames that should have valid timers if they were summoned out of combat.\
+\n -- IMPROVEMENTS \
+\n    - Bit of an overhaul on the state switching for cooldowns/buffs etc. \
+\n\n \
 ---------- v0.6.5 --\n \
 \n -- FIXES \
 \n    - Small bug when one doens't have 3 specs to itr through for flushing the savedVar. \

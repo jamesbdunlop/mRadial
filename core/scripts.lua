@@ -48,16 +48,19 @@ function mRadial:SetPetFrameScripts(frame, spellName)
         if plast <= MR_INTERVAL then return end
         
         local currentCooldown = mRadial:DoSpellFrameCooldown(spellName, frame)
-        local currentAura  = mRadial:DoPetFrameAuraTimer(spellName, frame)
+        local currentAura = mRadial:DoPetFrameAuraTimer(spellName, frame)
         if currentCooldown then
+            mRadial:ShowFrame(frame.cooldownText)
             mRadial:SetFrameState_Active_Cooldown(frame)
         end
 
         if currentAura then 
+            mRadial:ShowFrame(frame.cooldownText)
             mRadial:SetFrameState_Active_Cooldown(frame)
         end
 
         if not currentCooldown and not currentAura then
+            mRadial:HideFrame(frame.cooldownText)
             mRadial:SetFrameState_Ready(frame)
         end
 
