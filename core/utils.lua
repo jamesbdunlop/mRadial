@@ -2,6 +2,8 @@ local mRadial = mRadial
 local appName = "mRadial"
 local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
+--------------
+-- TIMER UTILS
 function mRadial:GetAuraTimeLeft(expirationTime)
     if expirationTime == nil then
         return nil
@@ -12,6 +14,8 @@ function mRadial:GetAuraTimeLeft(expirationTime)
     return minutes, seconds
 end
 
+---------------------
+-- ABILTY/SPELL UTILS
 function mRadial:HasActiveBuff(buffName)
     for i = 1, 40 do
         local name, _, scount, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
@@ -43,6 +47,37 @@ function mRadial:CheckHasSpell(spellName)
     end
 end
 
+function mRadial:IsActiveDebuff(spellName)
+    local debuffCheck
+    for idx = 1, 40 do
+        local name, _, _, _, _, expirationTime, source, _, _, _, _, _, _, _, _ = UnitDebuff("target", idx)
+        if name == spellName and source == "player" then 
+            debuffCheck = expirationTime - GetTime()
+            break
+        end
+    end
+    
+    return debuffCheck
+end
+
+function mRadial:IsPowerDependant(spellID)
+    local costInfo = GetSpellPowerCost(spellID)
+    local isUnitPowerDependant = false
+    local powerMinCost = 0
+    local powerType = 0
+    
+    if costInfo[1] == nil then 
+        isUnitPowerDependant = false
+    else 
+        isUnitPowerDependant = true
+        powerType = costInfo[1]["type"]
+        powerMinCost = costInfo[1]["minCost"]
+    end
+    
+    return isUnitPowerDependant, powerType, powerMinCost
+end
+---------------------
+-- CLASS UTILS
 function mRadial:IsWarlock()
     return UnitClass("player") == GetClassInfo(9)
 end
@@ -55,36 +90,6 @@ function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
     return currentSpecName
-end
-
-function mRadial:TableContains(myTable, value)
-    for _, v in ipairs(myTable) do
-        if v[1] == value[1] then
-            return true
-        end
-    end
-
-    return false
-end
-
-function mRadial:OrderTableContains(myTable, watcher)
-    for _, v in ipairs(myTable) do
-        if v.spellName == watcher.spellName then
-            return true
-        end
-    end
-
-    return false
-end
-
-function mRadial:TableContainsKey(myTable, key)
-    for tablekey, _ in pairs(myTable) do
-        if tablekey == key then
-            return true
-        end
-    end
-
-    return false
 end
 
 function mRadial:GetPetAbilities()
@@ -270,17 +275,226 @@ function mRadial:IsFelImpSummoned()
     return false
 end
 
-function mRadial:GlobalFontPercentageChanged()
-    -- print("Global font percentage changed!")
-    mRadial:UpdateUI(false)
-    mRadial:CreatePetFrames()
-    -- mRadial:SetPetFramePosAndSize()
+------------
+-- LUA UTILS
+function mRadial:TableContains(myTable, value)
+    for _, v in ipairs(myTable) do
+        if v[1] == value[1] then
+            return true
+        end
+    end
+
+    return false
+end
+
+function mRadial:OrderTableContains(myTable, watcher)
+    for _, v in ipairs(myTable) do
+        if v.spellName == watcher.spellName then
+            return true
+        end
+    end
+
+    return false
+end
+
+function mRadial:TableContainsKey(myTable, key)
+    for tablekey, _ in pairs(myTable) do
+        if tablekey == key then
+            return true
+        end
+    end
+
+    return false
 end
 
 function mRadial:GetFromTable(spellName, activespells)
     for _, watcher in ipairs(activespells) do
         if watcher.spellName == spellName then
             return watcher
+        end
+    end
+end
+
+--------------
+-- FRAME UTILS
+function mRadial:GlobalFontPercentageChanged()
+    mRadial:UpdateUI(false)
+    mRadial:CreatePetFrames()
+end
+
+function mRadial:GetWatcher(frameName)
+    for x = 1, #MR_WATCHERFRAMES do
+        local watcher = MR_WATCHERFRAMES[x]
+        if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
+            return watcher, x
+        end
+    end
+    return nil, -1
+end
+
+function mRadial:GetFrameByName(frameName)
+    for x = 1, #MR_ALLFRAMES do
+        local frame = MR_ALLFRAMES[x]
+        if frame ~= nil and frame:GetName() == frameName then
+            return true, frame
+        end
+    end
+    return false, nil
+end
+
+function mRadial:UpdateActivePrimarySpells()
+    -- Flush existing
+    ACTIVEPRIMARYWATCHERS = {}
+    mRadial:HideAllWatcherFrames()
+    for x=1, #MR_WATCHERFRAMES   do
+        -- -- Now we check for isActive (options toggles)
+        local watcher = MR_WATCHERFRAMES[x]
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        if isActive then 
+            ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher
+            mRadial:ShowFrame(watcher)
+            if not InCombatLockdown then
+                watcher:GetParent():Show()
+            end
+        end
+    end
+    return ACTIVEPRIMARYWATCHERS
+end
+
+function mRadial:UpdateActiveSecondarySpells()
+    -- Flush existing
+    ACTIVESECONDARYWATCHERS = {}
+    local hideSecondary = MRadialSavedVariables["hideSecondary"] 
+    if hideSecondary == nil then hideSecondary = MR_DEFAULT_HIDESECONDARY end
+    if hideSecondary then
+        return
+    end
+    for x=1, #MR_WATCHERFRAMES do
+        -- First we hide any and all watchers that may have been active.
+        local watcher = MR_WATCHERFRAMES[x]
+        local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
+        local isSecondaryActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
+        -- Now we check for isActive (options toggles)
+        if isSecondaryActive and not isActive then 
+            ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
+            mRadial:ShowFrame(watcher)
+            if not InCombatLockdown then
+                watcher:Show()
+            end
+        end
+    end
+    return ACTIVESECONDARYWATCHERS
+end
+
+function mRadial:HideAllWatcherFrames()
+    for x=1, #MR_WATCHERFRAMES do
+        -- First we hide any and all watchers that may have been active.
+        local watcher = MR_WATCHERFRAMES[x]
+        mRadial:HideFrame(watcher)
+        if not InCombatLockdown then
+            watcher:GetParent():Hide()
+        end
+    end
+end
+
+function mRadial:ForceUpdateAllMoveableFramePositions()
+    for x=1, #MR_ALLFRAMES do
+        local frame = MR_ALLFRAMES[x]
+        if not frame.isWatcher then
+            mRadial:RestoreFrame(frame:GetName(), frame, false)
+        end
+    end
+    mRadial:UpdateUI(false)
+    mRadial:setShardTrackerFramesSize()
+    mRadial:setOOSShardFramesSize()
+    mRadial:SetPetFramePosAndSize()
+end
+
+function mRadial:RestoreFrame(frameName, frame, forceDefault, dx, dy)
+    if forceDefault == nil then forceDefault = false end
+    local playerName = UnitName("player")
+    local playerSpec = GetSpecialization()
+    local framePosData = PerPlayerPerSpecSavedVars[playerName][playerSpec]["framePositions"][frameName]
+    
+    if framePosData == nil or forceDefault then
+        framePosData = {}
+        local x = dx or 0
+        local y = dy or 0
+        framePosData["x"] = x
+        framePosData["y"] = y
+        framePosData["point"] = "CENTER"
+        framePosData["relativeTo"] = "UIParent"
+        framePosData["relativePoint"] = "CENTER"
+        framePosData["size"] = {50, 50}
+    end
+
+    local x = framePosData["x"] or 0
+    local y = framePosData["y"] or 0
+    local point = framePosData["point"] or "CENTER"
+    -- local relativeTo = framePosData["relativeTo"] or UIParent
+    local relativePoint = framePosData["relativePoint"] or "CENTER"
+    if not InCombatLockdown() then 
+        frame:SetPoint(tostring(point), UIParent, relativePoint, x, y)
+    end
+    
+    local framesize = framePosData["size"]
+    if framesize == nil then
+        framePosData["size"] = {50, 50}
+    end
+
+    local sx = framePosData["size"][1] or 50
+    local sy = framePosData["size"][2] or 50
+    frame:SetSize(sx, sy)
+    -- WHY THE FUCK DOES THIS NOT WORK ANYMORE!!!!!??????
+    -- frame:SetPoint(tostring(point), relativeTo, tostring(relativePoint), x, y)
+    MRadialSavedVariables.framePositions[frameName] = framePosData
+end
+
+function mRadial:WatcherExists(frameName)
+    for x = 1, #MR_WATCHERFRAMES do
+        local watcher = MR_WATCHERFRAMES[x]
+        if watcher ~= nil and watcher.isWatcher and watcher:GetName() == frameName then
+            return true
+        end
+    end
+    return false
+end
+
+-- PET
+function mRadial:SetPetFramePosAndSize()
+    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
+    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
+    local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
+
+    for _, frame in ipairs(MR_ALLFRAMES) do
+        if frame.isPetFrame then
+            mRadial:RestoreFrame(frame:GetName(), frame)
+            frame:SetSize(petFrameSize, petFrameSize)
+            local pet_readyColor = MRadialSavedVariables.pet_readyColor or MR_DEFAULT_READYCOLOR
+            local pet_countColor = MRadialSavedVariables.pet_countColor or MR_DEFAULT_COUNTCOLOR
+            local pet_cdColor = MRadialSavedVariables.pet_cdColor or MR_DEFAULT_CDCOLOR
+            
+            local pet_readyFontSize = MRadialSavedVariables.pet_readyFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_countFontSize = MRadialSavedVariables.pet_countFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_coolDownFontSize = MRadialSavedVariables.pet_coolDownFontSize or MR_DEFAULT_PET_FONTSIZE
+
+            local pet_readyUDOffset = MRadialSavedVariables.pet_readyUDOffset or MR_DEFAULT_READYUDOFFSET
+            local pet_readyLROffset = MRadialSavedVariables.pet_readyLROffset or MR_DEFAULT_READYLROFFSET
+            local pet_countUdOffset = MRadialSavedVariables.pet_countUdOffset or MR_DEFAULT_COUNTUDOFFSET
+            local pet_countLROffset = MRadialSavedVariables.pet_countLROffset or MR_DEFAULT_COUNTLROFFSET
+            local pet_cdUdOffset = MRadialSavedVariables.pet_cdUdOffset or MR_DEFAULT_CDUDOFFSET
+            local pet_cdLROffset = MRadialSavedVariables.pet_cdLROffset or MR_DEFAULT_CDLROFFSET
+
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_readyFontSize, "THICKOUTLINE")
+            frame.countText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_countFontSize, "THICKOUTLINE")
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_coolDownFontSize, "OUTLINE, MONOCHROME")
+            
+            frame.readyText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_readyLROffset, pet_readyUDOffset)
+            frame.readyText:SetTextColor(pet_readyColor[1], pet_readyColor[2], pet_readyColor[3])
+            frame.countText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_countLROffset, pet_countUdOffset)
+            frame.countText:SetTextColor(pet_countColor[1], pet_countColor[2], pet_countColor[3])
+            frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_cdLROffset, pet_cdUdOffset)
+            frame.cooldownText:SetTextColor(pet_cdColor[1], pet_cdColor[2], pet_cdColor[3])
         end
     end
 end

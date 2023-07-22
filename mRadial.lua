@@ -9,7 +9,7 @@ if MRadialSavedVariables == nil then
 end
 
 UdOffset = 0
-
+MRPetGUID = nil
 MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
@@ -48,6 +48,9 @@ function mRadial:InitUI(create)
         MRadialSavedVariables["secondaryWatcherOrder"] = {}
     end
     mRadial:CreateMainFrame()
+    -- Out of shards masks and textures are set on the main frame, 
+    -- so we scale this for the red out of shards indicator
+    mRadial:setOOSShardFramesSize()
     mRadial:CreateWatcherFrames()
 
     local hideShardFrame = MRadialSavedVariables["hideShardFrame"]
@@ -57,11 +60,10 @@ function mRadial:InitUI(create)
         mRadial:shardtrack()
     end
     mRadial:CreateImpCounterFrame()
-    mRadial:SetUIMovable(MAINFRAME_ISMOVING)
     if create == nil then create = false end
     
-    mRadial:HideAllPetFrames()
     mRadial:CreatePetFrames()
+    
     -- Now force a read for all the positions as spec changes don't update as expected without it.
     mRadial:ForceUpdateAllMoveableFramePositions()
 end
@@ -167,6 +169,7 @@ function mRadial:OnInitialize()
         -- lr stands for leftRight
         if event == "PLAYER_ENTERING_WORLD" then
             mRadial:InitUI(true)
+            mRadial:UpdateUI(false)
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 
             -- frame cleanup

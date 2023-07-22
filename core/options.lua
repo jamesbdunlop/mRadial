@@ -25,7 +25,7 @@ MROptionsTable = {
         type = "toggle",
         set = function(info, val)
           MRadialSavedVariables["moveable"] = val 
-          mRadial.SetUIMovable(val)
+          mRadial:SetConfigMode(val)
           mRadial:UpdateUI(true)
         end,
         get = function(info) 
@@ -1651,7 +1651,7 @@ function mRadial:OptionsPane()
     MRADIALOptionsPane:SetTitle("---".. appName .. "---")
     MRADIALOptionsPane:SetCallback("OnClose", function(widget)
       MRadialSavedVariables["moveable"] = false
-      mRadial:SetUIMovable(false)
+      mRadial:SetConfigMode(false)
       mRadial:UpdateUI(false)
       AceGUI:Release(widget) 
     end)

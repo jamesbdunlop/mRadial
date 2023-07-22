@@ -1,14 +1,12 @@
 
-function mRadial:UNIT_PET(_, arg1)
+function mRadial:UNIT_PET(e, arg1)
     if arg1 ~= "player" then
         return
     end
-    MWPetGUID = UnitGUID("pet")
-    if MWPetGUID == nil then
-        mRadial:HideAllPetFrames()
-    else
-        mRadial:HideAllPetFrames()
-        mRadial:CreatePetFrames()
+    
+    -- cache new petGUI
+    mRadial:CreatePetFrames()
+    if not InCombatLockdown() then
         mRadial:SetPetFramePosAndSize()
     end
 end

@@ -29,6 +29,9 @@ addon.lua
 core\timers.lua
 core\constants.lua
 core\utils.lua
+core\transfer.lua
+core\states.lua
+core\scripts.lua
 
 core\frames.lua
 
@@ -37,9 +40,6 @@ mRadial.lua
 # core\options.lua
 core\shardtracker.lua
 core\slashcmds.lua
-
-events\combatlogUnfiltered.lua
-events\spellChannel.lua
 
 # show hide pet frames when pet is out.
 events\unitPet.lua

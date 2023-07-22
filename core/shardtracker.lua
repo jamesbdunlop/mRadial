@@ -1,39 +1,5 @@
 local mRadial = mRadial
 
-function mRadial:createShardCountFrame()
-    -- Sets up the frame used for counting warlock shards on the UI
-    local size = 200
-    local exists, frame = mRadial:GetFrameByName(SHARD_FRAMENAME)
-    if not exists then 
-        ShardCounterFrame = mRadial:CreateMovableFrame(SHARD_FRAMENAME,
-                                            {size, size},
-                                            UIParent,
-                                            "",
-                                            "",
-                                            "ARTWORK",
-                                            nil,
-                                            true, 
-                                            {size, size}, {size, size})
-    else
-        ShardCounterFrame = frame
-    end
-    
-    local alpha = MRadialSavedVariables["shardFrameTransparency"]
-    if alpha == nil then alpha = MR_DEFAULT_SHARD_TRANS end
-    local hide =  MRadialSavedVariables["hideShardFrame"]
-    if hide == nil then hide = false end
-
-    ShardCounterFrame:SetAlpha(alpha)
-    ShardCounterFrame:GetParent():SetAlpha(1)
-    if hide then
-        ShardCounterFrame:SetAlpha(0)
-        ShardCounterFrame:GetParent():SetAlpha(0)
-        return
-    end
-    mRadial:setShardTrackerFramesSize()
-    mRadial:SetMountedFrameScripts(ShardCounterFrame, alpha)
-end
-
 function mRadial:setShardTrackerFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MRadialSavedVariables["shardTrackerFrameSize"]
