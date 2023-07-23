@@ -27,7 +27,9 @@ function mRadial:shardtrack()
     local soulShards = mRadial:GetShardCount()
     -- Change the texture of the frame
     local iconPath = string.format("%s\\shards_%d.blp", MR_MEDIAPATH, soulShards)
-    ShardCounterFrame.iconFrame:SetTexture(iconPath)
+    if ShardCounterFrame ~= nil then
+        ShardCounterFrame.iconFrame:SetTexture(iconPath)
+    end
 
     -- Change the main frame bg if we're out of shards and not in moving mode..
     local hideOOfShardFrame = MRadialSavedVariables["hideOOShardFrame"]

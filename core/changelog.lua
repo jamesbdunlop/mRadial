@@ -6,6 +6,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.9 --\n \
+\n -- FIXES \
+\n    - Error when hiding the shard tracker frame in the shardtracker. \
+\n\n \
 ---------- v0.6.8 --\n \
 \n -- FIXES \
 \n    - Mem leak in pet frames. \

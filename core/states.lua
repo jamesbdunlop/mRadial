@@ -9,7 +9,7 @@
 ----------------------------------------------------------
 -- TIMERS
 
--- frame / PET FRAME STATES
+-- FRAME / PET FRAME STATES
 function mRadial:SetFrameState_Active_Cooldown(frame)
     if MAINFRAME_ISMOVING then return end
     -- hide
