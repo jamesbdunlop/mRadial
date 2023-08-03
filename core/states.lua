@@ -268,10 +268,12 @@ function mRadial:SetFrameVisibility(frame)
     end
 
     local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
-    if frame.isPetFrame and hidePetFrame then
+    local isPetFrame = mRadial:IsPetFrame(frame:GetName())
+    if isPetFrame and hidePetFrame then
         mRadial:HideFrame(frame)
         return
-    elseif frame.isPetFrame then
+
+    elseif isPetFrame then
         -- DEAD PET
         local petGUID = UnitGUID("pet")
         if petGUID == nil then

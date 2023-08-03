@@ -6,6 +6,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.10 --\n \
+\n -- FIXES \
+\n    - Pet frames requiring a reload when swapping pets. These should show hide now as expected. \
+\n\n \
 ---------- v0.6.9 --\n \
 \n -- FIXES \
 \n    - Error when hiding the shard tracker frame in the shardtracker. \

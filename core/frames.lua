@@ -14,7 +14,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
     -- frame.maskPath
     -- frame.specialTexture01
     -- frame.configText 
-    -- frame.isPetFrame         # Default false
     -- frame.isWatcher          # Default false
 function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton)
     if template == nil then template = MR_DEFAULT_TEMPLATE end
@@ -112,7 +111,6 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     parentFrame.timerTextBGElements = {}
     frame.spellName = ""
     frame.spellID = -1
-    frame.isPetFrame = false
     frame.isWatcher = false
     frame.isShardFrame = false
     frame.isImpFrame = false
@@ -168,7 +166,7 @@ end
 --------------------------------------------------------------------------
 -- Creates a moveable icon frame to be used by mRadial:SetMoveFrameScripts
 --
-function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
+function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer, isPetFrame)
     -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
     local frame = mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
     
@@ -504,7 +502,7 @@ function mRadial:CreatePetFrames()
         local frame
         local frameExists = MR_ALLFRAMES[frameName]
         local spellExists = mRadial:CheckHasPetSpell(spellName)
-        if frameExists == nil and spellExists and not toIgnore then 
+        if frameExists == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
 
@@ -518,6 +516,7 @@ function mRadial:CreatePetFrames()
                                                 true, 
                                                 petFrameSize, 
                                                 petFrameSize,
+                                                true,
                                                 true)
             
             if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
@@ -542,7 +541,6 @@ function mRadial:CreatePetFrames()
             
             mRadial:SetPetFrameScripts(frame, spellName)
 
-            -- frame.isPetFrame = true
             frame.spellName = spellName
             frame.isMovable = true
 
@@ -558,16 +556,19 @@ function mRadial:CreatePetFrames()
             MR_ALLFRAMES[frameName] = frame
             -- Offset default locations
             x = x + (5+petFrameSize)
-        elseif frameExists and spellExists and not toIgnore then
-            mRadial:ShowFrame(frameExists)
+        elseif frameExists and not toIgnore then
+            if spellExists then
+                mRadial:ShowFrame(frameExists)
+            else
+                mRadial:HideFrame(frameExists:GetParent())
+            end
         end
     end
 end
 
 function mRadial:HidePetFrames()
     for x=1, #MR_PETFAMES do
-        local frame = MR_PETFAMES[x]
-        mRadial:HideFrame(frame)
+        mRadial:HideFrame(MR_PETFAMES[x])
     end
 end
 ---------------------------------------------------------------------------------------------------
@@ -583,9 +584,9 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     if radiusMult == nil then radiusMult = MR_DEFAULT_RADIUSMULT end
     local radius = r * radiusMult
     local offset = o
-    local spread = sprd  -- -2.94  -- -5.0
     local widthDeform = wd
     local heightDeform = hd
+    local spread = sprd  -- -2.94  -- -5.0
 
     local readyColor = MRadialSavedVariables.readyColor
     if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
@@ -662,7 +663,7 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     local autoSpread =  MRadialSavedVariables['autoSpread'] 
     if autoSpread == nil then autoSpread = MR_DEFAULT_AUTOSPREAD end
     if autoSpread then
-        angleStep = (((watcherFrameSize+8)/(radius * (math.pi/180))) * (math.pi/180)) + spread *.1 
+        angleStep = (((watcherFrameSize+10)/(radius * (math.pi/180))) * (math.pi/180)) + (spread *.01)
     end
     
     if orderedWatchers == nil then

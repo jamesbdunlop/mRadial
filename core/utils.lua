@@ -454,6 +454,14 @@ function mRadial:WatcherExists(frameName)
 end
 
 -- PET
+function mRadial:IsPetFrame(spellName)
+    for x=1, #MR_PETFAMES do
+        local frame = MR_PETFAMES[x]
+        if frame:GetName() == spellName then return true end
+    end
+    return false
+end
+
 function mRadial:SetPetFramePosAndSize()
     local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
