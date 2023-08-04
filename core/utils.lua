@@ -345,7 +345,13 @@ function mRadial:UpdateActivePrimarySpells()
         -- -- Now we check for isActive (options toggles)
         local watcher = MR_WATCHERFRAMES[x]
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
-        if isActive then 
+        local name, rank, icon, castTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(watcher.spellName)
+        if spellID == nil then 
+            spellKnown = false 
+        else
+            spellKnown = IsSpellKnown(spellID, false)
+        end
+        if isActive and spellKnown then 
             ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher
             mRadial:ShowFrame(watcher)
             if not InCombatLockdown then
@@ -369,8 +375,16 @@ function mRadial:UpdateActiveSecondarySpells()
         local watcher = MR_WATCHERFRAMES[x]
         local isActive = MRadialSavedVariables["isActive".. watcher.spellName] or false
         local isSecondaryActive = MRadialSavedVariables["isSecondaryActive".. watcher.spellName] or false
+        local name, rank, icon, castTime, minRange, maxRange, spellID, originalIcon = GetSpellInfo(watcher.spellName)
+        local spellKnown
+        if spellID == nil then 
+            spellKnown = false 
+        else
+            spellKnown = IsSpellKnown(spellID, false)
+        end
+
         -- Now we check for isActive (options toggles)
-        if isSecondaryActive and not isActive then 
+        if isSecondaryActive and not isActive and spellKnown then 
             ACTIVESECONDARYWATCHERS[#ACTIVESECONDARYWATCHERS+1] = watcher 
             mRadial:ShowFrame(watcher)
             if not InCombatLockdown then

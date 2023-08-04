@@ -7,6 +7,8 @@ MRADIAL_KNOWNISSUES = " \
 
 MRADIAL_UPDATENOTES = " \
 ---------- v0.6.10 --\n \
+\n -- IMPROVEMENTS \
+\n    - Changing talents in the same spec will update the UI watchers accordingly, so one doesn't have to reload UI. This won't fix spread/positions though. \
 \n -- FIXES \
 \n    - Pet frames requiring a reload when swapping pets. These should show hide now as expected. \
 \n\n \
