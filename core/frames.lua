@@ -443,7 +443,7 @@ function mRadial:CreateImpCounterFrame()
     if fontPercentage == nil then fontPercentage = MR_DEFAULT_FONTPERCENTAGE end
     MRadialImpFrame.countText:SetFont(customFontPath,  32, "OUTLINE, MONOCHROME")
 
-    MRadialImpFrame:EnableMouse(false)
+    if not InCombatLockdown() then MRadialImpFrame:EnableMouse(false) end
     MRadialImpFrame.isImpFrame = true
     mRadial:SetFrameVisibility(MRadialImpFrame)
 end
@@ -475,7 +475,9 @@ function mRadial:createShardCountFrame()
     mRadial:setShardTrackerFramesSize()
     mRadial:SetMountedFrameScripts(ShardCounterFrame, alpha)
     mRadial:SetFrameVisibility(ShardCounterFrame)
-    ShardCounterFrame:EnableMouse(false)
+    if not InCombatLockdown() then
+        ShardCounterFrame:EnableMouse(false)
+    end
 end
 
 
@@ -640,7 +642,6 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     if countUdOffset == nil then countUdOffset = MR_DEFAULT_COUNTUDOFFSET end
     if countLROffset == nil then countLROffset = MR_DEFAULT_COUNTLROFFSET end
 
-    
     local readyUDOffset = MRadialSavedVariables.readyUDOffset
     local readyLROffset = MRadialSavedVariables.readyLROffset
     if readyUDOffset == nil then readyUDOffset = MR_DEFAULT_READYUDOFFSET end
