@@ -6,6 +6,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.11 --\n \
+\n -- FIXES \
+\n    - Some mouse frame issues for InCombatLockdown() checks. \
+\n\n \
 ---------- v0.6.10 --\n \
 \n -- IMPROVEMENTS \
 \n    - Changing talents in the same spec will update the UI watchers accordingly, so one doesn't have to reload UI. This won't fix spread/positions though. \
