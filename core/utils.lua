@@ -442,7 +442,9 @@ function mRadial:RestoreFrame(frameName, frame, forceDefault, dx, dy)
     local point = framePosData["point"] or "CENTER"
     -- local relativeTo = framePosData["relativeTo"] or UIParent
     local relativePoint = framePosData["relativePoint"] or "CENTER"
-    frame:SetPoint(tostring(point), UIParent, relativePoint, x, y)
+    if not InCombatLockdown() then
+        frame:SetPoint(tostring(point), UIParent, relativePoint, x, y)
+    end
     
     local framesize = framePosData["size"]
     if framesize == nil then

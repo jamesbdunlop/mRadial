@@ -1,11 +1,17 @@
 MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
-\n    - Void Bolt passive when added will read ready all the time without Void Form. \
-\n    - Pet frames will not generate fontStrings when swapping to new pets during combat. \
 \n \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.12 --\n \
+\n -- LIBS \
+\n    - Updates libDBIcon. \
+\n -- FIXES \
+\n    - Hide secondary toggle. \
+\n    - shardframe issues for InCombatLockdown() setPoint. \
+\n    - Desaturates frames when conditions are not met such as Channel Demonfire with no immolate present etc. \
+\n\n \
 ---------- v0.6.11 --\n \
 \n -- FIXES \
 \n    - Some mouse frame issues for InCombatLockdown() checks. \

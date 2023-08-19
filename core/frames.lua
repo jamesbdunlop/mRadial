@@ -1,6 +1,6 @@
 local appName = "mRadial"
 local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
-
+local mRadial = mRadial
 ---------------------------------------------------------------------------------------
 -- Create an Icon frame.
 -- This function sets up the necessary elements for any frame with a texture in the UI.
@@ -448,7 +448,7 @@ function mRadial:CreateImpCounterFrame()
     mRadial:SetFrameVisibility(MRadialImpFrame)
 end
 
-function mRadial:createShardCountFrame()
+function mRadial:CreateShardCountFrame()
     if not mRadial:IsWarlock() then return end
     -- Sets up the frame used for counting warlock shards on the UI
     local size = 200
@@ -714,10 +714,10 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             watcher.powerText:SetFont(customFontPath, (watcherFrameSize*fontPercentage)+powerFontSize, "THICKOUTLINE")
             
             -- Move the watcher around the center of the frame
-            watcher:SetPoint("CENTER", parentFrame, "CENTER", w, h)
+            if not InCombatLockdown() then watcher:SetPoint("CENTER", parentFrame, "CENTER", w, h) end
             
             -- We don't do ANY SHOW HIDE HERE!!
-            watcher.linkedTimerText:SetPoint("CENTER", watcher.linkedTimerTextBG, "CENTER", 0, 0)
+            if not InCombatLockdown() then watcher.linkedTimerText:SetPoint("CENTER", watcher.linkedTimerTextBG, "CENTER", 0, 0) end
             
             if cosAng >= - 0.1 and cosAng <= 0.1 then
                 -- Bottom of the circle, we want to keep the text UNDER the icon here

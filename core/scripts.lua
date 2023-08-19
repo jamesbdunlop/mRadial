@@ -86,7 +86,6 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
                 canCast = false
             end
         end
-        
         ------------------------------------------
         -- BASEFRAME STATE CHANGES HERE
         local currentDebuff = mRadial:DoDebuffTimer(spellName, frame, iconPath)
@@ -133,7 +132,7 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
 
         -- Finally if we are out of range, override the whole lot.
         mRadial:SetFrameState_OOR(frame, spellName)
-
+        
         wlast = 0
     end)
 end

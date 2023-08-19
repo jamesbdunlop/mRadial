@@ -1,3 +1,4 @@
+local mRadial = mRadial
 -- This module colors / shows / hides various frames
 -- STATES
     -- OnCooldown
@@ -14,6 +15,7 @@ function mRadial:SetFrameState_Active_Cooldown(frame)
     if MAINFRAME_ISMOVING then return end
     -- hide
     mRadial:HideFrame(frame.readyText)
+    mRadial:HideFrame(frame.deBuffTimerText)
     -- show
     frame.iconFrame:SetDesaturated(true)
     mRadial:ShowFrame(frame.cooldownText)
@@ -23,6 +25,7 @@ function mRadial:SetFrameState_Active_Debuff(frame)
     if MAINFRAME_ISMOVING then return end
     -- hide
     mRadial:HideFrame(frame.readyText)
+    mRadial:HideFrame(frame.cooldownText)
     
     -- show
     frame.iconFrame:SetDesaturated(true)
@@ -42,14 +45,20 @@ function mRadial:SetFrameState_Ready(frame)
         mRadial:HideFrame(frame.linkedTimerText)
         frame.deBuffTimerText:SetText("")
     end
+    local spellName = frame.spellName
     -- show
     if frame.readyText ~= nil then
         local readyText = frame.readyText
         mRadial:ShowFrame(readyText)
-        readyText:SetText(READYSTR)
         local readyColor = MRadialSavedVariables.readyColor
         if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
         frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3], readyColor[4]) -- RED
+        if not IsUsableSpell(spellName) then
+            frame.iconFrame:SetDesaturated(true)
+        else
+            readyText:SetText(READYSTR)
+            frame.iconFrame:SetDesaturated(false)
+        end
     end
 end
 

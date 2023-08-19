@@ -151,7 +151,7 @@ MROptionsTable = {
                   type = "toggle",
                   set = function(info,val)
                     MRadialSavedVariables["hideSecondary"] = val 
-                    mRadial:UpdateUI()
+                    mRadial:UpdateUI(true)
                   end,
                   get = function(info)
                     local current = MRadialSavedVariables["hideSecondary"]
@@ -1126,7 +1126,7 @@ MROptionsTable = {
                 default = 1,
                 set = function(self, val)
                   MRadialSavedVariables["shardFrameTransparency"] = val
-                  mRadial:createShardCountFrame()
+                  mRadial:CreateShardCountFrame()
                 end,
                 get = function(self) 
                   local trans = MRadialSavedVariables["shardFrameTransparency"]
@@ -1141,7 +1141,7 @@ MROptionsTable = {
                 defaultValue = false,
                 set = function(info, val)
                   MRadialSavedVariables["hideShardFrame"] = val
-                  mRadial:createShardCountFrame()
+                  mRadial:CreateShardCountFrame()
                   mRadial:UpdateUI()
                 end,
                 get = function(info)

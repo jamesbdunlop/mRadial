@@ -45,6 +45,7 @@ function mRadial:DoSpellFrameCooldown(spellName, frame, outOfPower)
         else
             frame.cooldownText:SetText(string.format("%d", seconds))
         end
+        frame.deBuffTimerText:SetText("")
         return true
     end
 
