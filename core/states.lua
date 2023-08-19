@@ -52,9 +52,11 @@ function mRadial:SetFrameState_Ready(frame)
         mRadial:ShowFrame(readyText)
         local readyColor = MRadialSavedVariables.readyColor
         if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
-        frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3], readyColor[4]) -- RED
+        frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3], readyColor[4])
         if not IsUsableSpell(spellName) then
             frame.iconFrame:SetDesaturated(true)
+            readyText:SetText(NOPOWER)
+            frame.readyText:SetTextColor(1, 0, 0)   -- RED
         else
             readyText:SetText(READYSTR)
             frame.iconFrame:SetDesaturated(false)
