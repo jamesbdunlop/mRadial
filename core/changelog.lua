@@ -4,6 +4,9 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.13 --\n \
+\n Nothing to see here. I didn't git add the darn lib files.. \
+\n\n \
 ---------- v0.6.12 --\n \
 \n -- LIBS \
 \n    - Updates libDBIcon. \
