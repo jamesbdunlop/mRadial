@@ -1203,7 +1203,6 @@ MROptionsTable = {
                 defaultValue = false,
                 set = function(info, val)
                   MRadialSavedVariables["hidePetFrame"] = val 
-                  mRadial:TogglePetFrameVisibility()
                 end,
                 get = function(info) return MRadialSavedVariables["hidePetFrame"] end,
               },
@@ -1233,14 +1232,15 @@ MROptionsTable = {
                 type = "execute",
                 order = 3,
                 func  = function(self, val)
-                  local petFrames = MR_PETFAMES
                   local petFrameSize = MRadialSavedVariables.PetFramesSize
                   if petFrameSize == nil then petFrameSize = MR_DEFAULT_PET_FRAMESIZE end
                   local x = -50
-                  for _, frame in ipairs(petFrames) do
-                    local frameName = frame:GetName()
-                    mRadial:RestoreFrame(frameName, frame, true, x, -150)
-                    x = x + (5+petFrameSize)
+                  for _, frame in ipairs(MR_ALLFRAMES) do
+                    if frame.isPetFrame then 
+                      local frameName = frame:GetName()
+                      mRadial:RestoreFrame(frameName, frame, true, x, -150)
+                      x = x + (5+petFrameSize)
+                    end
                   end
                 end,
               },

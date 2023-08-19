@@ -39,7 +39,19 @@ function mRadial:IsSpellUnitPowerDependant(spellID)
 end
 
 function mRadial:CheckHasPetSpell(spellName)
-    return mRadial:TableContainsKey(mRadial:GetPetAbilities(), spellName)
+    local numPetSpells = HasPetSpells()
+    if not numPetSpells then
+        return false
+    end
+
+    local abilities = mRadial:GetPetAbilities()
+    for petSpellName, _ in pairs(abilities) do
+        if petSpellName == spellName then
+            return true
+        end
+    end
+    
+    return false
 end
 
 function mRadial:IsActiveDebuff(spellName)
@@ -81,6 +93,10 @@ function mRadial:IsPriest()
     return UnitClass("player") == GetClassInfo(5)
 end
 
+function mRadial:IsShaman()
+    return UnitClass("player") == GetClassInfo(7)
+end
+
 function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
@@ -97,7 +113,8 @@ function mRadial:GetPetAbilities()
         local spellName, _, _ = GetSpellBookItemName(i, "pet")
         local spellTexture = GetSpellTexture(i, "pet")
         local isPassive = IsPassiveSpell(i, "pet")
-        if spellName and not isPassive and not mRadial:TableContainsKey(petAbilities, spellName) and spellTexture ~= nil then
+        local contains = mRadial:TableContainsKey(petAbilities, spellName)
+        if spellName and not isPassive and not contains and spellTexture ~= nil then
             petAbilities[spellName] = {}
             petAbilities[spellName]["spellName"] = spellName
             petAbilities[spellName]["spellIcon"] = spellTexture
@@ -302,10 +319,19 @@ function mRadial:TableContainsKey(myTable, key)
     return false
 end
 
-function mRadial:GetFromTable(spellName, activespells)
+function mRadial:GetWatcherFromTable(spellName, activespells)
     for _, watcher in ipairs(activespells) do
         if watcher.spellName == spellName then
             return watcher
+        end
+    end
+end
+
+function mRadial:GetFrame(frameName)
+    for x=1, #MR_ALLFRAMES do
+        local frame = MR_ALLFRAMES[x]
+        if frame:GetName() == frameName then
+            return frame
         end
     end
 end
@@ -470,46 +496,40 @@ function mRadial:WatcherExists(frameName)
 end
 
 -- PET
-function mRadial:IsPetFrame(spellName)
-    for x=1, #MR_PETFAMES do
-        local frame = MR_PETFAMES[x]
-        if frame:GetName() == spellName then return true end
-    end
-    return false
-end
-
 function mRadial:SetPetFramePosAndSize()
     local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
     local fontPercentage = MRadialSavedVariables.FontPercentage or .5
     local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
 
-    for _, frame in ipairs(MR_PETFAMES) do
-        mRadial:RestoreFrame(frame:GetName(), frame)
-        frame:SetSize(petFrameSize, petFrameSize)
-        local pet_readyColor = MRadialSavedVariables.pet_readyColor or MR_DEFAULT_READYCOLOR
-        local pet_countColor = MRadialSavedVariables.pet_countColor or MR_DEFAULT_COUNTCOLOR
-        local pet_cdColor = MRadialSavedVariables.pet_cdColor or MR_DEFAULT_CDCOLOR
-        
-        local pet_readyFontSize = MRadialSavedVariables.pet_readyFontSize or MR_DEFAULT_PET_FONTSIZE
-        local pet_countFontSize = MRadialSavedVariables.pet_countFontSize or MR_DEFAULT_PET_FONTSIZE
-        local pet_coolDownFontSize = MRadialSavedVariables.pet_coolDownFontSize or MR_DEFAULT_PET_FONTSIZE
+    for _, frame in pairs(MR_ALLFRAMES) do
+        if frame.isPetFrame then
+            mRadial:RestoreFrame(frame:GetName(), frame)
+            frame:SetSize(petFrameSize, petFrameSize)
+            local pet_readyColor = MRadialSavedVariables.pet_readyColor or MR_DEFAULT_READYCOLOR
+            local pet_countColor = MRadialSavedVariables.pet_countColor or MR_DEFAULT_COUNTCOLOR
+            local pet_cdColor = MRadialSavedVariables.pet_cdColor or MR_DEFAULT_CDCOLOR
+            
+            local pet_readyFontSize = MRadialSavedVariables.pet_readyFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_countFontSize = MRadialSavedVariables.pet_countFontSize or MR_DEFAULT_PET_FONTSIZE
+            local pet_coolDownFontSize = MRadialSavedVariables.pet_coolDownFontSize or MR_DEFAULT_PET_FONTSIZE
 
-        local pet_readyUDOffset = MRadialSavedVariables.pet_readyUDOffset or MR_DEFAULT_READYUDOFFSET
-        local pet_readyLROffset = MRadialSavedVariables.pet_readyLROffset or MR_DEFAULT_READYLROFFSET
-        local pet_countUdOffset = MRadialSavedVariables.pet_countUdOffset or MR_DEFAULT_COUNTUDOFFSET
-        local pet_countLROffset = MRadialSavedVariables.pet_countLROffset or MR_DEFAULT_COUNTLROFFSET
-        local pet_cdUdOffset = MRadialSavedVariables.pet_cdUdOffset or MR_DEFAULT_CDUDOFFSET
-        local pet_cdLROffset = MRadialSavedVariables.pet_cdLROffset or MR_DEFAULT_CDLROFFSET
+            local pet_readyUDOffset = MRadialSavedVariables.pet_readyUDOffset or MR_DEFAULT_READYUDOFFSET
+            local pet_readyLROffset = MRadialSavedVariables.pet_readyLROffset or MR_DEFAULT_READYLROFFSET
+            local pet_countUdOffset = MRadialSavedVariables.pet_countUdOffset or MR_DEFAULT_COUNTUDOFFSET
+            local pet_countLROffset = MRadialSavedVariables.pet_countLROffset or MR_DEFAULT_COUNTLROFFSET
+            local pet_cdUdOffset = MRadialSavedVariables.pet_cdUdOffset or MR_DEFAULT_CDUDOFFSET
+            local pet_cdLROffset = MRadialSavedVariables.pet_cdLROffset or MR_DEFAULT_CDLROFFSET
 
-        frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_readyFontSize, "THICKOUTLINE")
-        frame.countText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_countFontSize, "THICKOUTLINE")
-        frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_coolDownFontSize, "OUTLINE, MONOCHROME")
-        
-        frame.readyText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_readyLROffset, pet_readyUDOffset)
-        frame.readyText:SetTextColor(pet_readyColor[1], pet_readyColor[2], pet_readyColor[3])
-        frame.countText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_countLROffset, pet_countUdOffset)
-        frame.countText:SetTextColor(pet_countColor[1], pet_countColor[2], pet_countColor[3])
-        frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_cdLROffset, pet_cdUdOffset)
-        frame.cooldownText:SetTextColor(pet_cdColor[1], pet_cdColor[2], pet_cdColor[3])
+            frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_readyFontSize, "THICKOUTLINE")
+            frame.countText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_countFontSize, "THICKOUTLINE")
+            frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+pet_coolDownFontSize, "OUTLINE, MONOCHROME")
+            
+            frame.readyText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_readyLROffset, pet_readyUDOffset)
+            frame.readyText:SetTextColor(pet_readyColor[1], pet_readyColor[2], pet_readyColor[3])
+            frame.countText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_countLROffset, pet_countUdOffset)
+            frame.countText:SetTextColor(pet_countColor[1], pet_countColor[2], pet_countColor[3])
+            frame.cooldownText:SetPoint("CENTER", frame.iconFrame, "CENTER", pet_cdLROffset, pet_cdUdOffset)
+            frame.cooldownText:SetTextColor(pet_cdColor[1], pet_cdColor[2], pet_cdColor[3])
+        end
     end
 end

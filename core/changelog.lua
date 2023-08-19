@@ -4,6 +4,12 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.14 --\n \
+\n -- FIXES \
+\n    - Mem leak in pet frames. \
+\n    - Some CPU usage for non Shaman classes tracking on watcher frame updates for no good reason. \
+\n    - Option calling obsolete function TogglePetFrameVisiblity(). \
+\n\n \
 ---------- v0.6.13 --\n \
 \n Nothing to see here. I didn't git add the darn lib files.. \
 \n\n \

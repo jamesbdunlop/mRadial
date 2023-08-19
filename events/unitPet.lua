@@ -4,11 +4,13 @@ function mRadial:UNIT_PET(e, arg1)
         return
     end
     
-    -- cache new petGUI
+    -- Cache new petGUI
     mRadial:CreatePetFrames()
     if not InCombatLockdown() then
         mRadial:SetPetFramePosAndSize()
     end
+
+    MR_PET_ABILITIES = mRadial:GetPetAbilities()
 end
 
 mRadial:RegisterEvent("UNIT_PET")

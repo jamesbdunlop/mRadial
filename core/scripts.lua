@@ -1,15 +1,17 @@
 function mRadial:SetMoveFrameScripts(frame)
     frame:SetScript("OnMouseDown", function(self, button)
-        if not frame:IsMovable() or not frame:IsMouseEnabled() then
-            return
-        end
-
         if IsShiftKeyDown() and button == "LeftButton" then
+            if not frame:IsMovable() or not frame:IsMouseEnabled() then
+                return
+            end
             frame:StartMoving()
         end
     end)
 
     frame:SetScript("OnMouseUp", function(self, button)
+        if not frame:IsMovable() or not frame:IsMouseEnabled() then
+            return
+        end
         frame:StopMovingOrSizing()
         local playerName = UnitName("player")
         local playerSpec = GetSpecialization()
@@ -43,10 +45,11 @@ end
 
 local plast = 0
 function mRadial:SetPetFrameScripts(frame, spellName)
+    return
     frame:SetScript("OnUpdate", function(self, elapsed)
         plast = plast + elapsed
         if plast <= MR_INTERVAL then return end
-        
+
         local currentCooldown = mRadial:DoSpellFrameCooldown(spellName, frame)
         local currentAura = mRadial:DoPetFrameAuraTimer(spellName, frame)
         if currentCooldown then
@@ -74,7 +77,7 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
     frame:SetScript("OnUpdate", function(self, elapsed)
         wlast = wlast + elapsed
         if wlast <= MR_INTERVAL then return end
-        
+
         ------------------------------------------
         -- Do we have enough power to use?
         local powerTextEnabled = MRadialSavedVariables["powerTextEnabled"] or MR_DEFAULT_POWERENABLED
@@ -98,12 +101,8 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
             mRadial:SetFrameState_Active_Cooldown(frame) 
         end
         
-        if not currentCooldown and not currentDebuff and canCast then
+        if not currentCooldown and not currentDebuff then
             mRadial:SetFrameState_Ready(frame)
-        else
-            mRadial:ShowFrame(frame.readyText)
-            frame.readyText:SetText(NOPOWER)        -- "X"
-            frame.readyText:SetTextColor(1, 0, 0)   -- RED
         end
 
         ------------------------------------------
@@ -120,10 +119,12 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
         end
 
         -- TOTEM WATCHING
-        for slot = 1, 4 do
-            local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
-            if haveTotem and totemName == spellName then
-                mRadial:DoTotemTimer(frame, startTime, duration, icon)
+        if mRadial:IsShaman() then
+            for slot = 1, 4 do
+                local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
+                if haveTotem and totemName == spellName then
+                    mRadial:DoTotemTimer(frame, startTime, duration, icon)
+                end
             end
         end
 

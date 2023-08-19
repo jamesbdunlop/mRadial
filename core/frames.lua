@@ -115,6 +115,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame.isShardFrame = false
     frame.isImpFrame = false
     frame.isMovable = false
+    frame.isPetFrame = false
     
     -- Handle all frames vanishing when mounted.
     mRadial:SetMountedFrameScripts(frame)
@@ -166,21 +167,23 @@ end
 --------------------------------------------------------------------------
 -- Creates a moveable icon frame to be used by mRadial:SetMoveFrameScripts
 --
-function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer, isPetFrame)
-    -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
-    local frame = mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
-    
+function mRadial:CreateMovableFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asTimer)
+    local frame = mRadial:GetFrame(frameName)
+    if frame == nil then 
+        -- frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize, asbutton
+        frame = mRadial:CreateIconFrame(frameName, frameSize, parent, template, texturePath, strata, maskPath, allPoints, textureSize, maskSize)
+    end
+
+    frame.isMovable = true
+
     -- Petframes have timers, lets build those now.
     if asTimer then mRadial:CreateFrameTimerElements(frame) end
-
-    -- Now put it all back to where it was previously set by the user if these exist.
-    mRadial:RestoreFrame(frameName, frame)
     
     -- And set the scripts up for moving these frames.
     mRadial:SetMoveFrameScripts(frame)
-    
-    frame.isMovable = true
 
+    -- Now put it all back to where it was previously set by the user if these exist.
+    mRadial:RestoreFrame(frameName, frame)
     return frame
 end
 
@@ -420,8 +423,6 @@ function mRadial:CreateImpCounterFrame()
         MRadialImpFrame:Show()
         MRadialImpFrame:GetParent():Show()
         
-        MR_ALLFRAMES[#MR_ALLFRAMES+1] = MRadialImpFrame
-
         mRadial:SetMountedFrameScripts(MRadialImpFrame)
         MRadialImpFrame.countText = MRadialImpFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         MRadialImpFrame.countText:SetPoint("CENTER", MRadialImpFrame.iconFrame, "CENTER", -8, -8)
@@ -484,13 +485,9 @@ end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 function mRadial:CreatePetFrames()
-    -- Clear out existing
-    mRadial:HidePetFrames()
-
     local petAbilities = mRadial:GetPetAbilities()
     local x = -100
     local customFontPath = MRadialSavedVariables['Font'] 
-
     for frameName, spellData in pairs(petAbilities) do
         local spellName = spellData["spellName"]
         local spellIconPath = spellData["spellIcon"]
@@ -501,14 +498,12 @@ function mRadial:CreatePetFrames()
         end
         
         -- CREATE
-        local frame
-        local frameExists = MR_ALLFRAMES[frameName]
         local spellExists = mRadial:CheckHasPetSpell(spellName)
-        if frameExists == nil and spellExists and not toIgnore then
+        local frame = mRadial:GetFrame(frameName)
+        if frame == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
-
-            frame = mRadial:CreateMovableFrame(frameName,
+            local frame = mRadial:CreateMovableFrame(frameName,
                                                 {petFrameSize, petFrameSize},
                                                 UIParent,
                                                 "",
@@ -518,9 +513,8 @@ function mRadial:CreatePetFrames()
                                                 true, 
                                                 petFrameSize, 
                                                 petFrameSize,
-                                                true,
                                                 true)
-            
+                                                
             if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
@@ -544,7 +538,7 @@ function mRadial:CreatePetFrames()
             mRadial:SetPetFrameScripts(frame, spellName)
 
             frame.spellName = spellName
-            frame.isMovable = true
+            frame.isPetFrame = true
 
             local playerName = UnitName("player")
             local playerSpec = GetSpecialization()
@@ -553,26 +547,29 @@ function mRadial:CreatePetFrames()
             if not mRadial:TableContainsKey(frameCache, frameName) then 
                 mRadial:RestoreFrame(frameName, frame, true, x, -150)
             end
-
-            MR_PETFAMES[#MR_PETFAMES+1] = frame
-            MR_ALLFRAMES[frameName] = frame
             -- Offset default locations
             x = x + (5+petFrameSize)
-        elseif frameExists and not toIgnore then
+        end
+
+        if frame and not toIgnore then
             if spellExists then
-                mRadial:ShowFrame(frameExists)
+                mRadial:ShowFrame(frame)
+                mRadial:ShowFrame(frame:GetParent())
             else
-                mRadial:HideFrame(frameExists:GetParent())
+                mRadial:HideFrame(frame)
             end
         end
     end
 end
 
 function mRadial:HidePetFrames()
-    for x=1, #MR_PETFAMES do
-        mRadial:HideFrame(MR_PETFAMES[x])
+    for _, frame in pairs(MR_ALLFRAMES) do
+        if frame.isPetFrame then 
+            mRadial:HideFrame(frame)
+        end
     end
 end
+
 ---------------------------------------------------------------------------------------------------
 -- Watcher RADIAL LAYOUT
 function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentFrame)

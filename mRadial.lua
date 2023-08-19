@@ -13,9 +13,9 @@ MRPetGUID = nil
 MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
-MR_PETFAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
+MR_PET_ABILITIES = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -66,6 +66,7 @@ function mRadial:InitUI(create)
     
     -- Now force a read for all the positions as spec changes don't update as expected without it.
     mRadial:ForceUpdateAllMoveableFramePositions()
+    MR_PET_ABILITIES = mRadial:GetPetAbilities()
 end
 
 function mRadial:UpdateUI(create)
@@ -81,7 +82,7 @@ function mRadial:UpdateUI(create)
     mRadial:BuildPrimarySpellOrder(false)
     if prevOrder ~= nil and #prevOrder > 0 then
         for idx, watcherData in ipairs(prevOrder) do
-            currentPrimaryOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activePrimarySpells)
+            currentPrimaryOrder[idx] = mRadial:GetWatcherFromTable(watcherData.spellName, activePrimarySpells)
         end
     else
         currentPrimaryOrder = activePrimarySpells
@@ -112,7 +113,7 @@ function mRadial:UpdateUI(create)
     mRadial:BuildSecondarySpellOrder(false)
     if prevSecondaryOrder ~= nil and #prevSecondaryOrder > 0 then
         for idx, watcherData in ipairs(prevSecondaryOrder) do
-            secondaryCurrentOrder[idx] = mRadial:GetFromTable(watcherData.spellName, activeSecondarySpells)
+            secondaryCurrentOrder[idx] = mRadial:GetWatcherFromTable(watcherData.spellName, activeSecondarySpells)
         end
     else
         secondaryCurrentOrder = activeSecondarySpells
@@ -172,7 +173,7 @@ function mRadial:OnInitialize()
             mRadial:UpdateUI(false)
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 
-            -- frame cleanup
+            -- LEGACY frame cleanup to reduce the file size!
             local playerName = UnitName("player")
             for x=1, 3 do
                 local  spec = PerPlayerPerSpecSavedVars[playerName][x]

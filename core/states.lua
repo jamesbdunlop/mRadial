@@ -45,7 +45,6 @@ function mRadial:SetFrameState_Ready(frame)
         mRadial:HideFrame(frame.linkedTimerText)
         frame.deBuffTimerText:SetText("")
     end
-    local spellName = frame.spellName
     -- show
     if frame.readyText ~= nil then
         local readyText = frame.readyText
@@ -53,7 +52,7 @@ function mRadial:SetFrameState_Ready(frame)
         local readyColor = MRadialSavedVariables.readyColor
         if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
         frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3], readyColor[4])
-        if not IsUsableSpell(spellName) then
+        if not IsUsableSpell(frame.spellName) then
             frame.iconFrame:SetDesaturated(true)
             readyText:SetText(NOPOWER)
             frame.readyText:SetTextColor(1, 0, 0)   -- RED
@@ -279,27 +278,18 @@ function mRadial:SetFrameVisibility(frame)
     end
 
     local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
-    local isPetFrame = mRadial:IsPetFrame(frame:GetName())
-    if isPetFrame and hidePetFrame then
+    if frame.isPetFrame and hidePetFrame then
         mRadial:HideFrame(frame)
         return
-
-    elseif isPetFrame then
-        -- DEAD PET
-        local petGUID = UnitGUID("pet")
-        if petGUID == nil then
-            mRadial:HideFrame(frame)
-            return
-        end
-        
-        local spellName = frame.spellName
-        local spellExists = mRadial:CheckHasPetSpell(spellName)
-        if not spellExists then
-            mRadial:HideFrame(frame)
-            return
-        end
     end
 
+    local petGUID = UnitGUID("pet")
+    if frame.isPetFrame and petGUID == nil then
+        -- DEAD PET
+        mRadial:HideFrame(frame)
+        return
+    end
+    
     if frame.isShardFrame then
         local hide = MRadialSavedVariables["hideShardFrame"]
         if hide == nil then hide = MR_DEFAULT_SHARD_HIDE end
