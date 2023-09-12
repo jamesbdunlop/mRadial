@@ -2,7 +2,7 @@
 
 ## Title: mRadial
 ## Notes: Radial Menu for timers
-## Version: 0.6.15
+## Version: 0.6.16
 ## Author: Macka - JBD
 ## eMail: james@anim8d.com
 

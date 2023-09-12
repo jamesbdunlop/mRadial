@@ -4,6 +4,11 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.16 --\n \
+\n -- FIXES \
+\n    - Pet frame improvements. \
+\n    - CombatLockDown improvements. \
+\n\n \
 ---------- v0.6.14 --\n \
 \n -- FIXES \
 \n    - Mem leak in pet frames. \
