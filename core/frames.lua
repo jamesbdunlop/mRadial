@@ -22,26 +22,37 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     
     -- PARENT FRAME (Should be visible at all times for update scripts to fire.)
     local parentName = frameName .."_parent"
-    local parentFrame = CreateFrame("Frame", parentName, parent, MR_DEFAULT_TEMPLATE)
+    local curParentFrame = mRadial:GetFrame(parentName)
+    local parentFrame
+    if curParentFrame == nil then
+        parentFrame = CreateFrame("Frame", parentName, parent, MR_DEFAULT_TEMPLATE)
+    else
+        parentFrame = curParentFrame
+    end
     parentFrame.isParentFrame = true
     parentFrame:SetFrameStrata(LOW)
     parentFrame:SetFrameLevel(5)
     parentFrame:SetMovable(false)
     parentFrame:EnableMouse(false)
-
+    
     -- Main Icon Frame now.
     local frame
+    local curFrame = mRadial:GetFrame(frameName)
     if asbutton == nil then 
         asbutton = MRadialSavedVariables["asbuttons"] or MR_DEFAULT_ASBUTTONS
     end
 
-    if asbutton then
-        frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  
-        frame:SetEnabled(true)
-        parentFrame:EnableMouse(true)
-        frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+    if curFrame == nil then
+        if asbutton then
+            frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  
+            frame:SetEnabled(true)
+            parentFrame:EnableMouse(true)
+            frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        else
+            frame = CreateFrame("Frame", frameName, parentFrame, template)        
+        end
     else
-        frame = CreateFrame("Frame", frameName, parentFrame, template)        
+        frame = curFrame
     end
     -- Attrs for button clicks
     frame:SetAttribute("type", "spell")
@@ -52,7 +63,9 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     frame:SetFrameLevel(10)
     frame:SetPoint("CENTER", parent, "CENTER", 0, 0)
     frame:RegisterForDrag("LeftButton")
-    frame:SetSize(sizeX, sizeY)
+    if not InCombatLockdown() then
+        frame:SetSize(sizeX, sizeY)
+    end
     frame:SetMovable(false)
     frame:EnableMouse(false)
 
@@ -88,19 +101,21 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     end
     mRadial:HideFrame(frame.configText)
 
-    if allPoints ~= nil then
-        frame.iconFrame:SetAllPoints(frame)
-        if frame.mask ~= nil then
-            frame.mask:SetAllPoints(frame.iconFrame)
-        end
-    else
-        if textureSize ~= nil then
-            local texSizeX, texSizeY = textureSize, textureSize
-            frame.iconFrame:SetSize(texSizeX, texSizeY)
-        end
-        if frame.mask ~= nil and maskSize ~= nil then
-            local maskSizeX, maskSizeY = maskSize, maskSize
-            frame.mask:SetSize(maskSizeX, maskSizeY)
+    if not InCombatLockdown() then
+        if allPoints ~= nil then
+            frame.iconFrame:SetAllPoints(frame)
+            if frame.mask ~= nil then
+                frame.mask:SetAllPoints(frame.iconFrame)
+            end
+        else
+            if textureSize ~= nil then
+                local texSizeX, texSizeY = textureSize, textureSize
+                frame.iconFrame:SetSize(texSizeX, texSizeY)
+            end
+            if frame.mask ~= nil and maskSize ~= nil then
+                local maskSizeX, maskSizeY = maskSize, maskSize
+                frame.mask:SetSize(maskSizeX, maskSizeY)
+            end
         end
     end
 
@@ -380,7 +395,9 @@ function mRadial:CreateMainFrame()
     MRadialMainFrame.crosshair = MRadialMainFrame:CreateTexture("crossHair")
     MRadialMainFrame.crosshair:SetPoint("CENTER", 0, 0)
     MRadialMainFrame.crosshair:SetTexture(MR_CROSSHAIR_PATH)
-    MRadialMainFrame.crosshair:SetSize(25, 25)
+    if not InCombatLockdown() then
+        MRadialMainFrame.crosshair:SetSize(25, 25)
+    end
     mRadial:HideFrame(MRadialMainFrame.crosshair)
     if not InCombatLockdown() then
         MRadialMainFrame:Show()
@@ -485,6 +502,10 @@ end
 ---------------------------------------------------------------------------------------------------
 -- PET FRAMES
 function mRadial:CreatePetFrames()
+    for _, frame in ipairs(MR_CURRENTPETFRAMES) do
+        mRadial:HideFrame(frame)
+        mRadial:HideFrame(frame:GetParent())
+    end
     local petAbilities = mRadial:GetPetAbilities()
     local x = -100
     local customFontPath = MRadialSavedVariables['Font'] 
@@ -499,22 +520,22 @@ function mRadial:CreatePetFrames()
         
         -- CREATE
         local spellExists = mRadial:CheckHasPetSpell(spellName)
-        local frame = mRadial:GetFrame(frameName)
+        local frame = mRadial:GetPetFrame(frameName)
         if frame == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
             local frame = mRadial:CreateMovableFrame(frameName,
-                                                {petFrameSize, petFrameSize},
-                                                UIParent,
-                                                "",
-                                                spellIconPath,
-                                                "ARTWORK",
-                                                nil,
-                                                true, 
-                                                petFrameSize, 
-                                                petFrameSize,
-                                                true)
-                                                
+            {petFrameSize, petFrameSize},
+            UIParent,
+            "",
+            spellIconPath,
+            "ARTWORK",
+            nil,
+            true, 
+            petFrameSize, 
+            petFrameSize,
+            true)
+            
             if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
             frame.readyText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "THICKOUTLINE")
@@ -536,9 +557,10 @@ function mRadial:CreatePetFrames()
             frame.readyText:SetAlpha(1)
             
             mRadial:SetPetFrameScripts(frame, spellName)
-
+            
             frame.spellName = spellName
             frame.isPetFrame = true
+            table.insert(MR_CURRENTPETFRAMES, frame)
 
             local playerName = UnitName("player")
             local playerSpec = GetSpecialization()
@@ -557,15 +579,8 @@ function mRadial:CreatePetFrames()
                 mRadial:ShowFrame(frame:GetParent())
             else
                 mRadial:HideFrame(frame)
+                mRadial:HideFrame(frame:GetParent())
             end
-        end
-    end
-end
-
-function mRadial:HidePetFrames()
-    for _, frame in pairs(MR_ALLFRAMES) do
-        if frame.isPetFrame then 
-            mRadial:HideFrame(frame)
         end
     end
 end
@@ -686,15 +701,16 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
             watcher.deBuffTimerText:SetTextColor(debuffColor[1], debuffColor[2], debuffColor[3])
             watcher.powerText:SetTextColor(powerColor[1], powerColor[2], powerColor[3])
             
-            watcher:SetSize(watcherFrameSize, watcherFrameSize)
-            -- Expand the iconFrame a little so we don't get strange squares in the circles.
-            watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
-            -- Because the graphic for the border is a little smaller.. we wanna handle the scale now too
-            watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
-            watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
-            watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
-            watcher.linkedTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
-            
+            if not InCombatLockdown() then
+                watcher:SetSize(watcherFrameSize, watcherFrameSize)
+                -- Expand the iconFrame a little so we don't get strange squares in the circles.
+                watcher.iconFrame:SetSize(watcherFrameSize*1.2, watcherFrameSize*1.2)
+                -- Because the graphic for the border is a little smaller.. we wanna handle the scale now too
+                watcher.borderFrame:SetSize(watcherFrameSize*1.6, watcherFrameSize*1.6)
+                watcher.aura:SetSize(watcherFrameSize*3, watcherFrameSize*3)
+                watcher.mask:SetSize(watcherFrameSize, watcherFrameSize)
+                watcher.linkedTimerTextBG:SetSize(watcherFrameSize/1.2, watcherFrameSize/1.5)
+            end
             -- TEXT
             watcher.cooldownText:SetPoint("CENTER", watcher.iconFrame, "CENTER", cdLROffset, cdUdOffset)
             watcher.countText:SetPoint("CENTER", watcher.iconFrame, "CENTER", countLROffset, countUdOffset)

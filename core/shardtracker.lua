@@ -4,7 +4,7 @@ function mRadial:setShardTrackerFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MRadialSavedVariables["shardTrackerFrameSize"]
     if frameSize == nil then frameSize = MR_DEFAULT_SHARD_FS end
-    if ShardCounterFrame ~= nil then
+    if ShardCounterFrame ~= nil and not InCombatLockdown() then
         ShardCounterFrame:SetSize(frameSize, frameSize)
     end
 end
@@ -13,9 +13,11 @@ function mRadial:setOOSShardFramesSize()
     -- For options to use to change the size of the frame.
     local frameSize = MRadialSavedVariables["shardOutOfFrameSize"]
     if frameSize == nil then frameSize = MR_DEFAULT_OOS_FS end
-    MRadialMainFrame:SetSize(frameSize, frameSize)
-    MRadialMainFrame.iconFrame:SetSize(frameSize, frameSize)
-    MRadialMainFrame.mask:SetSize(frameSize, frameSize)
+    if not InCombatLockdown() then
+        MRadialMainFrame:SetSize(frameSize, frameSize)
+        MRadialMainFrame.iconFrame:SetSize(frameSize, frameSize)
+        MRadialMainFrame.mask:SetSize(frameSize, frameSize)
+    end
 end
 
 function mRadial:shardtrack()

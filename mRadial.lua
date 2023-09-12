@@ -13,9 +13,9 @@ MRPetGUID = nil
 MR_ALLFRAMES = {}
 MR_PARENTFRAMES = {}
 MR_WATCHERFRAMES = {}
+MR_CURRENTPETFRAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
-MR_PET_ABILITIES = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -66,7 +66,6 @@ function mRadial:InitUI(create)
     
     -- Now force a read for all the positions as spec changes don't update as expected without it.
     mRadial:ForceUpdateAllMoveableFramePositions()
-    MR_PET_ABILITIES = mRadial:GetPetAbilities()
 end
 
 function mRadial:UpdateUI(create)
