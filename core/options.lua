@@ -2,9 +2,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local LSM = LibStub("LibSharedMedia-3.0")
-
 local appName = "mRadial"
-
 local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
 ------------------------------------------------------------------------------------------
@@ -47,7 +45,10 @@ MROptionsTable = {
         desc = L["Opt_HideMiniMapIcon_desc"],
         type = "toggle",
         set = function(info, val) MRadialSavedVariables["hideMiniMapIcon"] = val end,
-        get = function(info) return MRadialSavedVariables["hideMiniMapIcon"] or MR_DEFAULT_HIDEMINIMAP end,
+        get = function(info) 
+          if MRadialSavedVariables["hideMiniMapIcon"] ~= nil then
+            return MRadialSavedVariables["hideMiniMapIcon"] end
+          return MR_DEFAULT_HIDEMINIMAP end,
         order = 4,
       }, 
 
@@ -1792,7 +1793,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
             warning:Hide()
             mRadial:UpdateActivePrimarySpells()
             mRadial:UpdateActiveSecondarySpells()
-            mRadial:UpdateUI(false)
+            mRadial:UpdateUI(true)
             MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", hidePassive)
             MROptionsTable.args.spellOptions.args.secondarySpells.args = mRadial:BuildSpellSelectionPane("isSecondaryActive", hidePassive)
             end)
@@ -2226,7 +2227,7 @@ function mRadial:linkedSpellPane()
   local widgetArgs = {}
   local linkedStuff = {}
   -- Boilerplate for a linked layout
-  local linkedGroup = {
+  local linkedParentGroup = {
     name = L["Opt_LinkedSpellsPane_name"],
     type = "group",
     inline = true,
@@ -2271,7 +2272,7 @@ function mRadial:linkedSpellPane()
           end
       end
   end
-  linkedGroup.args.linkedGroup.args = linkedStuff
-  table.insert(widgetArgs, linkedGroup)
+  linkedParentGroup.args.linkedGroup.args = linkedStuff
+  table.insert(widgetArgs, linkedParentGroup)
   return widgetArgs
 end

@@ -4,6 +4,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.17 --\n \
+\n -- FIXES \
+\n    - Hide minimap icon checkbox toggle. \
+\n    - Error when no spells selected. \
 ---------- v0.6.16 --\n \
 \n -- FIXES \
 \n    - Pet frame improvements. \

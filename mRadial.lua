@@ -197,7 +197,9 @@ function mRadial:OnInitialize()
 end
 
 function mRadial:OnEnable()
-    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"] or MR_DEFAULT_HIDEMINIMAP
+    local hideMiniMapIcon = MRadialSavedVariables["hideMiniMapIcon"]
+    if hideMiniMapIcon == nil then hideMiniMapIcon = MR_DEFAULT_HIDEMINIMAP end
+    
     if not hideMiniMapIcon then
         self.icodb = LibStub("AceDB-3.0"):New("mRadialICO", { profile = { minimap = { hide = hideMiniMapIcon, }, }, })
         icon:Register("mRadialIcon", db, mRadialICO)

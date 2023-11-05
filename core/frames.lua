@@ -671,8 +671,10 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
 
     local watcherFrameSize = MRadialSavedVariables.watcherFrameSize
     if watcherFrameSize == nil then watcherFrameSize = MR_DEFAULT_WATCHERFRAMESIZE end
-
-    local angleStep = (math.pi / #orderedWatchers) + spread*.1
+    
+    local totalCount = #orderedWatchers
+    if totalCount == 0 then totalCount = 1 end
+    local angleStep = (math.pi / totalCount) + spread*.1
     local autoSpread =  MRadialSavedVariables['autoSpread'] 
     if autoSpread == nil then autoSpread = MR_DEFAULT_AUTOSPREAD end
     if autoSpread then
