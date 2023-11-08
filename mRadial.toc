@@ -1,8 +1,8 @@
-## Interface: 100107
+## Interface: 100200
 
 ## Title: mRadial
 ## Notes: Radial Menu for timers
-## Version: 0.6.17
+## Version: 0.6.18
 ## Author: Macka - JBD
 ## eMail: james@anim8d.com
 
@@ -41,10 +41,11 @@ mRadial.lua
 core\shardtracker.lua
 core\slashcmds.lua
 
-# show hide pet frames when pet is out.
+# events
 events\unitPet.lua
 events\specChanged.lua
 events\traitConfigUpdated.lua
+events\unitSpellcastSucceeded.lua
 
 # Shard tracker
 events\unitpowerupdate.lua 
