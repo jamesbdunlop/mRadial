@@ -298,6 +298,8 @@ function mRadial:CreateWatcherFrames()
         end
     end
     
+    local spellBookSpells = {}
+    local spellsInBook = mRadial:GetAllSpells(spellBookSpells)
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
         local spellName, _, _, _, _, _, spellID, _ = GetSpellInfo(spellId)
@@ -306,7 +308,10 @@ function mRadial:CreateWatcherFrames()
         if spellName ~= nil then 
             isActive = MRadialSavedVariables["isActive"..spellName] or false
             isSecondaryActive = MRadialSavedVariables["isSecondaryActive"..spellName] or false
-            local isKnown = IsPlayerSpell(spellId)
+            local isKnown = IsPlayerSpell(spellId, true)
+            if not isKnown then
+                isKnown = mRadial:TableContains(spellBookSpells, {spellName, spellID})
+            end
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
             if isActive and isKnown and not mRadial:WatcherExists(frameName) then

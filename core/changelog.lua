@@ -4,6 +4,11 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.20 --\n \
+\n -- FIXES \
+\n    - Druid abilities like thrash etc were unable to be loaded as watchers due to a bug with IsPlayerSpell always returning false. \
+\n    I have hacked in a fix for this, but the spells will NOT be form based, and will persist to show if you swap from Bear with Thrash
+\n    to Boomy without Thrash. Not ideal, but at least you can put abilities this thrash into the radial now. \
 ---------- v0.6.17 --\n \
 \n -- FIXES \
 \n    - Hide minimap icon checkbox toggle. \

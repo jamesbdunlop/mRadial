@@ -131,7 +131,6 @@ function mRadial:GetPetAbilities()
 end
 
 function mRadial:GetAllSpells(activeTable)
-    local spellData = {}
     --- Trawl the entire spell book for spells.
     --- Sick of trying to figure out the most important! Going to leave this up to the user.
     local numTabs = GetNumSpellTabs()
@@ -151,7 +150,6 @@ function mRadial:GetAllSpells(activeTable)
                     end
                 end
     end end end
-    return spellData
 end
  
 function mRadial:GetTalentTreeSpellIDList()
@@ -212,6 +210,11 @@ function mRadial:GetAllActiveTalentTreeSpells()
     end
 
     local active = {}
+    
+    -- Trawl the book first, as sometimes the talentree will have abilities of the same name and then we don't
+    -- get the right spellID's eg Thrash for druid. 
+    mRadial:GetAllSpells(active)
+
     for _, spellID in ipairs(activeSpellData) do
         local spellName, _, _, _, _, _, _, _ = GetSpellInfo(spellID)
         local isKnown
@@ -225,7 +228,7 @@ function mRadial:GetAllActiveTalentTreeSpells()
             table.insert(active, {spellName, spellID})
         end
     end
-    mRadial:GetAllSpells(active)
+    
     return active
 end
 
@@ -376,6 +379,8 @@ function mRadial:UpdateActivePrimarySpells()
     -- Flush existing
     ACTIVEPRIMARYWATCHERS = {}
     mRadial:HideAllWatcherFrames()
+    local spellBookSpells = {}
+    local spellsInBook = mRadial:GetAllSpells(spellBookSpells)
     for x=1, #MR_WATCHERFRAMES   do
         -- -- Now we check for isActive (options toggles)
         local watcher = MR_WATCHERFRAMES[x]
@@ -385,6 +390,9 @@ function mRadial:UpdateActivePrimarySpells()
             spellKnown = false 
         else
             spellKnown = IsSpellKnown(spellID, false)
+        end
+        if not isKnown then
+            spellKnown = mRadial:TableContains(spellBookSpells, {watcher.spellName, spellID})
         end
         if isActive and spellKnown then 
             ACTIVEPRIMARYWATCHERS[#ACTIVEPRIMARYWATCHERS+1] = watcher

@@ -1838,7 +1838,6 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
               else
                   table.insert(activeSpells, {spellName, desc, isActiveSavedVarStr, false, spellID})
               end
-
           end
       end
   end
@@ -1851,7 +1850,6 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
       if spellID ~= nil then
           _, _, iconPath, _, _, _, _, _ = GetSpellInfo(spellID)
       end
-
       local spellsCbxs = {
           name = spellName,
           desc = desc,
