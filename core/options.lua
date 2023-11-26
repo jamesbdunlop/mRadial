@@ -1143,6 +1143,7 @@ MROptionsTable = {
                 set = function(info, val)
                   MRadialSavedVariables["hideShardFrame"] = val
                   mRadial:CreateShardCountFrame()
+                  mRadial:shardtrack()
                   mRadial:UpdateUI()
                 end,
                 get = function(info)
