@@ -366,7 +366,16 @@ function mRadial:SetConfigMode(isMovable)
     MAINFRAME_ISMOVING = isMovable
     
     local mask = MR_DEFAULT_RADIAL_MASK
-    if not MAINFRAME_ISMOVING then mask = "" end
+    if not MAINFRAME_ISMOVING then 
+        mask = "" 
+        mRadial:HideFrame(MRadialMainFrame.crosshair)
+    else
+        mRadial:ShowFrame(MRadialMainFrame.crosshair)
+    end
+
+    MRadialMainFrame.mask:SetTexture(mask, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+    MRadialMainFrame:SetFrameLevel(5)
+
     if MRadialPrimaryFrame ~= nil then
         MRadialPrimaryFrame.mask:SetTexture(mask, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
         MRadialPrimaryFrame:SetFrameLevel(100)

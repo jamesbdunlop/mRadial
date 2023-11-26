@@ -55,8 +55,10 @@ function mRadial:InitUI(create)
 
     local hideShardFrame = MRadialSavedVariables["hideShardFrame"]
     if hideShardFrame == nil then hideShardFrame = MR_DEFAULT_SHARD_FS end
-    if mRadial:IsWarlock() and not hideShardFrame then
-        mRadial:CreateShardCountFrame()
+    if mRadial:IsWarlock() then
+        if not hideShardFrame then 
+            mRadial:CreateShardCountFrame()
+        end
         mRadial:shardtrack()
     end
     mRadial:CreateImpCounterFrame()
@@ -171,20 +173,20 @@ function mRadial:OnInitialize()
             mRadial:InitUI(true)
             mRadial:UpdateUI(false)
             self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-
+            print("Loaded mRadial addon.")
             -- LEGACY frame cleanup to reduce the file size!
-            local playerName = UnitName("player")
-            for x=1, 3 do
-                local  spec = PerPlayerPerSpecSavedVars[playerName][x]
-                if spec ~= nil then 
-                    local frameCache = PerPlayerPerSpecSavedVars[playerName][x]["framePositions"]
-                    if frameCache ~= nil then
-                        for _, fameData in pairs(frameCache) do
-                            fameData["relativeTo"] = "UIParent"
-                        end
-                    end
-                end
-            end
+            -- local playerName = UnitName("player")
+            -- for x=1, 3 do
+            --     local  spec = PerPlayerPerSpecSavedVars[playerName][x]
+            --     if spec ~= nil then 
+            --         local frameCache = PerPlayerPerSpecSavedVars[playerName][x]["framePositions"]
+            --         if frameCache ~= nil then
+            --             for _, fameData in pairs(frameCache) do
+            --                 fameData["relativeTo"] = "UIParent"
+            --             end
+            --         end
+            --     end
+            -- end
         end
     end)
     

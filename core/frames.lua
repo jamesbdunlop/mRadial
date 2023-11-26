@@ -349,11 +349,12 @@ function mRadial:CreateMainFrame()
     local exists, frame = mRadial:GetFrameByName(MAINBG_FRAMENAME)
     local primary_exists, primaryFrame = mRadial:GetFrameByName(PRIMARY_FRAMENAME)
     local secondary_exists, secondaryFrame = mRadial:GetFrameByName(SECONDARY_FRAMENAME)
-    
+    local hideOOfShardFrame = MRadialSavedVariables["hideOOShardFrame"]
+    if hideOOfShardFrame == nil then hideOOfShardFrame = MR_DEFAULT_HIDE_OOSF end
     -- Main Frame
     if not exists then
         local mask = ""
-        if mRadial:IsWarlock() then
+        if mRadial:IsWarlock() and not hideOOS then
             mask = MR_DEFAULT_RADIAL_MASK
         end
         -- frameName, frameSize, parent, template, texturePath, strata, maskPath, 
@@ -370,7 +371,7 @@ function mRadial:CreateMainFrame()
     else
         MRadialMainFrame = frame
     end
-
+    
     if not primary_exists then
         MRadialPrimaryFrame = mRadial:CreateMovableFrame(PRIMARY_FRAMENAME,
                                                         {300, 200},
@@ -410,6 +411,8 @@ function mRadial:CreateMainFrame()
         MRadialPrimaryFrame:EnableMouse(false)
         MRadialSecondaryFrame:EnableMouse(false)
     end
+    -- Set the outofshards frame transparent by default.
+    MRadialMainFrame.iconFrame:SetColorTexture(1, 0, 0, 0) -- transparent
 end
 
 
