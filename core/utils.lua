@@ -134,9 +134,6 @@ function mRadial:GetAllSpells(activeTable)
     --- Trawl the entire spell book for spells.
     --- Sick of trying to figure out the most important! Going to leave this up to the user.
     local numTabs = GetNumSpellTabs()
-    if #CURRENTSPELLS > 0 then
-        return CURRENTSPELLS
-    end
     for i=2,numTabs do
         local name, _, offset, numSpells = GetSpellTabInfo(i)
         if name == mRadial:GetSpecName() or name == UnitClass("player") then
