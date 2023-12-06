@@ -16,6 +16,7 @@ MR_WATCHERFRAMES = {}
 MR_CURRENTPETFRAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
+CURRENTSPELLS = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")

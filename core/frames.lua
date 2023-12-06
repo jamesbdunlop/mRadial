@@ -312,15 +312,6 @@ function mRadial:CreateWatcherFrames()
             if not isKnown then
                 isKnown = mRadial:TableContains(spellBookSpells, {spellName, spellID})
             end
-            -- Stupid check for totem issues.
-            if mRadial:IsShaman() and not isKnown then
-                for slot = 1, 4 do
-                    local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
-                    if haveTotem and totemName == spellName then
-                        isKnown = haveTotem
-                    end
-                end
-            end
 
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
