@@ -2055,7 +2055,7 @@ function mRadial:BuildOrderLayout(parentFrame, savedVarTable, watcherTable, refr
         if not found then
             table.remove(currentOrder, idx)
         end
-    end  
+    end
     if savedVarTable == nil then
         savedVarTable = currentOrder
     end

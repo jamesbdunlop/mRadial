@@ -146,7 +146,6 @@ function mRadial:GetAllSpells(activeTable)
                     if spellName and spellID then
                         if not mRadial:TableContains(activeTable, {spellName, spellID}) then
                             table.insert(activeTable, {spellName, spellID})
-                            table.insert(CURRENTSPELLS, {spellName, spellID})
                         end
                     end
                 end
