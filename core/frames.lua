@@ -268,7 +268,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
         -- set the button tooltip
         watcher:SetScript("OnEnter", function(self)
             GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-            GameTooltip:SetText("Cast ".. spellName)
+            GameTooltip:SetText("Cast " .. spellName .. " | " ..  spellID)
             GameTooltip:SetSize(200, 40)
         end)
         watcher:SetScript("OnLeave", function(self)
@@ -312,22 +312,32 @@ function mRadial:CreateWatcherFrames()
             if not isKnown then
                 isKnown = mRadial:TableContains(spellBookSpells, {spellName, spellID})
             end
+            -- Stupid check for totem issues.
+            if mRadial:IsShaman() and not isKnown then
+                for slot = 1, 4 do
+                    local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
+                    if haveTotem and totemName == spellName then
+                        isKnown = haveTotem
+                    end
+                end
+            end
+
             local isPassive = IsPassiveSpell(spellID)
             local frameName = string.format("Frame_%s", spellName)
             if isActive and isKnown and not mRadial:WatcherExists(frameName) then
                 local frame = mRadial:CreateWatcherFrame(spellID, MRadialPrimaryFrame)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 local pframe = frame:GetParent()
-                frame.isPrimary = true
-                frame.isSecondary = false
+                frame.isPrimary = isActive
+                frame.isSecondary = isSecondaryActive
                 frame.isPassive = isPassive
                 mRadial:HideFrame(frame)
             elseif isSecondaryActive and isKnown and not mRadial:WatcherExists(frameName) then
                 local frame = mRadial:CreateWatcherFrame(spellID, MRadialSecondaryFrame)
                 MR_WATCHERFRAMES[#MR_WATCHERFRAMES+1] = frame
                 local pframe = frame:GetParent()
-                frame.isPrimary = false
-                frame.isSecondary = true
+                frame.isPrimary = isActive
+                frame.isSecondary = isSecondaryActive
                 mRadial:HideFrame(frame)
             elseif isKnown and mRadial:WatcherExists(frameName) then
                 local frame, _ = mRadial:GetWatcher(frameName)
