@@ -264,7 +264,6 @@ function mRadial:DisableButtonFrame(frame)
 end
 
 function mRadial:SetFrameVisibility(frame)
-    local isUsable = select(1, IsUsableSpell(frame.spellID))
     if IsMounted() or IsFlying() then
         mRadial:HideFrame(frame)
         mRadial:DisableButtonFrame(frame)
@@ -309,11 +308,6 @@ function mRadial:SetFrameVisibility(frame)
         end
     end
 
-    if isUsable then
-        mRadial:ShowFrame(frame)
-        mRadial:EnableButtonFrame(frame)
-        return
-    end
     mRadial:ShowFrame(frame)
     mRadial:EnableButtonFrame(frame)
 end
