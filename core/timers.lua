@@ -121,7 +121,7 @@ end
 function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
     if MAINFRAME_ISMOVING then return end
 
-    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
+    local hideOOC = MRadialSavedVariables["fadeooc"] or MR_DEFAULT_FADEOOC
     -- TIMERS
     if duration ~= nil and startTime ~= nil and not IsMounted() and not hideOOC then
         startTime = startTime or GetTime()

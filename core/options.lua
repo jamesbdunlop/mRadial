@@ -33,11 +33,11 @@ MROptionsTable = {
         order = 2,
       },
       hideOutOfCombat = {
-        name = L["Opt_HideOutOfCombat_name"],
-        desc = L["Opt_HideOutOfCombat_desc"],
+        name = L["Opt_FadeOutOfCombat_name"],
+        desc = L["Opt_FadeOutOfCombat_desc"],
         type = "toggle",
-        set = function(info, val) MRadialSavedVariables["hideooc"] = val end,
-        get = function(info) return MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC end,
+        set = function(info, val) MRadialSavedVariables["fadeooc"] = val end,
+        get = function(info) return MRadialSavedVariables["fadeooc"] or MR_DEFAULT_FADEOOC end,
         order = 3,
       }, 
       hideminimap = {

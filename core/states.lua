@@ -255,28 +255,12 @@ function mRadial:EnableButtonFrame(frame)
     end
 end
 
-function mRadial:DisableButtonFrame(frame)
-    local asButtons = MRadialSavedVariables[MR_KEY_ASBUTTONS]
-    if asButtons == nil then asButtons = MR_DEFAULT_ASBUTTONS end
-    if asButtons and frame.isWatcher and not InCombatLockdown() then
-        frame:EnableMouse(false)
-    end
-end
-
 function mRadial:SetFrameVisibility(frame)
     if IsMounted() or IsFlying() then
         mRadial:HideFrame(frame)
-        mRadial:DisableButtonFrame(frame)
         return
     end
     
-    local hideOOC = MRadialSavedVariables["hideooc"] or MR_DEFAULT_HIDEOOC
-    if hideOOC and not InCombatLockdown() then 
-        mRadial:HideFrame(frame)
-        mRadial:DisableButtonFrame(frame)
-        return
-    end
-
     local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
     if frame.isPetFrame and hidePetFrame then
         mRadial:HideFrame(frame)
@@ -314,7 +298,12 @@ end
 
 function mRadial:ShowFrame(frame, alpha)
     if alpha == nil then alpha = 1 end
-
+    local fadeooc = MRadialSavedVariables["fadeooc"] or MR_DEFAULT_FADEOOC
+    if fadeooc and not InCombatLockdown() then
+        alpha = .5
+    else
+        alpha = 1
+    end
     if frame.isParentFrame then
         frame:SetAlpha(alpha)
         local childFrames = {}

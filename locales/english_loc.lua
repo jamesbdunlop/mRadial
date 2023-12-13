@@ -9,8 +9,8 @@ L["Opt_GenericOptions_desc"] = "These apply to the entire UI"
 L["Opt_ConfigMode_name"] = "Config Mode"
 L["Opt_ConfigMode_desc"] = "Enables / disables config mode."
 
-L["Opt_HideOutOfCombat_name"] = "Hide Out Of Combat"
-L["Opt_HideOutOfCombat_desc"] = "Enables / disables hiding the UI while out of combat."
+L["Opt_FadeOutOfCombat_name"] = "Fade Out Of Combat"
+L["Opt_FadeOutOfCombat_desc"] = "Fades the UI while out of combat."
 
 L["Opt_HideMiniMapIcon_name"] = "Hide MiniMap Icon"
 L["Opt_HideMiniMapIcon_desc"] = "Enables / disables miniMapIcon in fav of the new addon container. This change will take effect on next reload/login."

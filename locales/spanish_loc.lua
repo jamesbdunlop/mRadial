@@ -8,8 +8,8 @@ L["Opt_GenericOptions_desc"] = "Estas se aplican a toda la interfaz de usuario"
 L["Opt_ConfigMode_name"] = "Modo de Configuración"
 L["Opt_ConfigMode_desc"] = "Habilita/deshabilita el modo de configuración."
 
-L["Opt_HideOutOfCombat_name"] = "Ocultar Fuera de Combate"
-L["Opt_HideOutOfCombat_desc"] = "Habilita/deshabilita ocultar la interfaz de usuario mientras está fuera de combate."
+L["Opt_FadeOutOfCombat_name"] = "Ocultar Fuera de Combate"
+L["Opt_FadeOutOfCombat_desc"] = "Habilita/deshabilita ocultar la interfaz de usuario mientras está fuera de combate."
 
 L["Opt_HideMiniMapIcon_name"] = "Ocultar Icono del Minimapa"
 L["Opt_HideMiniMapIcon_desc"] = "Habilita/deshabilita el icono del minimapa a favor del nuevo contenedor del complemento. Este cambio tendrá efecto en la próxima recarga/inicio de sesión."
