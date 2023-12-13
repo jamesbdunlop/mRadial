@@ -8,8 +8,8 @@ L["Opt_GenericOptions_desc"] = "Diese gelten für die gesamte Benutzeroberfläch
 L["Opt_ConfigMode_name"] = "Konfigurationsmodus"
 L["Opt_ConfigMode_desc"] = "Aktiviert/Deaktiviert den Konfigurationsmodus."
 
-L["Opt_FadeOutOfCombat_name"] = "Außerhalb des Kampfes ausblenden"
-L["Opt_FadeOutOfCombat_desc"] = "Aktiviert/Deaktiviert das Ausblenden der Benutzeroberfläche außerhalb des Kampfes."
+L["Opt_FadeOutOfCombat_name"] = "Ausblenden im Kampf"
+L["Opt_FadeOutOfCombat_desc"] = "Blendet die Benutzeroberfläche aus, wenn Sie nicht im Kampf sind."
 
 L["Opt_HideMiniMapIcon_name"] = "Minikarten-Symbol ausblenden"
 L["Opt_HideMiniMapIcon_desc"] = "Aktiviert/Deaktiviert das Minikarten-Symbol zugunsten des neuen Addon-Behälters. Diese Änderung tritt nach dem nächsten Neuladen/Anmelden in Kraft."
