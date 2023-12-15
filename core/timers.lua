@@ -136,7 +136,6 @@ function mRadial:DoTotemTimer(watcher, startTime, duration, iconPath)
         mRadial:ShowFrame(watcher.linkedTimerTextBG)
         watcher.linkedTimerTextBG:SetTexture(iconPath)
         watcher.linkedTimerTextBG:SetAlpha(.5)
-        
         if minutes~= nil and minutes > 0 then
             watcher.linkedTimerText:SetText(string.format("%d:%d", minutes, seconds))
         elseif seconds > 0 then

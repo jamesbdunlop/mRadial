@@ -262,7 +262,6 @@ function mRadial:SetFrameVisibility(frame)
         return
     end
 
-
     local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
     if frame.isPetFrame and hidePetFrame then
         mRadial:HideFrame(frame)
@@ -294,15 +293,6 @@ function mRadial:SetFrameVisibility(frame)
         end
     end
 
-    -- local usable, noMana = IsUsableSpell(frame.spellName)
-    -- if mRadial:IsDruid() then
-    --     if usable then 
-    --         mRadial:ShowFrame(frame)
-    --     else
-    --         mRadial:HideFrame(frame)
-    --     end
-    -- else
-    -- end
     mRadial:ShowFrame(frame)
     mRadial:EnableButtonFrame(frame)
 end
@@ -346,7 +336,11 @@ end
 function mRadial:HideFrame(frame)
     if MAINFRAME_ISMOVING then return end
     if frame.isParentFrame then
-        frame:SetAlpha(0)
+        -- Fucking drama with the cloudBurst Totem where the darn thing just
+        -- refuses to play nicely, so hard coding a check here for it.
+        if frame.spellID ~= 157153 then 
+            frame:SetAlpha(0)
+        end
         local textElements = frame.timerElements
         if textElements ~= nil then
             for _, frame in ipairs(textElements) do

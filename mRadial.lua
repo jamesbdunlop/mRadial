@@ -16,6 +16,7 @@ MR_WATCHERFRAMES = {}
 MR_CURRENTPETFRAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
+MR_SPELL_CACHE = {}
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")
@@ -40,6 +41,8 @@ function mRadial:CreatePlayerSavedVars()
 end
 
 function mRadial:InitUI(create)
+    if create == nil then create = false end
+
     MRadialSavedVariables = mRadial:CreatePlayerSavedVars()
     if MRadialSavedVariables["primaryWatcherOrder"] == nil then
         MRadialSavedVariables["primaryWatcherOrder"] = {}
@@ -51,7 +54,7 @@ function mRadial:InitUI(create)
     -- Out of shards masks and textures are set on the main frame, 
     -- so we scale this for the red out of shards indicator
     mRadial:setOOSShardFramesSize()
-    mRadial:CreateWatcherFrames()
+    mRadial:CreateWatcherFrames(create)
 
     local hideShardFrame = MRadialSavedVariables["hideShardFrame"]
     if hideShardFrame == nil then hideShardFrame = MR_DEFAULT_SHARD_FS end
@@ -62,11 +65,10 @@ function mRadial:InitUI(create)
         mRadial:shardtrack()
     end
     mRadial:CreateImpCounterFrame()
-    if create == nil then create = false end
-    
     mRadial:CreatePetFrames()
     
-    -- Now force a read for all the positions as spec changes don't update as expected without it.
+    -- Now force a read for all the positions as spec changes 
+    -- don't update as expected without it.
     mRadial:ForceUpdateAllMoveableFramePositions()
 end
 

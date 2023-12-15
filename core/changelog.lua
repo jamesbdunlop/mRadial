@@ -7,6 +7,8 @@ MRADIAL_UPDATENOTES = " \
 ---------- v0.6.23 --\n \
 \n -- CHANGES \
 \n    - Removes hide out of combat feature and replaces it with fade out of combat, due to issues with protected functions and buttons not working with this feature.. \
+\n -- FIXES \
+\n    - Issues with CloudBurst totem vanishing when ability used. \
 \n\n \
 ---------- v0.6.22 --\n \
 \n -- FIXES \

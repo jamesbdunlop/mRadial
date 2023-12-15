@@ -1,5 +1,6 @@
 function mRadial:PLAYER_SPECIALIZATION_CHANGED(self, event, ...)
     if event == "player" then
+        MR_SPELL_CACHE = {}
         -- print("Player spec changed, updating mRadial spells now...")
         mRadial:HideAllWatcherFrames()
         MROptionsTable.args.spellOptions.args.primarySpells.args = mRadial:BuildSpellSelectionPane("isActive", true)
