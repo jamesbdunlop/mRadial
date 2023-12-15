@@ -147,7 +147,8 @@ function mRadial:GetAllSpells(activeTable)
                     -- SOME WEIRD BUG WITH SHADOWFURY the names don't match??! 
                     -- Yet you print it and it's the same fkin name!
                     if spellID == 30283 then spellName = SHADOWFURY_SPELLNAME end
-                    if spellName and spellID then
+                    local usable = IsSpellKnown(spellID)
+                    if spellName and spellID and usable then
                         if not mRadial:TableContains(activeTable, {spellName, spellID}) then
                             table.insert(activeTable, {spellName, spellID})
                         end
