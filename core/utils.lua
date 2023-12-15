@@ -97,6 +97,10 @@ function mRadial:IsShaman()
     return UnitClass("player") == GetClassInfo(7)
 end
 
+function mRadial:IsDruid()
+    return UnitClass("player") == GetClassInfo(11)
+end
+
 function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
@@ -223,7 +227,6 @@ function mRadial:GetAllActiveTalentTreeSpells()
         else
             isKnown = IsPlayerSpell(spellID)
         end
-        
         if isKnown and not mRadial:TableContains(active, {spellName, spellID}) then
             table.insert(active, {spellName, spellID})
         end

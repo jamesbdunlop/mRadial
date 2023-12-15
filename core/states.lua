@@ -52,7 +52,8 @@ function mRadial:SetFrameState_Ready(frame)
         local readyColor = MRadialSavedVariables.readyColor
         if readyColor == nil then readyColor = MR_DEFAULT_READYCOLOR end
         frame.readyText:SetTextColor(readyColor[1], readyColor[2], readyColor[3], readyColor[4])
-        if not IsUsableSpell(frame.spellName) then
+        local usable, noMana = IsUsableSpell(frame.spellName)
+        if not usable then
             frame.iconFrame:SetDesaturated(true)
             readyText:SetText(NOPOWER)
             frame.readyText:SetTextColor(1, 0, 0)   -- RED
@@ -260,7 +261,8 @@ function mRadial:SetFrameVisibility(frame)
         mRadial:HideFrame(frame)
         return
     end
-    
+
+
     local hidePetFrame = MRadialSavedVariables["hidePetFrame"] or false
     if frame.isPetFrame and hidePetFrame then
         mRadial:HideFrame(frame)
@@ -292,6 +294,15 @@ function mRadial:SetFrameVisibility(frame)
         end
     end
 
+    -- local usable, noMana = IsUsableSpell(frame.spellName)
+    -- if mRadial:IsDruid() then
+    --     if usable then 
+    --         mRadial:ShowFrame(frame)
+    --     else
+    --         mRadial:HideFrame(frame)
+    --     end
+    -- else
+    -- end
     mRadial:ShowFrame(frame)
     mRadial:EnableButtonFrame(frame)
 end

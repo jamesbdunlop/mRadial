@@ -309,7 +309,7 @@ function mRadial:CreateWatcherFrames()
             isActive = MRadialSavedVariables["isActive"..spellName] or false
             isSecondaryActive = MRadialSavedVariables["isSecondaryActive"..spellName] or false
             local isKnown = IsPlayerSpell(spellId, true)
-            if not isKnown then
+            if not isKnown and mRadial:IsDruid() then
                 isKnown = mRadial:TableContains(spellBookSpells, {spellName, spellID})
             end
             local isPassive = IsPassiveSpell(spellID)
