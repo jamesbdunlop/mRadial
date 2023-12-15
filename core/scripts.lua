@@ -120,11 +120,16 @@ function mRadial:SetWatcherScripts(frame, spellName, isUnitPowerDependant, power
 
         -- TOTEM WATCHING
         if mRadial:IsShaman() then
+            local found = false
             for slot = 1, 4 do
                 local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot)
                 if haveTotem and totemName == spellName then
                     mRadial:DoTotemTimer(frame, startTime, duration, icon)
+                    found = true
                 end
+            end
+            if not found then
+                mRadial:DoTotemTimer(frame, GetTime(), -1, icon)
             end
         end
 
