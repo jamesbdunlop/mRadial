@@ -515,8 +515,8 @@ end
 
 -- PET
 function mRadial:SetPetFramePosAndSize()
-    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
-    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
+    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or MR_DEFAULT_PET_WATCHERFRAMESIZE
+    local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
     local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
 
     for _, frame in pairs(MR_CURRENTPETFRAMES) do
