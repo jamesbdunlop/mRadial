@@ -1205,6 +1205,7 @@ MROptionsTable = {
                 defaultValue = false,
                 set = function(info, val)
                   MRadialSavedVariables["hidePetFrame"] = val 
+                  mRadial:SetPetFramePosAndSize()
                 end,
                 get = function(info) return MRadialSavedVariables["hidePetFrame"] end,
               },

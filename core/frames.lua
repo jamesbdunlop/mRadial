@@ -47,16 +47,13 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
             frame = CreateFrame("Button", frameName, parentFrame, "SecureActionButtonTemplate")  
             frame:SetEnabled(true)
             parentFrame:EnableMouse(true)
-            frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+            frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")           
         else
             frame = CreateFrame("Frame", frameName, parentFrame, template)        
         end
     else
         frame = curFrame
     end
-    -- Attrs for button clicks
-    frame:SetAttribute("type", "spell")
-    frame:SetAttribute("name", spellName)
     
     frame:SetParent(parentFrame)
     frame:SetFrameStrata(LOW)
@@ -122,6 +119,7 @@ function mRadial:CreateIconFrame(frameName, frameSize, parent, template, texture
     -- SET PROPERTIES UP
     parentFrame.frame = frame
     parentFrame.spellName = ""
+    parentFrame.spellID = -1
     parentFrame.timerTextElements = {}
     parentFrame.timerTextBGElements = {}
     frame.spellName = ""
@@ -251,12 +249,13 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
 
     -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
-    local spellName, _, iconPath, _, minRange, maxRange, _, _ = GetSpellInfo(spellID)
+    local spellName, _, iconPath, _, minRange, maxRange, _, originalIcon = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
     local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
     watcher.spellName = spellName
     watcher.spellID = spellID
     watcher:GetParent().spellName = spellName
+    watcher:GetParent().spellID = spellID
     ------------------------------------------
     -- SPELL INFORMATION TO USE FOR TIMERS ETC
     local isUnitPowerDependant, powerType, powerMinCost = mRadial:IsPowerDependant(spellID)
@@ -264,6 +263,9 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- Assign the spell to cast if we're a button!
     local asButtons = MRadialSavedVariables[MR_KEY_ASBUTTONS]
     if asButtons then
+        -- Attrs for button clicks
+        watcher:SetAttribute("type", "spell")
+        watcher:SetAttribute("name", spellName)
         watcher:SetAttribute("spell", spellName)
         -- set the button tooltip
         watcher:SetScript("OnEnter", function(self)
@@ -298,8 +300,13 @@ function mRadial:CreateWatcherFrames()
         end
     end
     
-    local spellBookSpells = {}
-    local spellsInBook = mRadial:GetAllSpells(spellBookSpells)
+    local spellBookSpells
+    if #MR_SPELL_CACHE > 0 then 
+        spellBookSpells = MR_SPELL_CACHE 
+    else
+        spellBookSpells = {}
+        mRadial:GetAllSpells(spellBookSpells)
+    end
     for _, spellInfo in ipairs(activeTalentTreeSpells) do
         local spellId = spellInfo[2]
         local spellName, _, _, _, _, _, spellID, _ = GetSpellInfo(spellId)
@@ -309,7 +316,7 @@ function mRadial:CreateWatcherFrames()
             isActive = MRadialSavedVariables["isActive"..spellName] or false
             isSecondaryActive = MRadialSavedVariables["isSecondaryActive"..spellName] or false
             local isKnown = IsPlayerSpell(spellId, true)
-            if not isKnown then
+            if not isKnown and mRadial:IsDruid() then
                 isKnown = mRadial:TableContains(spellBookSpells, {spellName, spellID})
             end
             local isPassive = IsPassiveSpell(spellID)

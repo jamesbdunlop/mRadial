@@ -97,6 +97,10 @@ function mRadial:IsShaman()
     return UnitClass("player") == GetClassInfo(7)
 end
 
+function mRadial:IsDruid()
+    return UnitClass("player") == GetClassInfo(11)
+end
+
 function mRadial:GetSpecName()
     local currentSpec = GetSpecialization()
     local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec))
@@ -201,20 +205,17 @@ function mRadial:GetAllPassiveTalentTreeSpells()
 end
 
 function mRadial:GetAllActiveTalentTreeSpells()
-    -- Parse the active talent tree for active spells, note all passive spells get culled here, if you want passive use 
-    -- mRadial:GetAllPassiveTalentTreeSpells()
+    if #MR_SPELL_CACHE > 0 then 
+        return MR_SPELL_CACHE 
+    end
+    -- Parse the active talent tree for active spells, note all passive spells 
+    -- get culled here, if you want passive use mRadial:GetAllPassiveTalentTreeSpells()
     local activeSpellData = mRadial:GetTalentTreeSpellIDList()
     -- lower level classes might not have an active talent tree.
-    if activeSpellData == nil then
-        activeSpellData= {}
-    end
-
-    local active = {}
-    
-    -- Trawl the book first, as sometimes the talentree will have abilities of the same name and then we don't
-    -- get the right spellID's eg Thrash for druid. 
-    mRadial:GetAllSpells(active)
-
+    if activeSpellData == nil then activeSpellData= {} end
+    -- Trawl the book first, as sometimes the talent tree will have abilities of the 
+    -- same name and we don't get the right spellID's because of this, eg: Thrash for Druid. 
+    mRadial:GetAllSpells(MR_SPELL_CACHE)
     for _, spellID in ipairs(activeSpellData) do
         local spellName, _, _, _, _, _, _, _ = GetSpellInfo(spellID)
         local isKnown
@@ -223,13 +224,11 @@ function mRadial:GetAllActiveTalentTreeSpells()
         else
             isKnown = IsPlayerSpell(spellID)
         end
-        
-        if isKnown and not mRadial:TableContains(active, {spellName, spellID}) then
-            table.insert(active, {spellName, spellID})
+        if isKnown and not mRadial:TableContains(MR_SPELL_CACHE, {spellName, spellID}) then
+            table.insert(MR_SPELL_CACHE, {spellName, spellID})
         end
     end
-    
-    return active
+    return MR_SPELL_CACHE
 end
 
 function mRadial:GetShardCount()
@@ -516,8 +515,8 @@ end
 
 -- PET
 function mRadial:SetPetFramePosAndSize()
-    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or 45
-    local fontPercentage = MRadialSavedVariables.FontPercentage or .5
+    local petFrameSize = MRadialSavedVariables["PetFramesSize"] or MR_DEFAULT_PET_WATCHERFRAMESIZE
+    local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
     local customFontPath = MRadialSavedVariables['Font'] or MR_DEFAULT_FONT
 
     for _, frame in pairs(MR_CURRENTPETFRAMES) do
