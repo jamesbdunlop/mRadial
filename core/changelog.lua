@@ -4,6 +4,12 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.24 --\n \
+\n -- FIXES \
+\n    - Removes frame for Demonic Strength if you're specced into Bilescourge. \
+\n    - Font selection changes update pet frames. \
+\n    - Bug in fade out of combat where parentFrames could be set to .5 but not show at 1 again. \
+\n\n \
 ---------- v0.6.23 --\n \
 \n -- CHANGES \
 \n    - Removes hide out of combat feature and replaces it with fade out of combat, due to issues with protected functions and buttons not working with this feature.. \

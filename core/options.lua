@@ -429,7 +429,7 @@ MROptionsTable = {
                     local selectedFont = LSM:HashTable("font")[groupIndex]
                     MRadialSavedVariables['Font'] = selectedFont
                     mRadial:UpdateUI(true)
-                    -- mRadial:SetPetFramePosAndSize()
+                    mRadial:SetPetFramePosAndSize()
                     mRadial:GlobalFontPercentageChanged()
                   end,
                 get = function(info)

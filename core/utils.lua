@@ -126,7 +126,9 @@ function mRadial:GetPetAbilities()
     end
 
     -- Special cases, such as the talent for the felguard on lock.
-    if mRadial:IsWarlock() and mRadial:IsFelguardSummoned() and not mRadial:TableContainsKey(petAbilities, L["Opt_DemonicStrength"]) then
+    local demoniStrengthID = 267171
+    local isKnown = IsSpellKnown(demoniStrengthID)
+    if mRadial:IsWarlock() and mRadial:IsFelguardSummoned() and not mRadial:TableContainsKey(petAbilities, L["Opt_DemonicStrength"]) and isKnown then
         petAbilities[L["Opt_DemonicStrength"]] = {}
         petAbilities[L["Opt_DemonicStrength"]]["spellName"] = L["Opt_DemonicStrength"]
         petAbilities[L["Opt_DemonicStrength"]]["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)

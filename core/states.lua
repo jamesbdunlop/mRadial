@@ -301,7 +301,9 @@ function mRadial:ShowFrame(frame, alpha)
     if alpha == nil then alpha = 1 end
     local fadeooc = MRadialSavedVariables["fadeooc"] or MR_DEFAULT_FADEOOC
     if fadeooc and not InCombatLockdown() then
-        alpha = .5
+        alpha = .75
+    elseif InCombatLockdown() then
+        alpha = 1
     else
         alpha = 1
     end
@@ -316,14 +318,15 @@ function mRadial:ShowFrame(frame, alpha)
             if childFrame ~= nil then
                 childFrame:SetAlpha(alpha)
                 if idx == 2 then
-                    childFrame:SetAlpha(MR_DEFAULT_BORDERALPHA)
+                    childFrame:SetAlpha(MR_DEFAULT_BORDERALPHA*alpha)
                 end
             end
         end
     else
+        frame:GetParent():SetAlpha(alpha)
         frame:SetAlpha(alpha)
         if frame.borderFrame ~= nil then
-            frame.borderFrame:SetAlpha(MR_DEFAULT_BORDERALPHA)
+            frame.borderFrame:SetAlpha(MR_DEFAULT_BORDERALPHA*alpha)
         end
     end
     
