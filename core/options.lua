@@ -1,8 +1,8 @@
+local appName = "mRadial"
 local AceGUI = LibStub("AceGUI-3.0")
 local MR_configDialog = LibStub("AceConfigDialog-3.0")
 local MR_configRegistry = LibStub("AceConfigRegistry-3.0")
 local LSM = LibStub("LibSharedMedia-3.0")
-local appName = "mRadial"
 local L = LibStub("AceLocale-3.0"):GetLocale(appName, false) or nil
 
 ------------------------------------------------------------------------------------------
@@ -2108,6 +2108,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
       linkedInputActionSlot = {
         name = spellName,
         type = "input",
+        dialogControl = "Player_EditBox",
         order = 1,
         set = function(info, droppedSpellName)
             local current = MRadialSavedVariables["LINKEDSPELLS"]
@@ -2140,6 +2141,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         name = L["Opt_LinkedSpellsLinkedTo_name"],
         order = 2,
         type = "input",
+        dialogControl = "Player_EditBox",
         defaultValue = destName,
         get = function()
             local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
@@ -2207,7 +2209,8 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
         type = "execute",
         order = 4,
         width = "half",
-        func = function(info) 
+        func = function(info)
+          -- There's no warning here, as nesting the refresh into the onclick callback refuses to update the UI as expected.
           local current = MRadialSavedVariables["LINKEDSPELLS"] or LINKEDSPELLS
           local cleaned = {}
           for srcSpellName, spellID in pairs(current) do
@@ -2216,6 +2219,7 @@ local function createLinkedInputTable(spellName, srcIcon, srcSpellID, srcLink, d
               end
           end
           MRadialSavedVariables["LINKEDSPELLS"] = cleaned
+          MROptionsTable.args.linkedSpellOptions.args = mRadial:linkedSpellPane()
         end,
       }
     }
@@ -2226,6 +2230,7 @@ end
 function mRadial:linkedSpellPane()
   local widgetArgs = {}
   local linkedStuff = {}
+  
   -- Boilerplate for a linked layout
   local linkedParentGroup = {
     name = L["Opt_LinkedSpellsPane_name"],

@@ -175,6 +175,9 @@ L["ShadowFurySpellname"] = "ShadowFury"
 L["Opt_Reset_PetFrames_name"] = "Reset Pet Frames"
 L["Opt_Reset_PetFrames_desc"] = "Resets pet frames to center screen if they went missing."
 
+L["Opt_Remove_LinkedSpell_name"] = "Remove?"
+L["Opt_Remove_LinkedSpell_desc"] = "This will remove the linked spell."
+
 L["Opt_PetIgnoreInput_name"] = "Pet Abilities To Ignore"
 L["Opt_PetIgnoreInput_desc"] = "Type the name of the pet ability you want to ignore on a newLine. No trailing spaces!"
 
