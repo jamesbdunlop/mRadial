@@ -136,7 +136,7 @@ do
 	local function ShowButton(self)
 		if( self.lasttext ~= "" ) then
 			self.editbox.predictFrame.selectedButton = nil
-			searchSpells(self.editbox.predictFrame, "^" .. string.lower(self.lasttext))
+			searchSpells(self.editbox.predictFrame, string.lower(self.lasttext))
 		else
 			self.editbox.predictFrame:Hide()
 		end
@@ -222,7 +222,7 @@ do
 	local function EditBox_OnTextChanged(this)
 		local self = this.obj
 		local value = this:GetText()
-		if( value ~= self.lasttext ) then
+		if(value ~= self.lasttext) then
 			self:Fire("OnTextChanged", value)
 			self.lasttext = value
 			ShowButton(self)

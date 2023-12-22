@@ -1862,6 +1862,7 @@ function mRadial:BuildSpellSelectionPane(isActiveSavedVarStr, hidePassive)
           set = function(info, value)
             -- Store the savedVars
             MRadialSavedVariables[isactiveSpellName] = value
+            -- Rebuild the UI for the spell changes.
             mRadial:UpdateUI(true)
             -- Sync the checkboxes so we don't have them sharing selected spells.
             if asPrimary then
@@ -2245,6 +2246,7 @@ function mRadial:linkedSpellPane()
         },
         add = {
           name = L["Opt_LinkedSpellsAdd_name"],
+          desc = "Note:",
           type = "execute",
           order = 2,
           func = function()

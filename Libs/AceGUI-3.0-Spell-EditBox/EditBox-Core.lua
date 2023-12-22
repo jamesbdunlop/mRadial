@@ -2,7 +2,7 @@
 local AceGUI = LibStub("AceGUI-3.0")
 do
 	local Type = "Predictor_Base"
-	local Version = 1
+	local Version = 1.1
 	local PREDICTOR_ROWS = 10
 	local SpellData = LibStub("AceGUI-3.0-SpellLoader")
 	local tooltip
@@ -48,11 +48,11 @@ do
 		for _, button in pairs(self.buttons) do button:Hide() end
 		for k in pairs(alreadyAdded) do alreadyAdded[k] = nil end
 		
-		local query = "^" .. string.lower(self.obj.editBox:GetText())
+		local query = string.lower(self.obj.editBox:GetText())
 		
 		local activeButtons = 0
 		for spellID, name in pairs(SpellData.spellList) do
-			if( not alreadyAdded[name] and string.match(name, query) and ( not self.obj.spellFilter or self.obj.spellFilter(self.obj, spellID) ) ) then
+			if( not alreadyAdded[name] and string.find(name, query) and ( not self.obj.spellFilter or self.obj.spellFilter(self.obj, spellID) ) ) then
 				activeButtons = activeButtons + 1
 
 				local button = self.buttons[activeButtons]
@@ -176,7 +176,7 @@ do
 		local self = this.obj
 		local type, id, info = GetCursorInfo()
 		if( type == "spell" ) then
-			local name, rank = GetSpellName(id, info)
+			local name, rank, _, _, _, _, _, _ = GetSpellInfo(id, info)
 			if( self.useRanks and rank and rank ~= "" ) then
 				name = string.format("%s (%s)", name, rank)
 			end

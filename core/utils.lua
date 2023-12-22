@@ -301,6 +301,7 @@ function mRadial:TableContains(myTable, value)
 end
 
 function mRadial:OrderTableContains(myTable, watcher)
+    if myTable == nil then return False end
     for _, v in ipairs(myTable) do
         if v.spellName == watcher.spellName then
             return true

@@ -11,7 +11,6 @@ do
 	
 	local function loadPlayerSpells(self)
 		table.wipe(playerSpells)
-
 		for _, spellInfo in ipairs(MR_SPELL_CACHE) do
 			playerSpells[spellInfo[2]] = true
 		end
