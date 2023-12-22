@@ -4,6 +4,11 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.25 --\n \
+\n -- FIXES \
+\n    - Removes Demonic Strength as a pet frame. You'll need to add this as a radial button, and bilesourage to get clean swap for those. \
+\n    - Updates the linked spells area to have auto completion. This is still a WIP but should improve the experience in that area of the options. \
+\n\n \
 ---------- v0.6.24 --\n \
 \n -- FIXES \
 \n    - Removes frame for Demonic Strength if you're specced into Bilescourge. \

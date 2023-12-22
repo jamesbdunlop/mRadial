@@ -154,7 +154,6 @@ L["Opt_LinkedSpellsGrp_name"] = "Verknüpfte Zauber"
 
 L["Opt_Felguard"] = "Teufelswache"
 L["Opt_Wrathguard"] = "Zornwache"
-L["Opt_DemonicStrength"] = "Dämonische Stärke"
 L["Opt_FelStorm"] = "Teufelssturm"
 L["Opt_AxeToss"] = "Axtwurf"
 L["Opt_SoulStrike"] = "Seelenschlag"

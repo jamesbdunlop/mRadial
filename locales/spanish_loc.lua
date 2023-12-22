@@ -151,7 +151,6 @@ L["Opt_LinkedSpellsGrp_name"] = "Hechizos Vinculados"
 
 L["Opt_Felguard"] = " Guardia vil"
 L["Opt_Wrathguard"] = "Guardia de la Ira"
-L["Opt_DemonicStrength"] = "Fuerza demoníaca"
 L["Opt_FelStorm"] = "Tormenta vil"
 L["Opt_AxeToss"] = "AxtwurfLanzamiento de hacha"
 L["Opt_SoulStrike"] = "Golpe de alma"

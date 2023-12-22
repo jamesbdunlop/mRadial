@@ -293,6 +293,15 @@ function mRadial:SetFrameVisibility(frame)
         end
     end
 
+    if frame.isWatcher then 
+        local spellName = frame.spellName
+        local spellID = frame.spellID
+        local existsInCache = mRadial:TableContains(MR_SPELL_CACHE, {spellName, spellID})
+        if not existsInCache then
+            mRadial:HideFrame(frame)
+            return
+        end
+    end
     mRadial:ShowFrame(frame)
     mRadial:EnableButtonFrame(frame)
 end

@@ -124,15 +124,6 @@ function mRadial:GetPetAbilities()
             petAbilities[spellName]["spellIcon"] = spellTexture
         end
     end
-
-    -- Special cases, such as the talent for the felguard on lock.
-    local demoniStrengthID = 267171
-    local isKnown = IsSpellKnown(demoniStrengthID)
-    if mRadial:IsWarlock() and mRadial:IsFelguardSummoned() and not mRadial:TableContainsKey(petAbilities, L["Opt_DemonicStrength"]) and isKnown then
-        petAbilities[L["Opt_DemonicStrength"]] = {}
-        petAbilities[L["Opt_DemonicStrength"]]["spellName"] = L["Opt_DemonicStrength"]
-        petAbilities[L["Opt_DemonicStrength"]]["spellIcon"] = string.format("%s/Ability_warlock_demonicempowerment.blp", ROOTICONPATH)
-    end
     return petAbilities
 end
 
@@ -171,12 +162,15 @@ function mRadial:GetTalentTreeSpellIDList()
         local nodes = C_Traits.GetTreeNodes(treeID)
         for i, nodeID in ipairs(nodes) do
             local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID)
-            for _, entryID in ipairs(nodeInfo.entryIDs) do -- each node can have multiple entries (e.g. choice nodes have 2)
+            -- if nodeInfo.type == 2 then print ("FUCK") end
+            
+            -- each node can have multiple entries (e.g. choice nodes have 2)
+            for _, entryID in ipairs(nodeInfo.entryIDs) do 
                 local entryInfo = C_Traits.GetEntryInfo(configID, entryID)
                 if entryInfo and entryInfo.definitionID then
                     local definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
                     if definitionInfo.spellID then
-                        table.insert(list, definitionInfo.spellID)
+                        table.insert(list, {definitionInfo.spellID, nodeInfo.type == 2})
                     end
                 end
             end
@@ -218,7 +212,10 @@ function mRadial:GetAllActiveTalentTreeSpells()
     -- Trawl the book first, as sometimes the talent tree will have abilities of the 
     -- same name and we don't get the right spellID's because of this, eg: Thrash for Druid. 
     mRadial:GetAllSpells(MR_SPELL_CACHE)
-    for _, spellID in ipairs(activeSpellData) do
+    for _, spellInfo in ipairs(activeSpellData) do
+        local spellID = spellInfo[1]
+        local isMultiSelect = spellInfo[2]
+
         local spellName, _, _, _, _, _, _, _ = GetSpellInfo(spellID)
         local isKnown
         if spellID == nil then

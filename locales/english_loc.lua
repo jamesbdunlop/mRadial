@@ -153,7 +153,6 @@ L["Opt_LinkedSpellsGrp_name"] = "Linked Spells"
 
 L["Opt_Felguard"] = "Felguard"
 L["Opt_Wrathguard"] = "Wrathguard"
-L["Opt_DemonicStrength"] = "Demonic Strength"
 L["Opt_FelStorm"] = "FelStorm"
 L["Opt_AxeToss"] = "Axe Toss"
 L["Opt_SoulStrike"] = "Soul Strike"

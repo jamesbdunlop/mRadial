@@ -539,17 +539,16 @@ function mRadial:CreatePetFrames()
         if frame == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
-            local frame = mRadial:CreateMovableFrame(frameName,
-            {petFrameSize, petFrameSize},
-            UIParent,
-            "",
-            spellIconPath,
-            "ARTWORK",
-            nil,
-            true, 
-            petFrameSize, 
-            petFrameSize,
-            true)
+            local frame = mRadial:CreateMovableFrame(frameName, {petFrameSize, petFrameSize},
+                                                    UIParent,
+                                                    "",
+                                                    spellIconPath,
+                                                    "ARTWORK",
+                                                    nil,
+                                                    true, 
+                                                    petFrameSize, 
+                                                    petFrameSize,
+                                                    true)
             
             if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
@@ -587,14 +586,11 @@ function mRadial:CreatePetFrames()
             -- Offset default locations
             x = x + (5+petFrameSize)
         end
-
+        
         if frame and not toIgnore then
             if spellExists then
                 mRadial:ShowFrame(frame)
                 mRadial:ShowFrame(frame:GetParent())
-            else
-                mRadial:HideFrame(frame)
-                mRadial:HideFrame(frame:GetParent())
             end
         end
     end
