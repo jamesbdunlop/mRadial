@@ -13,6 +13,7 @@
   <Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
   <Include file="Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
   <Include file="Libs\AceGUI-3.0_SFX-Widgets\AceGUI-3.0_SFX-Widgets.xml"/>
+  <Include file="Libs\AceGUI-3.0-Spell-EditBox\AceGUI-3.0-Spell-EditBox.xml"/>
   <Include file="Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
   <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
 </Ui>

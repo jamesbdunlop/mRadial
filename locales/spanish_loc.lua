@@ -151,7 +151,6 @@ L["Opt_LinkedSpellsGrp_name"] = "Hechizos Vinculados"
 
 L["Opt_Felguard"] = " Guardia vil"
 L["Opt_Wrathguard"] = "Guardia de la Ira"
-L["Opt_DemonicStrength"] = "Fuerza demoníaca"
 L["Opt_FelStorm"] = "Tormenta vil"
 L["Opt_AxeToss"] = "AxtwurfLanzamiento de hacha"
 L["Opt_SoulStrike"] = "Golpe de alma"
@@ -170,6 +169,9 @@ L["ShadowFurySpellname"] = "Furia de las Sombras"
 
 L["Opt_Reset_PetFrames_name"] = "Restablecer marcos de mascotas"
 L["Opt_Reset_PetFrames_desc"] = "Restablece los marcos de mascotas al centro de la pantalla si desaparecieron."
+
+L["Opt_Remove_LinkedSpell_name"] = "Remove?"
+L["Opt_Remove_LinkedSpell_desc"] = "This will remove the linked spell."
 
 L["Opt_PetIgnoreInput_name"] = "Habilidades de Mascota a Ignorar"
 L["Opt_PetIgnoreInput_desc"] = "Escribe el nombre de la habilidad de mascota que deseas ignorar en una nueva línea. ¡Sin espacios al final!"

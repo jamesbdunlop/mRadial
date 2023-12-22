@@ -16,7 +16,7 @@ MR_WATCHERFRAMES = {}
 MR_CURRENTPETFRAMES = {}
 ACTIVEPRIMARYWATCHERS = {}
 ACTIVESECONDARYWATCHERS = {}
-MR_SPELL_CACHE = {}
+MR_SPELL_CACHE = {} -- {#: {spellName, spellID}, }
 
 function mRadial:CreatePlayerSavedVars()
     -- print("CreatePlayerSavedVars called!")

@@ -249,6 +249,7 @@ function mRadial:CreateWatcherFrame(spellID, parentFrame)
     -- of casting. If we don't have a buff name, we're tracking the parent spell entirely.
 
     -- spellName, rank, iconPath, castTime, minRange, maxRange, spellID, originalSpellIcon = 
+    
     local spellName, _, iconPath, _, minRange, maxRange, _, originalIcon = GetSpellInfo(spellID)
     local frameName = string.format("Frame_%s", spellName)
     local watcher = mRadial:CreateRadialWatcherFrame(frameName, spellName, iconPath, parentFrame)
@@ -312,7 +313,7 @@ function mRadial:CreateWatcherFrames()
         local spellName, _, _, _, _, _, spellID, _ = GetSpellInfo(spellId)
         local isActive = false
         local isSecondaryActive = false
-        if spellName ~= nil then 
+        if spellName ~= nil then
             isActive = MRadialSavedVariables["isActive"..spellName] or false
             isSecondaryActive = MRadialSavedVariables["isSecondaryActive"..spellName] or false
             local isKnown = IsPlayerSpell(spellId, true)
@@ -539,17 +540,16 @@ function mRadial:CreatePetFrames()
         if frame == nil and spellExists and not toIgnore then
             local petFrameSize = MRadialSavedVariables.PetFramesSize or MR_DEFAULT_PET_FRAMESIZE
             local fontPercentage = MRadialSavedVariables.FontPercentage or MR_DEFAULT_FONTPERCENTAGE
-            local frame = mRadial:CreateMovableFrame(frameName,
-            {petFrameSize, petFrameSize},
-            UIParent,
-            "",
-            spellIconPath,
-            "ARTWORK",
-            nil,
-            true, 
-            petFrameSize, 
-            petFrameSize,
-            true)
+            local frame = mRadial:CreateMovableFrame(frameName, {petFrameSize, petFrameSize},
+                                                    UIParent,
+                                                    "",
+                                                    spellIconPath,
+                                                    "ARTWORK",
+                                                    nil,
+                                                    true, 
+                                                    petFrameSize, 
+                                                    petFrameSize,
+                                                    true)
             
             if customFontPath == nil then customFontPath = MR_DEFAULT_FONT end
             frame.cooldownText:SetFont(customFontPath, petFrameSize*fontPercentage+2, "OUTLINE, MONOCHROME")
@@ -587,14 +587,11 @@ function mRadial:CreatePetFrames()
             -- Offset default locations
             x = x + (5+petFrameSize)
         end
-
+        
         if frame and not toIgnore then
             if spellExists then
                 mRadial:ShowFrame(frame)
                 mRadial:ShowFrame(frame:GetParent())
-            else
-                mRadial:HideFrame(frame)
-                mRadial:HideFrame(frame:GetParent())
             end
         end
     end
@@ -697,7 +694,9 @@ function mRadial:RadialButtonLayout(orderedWatchers, r, o, sprd, wd, hd, parentF
     end
     
     if orderedWatchers == nil then
-        orderedWatchers = mRadial:UpdateActiveSpells()
+        -- print("orderedWatchers: ".. orderedWatchers)
+        -- orderedWatchers = mRadial:UpdateActiveSpells()
+        return
     end
     for x, watcher in ipairs(orderedWatchers) do
         if watcher ~= nil and watcher.isWatcher then

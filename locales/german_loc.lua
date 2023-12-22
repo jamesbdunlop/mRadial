@@ -154,7 +154,6 @@ L["Opt_LinkedSpellsGrp_name"] = "Verknüpfte Zauber"
 
 L["Opt_Felguard"] = "Teufelswache"
 L["Opt_Wrathguard"] = "Zornwache"
-L["Opt_DemonicStrength"] = "Dämonische Stärke"
 L["Opt_FelStorm"] = "Teufelssturm"
 L["Opt_AxeToss"] = "Axtwurf"
 L["Opt_SoulStrike"] = "Seelenschlag"
@@ -173,6 +172,9 @@ L["ShadowFurySpellname"] = "Schattenfuror"
 
 L["Opt_Reset_PetFrames_name"] = "Haustierfenster zurücksetzen"
 L["Opt_Reset_PetFrames_desc"] = "Setzt die Haustierfenster in die Bildschirmmitte zurück, falls sie verschwunden sind."
+
+L["Opt_Remove_LinkedSpell_name"] = "Remove?"
+L["Opt_Remove_LinkedSpell_desc"] = "This will remove the linked spell."
 
 L["Opt_PetIgnoreInput_name"] = "Zu ignorierende Begleiterfähigkeiten"
 L["Opt_PetIgnoreInput_desc"] = "Geben Sie den Namen der Begleiterfähigkeit ein, die Sie ignorieren möchten, jeweils in einer neuen Zeile. Keine Leerzeichen am Ende!"

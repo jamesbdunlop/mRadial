@@ -1,5 +1,6 @@
 --UNIT_SPELLCAST_SUCCEEDED
 function mRadial:SPELLS_CHANGED(self, ...)
+    MR_SPELL_CACHE = {}
     -- print("Player spells changed, updating mRadial spells now...")
     -- print("Building active and secondary now")
     mRadial:UpdateActivePrimarySpells()

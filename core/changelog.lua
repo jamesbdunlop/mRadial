@@ -1,9 +1,17 @@
 MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
+\n    - Linked spell auto complete take some time to populate. I think there is some delay going on in the Spell-EditBox that I'd need to look through/fix myself as this seems to be an outdated GUI mod. \
 \n \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.25 --\n \
+\n -- IMPROVEMENTS \
+\n    - Removes Demonic Strength as a pet frame. You'll need to add this as a radial button, and Bilescourge Bombers to get clean swap for those. \
+\n    - Updates the linked spells area to have auto completion. This is still a WIP but should improve the experience in that area of the options. \
+\n -- FIXES \
+\n    - Some abilities (priest shadowfiend) being a talent wasn't using primary order table correctly. \
+\n\n \
 ---------- v0.6.24 --\n \
 \n -- FIXES \
 \n    - Removes frame for Demonic Strength if you're specced into Bilescourge. \
