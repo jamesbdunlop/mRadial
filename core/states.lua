@@ -307,6 +307,7 @@ function mRadial:SetFrameVisibility(frame)
             mRadial:HideFrame(frame)
             return
         end
+
     end
     mRadial:ShowFrame(frame)
     mRadial:EnableButtonFrame(frame)

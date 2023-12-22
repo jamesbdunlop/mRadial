@@ -378,7 +378,7 @@ function mRadial:UpdateActivePrimarySpells()
     -- Flush existing
     ACTIVEPRIMARYWATCHERS = {}
     mRadial:HideAllWatcherFrames()
-    local spellBookSpells = {}
+    local spellBookSpells = mRadial:GetAllActiveTalentTreeSpells()
     local spellsInBook = mRadial:GetAllSpells(spellBookSpells)
     for x=1, #MR_WATCHERFRAMES   do
         -- -- Now we check for isActive (options toggles)
