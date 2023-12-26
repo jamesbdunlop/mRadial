@@ -5,6 +5,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v0.6.26 --\n \
+-\n -- FIXES \
+-\n    - Adds check for costInfo nil. \
+\n\n \
 ---------- v0.6.25 --\n \
 -\n -- IMPROVEMENTS \
 -\n    - Removes Demonic Strength as a pet frame. You'll need to add this as a radial button, and Bilescourge Bombers to get clean swap for those. \
