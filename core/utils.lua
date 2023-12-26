@@ -73,7 +73,7 @@ function mRadial:IsPowerDependant(spellID)
     local powerMinCost = 0
     local powerType = 0
     
-    if costInfo[1] == nil then 
+    if costInfo == nil or costInfo[1] == nil then 
         isUnitPowerDependant = false
     else 
         isUnitPowerDependant = true
