@@ -1,10 +1,15 @@
 MRADIAL_KNOWNISSUES = " \
 \n    - If you reload UI when in config mode. The next time you open the options the checkbox for the configMode will most likely be ticked. Just toggled it again to turn the mode back on. \
 \n    - Linked spell auto complete take some time to populate. I think there is some delay going on in the Spell-EditBox that I'd need to look through/fix myself as this seems to be an outdated GUI mod. \
+\n    - Mem leak on certain function calls from update frames/set frame vis. Not sure when this was introduced but I suspect the latest patch WIP. \
 \n \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v1.0.1 --\n \
+-\n -- Fixes \
+-\n    - Removes line in toc for missing event file. \
+\n\n \
 ---------- v1.0.0 --\n \
 -\n -- Testing \
 -\n    - Adds regen enabled event for petFrameSize call trying to track down bug with frames when landing into combat. \
