@@ -5,6 +5,10 @@ MRADIAL_KNOWNISSUES = " \
 "
 
 MRADIAL_UPDATENOTES = " \
+---------- v1.0.0 --\n \
+-\n -- Testing \
+-\n    - Adds regen enabled event for petFrameSize call trying to track down bug with frames when landing into combat. \
+\n\n \
 ---------- v0.6.26 --\n \
 -\n -- FIXES \
 -\n    - Adds check for costInfo nil. \

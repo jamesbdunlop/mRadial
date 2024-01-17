@@ -1,8 +1,8 @@
-## Interface: 100200
+## Interface: 100205
 
 ## Title: mRadial
 ## Notes: Radial Menu for timers
-## Version: 0.6.26
+## Version: 1.0.0
 ## Author: Macka - JBD
 ## eMail: james@anim8d.com
 
@@ -45,6 +45,7 @@ core\slashcmds.lua
 events\unitPet.lua
 events\specChanged.lua
 events\traitConfigUpdated.lua
+events\regenEnabled.lua
 
 # Shard tracker
 events\unitpowerupdate.lua 

@@ -30,6 +30,7 @@ function mRadial:SetMoveFrameScripts(frame)
 end
 
 function mRadial:SetMountedFrameScripts(frame, alpha)
+    mRadial:SetPetFramePosAndSize()
     frame:GetParent():RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:GetParent():SetScript("OnEvent", function(self, event, ...)
         -- Show the frame when entering combat
